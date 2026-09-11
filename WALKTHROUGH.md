@@ -796,3 +796,49 @@ for API-cost support.
 
 **Open.** Two-rater expert validation (human task; worksheets ready); manual relation
 normalization; recovering the four missed concepts; expert rating of the programme theory.
+
+---
+
+## M31 — Richmond human standard rewritten, gold v2, and the definitive output/verification docs (2026-09-10)
+
+**What:** Answered, once and defensibly, the eight-month question ("what is our output, and HOW do
+we verify it against Richmond?"). Four concrete deliverables:
+1. Rewrote `gold/RICHMOND_CONCLUSIONS.md` grounded sentence-by-sentence in the primary paper (aims,
+   realist framework, workflow with the real search/screening counts, five contexts, Fig 2 & 3
+   transcribed, verbatim CMOC statements per context, the written conclusions); archived the old as
+   `gold/RICHMOND_CONCLUSIONS.v1-2026-07-15.md`.
+2. Built `gold/richmond_gold_v2.json` via `scripts/build_richmond_gold_v2.py`: keeps the core set
+   E01-E47/R01-R40 byte-identical (so every historical score stays reproducible), adds the 12 Fig-3
+   supplement entities (E48-E59) + 21 relations, corrected PTS1-5 chains, and
+   `context_study_membership` mapping Richmond's reference numbers to our study IDs S001-S028 (all 28
+   mapped; only ref 28/Eva-2007 is ambiguous, flagged).
+3. Wrote `docs/OUTPUT_AND_VERIFICATION.md` — the definitive reader-facing answer: what the system
+   produces (live DB counts), what Richmond produced, and the **verification matrix** (10 rows: review
+   product × Richmond artefact × system artefact × method × statistic × judge × current value ×
+   caveat), plus an honest reading of every number.
+4. Augmented `docs/REASONING_AND_ARCHITECTURE.md` with a research-grounded §6: the CMOC-quality
+   checklist mapped to our enforcing checks, the human-team↔our-step mapping, and the "what not to do"
+   list — all cited (RAMESES II, Pawson & Manzano, Dalkin, Greenhalgh & Manzano, Jagosh, Rees,
+   Renmans, Pizard, DeRegnaucourt, etc.), backed by a fresh literature scan.
+
+**Numbers reconciled to the live canonical run** (`extract-531966df` / `synth-e1c81001`;
+verification `verify-15b50105`, confirmed consistent with the live DB on both deterministic anchors):
+screening 92.9% auto (26/28) → 100% after HITL; citation faithfulness 96.9% (501/517); entity
+coverage 37/47 within-role (range 76.6-85.1%), 43/47 (91.5%) role-tolerant; relations type-level
+97.5% (39/40), anchored 55%, strict 0/40; theory correspondence 0.54 (self-judged); community↔
+mechanism alignment 7/14. The 2026-07-14 `MASTER_VERIFICATION_REPORT.md` is now stale (89.3% /
+98.3%) and carries a SUPERSEDED banner pointing to the new doc.
+
+**Why it matters:** For the first time the project has (a) a single traceable source for every
+verification number, (b) an explicit, non-expert-readable matrix that lays each of our outputs beside
+Richmond's, and (c) an honest ledger of what is deterministic-and-defensible vs model-judged-and-
+pending-human-ratification. This is what the professors kept asking for.
+
+**Honest limitations / open.** OpenAI API returned `429 insufficient_quota` (credits exhausted) on
+2026-09-10, so the three model-judged rows could not be re-run — they are quoted from the consistent
+`verify-15b50105`. Three code defects the audits found do NOT need API and remain to fix: the
+entity-coverage headline conflates a single-pass cross-role step with the K=3 majority vote; the
+theory judge uses the same model tier that composed the theory (self-judging); and there is no
+`CREATE TABLE` DDL in code for the live tables (they exist in Postgres but `res init-db` cannot
+recreate them on a fresh DB). Also pending: two-human-coder κ pass, cross-family judging, 2
+`UNTYPED_CANDIDATE` relations to clean.

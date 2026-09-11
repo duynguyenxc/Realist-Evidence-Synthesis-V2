@@ -94,3 +94,97 @@ does not do true GraphRAG subgraph retrieval. These are the next reasoning upgra
 Sources consulted: Madaan et al., *Self-Refine* (2023); Shinn et al., *Reflexion* (2023); Du et al.,
 *multi-agent debate* (2023); Rostam & Kojima, *LatteReview* (2025, arXiv:2501.05468); FutureHouse,
 *PaperQA2* (2024); Hong et al., *MetaGPT* (ICLR 2024); Edge et al., *GraphRAG* (2024).
+
+---
+
+## 6. Research grounding — does the system reason like a human realist team?
+
+This section answers the professor's second question: *does the machine perform the same analytic
+operations, to the same quality bar, as Richmond's human reviewers?* It is grounded in the realist
+methodology literature (not invented), and it states honestly where the design already conforms and
+where it does not. A key finding from the literature scan: **no published study applies LLMs to CMOC
+extraction or realist synthesis proper** — the nearest work is AI-assisted *searching* for a realist
+review (BMC Med Res Methodol 2026) and LLM deductive *coding* of qualitative data. So the framework
+is a genuine gap our RRE 2026 paper can claim, and its validation must borrow from the adjacent
+LLM-qualitative-coding and realist-methodology literatures.
+
+### 6.1 What counts as a *good* CMOC — the quality bar the system is held to
+
+The realist literature converges on concrete criteria. The table maps each to the check in our
+pipeline that enforces it (or flags where nothing does yet). "(auto)" = deterministic check;
+"(LLM)" = model-judged; "(—)" = not enforced yet.
+
+| Criterion for a faithful CMOC | Source | Enforced by |
+|---|---|---|
+| A CMOC is a causal *if-then proposition*, not a row of labels ("configurations not catalogues") | Pawson & Manzano-Santaella 2012 | `cmocs.narrative_statement` + typed relations (auto); orphan entities flaggable (—) |
+| Mechanism = **resource + response** (M(Resource)+C→M(Reasoning)=O) | Dalkin et al. 2015 | ontology splits `Mechanism_Resource` / `Mechanism_Response`; PROVIDES→TRIGGERS chain (auto) |
+| Mechanism ≠ intervention activity ("don't mislabel strategies as mechanisms") | RAMESES II 2017; Pawson & Manzano 2012 | domain/range validation (auto); low Intervention↔Mechanism-Response overlap check (partial) |
+| Context *modifies whether/how the mechanism fires* — not a direct cause of the outcome | RAMESES II 2017; Greenhalgh & Manzano 2022 | CONSTRAINS/ENABLES relations from Context (auto) |
+| A concept's realist role is an *explanatory decision* — the same thing can be C here, M there | Greenhalgh & Manzano 2022 | role recorded per instance; **row-3 cross-role matches in verification make this visible** (auto) |
+| Every element carries a **verbatim quote** that exists in the source; outcomes from results, not intros | Wong 2013; Sci Rep 2025; Pizard 2025 | quote resolution to exact span — **96.9%** (auto) |
+| Relations extracted *at the same time* as elements (linked coding), not assembled later | Jackson & Kolla 2012; Rees 2026 | extractor emits typed relations inline (auto) |
+| Demi-regularity requires **recurrence** (≥2 independent sources), else it is a candidate theory | Jagosh 2012; Rees 2025/2026 | `demi_regularities` built on ≥2 studies (auto) |
+| Contradictions handled by a named operation (juxtapose / reconcile / adjudicate / consolidate) | Pawson & Manzano 2012 (via RAMESES) | `contradictions` table surfaces them; operation-label is (—) |
+| Refined theory judged by coherence — consilience, simplicity, analogy | Dada 2023; Dalal 2024 (IBE-Eval) | theory correspondence (LLM, self-judged — see §4/OUTPUT_AND_VERIFICATION.md) |
+| Untested/refuted hunches are *kept and marked*, never deleted | Dalkin 2021; RAMESES II 2017 | `ipt_versions` retained; downstream persistence of HITL-3 needs fixing (—) |
+| Appraisal at the **fragment** level (relevance/richness/rigour), never a global study-quality gate | Wong 2013; Dada 2023 | screening is theory-relevance based (partial); richness/rigour scores (—) |
+| Independent double-coding + chance-corrected agreement + adjudication | Jagosh 2012; Khraisha 2024 | two screening models + Checker; **Cohen's κ / human pass still required** (—) |
+
+The "(—)" rows are the honest to-do list: **operation-labelled contradictions, fragment-level
+richness/rigour scores, guaranteed retention of refuted hunches, and a human double-coding κ pass.**
+
+### 6.2 How the pipeline mirrors how human realist teams actually work
+
+Published "how we did it" accounts (Jagosh 2012; Dalkin 2021; Rees 2026; Ajjawi & Kent 2022;
+Richmond 2020 itself) share a recognisable pattern. Our steps map onto it:
+
+| Human realist practice | Source | Our step |
+|---|---|---|
+| Build an initial programme theory from scoping + expert opinion + substantive theory | Shearn 2017; Richmond 2020 | Step 2 IPT seeding (HITL-0), from public learning theory — **never the benchmark's answers** |
+| Theory-driven (not exhaustive) screening for *relevance to the developing theory* | Wong 2013; Jagosh 2026 | Step 3, two independent reviewers vote on theory-relevance |
+| Extract linked configurations, conditioned on the current theory (deductive coding works; open coding is where LLMs fail) | DeRegnaucourt 2026; Xiao 2023 | Step 4, ontology-conditioned extraction with quote grounding |
+| Two independent coders + whole-team refinement triggered by *coding misfit* | Jagosh 2012; Dalkin 2021 | Step 4b–4c Checker critique→revise (Self-Refine); HITL-2 |
+| Re-read earlier papers in light of the revised theory | Dalkin 2021; RAMESES materials | Step 9 retroduction loop (**no prior LLM system does this** — a contribution) |
+| Consolidate hundreds of CMOCs into demi-regularities; two leads compare independently | Rees 2025/2026 | Steps 6–7, Leiden communities + ≥2-study demi-regularities (deterministic) |
+| Organise by explanatory contexts and compare across them | Rees 2026 (settings); Richmond (5 student contexts) | programme theory sections per context |
+
+### 6.3 What the literature says NOT to do — checked against our design
+
+- *Don't output catalogues* (separate C/M/O lists, or clusters that group like-with-like without
+  triads). — We emit typed triads and causal edges; the Leiden communities are labelled by realist
+  role but sit **inside** the CMOC graph, not as free-floating lists. **Watch item:** ensure
+  community output is always read as part of a configuration, never as a standalone taxonomy.
+- *Don't label intervention components as mechanisms.* — Enforced by domain/range validation; the
+  Resource/Response split is the sharpest guard (Dalkin 2015).
+- *Don't gate inclusion on study design / global quality scores.* — Our screening is theory-relevance
+  based, correct per Wong 2013.
+- *Don't report raw accuracy or single-run LLM-judged numbers.* — We report chance-correctable
+  designs and K=3 ranges; **but** the entity-coverage headline and the self-judging theory score are
+  the two places we currently fall short (documented in OUTPUT_AND_VERIFICATION.md §4).
+- *Don't expect prompt tricks (CoT, self-reflection) to fix interpretive weakness* — gains are modest
+  (Oami 2026). We rely on theory-conditioning + verification + human adjudication instead, which is
+  the literature's recommended posture.
+- *Don't assume a public CMOC gold standard exists or that exact-match scoring is meaningful* — experts
+  themselves disagree on CMOC granularity (Renmans 2024). This is exactly why our strict relation
+  recall is near-zero and why semantic/type-level matching with tolerance is the right lens.
+
+### 6.4 The honest verdict
+
+The system performs the **same operations** as a human realist team, in the same order, with the
+human sovereign at five checkpoints, and it enforces most of the literature's CMOC-quality criteria
+deterministically. Where it is weaker is exactly where the LLM-qualitative-coding literature predicts:
+the *interpretive* judgements (mechanism identification, context-vs-mechanism role, programme-theory
+coherence) are model-judged and need human ratification and cross-family judging. Those are named,
+scoped, and blocked only by (a) API credits and (b) a human coding pass — not by any design flaw.
+
+**Sources for §6:** RAMESES II *Quality Standards* (Wong et al. 2017); Wong et al., *RAMESES training
+materials* (2013) & *publication standards* (BMC Med 2013); Dalkin et al., *What's in a mechanism?*
+(Implement Sci 2015); Pawson & Manzano-Santaella, *A realist diagnostic workshop* (Evaluation 2012);
+Greenhalgh & Manzano, *Understanding 'context'* (IJSRM 2022); Dada et al., *relevance, richness, rigour*
+(Res Synth Methods 2023); Rees et al. (Med Educ 2025, 2026); Jagosh et al. (Milbank Q 2012); Jackson &
+Kolla, *linked coding* (AJE 2012); Dalkin et al., *NVivo for realist theory* (IJSRM 2021); Renmans et al.,
+*CMOC database* (Evaluation 2024); Pizard et al., *LLMs for qualitative synthesis* (arXiv 2510.16502,
+2025); DeRegnaucourt et al. (JMIR Form Res 2026); Xiao et al. (IUI 2023); Qiu et al., *hypothesis
+refinement* (ICLR 2024); Dalal et al., *IBE in LLMs* (ACL 2024); Lin et al., *Agent-as-Peer-Debriefer*
+(2026); Khraisha et al. (Res Synth Methods 2024); Oami et al. (Front Digit Health 2026); Ajjawi & Kent
+(J Grad Med Educ 2022); Shearn et al. (IJQM 2017). DOIs in the project research log.

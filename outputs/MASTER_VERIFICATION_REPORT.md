@@ -1,3 +1,8 @@
+> ⚠️ **SUPERSEDED (2026-09-10).** The screening and citation figures below are from the
+> 2026-07-14 run and are now stale (they read 89.3% / 464/472 / 98.3%; the current database gives
+> **92.9% (26/28)** and **96.9% (501/517)**). The authoritative, number-reconciled reference is
+> [`docs/OUTPUT_AND_VERIFICATION.md`](../docs/OUTPUT_AND_VERIFICATION.md). Read that instead.
+
 # Master Verification Report — Agentic Realist Synthesis vs Richmond et al. (2020)
 
 _The single scorecard: how closely does the automated pipeline reproduce the human realist
