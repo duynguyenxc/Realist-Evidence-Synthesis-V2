@@ -1,38 +1,41 @@
 [project]
 name = "res-pipeline"
 version = "0.1.0"
-description = "Agentic, human-in-the-loop GraphRAG pipeline for realist evidence synthesis (RRE 2026 worked example: Richmond et al. 2020)"
+description = "Human-in-the-loop pipeline for realist evidence synthesis: ontology-constrained CMOC extraction, Leiden community detection over the concept graph, and verification against a published human review (RRE 2026 worked example: Richmond et al. 2020)"
 authors = [{ name = "Duy Nguyen" }]
 requires-python = ">=3.11,<3.13"
 readme = "README.md"
 license = { text = "MIT" }
 
+# Every package here is imported by src/res_pipeline or scripts/. Nothing is listed
+# aspirationally: langchain, langgraph and graphrag were declared for a long time and never
+# imported, while openai, graspologic, scipy, matplotlib and python-docx were imported without
+# being declared — so a clean install silently lost Leiden (graspologic absent -> the bare
+# except in graph/communities.py fell back to NetworkX Louvain while every document still said
+# Leiden). See docs/SYSTEM_AND_ALGORITHMS.md section 6.
 dependencies = [
-    "langchain>=0.3",
-    "langchain-openai>=0.2",
-    "langgraph>=0.2",
-    "langgraph-checkpoint-postgres>=2.0",
-    "graphrag>=2.7",
-    "pydantic>=2.7",
-    "pandas>=2.2",
-    "pyarrow>=16.0",
-    "pypdf>=4.2",
-    "psycopg[binary]>=3.1",
-    "neo4j>=5.20",
+    "openai>=1.40",              # core/llm.py — the only LLM client
+    "pydantic>=2.7",             # typed ontology + structured outputs
+    "psycopg[binary]>=3.1",      # PostgreSQL, the system of record
+    "pandas>=2.2",               # exports
+    "pyarrow>=16.0",             # parquet knowledge-graph artefact
+    "pypdf>=4.2",                # corpus ingest
+    "networkx>=3.3",             # concept graph construction
+    "graspologic>=3.4",          # Leiden community detection (NOT optional)
+    "scipy>=1.11",               # Clopper-Pearson intervals
+    "neo4j>=5.20",               # exploration mirror
     "python-dotenv>=1.0",
     "typer>=0.12",
     "rich>=13.7",
     "pyyaml>=6.0",
-    "networkx>=3.3",
-    "jinja2>=3.1",
-    "fastapi>=0.111",
+    "fastapi>=0.111",            # res webui — the HITL console
     "uvicorn>=0.30",
     "python-multipart>=0.0.9",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-asyncio>=0.23", "ruff>=0.5", "mypy>=1.10"]
-viz = ["pyvis>=0.3", "graphviz>=0.20", "openpyxl>=3.1"]
+viz = ["matplotlib>=3.8", "python-docx>=1.1", "openpyxl>=3.1", "pyvis>=0.3", "graphviz>=0.20"]
 
 [project.scripts]
 res = "res_pipeline.cli:app"

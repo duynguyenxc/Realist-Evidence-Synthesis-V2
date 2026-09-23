@@ -98,7 +98,65 @@ CREATE TABLE IF NOT EXISTS token_usage (
     completion_tokens INT NOT NULL,
     created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- The CMOC layer. These three tables carry the review's actual findings and were, until
+-- 2026-09-23, created only as a side effect of the author's live database: no CREATE TABLE
+-- for them existed anywhere in the repository, so `res init-db` followed by `res extract`
+-- died with `relation "cmocs" does not exist` on any fresh machine. The definitions below
+-- are transcribed from the live schema (pg_dump --schema-only), so an existing database is
+-- unaffected and a new one is now reproducible from the repository alone.
+
+CREATE TABLE IF NOT EXISTS cmocs (
+    cmoc_id             TEXT PRIMARY KEY,
+    study_id            TEXT NOT NULL REFERENCES studies(study_id),
+    polarity            TEXT NOT NULL CHECK (polarity IN ('positive','negative','mixed')),
+    narrative_statement TEXT NOT NULL,
+    verifier_support    REAL,
+    verifier_notes      TEXT,
+    checker_agrees      BOOLEAN,
+    checker_notes       TEXT,
+    run_id              TEXT NOT NULL,
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS entity_instances (
+    entity_id       TEXT PRIMARY KEY,
+    study_id        TEXT NOT NULL REFERENCES studies(study_id),
+    cmoc_id         TEXT NOT NULL,
+    entity_type     TEXT NOT NULL CHECK (entity_type IN
+                        ('Context','Intervention','Mechanism_Resource',
+                         'Mechanism_Response','Outcome')),
+    label           TEXT NOT NULL,
+    canonical_id    TEXT,
+    verbatim_quote  TEXT NOT NULL,
+    char_start      INT,
+    char_end        INT,
+    quote_resolved  BOOLEAN NOT NULL DEFAULT FALSE,
+    match_kind      TEXT,
+    extractor_model TEXT NOT NULL,
+    prompt_version  TEXT NOT NULL,
+    confidence      REAL,
+    run_id          TEXT NOT NULL,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS typed_relations (
+    relation_id       TEXT PRIMARY KEY,
+    study_id          TEXT NOT NULL REFERENCES studies(study_id),
+    cmoc_id           TEXT NOT NULL,
+    predicate         TEXT NOT NULL,
+    subject_entity_id TEXT NOT NULL REFERENCES entity_instances(entity_id),
+    object_entity_id  TEXT NOT NULL REFERENCES entity_instances(entity_id),
+    constraint_valid  BOOLEAN NOT NULL,
+    run_id            TEXT NOT NULL,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS entity_instances_cmoc_idx ON entity_instances (cmoc_id);
+CREATE INDEX IF NOT EXISTS entity_instances_canonical_idx ON entity_instances (canonical_id);
+CREATE INDEX IF NOT EXISTS typed_relations_cmoc_idx ON typed_relations (cmoc_id);
 """
+
 
 
 @contextmanager

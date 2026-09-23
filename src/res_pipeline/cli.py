@@ -154,21 +154,32 @@ def _print_run_cost(run_id: str) -> None:
 @app.command()
 def extract(
     limit: int = typer.Option(None, help="Pilot mode: extract only the first N included studies."),
+    refresh: bool = typer.Option(
+        False, "--refresh",
+        help="Re-extract studies that already have CMOCs, replacing them one study at a time."),
 ) -> None:
-    """Phase 3: CMOC extraction (typed, span-grounded, verified) for included studies."""
+    """Phase 3: CMOC extraction (typed, span-grounded, verified) for included studies.
+
+    By default this skips any study that already has CMOCs, so a second `res extract` is a
+    no-op — which silently printed n=0 and confused every re-run. Pass ``--refresh`` for a
+    genuine re-extraction: each study's previous CMOC layer is deleted **immediately before
+    that study is re-extracted**, never all up front, so a failure part-way through costs one
+    study rather than the whole corpus. Take a database backup first regardless.
+    """
     import uuid as _uuid
 
     from res_pipeline.core.db import get_connection
     from res_pipeline.plugins.realist.cmoc_extraction import extract_study_cmocs
 
     run_id = f"extract-{_uuid.uuid4().hex[:8]}"
+    already_clause = "" if refresh else (
+        " AND study_id NOT IN (SELECT DISTINCT study_id FROM cmocs)")
     with get_connection() as conn:
         rows = conn.execute(
-            """
+            f"""
             SELECT DISTINCT study_id FROM screening_decisions
-            WHERE ((decider LIKE 'combined:%' AND decision='include')
-               OR (decider LIKE 'human:%' AND decision='include'))
-              AND study_id NOT IN (SELECT DISTINCT study_id FROM cmocs)
+            WHERE ((decider LIKE 'combined:%%' AND decision='include')
+               OR (decider LIKE 'human:%%' AND decision='include')){already_clause}
             ORDER BY study_id
             """
         ).fetchall()
@@ -182,6 +193,8 @@ def extract(
         table.add_column(col, justify="right" if col != "StudyID" else "left")
 
     for study_id in study_ids:
+        if refresh:
+            _clear_study_cmocs(study_id)
         stats = extract_study_cmocs(study_id, run_id)
         table.add_row(study_id, *(str(stats.get(k, 0)) for k in
                       ("cmocs", "entities", "relations", "unresolved_quotes",
@@ -199,6 +212,16 @@ def extract(
         console.print(f"  span repair: +{r1['repaired']} normalized, +{r2['repaired']} fuzzy, "
                       f"{r2['still_unresolved']} still unresolved → HITL-2", markup=False)
     _print_run_cost(run_id)
+
+
+def _clear_study_cmocs(study_id: str) -> None:
+    """Drop one study's CMOC layer, in dependency order, inside one transaction."""
+    from res_pipeline.core.db import get_connection
+
+    with get_connection() as conn:
+        conn.execute("DELETE FROM typed_relations WHERE study_id = %s", (study_id,))
+        conn.execute("DELETE FROM entity_instances WHERE study_id = %s", (study_id,))
+        conn.execute("DELETE FROM cmocs WHERE study_id = %s", (study_id,))
 
 
 @app.command()
@@ -687,14 +710,21 @@ def run_all(
     HITL checkpoints are NOT auto-resolved here — run `res adjudicate` / `res validate-cmocs`
     between stages for genuine human review. This command is for reproducible batch runs.
     """
-    ingest()
-    screen()
+    # Call the underlying functions with REAL values. Typer does not rewrite the
+    # decorated function, so calling `ingest()` bare passes the `typer.Option(...)`
+    # sentinel as the argument value — which is truthy, so `Path(source)` received an
+    # OptionInfo and `res run-all` died on its first line. Every documented
+    # "reproducible batch run" had therefore never run.
+    ingest(source=None)
+    screen(limit=None)
     if not skip_extract:
-        extract()
+        extract(limit=None)
     synthesize()
+    detect_communities_cmd(min_size=2)
     verify()
     build_lkg()
     report()
+    export_results()
     console.print("[bold green]Full pipeline complete.[/bold green] "
                   "See outputs/runs/ and outputs/lkg/.")
 

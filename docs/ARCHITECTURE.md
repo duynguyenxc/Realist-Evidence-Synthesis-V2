@@ -1,5 +1,22 @@
 # ARCHITECTURE — Agentic Realist Evidence Synthesis (V2)
 
+> ## ⚠ TECHNOLOGY CLAIMS SUPERSEDED (2026-09-23)
+>
+> A line-by-line comparison of this document against the source code found that several
+> load-bearing technology claims here are not implemented: LangGraph is never imported, no
+> embedding is ever computed, there is no vector store and no GraphRAG local/global search, the
+> `graphrag` package is declared but never used, the extraction/synthesis tier is gpt-5.5 rather
+> than gpt-5.4, `config/prompts/` is empty, the per-paper gold is LLM-produced rather than
+> human-coded, and nine of the modules listed in the repo layout below do not exist.
+>
+> **[`SYSTEM_AND_ALGORITHMS.md`](SYSTEM_AND_ALGORITHMS.md) is now the description of record** for
+> architecture, reasoning, algorithms and tooling; it carries the full correction table in §7.
+> This file is retained for its decision history (D1–D7) and for the ontology and phase plan, which
+> remain accurate.
+
+---
+
+
 _Status: **v1.0 — grounded proposal, approved-to-build** (RA granted full build authority
 2026-07-14; every decision below is traceable to `docs/research/SOTA_REPORT.md`, the professor's
 documents, or the Richmond primary source). Update this file when decisions change; log changes

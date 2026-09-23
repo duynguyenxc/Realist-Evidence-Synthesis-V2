@@ -932,3 +932,65 @@ NOT NULL constraint so the HITL→few-shot loop has never recorded a correction;
 declares langchain/langgraph/graphrag (all unused) and omits openai, graspologic and python-docx;
 and the "GraphRAG" claim is not supported by the code — there is Leiden community detection and LLM
 community labelling, but no embeddings, no vector store and no retrieval.
+
+---
+
+## M33 (2026-09-23) — full-run attempt blocked by API credit; architecture described from the code
+
+**The run was launched and stopped safely.** With a full `pg_dump` (943 KB) plus `*_bak_m33`
+snapshot tables taken first, the pipeline was started end to end. `ingest` completed (28 studies,
+165 text units, deterministic, no API). `screen` then died on its first model call with
+`429 credit_balance_exhausted` — "You have no credits remaining". The `&&` chain stopped there, so
+nothing downstream ran and **every table matched its snapshot exactly afterwards**. Diagnostics: the
+key is a valid **project key** (`sk-proj-…`, authenticates, 132 models visible) with a zero balance —
+the usual cause is credit added to the organisation while the key's *project* carries its own limit,
+or credit added to a different organisation. Only the account holder can resolve it.
+
+**Two blocking defects fixed before the run, both found in the M32 audit:**
+
+- `res run-all` had never executed. Typer does not rewrite the decorated function, so calling
+  `ingest()` bare passed the `typer.Option(...)` sentinel as the argument value; `Path(source)`
+  received an `OptionInfo` and the documented "reproducible batch run" died on its first line. Now
+  passes real values, and additionally chains `detect-communities` and `export-results`.
+- `res extract` silently skipped every study that already had CMOCs, so a second run printed `n=0`
+  with no explanation. New `--refresh` flag re-extracts, deleting each study's previous layer
+  **immediately before re-extracting that study** (`_clear_study_cmocs`), never all up front — so a
+  failure part-way costs one study rather than the corpus. This is the M26 lesson made structural.
+
+**Reproducibility defects fixed (no API needed):**
+
+- **`res init-db` now creates the CMOC layer.** There was no `CREATE TABLE` anywhere in the
+  repository for `cmocs`, `entity_instances` or `typed_relations` — they existed only in the
+  author's live database, so a replicator got `relation "cmocs" does not exist`. DDL transcribed
+  from `pg_dump --schema-only`; verified idempotent against the live database (row counts
+  unchanged).
+- **`pyproject.toml` corrected in both directions.** Removed `langchain`, `langchain-openai`,
+  `langgraph`, `langgraph-checkpoint-postgres`, `graphrag`, `jinja2` — none is imported anywhere.
+  Added `openai`, `graspologic`, `scipy` to the runtime set and `matplotlib`, `python-docx` to
+  `viz`. This mattered: on a clean install `graspologic` was absent, the bare `except` in
+  `graph/communities.py` swallowed the `ImportError`, and the pipeline **silently ran NetworkX
+  Louvain while every document said Leiden**.
+- The package description no longer makes an unqualified "GraphRAG" claim.
+
+**`docs/SYSTEM_AND_ALGORITHMS.md` — the description of record.** Written from the source, not from
+the design documents. States the real reasoning stack (one `call_structured()` entry point, Pydantic
+structured outputs, fixed seed, no retry/tool-use/history — so "8 agents" means 8 role prompts, and
+four of the eight personas are never loaded at all); the one genuine loop (Self-Refine with an
+*external* critic in CMOC extraction, ~Reflexion); every named algorithm with its parameters (Leiden
+via graspologic, resolution 1.0, seed 20260714; union-of-includes screening; three-tier span
+resolution; Clopper–Pearson intervals); and the settled tool stack.
+
+**And it states plainly what "GraphRAG" is here.** Present: ontology-constrained typed extraction,
+Leiden partition, one LLM label pass per community. Absent: embeddings, vector store, hierarchical
+community summarisation, and local/global search — the programme-theory composer receives
+`json.dumps(evidence_pack)`, which is context stuffing, not retrieval; and `guidance.py`'s
+"GraphRAG-in-the-loop" is a `LIMIT 24` frequency query unrelated to the paper being extracted. The
+defensible phrasing is *"ontology-constrained knowledge-graph construction with Leiden community
+detection and LLM community labelling"*. `ARCHITECTURE.md` now carries a banner pointing here, with
+a nine-row correction table (LangGraph never imported; nine listed modules absent; gpt-5.4 vs
+gpt-5.5; empty `config/prompts/`; the per-paper gold is LLM output).
+
+**Standing blockers, unchanged:** OpenAI credit (blocks any re-run); no human has coded anything
+(blocks every agreement-style number); `res feedback` still violates a NOT NULL constraint; the
+unfiltered `DELETE`s in normalize/communities/synthesize still discard other runs' rows and HITL-3
+resolutions.
