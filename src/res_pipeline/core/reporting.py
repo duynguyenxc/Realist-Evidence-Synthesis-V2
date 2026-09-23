@@ -193,22 +193,45 @@ def write_verification_markdown(report: dict, out: Path) -> None:
         f"- False excludes: **{len(s['false_excludes'])}** {s['false_excludes'] or ''}",
         f"- Uncertain → HITL-1: {len(s['uncertain_routed_to_hitl'])} "
         f"{s['uncertain_routed_to_hitl']}",
-        f"- Final sensitivity after HITL-1: **{s['final_sensitivity_after_hitl']:.1%}**", "",
-        "## 2. Entity coverage (47 gold entities E01–E47)",
+        f"- Final sensitivity after HITL-1: **{s['final_sensitivity_after_hitl']:.1%}**",
+        f"- Screening run scored: `{s.get('screening_run_id', 'n/a')}`",
+        f"- {s.get('caveat', '')}", "",
+        f"## 2. Entity coverage ({e['gold_entities']} scored gold entities, "
+        f"gold {e.get('gold_version', '?')})",
         f"- Recall: **{e['recall']:.1%}** ({e['matched']}/{e['gold_entities']}) — "
-        "LLM-judged semantic matching (human audit required before publication)", "",
-        "## 3. Relation coverage (40 gold relations R01–R40)",
+        "LLM-judged semantic matching (human audit required before publication)",
+        f"- Within Richmond's realist role: {e.get('matched_within_type', 0)}; "
+        f"role-crossing: {e.get('matched_cross_type', 0)}",
+        f"- Per-sample range over {e.get('samples', 0)} judge samples: "
+        f"{e.get('recall_min', 0):.1%}–{e.get('recall_max', 0):.1%}", "",
+        f"## 3. Relation coverage ({r['gold_relations']} scored gold relations)",
         f"- Strict recall (exact concept match on both endpoints): **{r['recall']:.1%}** "
         f"({r['recovered']}/{r['gold_relations']})",
-        f"- Type-level recall (causal pattern recovered — predicate + endpoint types): "
+        f"- Anchored recall (one exact endpoint + correct role on the other): "
+        f"**{r.get('anchored_recall', 0):.1%}** "
+        f"({r.get('anchored_recovered', 0)}/{r['gold_relations']})",
+        f"- Type-level recall (causal pattern recovered — predicate + endpoint roles): "
         f"**{r.get('type_recall', 0):.1%}** ({r.get('type_recovered', 0)}/{r['gold_relations']})",
-        f"- Missed (strict): {', '.join(r['missed_ids']) if r['missed_ids'] else 'none'}", "",
-        "## 4. Citation faithfulness (automated, exact)",
-        f"- {f['quotes_resolved']}/{f['entities']} extracted elements have verbatim quotes "
-        f"resolved to exact character spans: **{f['faithfulness']:.1%}**", "",
-        "## 5. Programme-theory correspondence (5 gold PTS chains)",
-        f"- Mean correspondence: **{t.get('mean_correspondence', 0):.2f}** "
-        f"({t.get('judge','')})", "",
+        f"- {r.get('type_level_ceiling', {}).get('warning', '')}",
+        f"- Missed at the strict tier only (many are recovered at the anchored tier): "
+        f"{', '.join(r['strict_missed_ids']) if r.get('strict_missed_ids') else 'none'}", "",
+        "## 4. Citation faithfulness (deterministic; three tiers, never conflated)",
+        f"- Exact character span: **{f.get('strict', 0):.1%}** "
+        f"({f.get('tiers', {}).get('exact', 0)}/{f['entities']})",
+        f"- Exact **or** normalized (PDF de-hyphenation, whitespace, quote marks): "
+        f"**{f.get('strict_plus_normalized', 0):.1%}**",
+        f"- All tiers including fuzzy (>=70% overlap): **{f['faithfulness']:.1%}** "
+        f"({f['quotes_resolved']}/{f['entities']})",
+        f"- Tier breakdown: {f.get('tiers', {})}",
+        f"- {f.get('note', '')}", "",
+        f"## 5. Programme-theory correspondence ({t.get('gold_chains', 5)} gold PTS chains)",
+        f"- Independent-family judge: **{t.get('mean_correspondence', 0):.2f}** "
+        f"(range {t.get('mean_min', 0):.2f}–{t.get('mean_max', 0):.2f})",
+        f"- Composer's own model family: "
+        f"**{t.get('same_family_judge', {}).get('mean_correspondence', 0):.2f}**",
+        f"- Self-preference gap (same-family minus independent): "
+        f"**{t.get('self_preference_gap', 0):+.3f}**",
+        f"- {t.get('judge','')}", "",
     ]
     if "per_chain" in t:
         lines += ["| PTS | Score | Rationale |", "|---|---|---|"]

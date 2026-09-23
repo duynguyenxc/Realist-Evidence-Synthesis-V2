@@ -842,3 +842,93 @@ theory judge uses the same model tier that composed the theory (self-judging); a
 `CREATE TABLE` DDL in code for the live tables (they exist in Postgres but `res init-db` cannot
 recreate them on a fresh DB). Also pending: two-human-coder κ pass, cross-family judging, 2
 `UNTYPED_CANDIDATE` relations to clean.
+
+---
+
+## M32 (2026-09-23) — the output made observable, and the benchmark corrected
+
+The session opened on the RA's standing question — *"where is the output, what does it look like,
+and how exactly do we verify it?"* — and closed having found that part of the reason the output had
+never been seen is that it was never actually written, and part of the reason the verification was
+unpersuasive is that it was scoring against a benchmark the project had already documented as
+wrong.
+
+**1. The exports were empty.** `scripts/export_outputs.py` wrote CSVs in which *every data row was
+a verbatim repeat of the header*: `pandas.read_sql` over a psycopg connection with
+`row_factory=dict_row` converts each dict row into its keys. 517 entities, 439 relations and 91
+CMOCs had been "exported" as 1,047 copies of four header lines — including in the `raw_outputs/`
+bundles shipped to the professor in `outputs/submission/` and `outputs/submission_v2/`. Fixed with
+a raw cursor plus `cur.description`; re-exported and verified.
+
+**2. A single shareable results page.** New `core/results_export.py` + `res export-results` writes
+`outputs/RESULTS.html` — one self-contained file, no server, no database, openable on a phone and
+attachable to an email. Seven sections: the one-minute human-vs-machine answer; live output counts;
+**a side-by-side of Richmond's five student contexts against ours, block by block**; the
+verification matrix with exact confidence intervals and a "judged by" column; all 46 gold concepts
+one by one with the matcher's reasoning; every CMOC, entity (with its verbatim quote), relation and
+emergent mechanism, searchable; and what is not yet verified. This is the shareable rendering of
+what `res webui` serves interactively — per the M21 lesson, it extends the one coherent system
+rather than adding another one-off artefact. Published as an artifact for remote viewing.
+
+**3. The benchmark was wrong, and it was the one being scored.** `gold/richmond_gold.json` was
+byte-identical to `richmond_gold_v1.json` (MD5 `c3edd83…`), so every correction
+`RICHMOND_CONCLUSIONS.md` §6 claimed had been applied had never reached `metrics.py`. **All five**
+v1 programme-theory chains were cross-context contaminated and every one routed through `E19`, a
+Figure-2 placeholder belonging to one context and carrying no relation (§6 admitted only two).
+Further: E07–E18 were typed `Intervention` although Richmond tags each *"(Mresource)"*; E21 and E43
+contradicted the paper's own `(Mresponse)` tags; `E01` is the review population, not a context, and
+inflated the denominator to 47. Built `gold/richmond_gold_v3.json`
+(`scripts/build_richmond_gold_v3.py`) recording **Richmond's own four-role scheme** alongside ours —
+our ontology legitimately splits their Mresource column into Intervention + Mechanism_Resource
+(Dalkin et al. 2015), so the system had been marked wrong for a distinction Richmond never drew.
+`RES_GOLD=v1` still reproduces every published number exactly.
+
+**4. Four metrics were computed dishonestly, and are not any more.**
+- *Citation faithfulness* conflated exact, normalized and fuzzy tiers under the word **exact**,
+  breaking the promise `span_repair.py` makes in its own docstring. True split: 48 exact, 432
+  normalized (PDF de-hyphenation), 19 fuzzy, 18 unresolved → **92.8% verbatim, not 96.9% exact.**
+- *Entity coverage* reported 91.5% against a per-sample range of 76.6–85.1% — a headline outside
+  its own range — because the cross-role recovery pass ran **once, unvoted**, after a K=3 majority
+  vote. Now sampled and voted identically; hallucinated and duplicate codes discarded.
+- *Screening* silently blended six screening runs and took its denominator from its own output.
+  Now one named run (`screen-4e53160c`), denominator from the study registry.
+- *Theory correspondence* was graded by the same model tier that composed the theory. Now scored by
+  both that tier and a new `independent_judge` tier from a different family, with the gap reported.
+
+**5. Confidence intervals everywhere.** New `verification/stats.py` adds Clopper–Pearson exact
+intervals to every proportion — chosen because the denominators are small (28, 40, 46) and two
+headline values sit exactly at the boundary (28/28, 0/40) where Wald degenerates.
+
+**Corrected scorecard (run `verify-d72550c4`, gold v3).** Screening 92.9% unaided → **100%**
+(95% CI 87.7–100) after one human check, from one named run. Verbatim grounding **92.8%**
+(90.3–94.9). Concepts **38/46 like-for-like** (68.6–92.2), 45/46 role-tolerant, 7 role
+disagreements. Relations: type-level 39/40 **but only 8 distinct patterns exist in our graph
+against 7 in the gold, so the tier is saturable and is now reported with its ceiling**; anchored
+**29/40 (72.5%)**, rising to 80.6% over the arrows Richmond actually draws; strict **0/40**
+(0.0–8.8). Emergent mechanisms **22/28 (78.6%)**. Programme theory **0.56 same-family vs 0.87
+independent — a 0.31 gap on identical inputs, which is the finding, not a score.**
+
+**6. `docs/VERIFICATION_PROTOCOL.md`** — the cited methodological answer to "how do you verify
+this?". Three separable claims (faithful / non-inferior / in correspondence) each with its own
+warrant; why each metric is the right one; and an honest gap list. Key external findings that
+reshape the framing: no published work automates realist synthesis at all, and the field's own
+flagship attempt (Owen-Boukra et al. 2026 *BJGP Open*, with Geoff Wong and James Thomas) **poses the
+question and defers the evaluation design** — that is the gap; no published study reports IRR for
+CMOC extraction, Richmond included, so there is no psychometric baseline and creating one is the
+contribution; Cohen's κ is the *wrong* statistic for span extraction and positive specific agreement
+/ F is the right one (Hripcsak & Rothschild 2005), which dissolves the standing "you can't compute κ
+on 91 CMOCs" objection; human screeners err at 10.76% (Wang et al. 2020), so the target is
+**non-inferiority, not correctness**; and "reproduces Richmond" is the wrong claim to make at all,
+because a human gold standard is instrument-dependent, incomplete and not ground truth.
+
+**Standing gap, unchanged and now blocking:** no human has coded anything. Until two coders
+independently code 8–10 papers, there is no human–human ceiling and every agreement-style number
+here is uninterpretable. `res gold-template` already produces the blank workbooks.
+
+**Also still open** (found this session, not yet fixed): `res init-db` has no DDL for `cmocs`,
+`entity_instances` or `typed_relations`, so the repository cannot rebuild its own schema; `res
+run-all` crashes on its first line (Typer `OptionInfo` passed as a value); `res feedback` violates a
+NOT NULL constraint so the HITL→few-shot loop has never recorded a correction; `pyproject.toml`
+declares langchain/langgraph/graphrag (all unused) and omits openai, graspologic and python-docx;
+and the "GraphRAG" claim is not supported by the code — there is Leiden community detection and LLM
+community labelling, but no embeddings, no vector store and no retrieval.

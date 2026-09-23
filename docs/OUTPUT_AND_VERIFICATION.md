@@ -1,5 +1,32 @@
 # Output and Verification — the definitive answer
 
+> ## ⚠ SUPERSEDED IN PART — read this first (2026-09-23)
+>
+> The *structure* of this document still holds: what Richmond produced, what we produce, and the
+> shape of the comparison. **Its numbers do not.** A line-by-line audit on 2026-09-23 found that
+> the harness had been scoring against `gold/richmond_gold.json`, which was byte-identical to the
+> **uncorrected v1** benchmark, and that four metrics were computed in ways that inflated or
+> mislabelled them. Both are fixed; `RES_GOLD=v1` reproduces every number below exactly, and
+> nothing has been deleted.
+>
+> | Reported below | Corrected (run `verify-d72550c4`, gold v3) | Why it moved |
+> |---|---|---|
+> | Citation faithfulness **96.9% "exact"** | **92.8% verbatim** (95% CI 90.3–94.9); genuinely exact is 9.3% | Three tiers had been conflated under the word *exact* |
+> | Concept coverage **37/47** like-for-like | **38/46** (95% CI 68.6–92.2) | Richmond's own four-role scheme; E01 is not a context |
+> | Concept coverage **43/47** role-tolerant | **45/46** | The recovery pass is now voted, not one-shot |
+> | Relation anchored **22/40 (55%)** | **29/40 (72.5%)** (95% CI 56.1–85.4) | Endpoint roles compared under Richmond's scheme |
+> | Community alignment **7/14 (50%)** | **22/28 (78.6%)** (95% CI 59.0–91.7) | The 14 denominator was an artefact of the same typing defect |
+> | Theory correspondence **0.54** | **0.56 same-family / 0.87 independent** — judge-dependent, not a number | The old score was graded by the composer's own model family against contaminated gold chains |
+> | Screening **92.9% → 100%** | unchanged, but now from **one named run** | It had silently blended six screening runs |
+>
+> **For the current numbers with their confidence intervals, read `outputs/RESULTS.html`
+> (`res export-results`). For why these are the right metrics and what is still missing, read
+> [`VERIFICATION_PROTOCOL.md`](VERIFICATION_PROTOCOL.md) — that document now carries the
+> methodological argument this one only gestured at.**
+
+---
+
+
 > **The question this document exists to answer** (asked by Prof. Wei Zheng and the VinUni
 > reviewers, unresolved for eight months): *What exactly does our system produce, what does that
 > output look like, and HOW do we verify it — how do we lay it beside what Richmond's human team

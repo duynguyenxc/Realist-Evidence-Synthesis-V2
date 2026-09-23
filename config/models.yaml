@@ -36,9 +36,15 @@ tiers:
     notes: "Independent per-paper reference coding of the gold standard. DELIBERATELY a
       different model family from the extraction tier (gpt-5.5) to reduce shared-model bias
       when the reference is used to score the pipeline (methodological independence)."
-  embeddings:
-    model: text-embedding-3-small
-    notes: "GraphRAG vector store; sufficient at 28-100 paper scale."
+  independent_judge:
+    model: gpt-4.1-mini
+    temperature: 0.0
+    notes: "Verification judge from a DIFFERENT model family (4.1) than the tiers that
+      produce the work being judged (extraction and synthesis are both gpt-5.5). Used to
+      re-score programme-theory correspondence alongside the synthesis-tier judge so the
+      self-preference gap is measured and reported, not assumed away. Capability is
+      traded for independence deliberately: the question this tier answers is whether the
+      score survives a judge with no stake in the output."
 
 budget:
   pilot_paper_count: 3

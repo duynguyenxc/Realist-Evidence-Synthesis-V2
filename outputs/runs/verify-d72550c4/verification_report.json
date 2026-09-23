@@ -1,0 +1,762 @@
+{
+  "screening": {
+    "screening_run_id": "screen-4e53160c",
+    "n_gold_includes": 28,
+    "auto_include": 26,
+    "auto_sensitivity": 0.9285714285714286,
+    "false_excludes": [],
+    "uncertain_routed_to_hitl": [
+      "S018",
+      "S028"
+    ],
+    "no_decision": [],
+    "final_sensitivity_after_hitl": 1.0,
+    "auto_sensitivity_ci": {
+      "successes": 26,
+      "total": 28,
+      "proportion": 0.9286,
+      "ci_low": 0.765,
+      "ci_high": 0.9912,
+      "confidence": 0.95,
+      "method": "clopper-pearson",
+      "display": "92.9% (95% CI 76.5%\u201399.1%; 26/28)"
+    },
+    "final_sensitivity_ci": {
+      "successes": 28,
+      "total": 28,
+      "proportion": 1.0,
+      "ci_low": 0.8766,
+      "ci_high": 1.0,
+      "confidence": 0.95,
+      "method": "clopper-pearson",
+      "display": "100.0% (95% CI 87.7%\u2013100.0%; 28/28)"
+    },
+    "caveat": "Sensitivity only \u2014 every corpus study is a gold include, so this metric has no true negatives and cannot detect over-inclusion. Specificity is measured separately against the distractor pool (`res precision-test`)."
+  },
+  "entity_coverage": {
+    "gold_version": "v3",
+    "gold_entities": 46,
+    "matched": 45,
+    "recall": 0.9782608695652174,
+    "recall_ci": {
+      "successes": 45,
+      "total": 46,
+      "proportion": 0.9783,
+      "ci_low": 0.8847,
+      "ci_high": 0.9994,
+      "confidence": 0.95,
+      "method": "clopper-pearson",
+      "display": "97.8% (95% CI 88.5%\u201399.9%; 45/46)"
+    },
+    "recall_within_type_ci": {
+      "successes": 38,
+      "total": 46,
+      "proportion": 0.8261,
+      "ci_low": 0.6858,
+      "ci_high": 0.9218,
+      "confidence": 0.95,
+      "method": "clopper-pearson",
+      "display": "82.6% (95% CI 68.6%\u201392.2%; 38/46)"
+    },
+    "matched_within_type": 38,
+    "matched_cross_type": 7,
+    "samples": 3,
+    "per_sample_recalls": [
+      0.804,
+      0.826,
+      0.891
+    ],
+    "recall_min": 0.804,
+    "recall_max": 0.891,
+    "per_entity": {
+      "E02": {
+        "matched": true,
+        "concept": "cont:reasoning-and-knowledge-limitations",
+        "rationale": "This concept explicitly includes students challenged by applying knowledge clinically and novices not using nonanalytic reasoning, which aligns with low clinical domain-specific knowledge or inability to use knowledge in reasoning.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E03": {
+        "matched": true,
+        "concept": "cont:expertise-level",
+        "rationale": "The concept covers clinically different expertise levels and experienced diagnosticians with developed expertise, matching students with high clinical domain-specific knowledge.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E04": {
+        "matched": true,
+        "concept": "mech:confidence-and-enjoyment",
+        "rationale": "Matches the construct of appropriate self-confidence/self-efficacy: the evidence explicitly mentions 'increased confidence in diagnostic reasoning'.",
+        "cross_type": true,
+        "type_agrees": false
+      },
+      "E05": {
+        "matched": false,
+        "concept": "mech:student-frustration",
+        "rationale": "Best available cross-type match for negative coping/lacking confidence is the response of frustration under challenge; however this is only a partial fit and does not directly state low self-efficacy.",
+        "cross_type": false,
+        "type_agrees": false
+      },
+      "E06": {
+        "matched": true,
+        "concept": "cont:expertise-level",
+        "rationale": "This is the closest same-construct match for differing knowledge levels within a group; the extracted concept explicitly concerns clinically different expertise levels.",
+        "cross_type": true,
+        "type_agrees": true
+      },
+      "E07": {
+        "matched": true,
+        "concept": "mech:reasoning-automation",
+        "rationale": "The evidence explicitly says the teacher explains the reasoning, which reveals and discusses the expert's reasoning processes.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E08": {
+        "matched": true,
+        "concept": "inte:spontaneous-reasoning-instruction",
+        "rationale": "The evidence indicates participants were given no instructions on how best to approach diagnosis, implying they were not instructed to use analytical reasoning alone; this is the closest explicit reasoning-instruction concept among the extracted items.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E09": {
+        "matched": true,
+        "concept": "inte:worked-examples-with-errors-and-elaborated-feedback",
+        "rationale": "Worked examples with errors directly allow learners to encounter and correct mistakes, matching teaching resources that allow them to make mistakes.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E10": {
+        "matched": true,
+        "concept": "inte:diagnostic-simulation",
+        "rationale": "The evidence describes virtual patient cases giving virtual experience of real-time clinical situations, which corresponds to real-life scenarios including simulation and simulated patients.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E11": {
+        "matched": true,
+        "concept": "mech:written-clinical-cases",
+        "rationale": "Written clinical cases are real cases presented as case materials, matching the construct of real cases.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E12": {
+        "matched": true,
+        "concept": "mech:mnemonic-tool",
+        "rationale": "A mnemonic decision-making tool is a strategy intended to aid retention of knowledge.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E13": {
+        "matched": true,
+        "concept": "mech:feedback-examples",
+        "rationale": "The evidence explicitly mentions immediate educational feedback and correct/incorrect answer explanations, which fits accurate and timely feedback.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E14": {
+        "matched": true,
+        "concept": "mech:case-reading-and-self-explanation-prompt-without-feedback",
+        "rationale": "The evidence states learners received no feedback, matching absent feedback.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E15": {
+        "matched": true,
+        "concept": "mech:reasoning-automation",
+        "rationale": "The evidence says the teacher explains the reasoning, which is an explicit and clear explanation of expert reasoning.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E16": {
+        "matched": true,
+        "concept": "mech:natural-clinical-reasoning-examples",
+        "rationale": "This concept concerns observing expert reasoning examples; the evidence for peer/expert self-explanation audio models indicates passive observation/listening to expert reasoning without necessarily receiving explanation about the reasoning processes.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E17": {
+        "matched": true,
+        "concept": "inte:self-explanation-and-model-observation",
+        "rationale": "The evidence says participants listened to recordings of peer or expert self-explanations, which matches listening to near-peer think aloud their reasoning with prompts/examples.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E18": {
+        "matched": true,
+        "concept": "mech:analytic-nonanalytic-instruction",
+        "rationale": "The evidence explicitly instructs using a combined analytic/nonanalytic strategy, matching instruction to use both pattern recognition and analytical reasoning.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E19": {
+        "matched": true,
+        "concept": "mech:case-background",
+        "rationale": "The evidence refers to case text with clinical details and background information, which best fits multiple relevant resources available for reasoning.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E20": {
+        "matched": true,
+        "concept": "mech:conceptual-understanding",
+        "rationale": "The evidence for conceptual understanding refers to deep understanding of the material, which matches the gold construct 'understanding'.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E21": {
+        "matched": true,
+        "concept": "mech:insight-into-reasoning",
+        "rationale": "This concept explicitly states 'insight into cognitive features of reasoning,' aligning with insight into the reasoning process when diagnosing and managing patients.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E22": {
+        "matched": true,
+        "concept": "outc:perceived-usefulness-and-interest",
+        "rationale": "The evidence for this concept includes positive reception and perceived benefits ('students felt more comfortable', 'increased the use'), which reflects a positive learning experience.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E23": {
+        "matched": true,
+        "concept": "mech:student-frustration",
+        "rationale": "The extracted concept directly denotes frustration, and the evidence quote says students found the game frustrating.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E24": {
+        "matched": true,
+        "concept": "mech:reasoning-style-reliance",
+        "rationale": "The concept concerns greater reliance on analytic or non-analytic tendencies; the non-analytic tendency side matches relying on non-analytical reasoning.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E25": {
+        "matched": true,
+        "concept": "outc:diagnostic-accuracy-improvement",
+        "rationale": "This concept explicitly concerns improved diagnostic accuracy, matching high diagnostic accuracy.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E26": {
+        "matched": true,
+        "concept": "mech:confidence-and-enjoyment",
+        "rationale": "The evidence includes 'enjoyment and challenge', which captures being grateful/positive about the learning experience only weakly; however no better exact construct is present, so this is not a strong match.",
+        "cross_type": true,
+        "type_agrees": true
+      },
+      "E27": {
+        "matched": true,
+        "concept": "mech:knowledge-elaboration",
+        "rationale": "The evidence describes elaboration on case information helping activate relevant knowledge, which corresponds to building understanding.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E28": {
+        "matched": true,
+        "concept": "outc:diagnostic-learning-and-reasoning-development",
+        "rationale": "The evidence describes learning and construction of clinical reasoning, which is a positive impact on learning rather than just a broader outcome.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E29": {
+        "matched": true,
+        "concept": "outc:illness-script-development",
+        "rationale": "This concept directly denotes illness-script development, aligning with more complete illness scripts.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E30": {
+        "matched": true,
+        "concept": "outc:pattern-recognition-and-nonanalytic-reasoning",
+        "rationale": "The concept concerns faster nonanalytic responses and implicit learning, which corresponds to more accurate non-analytical reasoning.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E31": {
+        "matched": true,
+        "concept": "mech:time-pressure",
+        "rationale": "The construct is pressure that a decision could have a real impact; the extracted concept is pressure/time pressure during decision-making, which is the closest same underlying pressure construct.",
+        "cross_type": true,
+        "type_agrees": false
+      },
+      "E32": {
+        "matched": true,
+        "concept": "mech:reduced-referral-fear",
+        "rationale": "This is explicitly about fear being reduced; the underlying construct is fear.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E33": {
+        "matched": true,
+        "concept": "mech:competing-demands-stress",
+        "rationale": "The evidence explicitly describes something as stressful, matching stress.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E34": {
+        "matched": true,
+        "concept": "mech:time-pressure",
+        "rationale": "Directly matches pressure to perform via the evidence on time-pressure and competition.",
+        "cross_type": true,
+        "type_agrees": false
+      },
+      "E35": {
+        "matched": true,
+        "concept": "mech:cognitive-overload-and-confusion",
+        "rationale": "The evidence states cognitive load may overwhelm the learner, which matches increased cognitive load.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E36": {
+        "matched": true,
+        "concept": "outc:limited-diagnostic-knowledge",
+        "rationale": "The evidence indicates insufficient integration in illness scripts and limited recognition, consistent with poor illness script development.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E37": {
+        "matched": true,
+        "concept": "outc:pattern-recognition-and-nonanalytic-reasoning",
+        "rationale": "Faulty future non-analytical reasoning corresponds to future nonanalytic reasoning performance/response; this outcome captures nonanalytic reasoning in future cases, though not explicitly faulty.",
+        "cross_type": true,
+        "type_agrees": true
+      },
+      "E38": {
+        "matched": true,
+        "concept": "outc:reduced-learning-or-performance",
+        "rationale": "This concept captures detrimental learning/performance effects, matching negative learning outcomes.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E39": {
+        "matched": true,
+        "concept": "mech:knowledge-elaboration",
+        "rationale": "The concept involves elaboration on case information and search for meaning, which fits building upon what they already know.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E40": {
+        "matched": true,
+        "concept": "outc:learning-from-feedback-and-errors",
+        "rationale": "The evidence shows students corrected answers and profited from feedback/errors, indicating increased learning.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E41": {
+        "matched": true,
+        "concept": "outc:engagement-and-adoption",
+        "rationale": "This concept includes increased use, voluntary use, and positive reception, which expresses further engagement.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E42": {
+        "matched": true,
+        "concept": "mech:reasoning-reflection-and-improvement",
+        "rationale": "This concept directly refers to reflecting on and improving one\u2019s reasoning, aligning with developing understanding of successes/failures and generating improvement plans.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E43": {
+        "matched": true,
+        "concept": "mech:illness-script-enrichment",
+        "rationale": "The evidence says reflection enriched illness scripts already stored, which corresponds to completing/enriching illness scripts.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E44": {
+        "matched": true,
+        "concept": "outc:pattern-recognition-and-nonanalytic-reasoning",
+        "rationale": "Successful future non-analytical reasoning aligns with improved/faster nonanalytic reasoning and pattern recognition in the extracted outcome.",
+        "cross_type": true,
+        "type_agrees": true
+      },
+      "E45": {
+        "matched": true,
+        "concept": "mech:cognitive-overload-and-confusion",
+        "rationale": "The extracted concept explicitly includes confusion in the evidence quote, matching confusion.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E46": {
+        "matched": true,
+        "concept": "outc:diagnostic-accuracy-improvement",
+        "rationale": "This concept explicitly covers increased diagnostic accuracy and improved outcomes, matching the combined increase construct.",
+        "cross_type": false,
+        "type_agrees": true
+      },
+      "E47": {
+        "matched": true,
+        "concept": "outc:reduced-learning-or-performance",
+        "rationale": "This concept explicitly includes increased learning time and less effective learning, matching a decrease in learning gain or outcomes; it does not directly address diagnostic accuracy.",
+        "cross_type": false,
+        "type_agrees": true
+      }
+    }
+  },
+  "relation_coverage": {
+    "gold_version": "v3",
+    "gold_relations": 40,
+    "type_level_ceiling": {
+      "distinct_patterns_in_our_graph": 8,
+      "distinct_patterns_in_gold": 7,
+      "warning": "Type-level recall only asks whether each gold pattern occurs anywhere in the graph. With so few distinct patterns on either side, any non-trivial extraction scores near 100%. Never quote type_recall without anchored_recall and recall beside it."
+    },
+    "recovered": 0,
+    "recall": 0.0,
+    "recall_ci": {
+      "successes": 0,
+      "total": 40,
+      "proportion": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0881,
+      "confidence": 0.95,
+      "method": "clopper-pearson",
+      "display": "0.0% (95% CI 0.0%\u20138.8%; 0/40)"
+    },
+    "anchored_recovered": 29,
+    "anchored_recall": 0.725,
+    "anchored_recall_ci": {
+      "successes": 29,
+      "total": 40,
+      "proportion": 0.725,
+      "ci_low": 0.5611,
+      "ci_high": 0.854,
+      "confidence": 0.95,
+      "method": "clopper-pearson",
+      "display": "72.5% (95% CI 56.1%\u201385.4%; 29/40)"
+    },
+    "type_recovered": 39,
+    "type_recall": 0.975,
+    "type_recall_ci": {
+      "successes": 39,
+      "total": 40,
+      "proportion": 0.975,
+      "ci_low": 0.8684,
+      "ci_high": 0.9994,
+      "confidence": 0.95,
+      "method": "clopper-pearson",
+      "display": "97.5% (95% CI 86.8%\u201399.9%; 39/40)"
+    },
+    "drawn_only": {
+      "gold_relations": 36,
+      "anchored_recall": 0.8055555555555556,
+      "type_recall": 0.9722222222222222,
+      "excluded_derived": [
+        "R37",
+        "R38",
+        "R39",
+        "R40"
+      ]
+    },
+    "recovered_ids": [],
+    "anchored_ids": [
+      "R02",
+      "R03",
+      "R04",
+      "R05",
+      "R06",
+      "R07",
+      "R08",
+      "R09",
+      "R10",
+      "R11",
+      "R12",
+      "R13",
+      "R14",
+      "R15",
+      "R16",
+      "R17",
+      "R18",
+      "R19",
+      "R24",
+      "R25",
+      "R26",
+      "R27",
+      "R29",
+      "R30",
+      "R31",
+      "R32",
+      "R34",
+      "R35",
+      "R36"
+    ],
+    "strict_missed_ids": [
+      "R01",
+      "R02",
+      "R03",
+      "R04",
+      "R05",
+      "R06",
+      "R07",
+      "R08",
+      "R09",
+      "R10",
+      "R11",
+      "R12",
+      "R13",
+      "R14",
+      "R15",
+      "R16",
+      "R17",
+      "R18",
+      "R19",
+      "R20",
+      "R21",
+      "R22",
+      "R23",
+      "R24",
+      "R25",
+      "R26",
+      "R27",
+      "R28",
+      "R29",
+      "R30",
+      "R31",
+      "R32",
+      "R33",
+      "R34",
+      "R35",
+      "R36",
+      "R37",
+      "R38",
+      "R39",
+      "R40"
+    ]
+  },
+  "citation_faithfulness": {
+    "entities": 517,
+    "quotes_resolved": 499,
+    "faithfulness": 0.965183752417795,
+    "tiers": {
+      "exact": 48,
+      "normalized": 432,
+      "fuzzy": 19,
+      "unresolved": 18
+    },
+    "strict": 0.09284332688588008,
+    "resolved_ci": {
+      "successes": 499,
+      "total": 517,
+      "proportion": 0.9652,
+      "ci_low": 0.9455,
+      "ci_high": 0.9792,
+      "confidence": 0.95,
+      "method": "clopper-pearson",
+      "display": "96.5% (95% CI 94.6%\u201397.9%; 499/517)"
+    },
+    "strict_ci": {
+      "successes": 48,
+      "total": 517,
+      "proportion": 0.0928,
+      "ci_low": 0.0692,
+      "ci_high": 0.1212,
+      "confidence": 0.95,
+      "method": "clopper-pearson",
+      "display": "9.3% (95% CI 6.9%\u201312.1%; 48/517)"
+    },
+    "strict_plus_normalized_ci": {
+      "successes": 480,
+      "total": 517,
+      "proportion": 0.9284,
+      "ci_low": 0.9027,
+      "ci_high": 0.9491,
+      "confidence": 0.95,
+      "method": "clopper-pearson",
+      "display": "92.8% (95% CI 90.3%\u201394.9%; 480/517)"
+    },
+    "strict_plus_normalized": 0.9284332688588007,
+    "note": "Quote the `strict` (exact-span) figure as the headline; `faithfulness` counts normalized and fuzzy matches too and must never be described as exact."
+  },
+  "theory_correspondence": {
+    "per_chain": {
+      "PTS1": {
+        "correspondence": 1.0,
+        "rationale": "PTS1 concerns students with low or poorly organised clinical knowledge, matching the SYSTEM context of novices with limited or poorly organised diagnostic knowledge. The SYSTEM programme theory describes mechanisms involving contrastive scaffolding, explicit combined analytic/non-analytic instructions, and elaborated feedback leading to structured knowledge building and improved diagnostic accuracy, which aligns well with PTS1's expected interventions (e.g., explicit explanations, feedback, combined reasoning instructions) and mechanism responses (structured reasoning uptake, guided self-explanation). The outcomes (increased learning gain or diagnostic accuracy) correspond directly. The C->M->O logic is structurally and conceptually consistent."
+      },
+      "PTS2": {
+        "correspondence": 0.9,
+        "rationale": "PTS2 addresses students with high clinical domain-specific knowledge, corresponding to SYSTEM contexts of partially prepared learners with incomplete but integrated knowledge or unfamiliar clinical problems with room for elaboration. The SYSTEM theory emphasizes mechanisms like self-explanation, model comparison, and feedback leading to knowledge integration and improved diagnostic performance, which aligns with PTS2's interventions (expert reasoning revealed, analytical reasoning instruction) and mechanism responses (understanding, positive learning experience). Outcomes of improved diagnostic accuracy and insight match. Slight deduction because SYSTEM theory distinguishes nuances of knowledge level and elaboration room, which PTS2 aggregates, but overall the logic matches well."
+      },
+      "PTS3": {
+        "correspondence": 0.817,
+        "rationale": "PTS3 focuses on positive coping strategies and self-confidence, with interventions involving teaching resources allowing mistakes and real cases, mechanisms involving gratitude, understanding, and pressure, and outcomes of positive learning and reasoning improvements. SYSTEM theory includes pressure-driven case patterning and guided self-explanation as mechanisms that improve engagement and reasoning, which conceptually aligns. However, SYSTEM theory primarily frames mechanisms in terms of knowledge and reasoning scaffolding rather than emotional coping or confidence per se, so the correspondence is good but not perfect in mechanism conceptualization."
+      },
+      "PTS4": {
+        "correspondence": 0.733,
+        "rationale": "PTS4 involves negative coping strategies or lacking self-confidence, with mechanisms of fear, stress, increased cognitive load, and negative learning outcomes. SYSTEM theory acknowledges negative pathways when learners experience confusion, overload, or unproductive pressure, leading to poor learning outcomes. While SYSTEM theory does not explicitly frame mechanisms as emotional states like fear or stress, it does recognize cognitive overload and confusion as negative mechanisms. The outcome family matches negative learning outcomes. The correspondence is moderate due to less explicit emotional mechanism representation."
+      },
+      "PTS5": {
+        "correspondence": 0.9,
+        "rationale": "PTS5 concerns students with different knowledge levels within a group, with interventions promoting knowledge retention and feedback, mechanisms involving building on prior knowledge, developing understanding, and confusion, and outcomes including increased learning or negative outcomes. SYSTEM theory addresses contexts of mixed prior knowledge and emphasizes the importance of scaffolds that reduce confusion and promote structured reasoning uptake. The C->M->O logic aligns well, with mechanisms of knowledge building and confusion matching SYSTEM's positive and negative pathways. Slight deduction due to SYSTEM theory not explicitly focusing on group heterogeneity but the logic is consistent."
+      }
+    },
+    "gold_chains": 5,
+    "mean_correspondence": 0.87,
+    "samples": 3,
+    "mean_min": 0.86,
+    "mean_max": 0.89,
+    "judge_tier": "independent_judge",
+    "same_family_judge": {
+      "per_chain": {
+        "PTS1": {
+          "correspondence": 0.86,
+          "rationale": "Strong correspondence. The SYSTEM theory explicitly covers low-expertise/poorly organised diagnostic knowledge and distinguishes productive scaffolding, feedback, explicit expert reasoning, combined analytic/non-analytic instruction, worked examples, and prompts from under-explained or unguided exposure. The mechanism direction matches: structured understanding/self-explanation/feature comparison versus confusion/unguided reasoning. Outcomes align with improved or worsened diagnostic accuracy, learning, and reasoning development. It is broader and reframes some GOLD mechanisms, and does not reproduce every specified resource such as near-peer think-aloud in the central chain, so not a full 1.0."
+        },
+        "PTS2": {
+          "correspondence": 0.28,
+          "rationale": "Limited correspondence. SYSTEM includes visible expert reasoning leading to understanding and reasoning development, which partly matches the expert-reasoning branch. However, the GOLD context is specifically students with high clinical domain-specific knowledge, whereas SYSTEM mainly addresses novices, partially prepared learners, unfamiliar domains, and opaque expert reasoning generally. The second GOLD branch\u2014analytical reasoning alone causing frustration/reliance on non-analytical reasoning yet high diagnostic accuracy\u2014is not clearly represented. Outcome overlap exists, but the context and distinctive mechanism logic are mostly absent."
+        },
+        "PTS3": {
+          "correspondence": 0.423,
+          "rationale": "Partial correspondence. SYSTEM has positive pathways for simulation/realistic or pressured-but-contained learning, including engagement, perceived value, illness-script development, structured reasoning uptake, and improved reasoning, which overlaps with GOLD outcomes and some resource elements. However, the GOLD context is specifically positive coping strategies or appropriate self-confidence/self-efficacy, and SYSTEM does not make that affective/self-efficacy context central. Mechanisms such as gratitude and pressure from real consequences are only loosely approximated by enjoyment/challenge, engagement, and structured uptake. Thus the C-M-O structure is related but not the same."
+        },
+        "PTS4": {
+          "correspondence": 0.643,
+          "rationale": "Moderate correspondence. SYSTEM explicitly describes negative effects of pressure, acute simulation, unfamiliar tools, limited experience, stress, overload, frustration, and incomplete assessment when task demands exceed coping capacity. This maps well to the GOLD mechanism direction from real-life scenarios to fear/stress/pressure, increased cognitive load, and negative learning outcomes. However, SYSTEM frames the context mainly as insufficient prior experience or lack of familiar structure rather than negative coping strategies or low self-confidence/self-efficacy specifically, and it does not clearly specify poor illness-script development or faulty future non-analytical reasoning as the direct outcome chain. Hence substantial but incomplete alignment."
+        },
+        "PTS5": {
+          "correspondence": 0.6,
+          "rationale": "Moderate-to-limited correspondence. SYSTEM includes strategies for retention, varied case exposure, feedback/corrective guidance, building on prior knowledge, error debugging, knowledge integration, engagement, and the negative pathway where thin or erroneous feedback leads to confusion or unrecognised errors. These overlap with GOLD mechanisms and outcomes for retention, feedback, understanding successes/failures, illness-script development, and negative outcomes from absent/error feedback. The key GOLD context\u2014students with different levels of knowledge within a group\u2014is not explicitly theorised in SYSTEM, and the group heterogeneity logic is replaced by broader partial-preparedness/knowledge-threshold logic. Therefore the intervention-mechanism-outcome overlap is meaningful but context correspondence is incomplete."
+        }
+      },
+      "gold_chains": 5,
+      "mean_correspondence": 0.561,
+      "samples": 3,
+      "mean_min": 0.56,
+      "mean_max": 0.564
+    },
+    "self_preference_gap": -0.309,
+    "judge": "Scored by a judge from a different model family than the composer; the same-family score is reported alongside so the self-preference gap is visible. Human expert rating still required before publication."
+  },
+  "community_alignment": {
+    "algorithm": "leiden(graspologic)",
+    "n_communities": 8,
+    "gold_mechanisms": 28,
+    "aligned": 22,
+    "alignment_recall": 0.7857142857142857,
+    "alignment_recall_ci": {
+      "successes": 22,
+      "total": 28,
+      "proportion": 0.7857,
+      "ci_low": 0.5905,
+      "ci_high": 0.917,
+      "confidence": 0.95,
+      "method": "clopper-pearson",
+      "display": "78.6% (95% CI 59.0%\u201391.7%; 22/28)"
+    },
+    "samples": 3,
+    "matches": [
+      {
+        "e_code": "E07",
+        "community": "COMM2",
+        "rationale": "COMM2 explicitly includes modelling/explanation of expert reasoning and prompting hypothesis generation, which corresponds to having an expert's reasoning processes revealed and discussed."
+      },
+      {
+        "e_code": "E09",
+        "community": "COMM7",
+        "rationale": "COMM7 includes worked examples with errors and feedback, aligning with teaching resources that let learners make mistakes and learn from them."
+      },
+      {
+        "e_code": "E10",
+        "community": "COMM4",
+        "rationale": "COMM4 centers on simulated ward/multi-tasking and varied clinical cases under pressure, matching real-life scenarios and simulation-based learning."
+      },
+      {
+        "e_code": "E11",
+        "community": "COMM2",
+        "rationale": "COMM2 is case-based and explicitly organized around clinical cases, matching real cases used for reasoning practice."
+      },
+      {
+        "e_code": "E12",
+        "community": "COMM3",
+        "rationale": "COMM3 emphasizes structured examples, prompts, reflection, and practice that build coherent diagnostic knowledge and illness scripts, which supports retention."
+      },
+      {
+        "e_code": "E13",
+        "community": "COMM7",
+        "rationale": "COMM7 explicitly includes official diagnosis feedback after each case and KCR feedback, corresponding to accurate and timely feedback."
+      },
+      {
+        "e_code": "E15",
+        "community": "COMM2",
+        "rationale": "COMM2 directly contains explicit modelling/explanation of expert reasoning, matching clear explanation of expert reasoning."
+      },
+      {
+        "e_code": "E16",
+        "community": "COMM5",
+        "rationale": "COMM5 reflects unguided reasoning and simple diagnosis without explicit learning processes, consistent with passive observation without explanation of reasoning."
+      },
+      {
+        "e_code": "E19",
+        "community": "COMM0",
+        "rationale": "COMM0 includes virtual experience of real-time reasoning techniques and reflection across supports, the closest match to using multiple relevant resources."
+      },
+      {
+        "e_code": "E20",
+        "community": "COMM3",
+        "rationale": "COMM3 is about organizing diagnostic knowledge into coherent structures, which corresponds to understanding."
+      },
+      {
+        "e_code": "E21",
+        "community": "COMM2",
+        "rationale": "COMM2 includes explicit modelling/explanation of expert reasoning and case-based hypothesis checking, giving insight into diagnosis and management reasoning processes."
+      },
+      {
+        "e_code": "E24",
+        "community": "COMM4",
+        "rationale": "COMM4 emphasizes faster, more secure case representations and implicit recognition, aligning with reliance on non-analytical reasoning."
+      },
+      {
+        "e_code": "E27",
+        "community": "COMM3",
+        "rationale": "COMM3 focuses on structured examples, prompts, reflection, and practice that organize diagnostic knowledge, matching building understanding."
+      },
+      {
+        "e_code": "E31",
+        "community": "COMM4",
+        "rationale": "COMM4 includes simulated multi-tasking ward experience and pressure/competing demands, which best corresponds to pressure that decisions could have a real impact."
+      },
+      {
+        "e_code": "E33",
+        "community": "COMM4",
+        "rationale": "COMM4 is the only community centered on pressure and competing demands, making it the closest match to stress."
+      },
+      {
+        "e_code": "E34",
+        "community": "COMM4",
+        "rationale": "COMM4 directly involves pressure and transition to junior doctor performance demands, matching pressure to perform."
+      },
+      {
+        "e_code": "E35",
+        "community": "COMM4",
+        "rationale": "COMM4 emphasizes simulated multi-tasking and competing demands, which increase cognitive load."
+      },
+      {
+        "e_code": "E39",
+        "community": "COMM3",
+        "rationale": "COMM3 builds diagnostic knowledge by linking structured examples to existing knowledge and illness scripts, matching building upon what learners already know."
+      },
+      {
+        "e_code": "E42",
+        "community": "COMM0",
+        "rationale": "COMM0 explicitly includes reflection on and improvement of reasoning after errors and failed retrieval, matching developing understanding of successes/failures and plans for improvement."
+      },
+      {
+        "e_code": "E43",
+        "community": "COMM3",
+        "rationale": "COMM3 is centered on illness-script enrichment and coherent diagnostic structures, matching complete illness scripts."
+      },
+      {
+        "e_code": "E14",
+        "community": "COMM0",
+        "rationale": "COMM0 includes error identification and correct-solution comparison, which reflects situations where feedback is absent, incomplete, or error-containing and learners evaluate usefulness of supports."
+      },
+      {
+        "e_code": "E17",
+        "community": "COMM6",
+        "rationale": "COMM6 centers on guided self-explanation and reasoning steps during case work, which best matches near-peer think-aloud reasoning with prompts and examples."
+      }
+    ],
+    "judge": "model-based majority-vote (human expert mapping required before publication)"
+  }
+}

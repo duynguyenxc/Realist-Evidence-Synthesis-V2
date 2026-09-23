@@ -46,7 +46,14 @@ def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     with get_connection() as conn:
         for name, sql in QUERIES.items():
-            df = pd.read_sql(sql, conn)
+            # NOTE: do not use pandas.read_sql here. get_connection() sets psycopg's
+            # row_factory=dict_row, and pandas' DBAPI path turns each dict row into its
+            # keys — which silently wrote a CSV whose every row repeated the header.
+            with conn.cursor() as cur:
+                cur.execute(sql)
+                rows = cur.fetchall()          # list[dict], column order preserved
+                columns = [d.name for d in cur.description or []]
+            df = pd.DataFrame(rows, columns=columns)
             # utf-8-sig so Excel opens the quotes/accents correctly
             df.to_csv(OUT / f"{name}.csv", index=False, encoding="utf-8-sig")
             print(f"  {name}.csv — {len(df)} rows")

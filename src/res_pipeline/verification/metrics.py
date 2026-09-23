@@ -12,14 +12,23 @@ Stages measured (plan_verification_text.txt steps; ARCHITECTURE D6):
      relation counts as recovered when a typed relation with the same predicate
      links entities matched to its subject/object E-codes.
   4. Citation faithfulness — share of extracted entities whose verbatim quote
-     resolved to an exact span in the canonical text (automated, exact).
-  5. Programme-theory correspondence — per-PTS-chain rubric score by LLM judge
-     (flagged clearly as model-judged; human rating required before publication).
+     resolved to a span in the canonical text, reported in three separate tiers
+     (exact / normalized / fuzzy) because they are not the same evidence.
+  5. Programme-theory correspondence — per-PTS-chain rubric score, judged both by
+     the composer's own model family and by an independent family, so the
+     self-preference gap is reported rather than assumed away. Human rating is
+     still required before publication.
+
+Every metric here declares whether it is deterministic or model-judged, and each
+model-judged metric is K-sampled and majority-voted with its range reported. A
+metric that cannot fail is worse than no metric, so where a score is saturable
+(relation type-level recall) the ceiling is reported next to the score.
 """
 
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from pydantic import BaseModel, Field
@@ -27,6 +36,7 @@ from pydantic import BaseModel, Field
 from res_pipeline.core.config import GOLD_DIR
 from res_pipeline.core.db import get_connection
 from res_pipeline.core.llm import call_structured
+from res_pipeline.verification.stats import clopper_pearson
 
 
 class EntityMatch(BaseModel):
@@ -51,8 +61,61 @@ class ChainScoreBatch(BaseModel):
     scores: list[ChainScore]
 
 
+# Which benchmark file to score against. v3 is the corrected standard (see
+# scripts/build_richmond_gold_v3.py for the four defects it fixes); set RES_GOLD=v1 to
+# reproduce any number published before 2026-09-23 exactly.
+_GOLD_FILES = {
+    "v1": "richmond_gold_v1.json",
+    "v2": "richmond_gold_v2.json",
+    "v3": "richmond_gold_v3.json",
+}
+
+# Richmond's CMOC scheme has four roles. Our ontology splits their single mechanism-
+# resource column into Intervention and Mechanism_Resource, so an extracted concept is
+# compared to a gold entity under Richmond's scheme, not ours — otherwise the system is
+# marked wrong for a distinction Richmond never drew.
+_OUR_TYPE_TO_RICHMOND_ROLE = {
+    "Context": "Context",
+    "Intervention": "Mechanism_Resource",
+    "Mechanism_Resource": "Mechanism_Resource",
+    "Mechanism_Response": "Mechanism_Response",
+    "Outcome": "Outcome",
+}
+_RICHMOND_ROLES = ("Context", "Mechanism_Resource", "Mechanism_Response", "Outcome")
+
+
+def gold_version() -> str:
+    return os.environ.get("RES_GOLD", "v3").lower()
+
+
 def _load_gold() -> dict:
-    return json.loads((GOLD_DIR / "richmond_gold.json").read_text(encoding="utf-8"))
+    """The benchmark, restricted to the scored core so denominators stay comparable.
+
+    v1 predates the ``scored`` flag and the ``richmond_role`` field; both are filled in
+    here so the rest of the module has one shape to work with whichever file is loaded.
+    """
+    version = gold_version()
+    filename = _GOLD_FILES.get(version)
+    if filename is None:
+        raise ValueError(f"RES_GOLD={version!r} — expected one of {sorted(_GOLD_FILES)}")
+    gold = json.loads((GOLD_DIR / filename).read_text(encoding="utf-8"))
+
+    entities = {}
+    for code, spec in gold["entities"].items():
+        if not spec.get("scored", True):
+            continue
+        spec = dict(spec)
+        spec.setdefault("richmond_role",
+                        _OUR_TYPE_TO_RICHMOND_ROLE[spec["category"]])
+        entities[code] = spec
+    gold["entities"] = entities
+    gold["relationships"] = [
+        rel for rel in gold["relationships"]
+        if rel.get("scored", True)
+        and rel["subject_code"] in entities and rel["object_code"] in entities
+    ]
+    gold["gold_version"] = version
+    return gold
 
 
 # LLM-judged metrics are non-deterministic run-to-run (entity coverage varied 72/66/62%
@@ -62,30 +125,68 @@ def _load_gold() -> dict:
 _JUDGE_SAMPLES = 3
 
 
-def screening_metrics() -> dict:
-    """All 28 corpus studies are gold-includes; measure the screening stage."""
+def screening_metrics(run_id: str | None = None) -> dict:
+    """Sensitivity against Richmond's 28 included studies.
+
+    Two things this function used to get wrong, both of which a reviewer would catch:
+
+    * **The denominator came from our own output.** `n` was the number of studies that
+      happened to have a screening decision, so a run that died after 20 studies still
+      reported a fraction of 20. The denominator is now the registry of gold-include
+      studies, and any study with no decision is reported as `no_decision` rather than
+      quietly leaving the denominator.
+    * **It blended every screening run ever stored.** `DISTINCT ON ... ORDER BY
+      created_at DESC` drew the newest decision per study across six different runs, so
+      the published number belonged to no single execution. Decisions are now taken from
+      one run — the newest complete one by default, or `run_id` if given — and the run is
+      named in the result so the number is reproducible.
+
+    Sensitivity alone cannot fail here: every corpus study is a gold include, so there
+    are no true negatives to get wrong. `specificity_measured_separately` points at the
+    distractor-pool test, which is the only place precision is actually measured.
+    """
     with get_connection() as conn:
-        combined = conn.execute(
-            "SELECT DISTINCT ON (study_id) study_id, decision FROM screening_decisions "
-            "WHERE decider LIKE 'combined:%' ORDER BY study_id, created_at DESC"
-        ).fetchall()
-        human = {r["study_id"]: r["decision"] for r in conn.execute(
-            "SELECT study_id, decision FROM screening_decisions WHERE decider LIKE 'human:%'"
+        gold_ids = {r["study_id"] for r in
+                    conn.execute("SELECT study_id FROM studies").fetchall()}
+        if run_id is None:
+            chosen = conn.execute(
+                """
+                SELECT run_id FROM screening_decisions WHERE decider LIKE 'combined:%%'
+                GROUP BY run_id HAVING count(DISTINCT study_id) = %s
+                ORDER BY max(created_at) DESC LIMIT 1
+                """,
+                (len(gold_ids),),
+            ).fetchone()
+            run_id = chosen["run_id"] if chosen else None
+        decisions = {r["study_id"]: r["decision"] for r in conn.execute(
+            "SELECT study_id, decision FROM screening_decisions "
+            "WHERE decider LIKE 'combined:%%' AND run_id = %s", (run_id,)
         ).fetchall()}
-    auto_include = sum(1 for r in combined if r["decision"] == "include")
-    uncertain = [r["study_id"] for r in combined if r["decision"] == "uncertain"]
-    false_exclude = [r["study_id"] for r in combined if r["decision"] == "exclude"]
-    final_include = auto_include + sum(
-        1 for s in uncertain if human.get(s) == "include"
-    )
-    n = len(combined)
+        human = {r["study_id"]: r["decision"] for r in conn.execute(
+            "SELECT DISTINCT ON (study_id) study_id, decision FROM screening_decisions "
+            "WHERE decider LIKE 'human:%' ORDER BY study_id, created_at DESC"
+        ).fetchall()}
+
+    n = len(gold_ids)
+    auto_include = [s for s in gold_ids if decisions.get(s) == "include"]
+    uncertain = sorted(s for s in gold_ids if decisions.get(s) == "uncertain")
+    false_exclude = sorted(s for s in gold_ids if decisions.get(s) == "exclude")
+    no_decision = sorted(s for s in gold_ids if s not in decisions)
+    final = len(auto_include) + sum(1 for s in uncertain if human.get(s) == "include")
     return {
+        "screening_run_id": run_id,
         "n_gold_includes": n,
-        "auto_include": auto_include,
-        "auto_sensitivity": auto_include / n if n else 0,
+        "auto_include": len(auto_include),
+        "auto_sensitivity": len(auto_include) / n if n else 0,
         "false_excludes": false_exclude,
         "uncertain_routed_to_hitl": uncertain,
-        "final_sensitivity_after_hitl": final_include / n if n else 0,
+        "no_decision": no_decision,
+        "final_sensitivity_after_hitl": final / n if n else 0,
+        "auto_sensitivity_ci": clopper_pearson(len(auto_include), n),
+        "final_sensitivity_ci": clopper_pearson(final, n),
+        "caveat": "Sensitivity only — every corpus study is a gold include, so this metric "
+                  "has no true negatives and cannot detect over-inclusion. Specificity is "
+                  "measured separately against the distractor pool (`res precision-test`).",
     }
 
 
@@ -107,25 +208,27 @@ def entity_coverage(run_id: str) -> dict:
             """
         ).fetchall()
 
-    by_type: dict[str, list[str]] = {}
-    concept_type: dict[str, str] = {}
+    # Candidates are bucketed by RICHMOND's role, not ours: our Intervention and
+    # Mechanism_Resource concepts both compete for Richmond's Mresource entities.
+    by_role: dict[str, list[str]] = {}
+    concept_role: dict[str, str] = {}
     all_candidate_lines: list[str] = []
     for c in concepts:
         quote = (c["quote"] or "")[:120]
         line = f"{c['canonical_id']} :: {'; '.join(c['labels'][:3])} :: evidence: \"{quote}\""
-        by_type.setdefault(c["entity_type"], []).append(line)
-        concept_type[c["canonical_id"]] = c["entity_type"]
+        role = _OUR_TYPE_TO_RICHMOND_ROLE[c["entity_type"]]
+        by_role.setdefault(role, []).append(f"[{c['entity_type']}] {line}")
+        concept_role[c["canonical_id"]] = role
         all_candidate_lines.append(f"[{c['entity_type']}] {line}")
 
     def _one_pass() -> list[EntityMatch]:
         matches: list[EntityMatch] = []
-        for category in ("Context", "Intervention", "Mechanism_Resource",
-                         "Mechanism_Response", "Outcome"):
+        for category in _RICHMOND_ROLES:
             gold_entities = {code: spec for code, spec in gold["entities"].items()
-                             if spec["category"] == category}
+                             if spec["richmond_role"] == category}
             if not gold_entities:
                 continue
-            candidates = by_type.get(category, [])
+            candidates = by_role.get(category, [])
             batch = call_structured(
                 tier="extraction_verifier",
                 system_prompt=(
@@ -151,22 +254,27 @@ def entity_coverage(run_id: str) -> dict:
         return matches
 
     all_codes = list(gold["entities"].keys())
+    valid_concepts = set(concept_role)
     votes: dict[str, int] = {c: 0 for c in all_codes}
     concept_of: dict[str, str] = {}
     rationale_of: dict[str, str] = {}
     per_sample_recalls: list[float] = []
     total = len(all_codes)
     for _ in range(_JUDGE_SAMPLES):
-        passed = _one_pass()
-        hit = 0
-        for m in passed:
-            if m.matched:
-                votes[m.e_code] = votes.get(m.e_code, 0) + 1
-                if m.matched_concept:
-                    concept_of[m.e_code] = m.matched_concept
-                rationale_of[m.e_code] = m.rationale
-                hit += 1
-        per_sample_recalls.append(hit / total if total else 0)
+        # Deduplicate within the sample: a judge that emits the same code twice in one
+        # pass must not thereby clear a 3-sample majority on its own. Codes outside the
+        # gold (hallucinated by the judge) are discarded rather than counted, which is
+        # what previously allowed recall to exceed 1.0.
+        hits_this_sample: set[str] = set()
+        for m in _one_pass():
+            if not m.matched or m.e_code not in votes or m.e_code in hits_this_sample:
+                continue
+            hits_this_sample.add(m.e_code)
+            votes[m.e_code] += 1
+            if m.matched_concept in valid_concepts:
+                concept_of[m.e_code] = m.matched_concept
+            rationale_of[m.e_code] = m.rationale
+        per_sample_recalls.append(len(hits_this_sample) / total if total else 0)
 
     threshold = (_JUDGE_SAMPLES // 2) + 1  # majority
     matched_codes = {c for c, v in votes.items() if v >= threshold}
@@ -179,8 +287,13 @@ def entity_coverage(run_id: str) -> dict:
     # still-unmatched gold codes only, we match against candidates of ALL types, keep
     # the strict same-construct bar, and record the role disagreement rather than hide
     # it. This corrects a matcher artefact; it does not loosen what counts as recovered.
+    # The recovery pass is sampled and majority-voted exactly like the main pass. It
+    # previously ran once and accepted any hit, so a rigorous 3-of-3 bar was applied to
+    # within-role matches and a one-shot bar to the fallback — which is how the headline
+    # recall came to sit ABOVE the highest of its own three samples.
     unmatched = [c for c in all_codes if c not in matched_codes]
-    if unmatched and all_candidate_lines:
+    recovery_votes: dict[str, int] = {}
+    for _ in range(_JUDGE_SAMPLES if unmatched and all_candidate_lines else 0):
         recovery = call_structured(
             tier="extraction_verifier",
             system_prompt=(
@@ -195,28 +308,40 @@ def entity_coverage(run_id: str) -> dict:
             ),
             user_prompt=(
                 "GOLD ENTITIES (still unmatched):\n"
-                + "\n".join(f"{c} [{gold['entities'][c]['category']}]: "
+                + "\n".join(f"{c} [{gold['entities'][c]['richmond_role']}]: "
                             f"{gold['entities'][c]['label']}" for c in unmatched)
                 + "\n\nEXTRACTED CONCEPTS (any type):\n" + "\n".join(all_candidate_lines)
             ),
             schema=EntityMatchBatch, run_id=run_id,
         )
+        seen: set[str] = set()
         for m in recovery.matches:
-            if m.matched and m.e_code in unmatched:
-                matched_codes.add(m.e_code)
-                crosswalk_codes.add(m.e_code)
-                if m.matched_concept:
-                    concept_of[m.e_code] = m.matched_concept
-                rationale_of[m.e_code] = m.rationale
+            if not m.matched or m.e_code not in unmatched or m.e_code in seen:
+                continue
+            seen.add(m.e_code)
+            recovery_votes[m.e_code] = recovery_votes.get(m.e_code, 0) + 1
+            if m.matched_concept in valid_concepts:
+                concept_of[m.e_code] = m.matched_concept
+            rationale_of[m.e_code] = m.rationale
+
+    for code, count in recovery_votes.items():
+        if count >= threshold:
+            matched_codes.add(code)
+            crosswalk_codes.add(code)
 
     def _type_agree(code: str) -> bool:
+        """Does the match sit in the same realist role Richmond gave it?"""
         cid = concept_of.get(code, "")
-        return bool(cid) and concept_type.get(cid) == gold["entities"][code]["category"]
+        return bool(cid) and concept_role.get(cid) == gold["entities"][code]["richmond_role"]
 
     return {
+        "gold_version": gold["gold_version"],
         "gold_entities": total,
         "matched": len(matched_codes),
         "recall": len(matched_codes) / total if total else 0,
+        "recall_ci": clopper_pearson(len(matched_codes), total),
+        "recall_within_type_ci": clopper_pearson(
+            len(matched_codes) - len(crosswalk_codes), total),
         "matched_within_type": len(matched_codes) - len(crosswalk_codes),
         "matched_cross_type": len(crosswalk_codes),
         "samples": _JUDGE_SAMPLES,
@@ -243,7 +368,8 @@ def relation_coverage(entity_matches: dict) -> dict:
       methodologically appropriate question for a realist synthesis.
     """
     gold = _load_gold()
-    categories = {code: spec["category"] for code, spec in gold["entities"].items()}
+    # Endpoint types are compared under Richmond's four-role scheme (see _load_gold).
+    categories = {code: spec["richmond_role"] for code, spec in gold["entities"].items()}
     code_to_concept = {
         code: info["concept"] for code, info in entity_matches["per_entity"].items()
         if info["matched"] and info["concept"]
@@ -259,13 +385,17 @@ def relation_coverage(entity_matches: dict) -> dict:
             WHERE tr.constraint_valid
             """
         ).fetchall()
+    def _role(row_type: str) -> str:
+        return _OUR_TYPE_TO_RICHMOND_ROLE[row_type]
+
     strict_set = {(r["predicate"], r["subj"], r["obj"]) for r in rows}
-    type_set = {(r["predicate"], r["subj_type"], r["obj_type"]) for r in rows}
-    # for the middle tier: predicate + one exact concept endpoint + other endpoint's type
-    subj_anchored = {(r["predicate"], r["subj"], r["obj_type"]) for r in rows}
-    obj_anchored = {(r["predicate"], r["subj_type"], r["obj"]) for r in rows}
+    type_set = {(r["predicate"], _role(r["subj_type"]), _role(r["obj_type"])) for r in rows}
+    # for the middle tier: predicate + one exact concept endpoint + other endpoint's role
+    subj_anchored = {(r["predicate"], r["subj"], _role(r["obj_type"])) for r in rows}
+    obj_anchored = {(r["predicate"], _role(r["subj_type"]), r["obj"]) for r in rows}
 
     strict_recovered, partial_recovered, type_recovered, missed_strict = [], [], [], []
+    derived_ids = {rel["id"] for rel in gold["relationships"] if rel.get("derived")}
     for rel in gold["relationships"]:
         subj_concept = code_to_concept.get(rel["subject_code"])
         obj_concept = code_to_concept.get(rel["object_code"])
@@ -285,32 +415,124 @@ def relation_coverage(entity_matches: dict) -> dict:
         if (rel["predicate"], subj_cat, obj_cat) in type_set:
             type_recovered.append(rel["id"])
     total = len(gold["relationships"])
+    # Figure-fidelity view: the same three tiers over only the arrows Richmond actually
+    # draws, excluding the four transitive shortcuts flagged `derived` in the gold.
+    drawn = [rel["id"] for rel in gold["relationships"] if rel["id"] not in derived_ids]
+    n_drawn = len(drawn)
+    # The type-level tier is saturable: it asks only whether a pattern such as
+    # "Context CONSTRAINS Outcome" occurs anywhere in the graph. Reporting how few
+    # distinct patterns exist on each side makes the ceiling visible, so the score is
+    # never read as if it were concept-level recovery.
+    gold_patterns = {(rel["predicate"], categories[rel["subject_code"]],
+                      categories[rel["object_code"]]) for rel in gold["relationships"]}
     return {
+        "gold_version": gold["gold_version"],
         "gold_relations": total,
+        "type_level_ceiling": {
+            "distinct_patterns_in_our_graph": len(type_set),
+            "distinct_patterns_in_gold": len(gold_patterns),
+            "warning": "Type-level recall only asks whether each gold pattern occurs "
+                       "anywhere in the graph. With so few distinct patterns on either "
+                       "side, any non-trivial extraction scores near 100%. Never quote "
+                       "type_recall without anchored_recall and recall beside it.",
+        },
         "recovered": len(strict_recovered),
         "recall": len(strict_recovered) / total if total else 0,
+        "recall_ci": clopper_pearson(len(strict_recovered), total),
         "anchored_recovered": len(partial_recovered),
         "anchored_recall": len(partial_recovered) / total if total else 0,
+        "anchored_recall_ci": clopper_pearson(len(partial_recovered), total),
         "type_recovered": len(type_recovered),
         "type_recall": len(type_recovered) / total if total else 0,
+        "type_recall_ci": clopper_pearson(len(type_recovered), total),
+        "drawn_only": {
+            "gold_relations": n_drawn,
+            "anchored_recall": (len([r for r in partial_recovered if r in drawn]) / n_drawn
+                                if n_drawn else 0),
+            "type_recall": (len([r for r in type_recovered if r in drawn]) / n_drawn
+                            if n_drawn else 0),
+            "excluded_derived": sorted(derived_ids),
+        },
         "recovered_ids": strict_recovered, "anchored_ids": partial_recovered,
-        "missed_ids": missed_strict,
+        # Missed at the STRICT tier only. Many of these are recovered at the anchored or
+        # type tier — read this list together with `anchored_ids`, never on its own.
+        "strict_missed_ids": missed_strict,
     }
 
 
 def citation_faithfulness() -> dict:
+    """Does every extracted claim actually appear in its source paper?
+
+    Reported in three tiers, never conflated — the promise `span_repair` makes and this
+    function used to break by returning one blended number under the word "exact":
+
+      exact       the stored quote is character-for-character the text at [start, end)
+      normalized  identical only after case/whitespace/hyphen normalisation
+      fuzzy       a difflib longest-common-block covering >= 70% of the quote
+                  (`match_kind = 'fuzzy'`, set by span_repair)
+
+    The tiers are recomputed here from the canonical text rather than trusted from a
+    stored flag, so the number cannot drift from the evidence it describes. `strict` is
+    the exact tier alone and is the figure to quote when a single number is wanted;
+    `faithfulness` keeps the historical all-tiers definition so earlier reports remain
+    interpretable, and is always reported next to its breakdown.
+    """
     with get_connection() as conn:
-        row = conn.execute(
-            "SELECT count(*) AS total, count(*) FILTER (WHERE quote_resolved) AS resolved "
-            "FROM entity_instances"
-        ).fetchone()
-    total, resolved = row["total"], row["resolved"]
-    return {"entities": total, "quotes_resolved": resolved,
-            "faithfulness": resolved / total if total else 0}
+        rows = conn.execute(
+            """
+            SELECT e.verbatim_quote, e.char_start, e.char_end, e.quote_resolved,
+                   e.match_kind, t.canonical_text
+            FROM entity_instances e
+            JOIN canonical_texts t ON t.study_id = e.study_id
+            """
+        ).fetchall()
+
+    # Reuse span_repair's normalisation so "normalized" means exactly one thing in this
+    # codebase: the same dehyphenation, quote-folding and whitespace collapse the repair
+    # pass applies. Writing a second definition here is how the two silently diverge.
+    from res_pipeline.plugins.realist.span_repair import _normalize_quote as _norm
+
+    tiers = {"exact": 0, "normalized": 0, "fuzzy": 0, "unresolved": 0}
+    for r in rows:
+        quote, text = r["verbatim_quote"] or "", r["canonical_text"] or ""
+        if not r["quote_resolved"]:
+            tiers["unresolved"] += 1
+        elif r["match_kind"] == "fuzzy":
+            tiers["fuzzy"] += 1
+        elif quote and text[r["char_start"]:r["char_end"]] == quote:
+            tiers["exact"] += 1
+        elif quote and _norm(text[r["char_start"]:r["char_end"]]) == _norm(quote):
+            tiers["normalized"] += 1
+        else:
+            tiers["unresolved"] += 1
+
+    total = len(rows)
+    resolved = total - tiers["unresolved"]
+    return {
+        "entities": total,
+        "quotes_resolved": resolved,
+        "faithfulness": resolved / total if total else 0,
+        "tiers": tiers,
+        "strict": tiers["exact"] / total if total else 0,
+        "resolved_ci": clopper_pearson(resolved, total),
+        "strict_ci": clopper_pearson(tiers["exact"], total),
+        "strict_plus_normalized_ci": clopper_pearson(
+            tiers["exact"] + tiers["normalized"], total),
+        "strict_plus_normalized": (tiers["exact"] + tiers["normalized"]) / total if total else 0,
+        "note": "Quote the `strict` (exact-span) figure as the headline; `faithfulness` "
+                "counts normalized and fuzzy matches too and must never be described as exact.",
+    }
 
 
 def theory_correspondence(run_id: str) -> dict:
-    """LLM-judged correspondence of the latest theory to the 5 gold PTS chains."""
+    """Correspondence of the latest theory to the gold programme-theory chains.
+
+    Scored TWICE: once by the `synthesis` tier — the same model that composed the theory
+    — and once by `independent_judge`, a different model family with no stake in the
+    output. Self-preference bias in LLM judges is well documented, so the honest move is
+    not to assert it away but to measure it: `self_preference_gap` is the difference
+    between the two, and the independent score is the one to quote.
+    """
     gold = _load_gold()
     with get_connection() as conn:
         row = conn.execute(
@@ -320,12 +542,32 @@ def theory_correspondence(run_id: str) -> dict:
         return {"error": "no programme theory drafted yet"}
     theory = row["theory_json"]
 
+    def _score_with(tier: str) -> dict:
+        return _score_theory(tier, gold, theory, run_id)
+
+    same_family = _score_with("synthesis")
+    independent = _score_with("independent_judge")
+    gap = same_family["mean_correspondence"] - independent["mean_correspondence"]
+    return {
+        **independent,
+        "judge_tier": "independent_judge",
+        "same_family_judge": same_family,
+        "self_preference_gap": round(gap, 3),
+        "judge": "Scored by a judge from a different model family than the composer; the "
+                 "same-family score is reported alongside so the self-preference gap is "
+                 "visible. Human expert rating still required before publication.",
+    }
+
+
+def _score_theory(tier: str, gold: dict, theory, run_id: str) -> dict:
+    """One judge's K-sample rating of the theory against the gold chains."""
     per_chain_samples: dict[str, list[float]] = {}
     last_rationale: dict[str, str] = {}
     sample_means: list[float] = []
+    expected = set(gold["programme_theory_statements"])
     for _ in range(_JUDGE_SAMPLES):
         batch = call_structured(
-            tier="synthesis",
+            tier=tier,
             system_prompt=(
                 "You are an external methods assessor. Score how well the SYSTEM programme "
                 "theory corresponds to each GOLD programme-theory statement (structural and "
@@ -343,21 +585,31 @@ def theory_correspondence(run_id: str) -> dict:
             ),
             schema=ChainScoreBatch, run_id=run_id,
         )
-        for s in batch.scores:
-            per_chain_samples.setdefault(s.pts_id, []).append(s.correspondence)
-            last_rationale[s.pts_id] = s.rationale
-        vals = [s.correspondence for s in batch.scores]
+        # Only chains that exist in the gold count, and a chain the judge silently omits
+        # scores 0 rather than leaving the denominator — otherwise a judge can raise its
+        # own mean by declining to rate the chains it would score worst.
+        rated = {s.pts_id: s for s in batch.scores if s.pts_id in expected}
+        for pid in expected:
+            s = rated.get(pid)
+            per_chain_samples.setdefault(pid, []).append(s.correspondence if s else 0.0)
+            if s:
+                last_rationale[pid] = s.rationale
+            else:
+                last_rationale.setdefault(pid, "Not rated by the judge in this sample; "
+                                               "scored 0 so the denominator stays fixed.")
+        vals = [per_chain_samples[pid][-1] for pid in expected]
         sample_means.append(sum(vals) / len(vals) if vals else 0)
 
-    scores = {pid: {"correspondence": round(sum(v) / len(v), 3), "rationale": last_rationale[pid]}
-              for pid, v in per_chain_samples.items()}
+    scores = {pid: {"correspondence": round(sum(v) / len(v), 3),
+                    "rationale": last_rationale.get(pid, "")}
+              for pid, v in sorted(per_chain_samples.items())}
     means = [d["correspondence"] for d in scores.values()]
     return {"per_chain": scores,
-            "mean_correspondence": sum(means) / len(means) if means else 0,
+            "gold_chains": len(expected),
+            "mean_correspondence": round(sum(means) / len(means), 3) if means else 0,
             "samples": _JUDGE_SAMPLES,
             "mean_min": round(min(sample_means), 3) if sample_means else 0,
-            "mean_max": round(max(sample_means), 3) if sample_means else 0,
-            "judge": "model-based, averaged over samples (human rating required before publication)"}
+            "mean_max": round(max(sample_means), 3) if sample_means else 0}
 
 
 def community_alignment(run_id: str) -> dict:
@@ -366,8 +618,11 @@ def community_alignment(run_id: str) -> dict:
     professor's named novelty — community-defined conceptual entities vs human mechanisms.
     """
     gold = _load_gold()
+    # Richmond's mechanisms are everything in their Mresource and Mresponse columns.
+    # Scoring against `category` used to miss E07-E18 (typed Intervention in the gold
+    # though Richmond tags them Mresource), which shrank this denominator to 14.
     gold_mechs = {code: spec for code, spec in gold["entities"].items()
-                  if spec["category"] in ("Mechanism_Resource", "Mechanism_Response")}
+                  if spec["richmond_role"] in ("Mechanism_Resource", "Mechanism_Response")}
     with get_connection() as conn:
         try:
             communities = conn.execute(
@@ -405,11 +660,16 @@ def community_alignment(run_id: str) -> dict:
             ),
             schema=EntityMatchBatch, run_id=run_id,
         )
+        seen: set[str] = set()
         for m in batch.matches:
-            if m.matched:
-                votes[m.e_code] = votes.get(m.e_code, 0) + 1
-                community_of[m.e_code] = m.matched_concept
-                rationale_of[m.e_code] = m.rationale
+            # Discard codes the judge invented and duplicates within one sample; both
+            # previously inflated the vote and could push recall above 1.0.
+            if not m.matched or m.e_code not in gold_mechs or m.e_code in seen:
+                continue
+            seen.add(m.e_code)
+            votes[m.e_code] = votes.get(m.e_code, 0) + 1
+            community_of[m.e_code] = m.matched_concept
+            rationale_of[m.e_code] = m.rationale
     threshold = (_JUDGE_SAMPLES // 2) + 1
     aligned_codes = [c for c, v in votes.items() if v >= threshold]
     return {
@@ -418,6 +678,7 @@ def community_alignment(run_id: str) -> dict:
         "gold_mechanisms": len(gold_mechs),
         "aligned": len(aligned_codes),
         "alignment_recall": len(aligned_codes) / len(gold_mechs) if gold_mechs else 0,
+        "alignment_recall_ci": clopper_pearson(len(aligned_codes), len(gold_mechs)),
         "samples": _JUDGE_SAMPLES,
         "matches": [{"e_code": c, "community": community_of.get(c, ""),
                      "rationale": rationale_of.get(c, "")} for c in aligned_codes],

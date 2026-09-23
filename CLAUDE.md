@@ -37,6 +37,22 @@ Richmond's human outputs. **Method > platform; human judgment stays sovereign.**
 - `transcript-meetings/` — weekly RA↔professor meetings (Jan 23, Feb 4, Feb 19, **May 28**).
 - `docs/` — project memory maintained by Claude (`PROJECT_CONTEXT.md`, `DECISION_LOG.md`).
 
+## Read these first when asked "what is the output / how do we verify it?"
+1. **`outputs/RESULTS.html`** (regenerate with `res export-results`) — the whole review as one
+   self-contained page: Richmond's conclusions beside ours, context by context; the verification
+   matrix with exact confidence intervals and a *judged by* column; all 46 gold concepts one by
+   one; and every CMOC, entity, relation and emergent mechanism, searchable. This is the artefact
+   to send to the professor or open in an interview. No server, no database.
+2. **`docs/VERIFICATION_PROTOCOL.md`** — why those are the right metrics, with citations, and the
+   honest list of what is still missing. The blocking gap is that **no human has coded anything**,
+   so there is no human–human ceiling and the agreement-style numbers are uninterpretable.
+3. **`gold/RICHMOND_CONCLUSIONS.md`** — what Richmond actually concluded, grounded line by line.
+
+The benchmark is `gold/richmond_gold_v3.json` (corrected 2026-09-23; `RES_GOLD=v1` reproduces
+every earlier published number). Never quote the relation type-level score without the anchored
+and strict tiers, never quote entity coverage role-tolerant without like-for-like, and never quote
+a single programme-theory correspondence number — two judges differ by 0.31 on identical inputs.
+
 ## Status pointer
 **Architecture v1.0 adopted** (`docs/ARCHITECTURE.md`, grounded in `docs/research/SOTA_REPORT.md`).
 Build authority granted; next step is Phase 0 (repository scaffold + config + ontology file),

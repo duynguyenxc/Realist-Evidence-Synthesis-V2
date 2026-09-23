@@ -661,6 +661,23 @@ def report() -> None:
     console.print(f"[green]Artifacts written to {out_dir}[/green]", markup=False)
 
 
+@app.command("export-results")
+def export_results() -> None:
+    """Write outputs/RESULTS.html — the whole review as one shareable, self-contained page.
+
+    Same data as the review console, but as a single file that opens anywhere with no
+    database and no server: the human standard, our output, and the verification matrix
+    side by side. This is the artifact to send to a supervisor or a reviewer.
+    """
+    from res_pipeline.core.results_export import write
+
+    target = write()
+    size_kb = target.stat().st_size / 1024
+    console.print(f"[green]Results page written:[/green] {target} ({size_kb:.0f} KB)",
+                  markup=False)
+    console.print("Open it in any browser — no server needed.")
+
+
 @app.command("run-all")
 def run_all(
     skip_extract: bool = typer.Option(False, help="Reuse existing CMOCs (skip re-extraction)."),
