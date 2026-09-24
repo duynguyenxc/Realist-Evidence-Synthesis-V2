@@ -506,6 +506,31 @@ def _section_orientation(d: dict[str, Any]) -> str:
 """
 
 
+def _drift_note(d: dict[str, Any]) -> str:
+    """Say so when the database has moved since the verification run was scored.
+
+    The page shows live database counts next to scores from a named verification run. If a
+    study has been re-extracted since that run, the two describe slightly different corpora —
+    a small drift, but one the reader is entitled to know about rather than discover.
+    """
+    scored = d["verification"].get("citation_faithfulness", {}).get("entities")
+    live = d["counts"].get("entities")
+    if not scored or not live or scored == live:
+        return ""
+    delta = live - scored
+    return f"""
+<div class="callout" style="border-left-color:var(--partial);background:var(--partial-bg)">
+  <p><strong>Small provenance drift.</strong> The counts on this page are read live from the
+  database, which now holds <strong>{live}</strong> entity instances; the scores come from
+  verification run <code>{_e(d.get('verify_run') or '?')}</code>, which was computed over
+  <strong>{scored}</strong> ({delta:+d}). One study was re-extracted after that run. The
+  difference is {abs(delta) / scored:.1%} of the corpus and does not move any headline, but the
+  scores and the counts are not from the identical snapshot. Re-run <code>res verify</code> to
+  put them back in exact step.</p>
+</div>
+"""
+
+
 def _vintage_warning(d: dict[str, Any]) -> str:
     """A banner when the CMOC layer mixes extraction runs — never a silent composite."""
     vintages = d.get("vintages") or []
@@ -998,6 +1023,7 @@ def render(d: dict[str, Any]) -> str:
 </header>
 
 {_vintage_warning(d)}
+{_drift_note(d)}
 {_section_orientation(d)}
 {_section_headline(d)}
 {_section_counts(d)}
