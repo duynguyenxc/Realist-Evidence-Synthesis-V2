@@ -133,9 +133,26 @@ def ensure_feedback_store() -> None:
     init_schema()
 
 
+# The agent keys that any part of the pipeline actually reads corrections back under.
+# Storing against anything else is a silent no-op: the correction is written, nothing ever
+# looks it up, and the loop appears to work while teaching nobody. That happened — two
+# corrections were filed under "cmoc_extractor" while the extractor reads "cmoc_extraction",
+# and an improvement was reported that the feedback could not have caused.
+CONSUMING_AGENT_KEYS = frozenset({"cmoc_extraction"})
+
+
 def record_feedback(agent_key: str, correct: str, *, wrong: str = "",
                     note: str = "", study_id: str = "", run_id: str = "") -> None:
-    """Persist one human correction so it can be replayed as a few-shot example later."""
+    """Persist one human correction so it can be replayed as a few-shot example later.
+
+    Raises on an agent key nothing reads, rather than storing a correction that will never
+    be delivered.
+    """
+    if agent_key not in CONSUMING_AGENT_KEYS:
+        raise ValueError(
+            f"agent_key {agent_key!r} is not read by any agent, so this correction would "
+            f"never reach one. Known keys: {sorted(CONSUMING_AGENT_KEYS)}"
+        )
     ensure_feedback_store()
     with get_connection() as conn:
         conn.execute(

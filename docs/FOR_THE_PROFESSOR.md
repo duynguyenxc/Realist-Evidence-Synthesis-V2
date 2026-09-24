@@ -4,7 +4,7 @@
 # Answers to your five questions
 
 *Duy Nguyen — 2026-09-23. Five questions from our last meeting, one short answer each.
-Numbers below are from run `verify-0cc8eff6`; all of them are reproducible with two commands
+Numbers below are from run `verify-91a39a5c`; all of them are reproducible with two commands
 (§6).*
 
 ---
@@ -26,8 +26,8 @@ run, here is what exists and where:
 | PRISMA flow, evidence table, theory | `outputs/runs/report-*/` | The same artefact types Richmond published |
 | Full audit trail | `audit_log` table | Every action, who did it, when |
 
-**Scale:** 28 papers in; **91 findings**, **544 concepts with quotes**, **460
-causal links**, **9 discovered mechanisms** out.
+**Scale:** 28 papers in; **94 findings**, **547 concepts with quotes**, **459
+causal links**, **8 discovered mechanisms** out.
 
 ---
 
@@ -40,15 +40,15 @@ tell you exactly which is which.**
 
 - We recover **all 28** of Richmond's included studies (26 automatically; 2 flagged as uncertain and
   sent to a human, which is the design working).
-- **95.6% (95% CI 93.5%–97.2%) of every claim the system makes resolves to a verbatim sentence in the source
+- **93.0% (95% CI 90.6%–95.0%) of every claim the system makes resolves to a verbatim sentence in the source
   paper**, with its character position. The system cannot assert something that is not in a paper.
-- **32 of Richmond's 40 causal links** are recovered with at least one endpoint pinned to
+- **27 of Richmond's 40 causal links** are recovered with at least one endpoint pinned to
   the matching concept.
 
 **Not yet validated — and I am not presenting these as results:**
 
 - Concept matching and mechanism matching are judged by an AI, not a person.
-- The programme-theory score changes by **0.36 on a 0–1 scale** depending only on which AI does the
+- The programme-theory score changes by **0.44 on a 0–1 scale** depending only on which AI does the
   judging. That spread means the number is not yet trustworthy.
 - **No human has independently coded any paper yet.** Until two coders do, there is no human
   benchmark to compare against.
@@ -68,12 +68,12 @@ The column that matters most is the last one.
 | What we compare | Richmond's artefact | How | Result | Judged by |
 |---|---|---|---|---|
 | Did we find the same papers? | The 28 included studies | Do we include each one? | **100%** after one human check | machine |
-| Is every claim really in the paper? | They quote sources | Does each quote match text in the PDF? | **95.6% (95% CI 93.5%–97.2%)** | machine |
+| Is every claim really in the paper? | They quote sources | Does each quote match text in the PDF? | **93.0% (95% CI 90.6%–95.0%)** | machine |
 | Same concepts? | 46 concepts in their Figures 2–3 | Does one of ours mean the same thing? | **37/46** | **AI** |
 | Same causal shape? | 40 arrows | Is the pattern present? | **39/40** — *but this cannot fail, see below* | machine |
-| …anchored to a real concept? | Same 40 | One endpoint exact, other correct role | **32/40** | machine |
-| …exact concept pair? | Same 40 | Both endpoints exact | **1/40** | machine |
-| Same mechanisms? | Their mechanism list | Does a discovered cluster match? | **19/28** | **AI** |
+| …anchored to a real concept? | Same 40 | One endpoint exact, other correct role | **27/40** | machine |
+| …exact concept pair? | Same 40 | Both endpoints exact | **5/40** | machine |
+| Same mechanisms? | Their mechanism list | Does a discovered cluster match? | **17/28** | **AI** |
 | Same theory? | Their 5 theory chains | Structural correspondence | **judge-dependent** | **AI** |
 
 **Three things I want to state plainly, because they protect the work:**
@@ -165,7 +165,7 @@ So we do a third thing: store it as **`UNTYPED_CANDIDATE`** — *"a real link we
 mark it as not satisfying the ontology constraint, and put it in the human review queue at
 Checkpoint 2. It is excluded from every metric until a person types it.
 
-**In this run there are 4 of 460.** That the number is tiny is itself the finding:
+**In this run there are 3 of 459.** That the number is tiny is itself the finding:
 the five-relation ontology covers essentially all the causal language in this literature.
 
 The word *candidate* appears in one other place — the verification step, where the AI matcher is
@@ -189,5 +189,5 @@ before the benchmark corrections of 2026-09-23.
 
 1. **Two human coders** on 8–10 papers, blind. This unblocks every agreement number; nothing else
    substitutes for it.
-2. **An expert rating** of the programme theory, since two AI judges disagree by 0.36.
+2. **An expert rating** of the programme theory, since two AI judges disagree by 0.44.
 3. Confirmation of the delegated human-checkpoint decisions logged during development.

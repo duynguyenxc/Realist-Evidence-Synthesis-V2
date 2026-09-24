@@ -1048,3 +1048,53 @@ currently 0, so prompt caching is being wasted entirely).
 
 **Human HITL-3 contradiction resolutions** were snapshotted to `contradictions_hitl3_m35` before
 `synthesize` (which still issues an unfiltered DELETE) — that defect remains open.
+
+---
+
+## M35 (2026-09-24) — second complete run, and what comparing two runs revealed
+
+A second full pipeline run completed without error on a single extraction vintage
+(`extract-fb045429`, 26 studies): **94 CMOCs · 547 entity instances · 459 relations · 8 emergent
+mechanisms**. Scored as `verify-91a39a5c`.
+
+**The most useful result of the day is the comparison of the two complete runs**, same corpus,
+same code, same benchmark:
+
+| | `verify-0cc8eff6` | `verify-91a39a5c` |
+|---|---|---|
+| Screening after HITL | 100% (28/28) | 100% (28/28) — identical |
+| Verbatim grounding | 95.6% (93.5–97.2) | 93.1% (90.6–95.0) |
+| Concepts, same realist role | 37/46 (66.1–90.6) | 37/46 — identical |
+| Relation anchored | **80.0%** (64.4–90.9) | **67.5%** (50.9–81.4) |
+| Relation strict | 1/40 (0.1–13.2) | 5/40 (4.2–26.8) |
+| Emergent mechanisms | 19/28 (47.6–84.1) | 17/28 (40.6–78.5) |
+| Theory, independent judge | 0.87 | 0.94 |
+| Theory, same-family judge | 0.51 | 0.50 |
+
+Anchored relation recall moved 12.5 points between two runs of identical code, and strict recall
+moved the other way. **Every confidence interval overlaps.** The intervals added in M32 are
+earning their place: they show these swings are sampling noise, not improvement or regression,
+and they make it plain that **two runs cannot be compared on point estimates alone.** Any future
+claim that a change improved the pipeline needs a paired design on the same studies, not a
+before/after of two runs.
+
+**A self-inflicted error, recorded because it is the instructive kind.** Earlier in the session
+the HITL feedback loop was repaired — corrections moved out of `hitl_feedback` (whose NOT NULL
+columns had made every write fail) into their own `agent_feedback` table. The corrections were
+then filed under `agent_key="cmoc_extractor"`, while `extraction_guidance_block()` reads
+`"cmoc_extraction"`. The keys never matched, the few-shot block stayed empty, and a pilot showing
+checker disagreement falling from 77% to 50% on three studies was reported as evidence the loop
+worked. It was not: the loop was still dead, and — as the table above shows — three studies is
+far too small to distinguish anything from noise. **Fixing a table is not fixing a pipeline; the
+correction has to be observed arriving at the prompt.** `record_feedback` now raises on an agent
+key nothing reads (`CONSUMING_AGENT_KEYS`), so a correction can never again be stored somewhere
+that no agent consults. Both runs above are feedback-free and therefore internally consistent.
+
+**Provenance drift guard.** Restoring state surfaced that RESULTS.html shows live database counts
+beside scores from a named verification run, and the two can drift — at one point by one entity
+instance out of 544. `_drift_note` now states the discrepancy on the page with both numbers and
+the run id.
+
+**Resumability paid for itself.** Credit ran out twice more during this work, at 18/28 and again
+mid-run. Each time `--resume` continued under the original run id; the 16 studies extracted
+before the first failure were banked to `*_fbrun`, restored afterwards, and never paid for twice.
