@@ -880,75 +880,90 @@ def progress(
 
 @app.command()
 def outputs() -> None:
-    """List every file a run produces, what it is, and whether it is current.
+    """Show what a run produced, grouped by what each file is FOR.
 
-    Exists because the most common question asked of this project is "show me the output",
-    and the honest answer is a list of files with what each one is for — not a summary
-    written about them.
+    A flat list of eighteen files answers "show me the output" with more confusion than it
+    removes. The files fall into three jobs, and naming the job is most of the explanation:
+    one file to show someone, a few to answer their follow-up questions, and the rest as
+    evidence for when a specific number is challenged.
     """
-    from datetime import datetime, timezone
-
     from res_pipeline.core.config import OUTPUTS_DIR
+    from res_pipeline.core.db import get_connection
 
-    described: list[tuple[str, str]] = [
-        ("RESULTS.html", "THE ONE TO OPEN: whole review, human vs machine, searchable"),
-        ("exports/cmocs.csv", "Every finding, one row each (study, direction, statement)"),
-        ("exports/entities.csv", "Every concept + the verbatim sentence and character span"),
-        ("exports/relationships.csv", "Every causal link (from -> relation -> to)"),
-        ("exports/big_concepts.csv", "Mechanisms the Leiden algorithm discovered"),
-        ("lkg/entities.parquet", "Knowledge graph nodes, for programmatic use"),
-        ("lkg/relationships.parquet", "Knowledge graph edges"),
-        ("lkg/communities.parquet", "Discovered mechanism clusters"),
-        ("lkg/cmocs.parquet", "Findings, columnar"),
+    TIERS: list[tuple[str, str, list[tuple[str, str]]]] = [
+        ("1 — SHOW THIS", "The whole review on one page. If you open one file, open this one.", [
+            ("RESULTS.html", "Richmond's conclusions beside ours, the verification table, and "
+                             "every finding — searchable, opens in any browser"),
+        ]),
+        ("2 — OUR FINAL CONCLUSION", "What the system concluded, in its own words. This is the "
+                                     "thing being compared with Richmond.", [
+            ("runs/report-*/programme_theory.md", "The programme theory: for which student, "
+                                                  "what teaching works, and why"),
+            ("runs/report-*/theory_diagram.html", "The same theory as a diagram"),
+        ]),
+        ("3 — HOW WE CHECKED IT", "The comparison with Richmond, number by number.", [
+            ("runs/verify-*/verification_report.md", "Scorecard: every metric, its interval, "
+                                                     "and whether a machine or an AI judged it"),
+            ("runs/report-*/prisma_flow.md", "Study flow, the way a systematic review reports it"),
+        ]),
+        ("4 — THE EVIDENCE", "Open these only when someone challenges a specific number.", [
+            ("exports/cmocs.csv", "Every finding, one row each"),
+            ("exports/entities.csv", "Every concept + the exact sentence it came from"),
+            ("exports/relationships.csv", "Every causal link"),
+            ("exports/big_concepts.csv", "Mechanisms the algorithm discovered by itself"),
+            ("runs/report-*/cmoc_evidence_table.md", "Findings with their quotes, per paper"),
+            ("runs/report-*/audit_trail.md", "Every action taken, by whom, when"),
+            ("lkg/*.parquet", "The knowledge graph, for programmatic use"),
+            ("logs/*.log", "Console log of the run"),
+        ]),
     ]
-    globbed: list[tuple[str, str]] = [
-        ("runs/verify-*/verification_report.md", "Scorecard vs Richmond, human-readable"),
-        ("runs/verify-*/verification_report.json", "The same numbers, machine-readable"),
-        ("runs/verify-*/dashboard.html", "Scorecard as a dashboard"),
-        ("runs/report-*/prisma_flow.md", "PRISMA study-flow diagram"),
-        ("runs/report-*/cmoc_evidence_table.md", "Evidence table, Richmond's genre"),
-        ("runs/report-*/programme_theory.md", "The programme theory the system wrote"),
-        ("runs/report-*/theory_diagram.html", "Programme theory as a diagram"),
-        ("runs/report-*/audit_trail.md", "What was done, by whom, when"),
-        ("logs/*.log", "Full console log of the run"),
-    ]
 
-    now = datetime.now(timezone.utc)
-    table = Table(title="Output files")
-    table.add_column("File")
-    table.add_column("What it is")
-    table.add_column("Size", justify="right")
-    table.add_column("Age", justify="right")
+    def _resolve(pattern: str):
+        if "*" in pattern:
+            matches = sorted(OUTPUTS_DIR.glob(pattern), key=lambda q: q.stat().st_mtime)
+            return matches[-1] if matches else None
+        path = OUTPUTS_DIR / pattern
+        return path if path.exists() else None
 
-    def _row(path, what: str) -> None:
-        stat = path.stat()
-        age_h = (now.timestamp() - stat.st_mtime) / 3600
-        age = f"{age_h:.0f}h" if age_h >= 1 else f"{age_h * 60:.0f}m"
-        size = (f"{stat.st_size / 1_048_576:.1f} MB" if stat.st_size >= 1_048_576
-                else f"{stat.st_size / 1024:.1f} KB" if stat.st_size >= 1024
-                else f"{stat.st_size} B")
-        table.add_row(str(path.relative_to(OUTPUTS_DIR)), what, size, age)
+    with get_connection() as conn:
+        c = {r["k"]: r["n"] for r in conn.execute("""
+            SELECT 'studies' AS k, count(*) AS n FROM studies
+            UNION ALL SELECT 'cmocs', count(*) FROM cmocs
+            UNION ALL SELECT 'entities', count(*) FROM entity_instances
+            UNION ALL SELECT 'relations', count(*) FROM typed_relations
+            UNION ALL SELECT 'mechanisms', count(*) FROM conceptual_entities
+        """).fetchall()}
+
+    console.print()
+    console.print("[bold]What the pipeline did, in one line[/bold]")
+    console.print(
+        f"  {c['studies']} papers  →  {c['cmocs']} findings  →  {c['entities']} concepts "
+        f"+ {c['relations']} causal links  →  {c['mechanisms']} mechanisms  →  "
+        "[bold]1 programme theory[/bold]  →  compared with Richmond",
+        markup=True)
+    console.print("  [dim]The programme theory is our conclusion. Everything else is either the "
+                  "evidence under it or the check on it.[/dim]")
 
     missing: list[str] = []
-    for rel, what in described:
-        path = OUTPUTS_DIR / rel
-        if path.exists():
-            _row(path, what)
-        else:
-            missing.append(rel)
-    for pattern, what in globbed:
-        matches = sorted(OUTPUTS_DIR.glob(pattern), key=lambda p: p.stat().st_mtime)
-        if matches:
-            _row(matches[-1], what + (f"  (newest of {len(matches)})" if len(matches) > 1 else ""))
-        else:
-            missing.append(pattern)
+    for title, why, entries in TIERS:
+        table = Table(title=f"{title}   —   {why}", title_justify="left")
+        table.add_column("File")
+        table.add_column("What it is")
+        table.add_column("Size", justify="right")
+        for pattern, what in entries:
+            path = _resolve(pattern)
+            if path is None:
+                missing.append(pattern)
+                continue
+            size = path.stat().st_size
+            human = (f"{size / 1_048_576:.1f} MB" if size >= 1_048_576
+                     else f"{size / 1024:.1f} KB" if size >= 1024 else f"{size} B")
+            table.add_row(str(path.relative_to(OUTPUTS_DIR)), what, human)
+        console.print(table)
 
-    console.print(table)
     console.print(f"[dim]Root: {OUTPUTS_DIR}[/dim]")
     if missing:
         console.print(f"[yellow]Not yet generated:[/yellow] {', '.join(missing)}", markup=False)
-    console.print("Open [bold]outputs/RESULTS.html[/bold] first — it renders everything above "
-                  "in one page, with the verification table.")
 
 
 @app.command()

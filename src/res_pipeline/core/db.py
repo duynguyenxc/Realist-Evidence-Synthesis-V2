@@ -152,6 +152,19 @@ CREATE TABLE IF NOT EXISTS typed_relations (
     created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE TABLE IF NOT EXISTS agent_feedback (
+    id          BIGSERIAL PRIMARY KEY,
+    agent_key   TEXT NOT NULL,              -- which agent the correction teaches
+    wrong       TEXT,                       -- what the agent did (optional)
+    correct     TEXT NOT NULL,              -- what it should have done
+    note        TEXT,                       -- why, in the reviewer's words
+    study_id    TEXT,
+    run_id      TEXT,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS agent_feedback_agent_idx ON agent_feedback (agent_key, created_at DESC);
+
 CREATE INDEX IF NOT EXISTS entity_instances_cmoc_idx ON entity_instances (cmoc_id);
 CREATE INDEX IF NOT EXISTS entity_instances_canonical_idx ON entity_instances (canonical_id);
 CREATE INDEX IF NOT EXISTS typed_relations_cmoc_idx ON typed_relations (cmoc_id);

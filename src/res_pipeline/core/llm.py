@@ -47,12 +47,18 @@ def call_structured(
     user_prompt: str,
     schema: type[TSchema],
     run_id: str,
+    cache_key: str | None = None,
 ) -> TSchema:
     """Call the tier's model and parse the response into ``schema``.
 
     ``temperature`` is only sent when the tier declares one, because some
     reasoning-tier models (e.g. gpt-5.5) reject any non-default temperature. A
     fixed seed is always sent for best-effort reproducibility.
+
+    ``cache_key`` groups calls that share a long identical prefix — the CMOC draft and its
+    revision send the same full paper text — so the provider can serve the repeated prefix
+    from its prompt cache instead of charging for it twice. Cached input tokens are recorded
+    in ``token_usage.cached_tokens`` so the saving is measured rather than assumed.
     """
     spec = resolve_tier(tier)
     client = _get_client()
@@ -68,6 +74,8 @@ def call_structured(
     }
     if "temperature" in spec:
         kwargs["temperature"] = spec["temperature"]
+    if cache_key:
+        kwargs["prompt_cache_key"] = cache_key
 
     try:
         response = client.beta.chat.completions.parse(**kwargs)
@@ -80,7 +88,10 @@ def call_structured(
 
     usage = response.usage
     if usage is not None:
-        _log_usage(run_id, tier, spec["model"], usage.prompt_tokens, usage.completion_tokens)
+        details = getattr(usage, "prompt_tokens_details", None)
+        cached = getattr(details, "cached_tokens", 0) or 0
+        _log_usage(run_id, tier, spec["model"], usage.prompt_tokens,
+                   usage.completion_tokens, cached)
 
     parsed = response.choices[0].message.parsed
     if parsed is None:
@@ -89,12 +100,14 @@ def call_structured(
 
 
 def _log_usage(run_id: str, tier: str, model: str, prompt_tokens: int,
-               completion_tokens: int) -> None:
+               completion_tokens: int, cached_tokens: int = 0) -> None:
     from res_pipeline.core.db import get_connection
 
     with get_connection() as conn:
+        conn.execute("ALTER TABLE token_usage ADD COLUMN IF NOT EXISTS cached_tokens INT "
+                     "NOT NULL DEFAULT 0")
         conn.execute(
-            "INSERT INTO token_usage (run_id, tier, model, prompt_tokens, completion_tokens) "
-            "VALUES (%s,%s,%s,%s,%s)",
-            (run_id, tier, model, prompt_tokens, completion_tokens),
+            "INSERT INTO token_usage (run_id, tier, model, prompt_tokens, completion_tokens, "
+            "cached_tokens) VALUES (%s,%s,%s,%s,%s,%s)",
+            (run_id, tier, model, prompt_tokens, completion_tokens, cached_tokens),
         )

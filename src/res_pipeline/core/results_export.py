@@ -422,6 +422,18 @@ details[open]>summary{margin-bottom:10px;padding-bottom:8px;border-bottom:1px so
 .pol-positive{background:var(--match-bg);color:var(--match)}
 .pol-negative{background:var(--gap-bg);color:var(--gap)}
 .pol-mixed{background:var(--partial-bg);color:var(--partial)}
+
+.orient{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:26px 28px;margin:34px 0}
+.chain{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin:22px 0 4px}
+.step{flex:1 1 130px;min-width:120px;background:var(--bg);border:1px solid var(--line);
+  border-radius:10px;padding:12px 13px}
+.step.final{border-color:var(--accent);border-width:2px;background:var(--accent-soft)}
+.step .n{font:700 22px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:-.02em}
+.step.final .n{color:var(--accent)}
+.step .w{font:600 13px/1.3 ui-sans-serif,system-ui,sans-serif;margin:4px 0 5px}
+.arrow{align-self:center;color:var(--muted);font-size:20px;flex:0 0 auto}
+@media(max-width:700px){.arrow{display:none}}
 footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--line);
   color:var(--muted);font-size:13px}
 """
@@ -441,6 +453,56 @@ document.querySelectorAll('[data-filter]').forEach(function(box){
     if(out) out.textContent = shown + ' of ' + rows.length + ' shown';
   });
 });
+"""
+
+
+def _section_orientation(d: dict[str, Any]) -> str:
+    """The first screen: what this is, what was made, and where to look for what.
+
+    A reader who opens a 450KB page of tables needs to know, before anything else, which
+    part is the answer and which part is the evidence under it. Without that, more detail
+    reads as more confusion.
+    """
+    c = d["counts"]
+    steps = [
+        (c.get("studies", 0), "papers", "the same 28 Richmond reviewed"),
+        (c.get("cmocs", 0), "findings", "one C→M→O configuration each"),
+        (c.get("concepts", 0), "concepts", f"from {c.get('entities', 0)} quoted mentions"),
+        (c.get("relations", 0), "causal links", "typed, between concepts"),
+        (c.get("big_concepts", 0), "mechanisms", "found by the algorithm, not written"),
+        (1, "programme theory", "our conclusion"),
+    ]
+    chain = "".join(
+        f'<div class="step{" final" if i == len(steps) - 1 else ""}">'
+        f'<div class="n">{n}</div><div class="w">{_e(word)}</div>'
+        f'<div class="small">{_e(note)}</div></div>'
+        + ('<div class="arrow">→</div>' if i < len(steps) - 1 else "")
+        for i, (n, word, note) in enumerate(steps)
+    )
+    return f"""
+<section class="orient">
+  <h2 style="border:none;margin-top:0;padding-top:0">What you are looking at</h2>
+  <p>Richmond et al. (2020) is a published <em>realist review</em>: five reviewers read 28
+  studies by hand and worked out <strong>which teaching helps which student, and why</strong>.
+  We gave our system the same 28 papers and asked it to do the same analytic work, with a human
+  approving at four points. This page puts the two side by side.</p>
+
+  <div class="chain">{chain}</div>
+  <p class="small" style="margin-top:6px"><strong>The programme theory is our conclusion.</strong>
+  Everything else on this page is either the evidence underneath it or the check on it.</p>
+
+  <h3 style="margin-top:26px">Where to look for what</h3>
+  <ol class="tight">
+    <li><strong>The answer</strong> — §1 below: Richmond's conclusion and ours, side by side.</li>
+    <li><strong>Judge it yourself</strong> — §3: Richmond's five kinds of student, one block each,
+    their finding on the left and ours on the right. No statistics needed.</li>
+    <li><strong>How we checked</strong> — §4: one row per question, each with who judged it —
+    a machine or a language model. This is the part that answers <em>"how do you verify this?"</em></li>
+    <li><strong>Check any single case</strong> — §5 and §6: every concept, every finding, every
+    quote, searchable.</li>
+    <li><strong>What is not yet verified</strong> — §7. Read it before quoting anything.</li>
+  </ol>
+</section>
 """
 
 
@@ -936,6 +998,7 @@ def render(d: dict[str, Any]) -> str:
 </header>
 
 {_vintage_warning(d)}
+{_section_orientation(d)}
 {_section_headline(d)}
 {_section_counts(d)}
 {_section_side_by_side(d)}

@@ -120,20 +120,17 @@ def _known_concepts_block(limit: int) -> str:
 
 # ── Gap C: HITL feedback → few-shot store ─────────────────────────────────────────
 def ensure_feedback_store() -> None:
-    with get_connection() as conn:
-        conn.execute(
-            """
-            CREATE TABLE IF NOT EXISTS hitl_feedback (
-                id BIGSERIAL PRIMARY KEY,
-                agent_key TEXT NOT NULL,
-                created_at TIMESTAMPTZ NOT NULL DEFAULT now()
-            )
-            """
-        )
-        # Reconcile with any pre-existing table that used a different schema.
-        for col, decl in (("agent_key", "TEXT"), ("study_id", "TEXT"), ("wrong", "TEXT"),
-                          ("correct", "TEXT"), ("note", "TEXT"), ("run_id", "TEXT")):
-            conn.execute(f"ALTER TABLE hitl_feedback ADD COLUMN IF NOT EXISTS {col} {decl}")
+    """Create the few-shot correction store if it is missing.
+
+    This used to reuse ``hitl_feedback``, which is a different thing: that table records the
+    human decisions taken at the four checkpoints and has ``checkpoint``, ``subject_ref`` and
+    ``action`` as NOT NULL. Writing a correction into it therefore violated a constraint on
+    every call, so the documented "human correction becomes a few-shot example" loop had
+    never stored a single row. Corrections now live in ``agent_feedback``, their own table.
+    """
+    from res_pipeline.core.db import init_schema
+
+    init_schema()
 
 
 def record_feedback(agent_key: str, correct: str, *, wrong: str = "",
@@ -142,7 +139,7 @@ def record_feedback(agent_key: str, correct: str, *, wrong: str = "",
     ensure_feedback_store()
     with get_connection() as conn:
         conn.execute(
-            "INSERT INTO hitl_feedback (agent_key, study_id, wrong, correct, note, run_id) "
+            "INSERT INTO agent_feedback (agent_key, study_id, wrong, correct, note, run_id) "
             "VALUES (%s,%s,%s,%s,%s,%s)",
             (agent_key, study_id or None, wrong or None, correct, note or None, run_id or None),
         )
@@ -152,7 +149,7 @@ def _feedback_block(agent_key: str, limit: int) -> str:
     ensure_feedback_store()
     with get_connection() as conn:
         rows = conn.execute(
-            "SELECT wrong, correct, note FROM hitl_feedback WHERE agent_key=%s "
+            "SELECT wrong, correct, note FROM agent_feedback WHERE agent_key=%s "
             "ORDER BY created_at DESC LIMIT %s", (agent_key, limit)
         ).fetchall()
     if not rows:

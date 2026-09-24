@@ -191,13 +191,24 @@ def _cmoc_listing(cmocs: list[ExtractedCMOC]) -> str:
     return "\n\n".join(_one(i, c) for i, c in enumerate(cmocs))
 
 
-def _critique_draft(study_id: str, cmocs: list[ExtractedCMOC], run_id: str) -> str:
+# Share of a draft's CMOCs the second reviewer must dispute before a full revision round is
+# worth a second call to the extraction tier. Set to 0.0 to always revise (the old behaviour).
+_REVISE_THRESHOLD = 0.34
+
+
+def _critique_draft(study_id: str, cmocs: list[ExtractedCMOC],
+                    run_id: str) -> tuple[str, int]:
     """Reflection step: an independent reviewer (different model family) critiques the DRAFT
     CMOCs in-memory and returns the specific defects, so the extractor can self-correct
     before anything is persisted (Self-Refine / Reflexion, grounded in the SOTA on
-    multi-agent self-correction). Returns '' when the draft is accepted as-is."""
+    multi-agent self-correction).
+
+    Returns the issue text and the number of CMOCs the reviewer actually disputed, so the
+    caller can decide whether a second full-text call to the expensive extraction tier is
+    worth paying for on this paper.
+    """
     if not cmocs:
-        return ""
+        return "", 0
     review = call_structured(
         tier="gold_coder", system_prompt=persona("consistency_checker"),
         user_prompt=(
@@ -215,7 +226,8 @@ def _critique_draft(study_id: str, cmocs: list[ExtractedCMOC], run_id: str) -> s
             parts.append("RE-TYPE these elements exactly: " + "; ".join(c.retype))
         if parts:
             issues.append(f"CMOC #{c.cmoc_index}: " + " | ".join(parts))
-    return "\n".join(issues)
+    n_disputed = sum(1 for c in review.checks if not c.agrees or c.retype)
+    return "\n".join(issues), n_disputed
 
 
 def extract_study_cmocs(study_id: str, run_id: str) -> dict:
@@ -242,7 +254,7 @@ def extract_study_cmocs(study_id: str, run_id: str) -> dict:
     )
     result = call_structured(
         tier="extraction", system_prompt=_SYSTEM, user_prompt=user_prompt,
-        schema=ExtractionResult, run_id=run_id,
+        schema=ExtractionResult, run_id=run_id, cache_key=f"extract:{study_id}",
     )
 
     # ── Reflection round (Self-Refine / Reflexion) ────────────────────────────────
@@ -251,9 +263,15 @@ def extract_study_cmocs(study_id: str, run_id: str) -> dict:
     # coding, exactly as Richmond's second reviewer's checks led the lead coder to revise
     # (L248-250), rather than merely flagging problems for a human to clean up later.
     refined = 0
-    critique = _critique_draft(study_id, result.cmocs, run_id)
-    if critique:
-        draft_n = len(result.cmocs)
+    critique, n_disputed = _critique_draft(study_id, result.cmocs, run_id)
+    draft_n = len(result.cmocs)
+    # Revising is a second full-text call to the most expensive tier — 2.19 such calls per
+    # study measured on run extract-9035e95e, i.e. it fired on essentially every paper. It is
+    # worth paying for when the reviewer disputes a real share of the draft; when one CMOC in
+    # a large set is questioned, HITL-2 is the cheaper and more honest place to settle it.
+    substantive = bool(critique) and (
+        n_disputed >= max(1, round(draft_n * _REVISE_THRESHOLD)))
+    if substantive:
         revised = call_structured(
             tier="extraction", system_prompt=_SYSTEM,
             user_prompt=(
@@ -266,7 +284,7 @@ def extract_study_cmocs(study_id: str, run_id: str) -> dict:
                 "deleting it. Only drop a configuration if the text genuinely does not support it. "
                 "Keep every sound CMOC and add any well-evidenced pathway you missed. Return the "
                 "full corrected set — do not reduce a well-evidenced paper to nothing."),
-            schema=ExtractionResult, run_id=run_id)
+            schema=ExtractionResult, run_id=run_id, cache_key=f"extract:{study_id}")
         # Guard against over-correction: a revision should FIX, not gut the paper. If it
         # collapses the set (< half the draft, or empty), keep the draft — losing evidence
         # is worse than a residual typing issue (which HITL-2 still catches).
