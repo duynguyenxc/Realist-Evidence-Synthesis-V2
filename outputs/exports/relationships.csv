@@ -1,13 +1,14 @@
 ﻿study_id,cmoc_id,subject,subject_type,predicate,object,object_type,constraint_valid
 S001,S001-cmoc-8208f5,diagnostic reasoning instruction,Intervention,PROVIDES,instructional input,Mechanism_Resource,True
-S001,S001-cmoc-8208f5,instructional input,Mechanism_Resource,TRIGGERS,relative reliance on analytic and similarity-based processes,Mechanism_Response,True
-S001,S001-cmoc-8208f5,diagnostic expertise level,Context,ENABLES,relative reliance on analytic and similarity-based processes,Mechanism_Response,True
-S001,S001-cmoc-8208f5,relative reliance on analytic and similarity-based processes,Mechanism_Response,LEADS_TO,modifiable expertise-dependent processing reliance,Outcome,True
 S001,S001-cmoc-8208f5,diagnostic expertise level,Context,CONSTRAINS,modifiable expertise-dependent processing reliance,Outcome,True
-S003,S003-cmoc-8d24f5,diagnostic reasoning instruction,Intervention,PROVIDES,feature-oriented and similarity-trusting instructions,Mechanism_Resource,True
-S003,S003-cmoc-8d24f5,feature-oriented and similarity-trusting instructions,Mechanism_Resource,TRIGGERS,feature-oriented and similarity-trusting cognitive orientation,Mechanism_Response,True
-S003,S003-cmoc-8d24f5,feature-oriented and similarity-trusting cognitive orientation,Mechanism_Response,LEADS_TO,improved performance in novice diagnosticians,Outcome,True
+S001,S001-cmoc-8208f5,relative reliance on analytic and similarity-based processes,Mechanism_Response,LEADS_TO,modifiable expertise-dependent processing reliance,Outcome,True
+S001,S001-cmoc-8208f5,diagnostic expertise level,Context,ENABLES,relative reliance on analytic and similarity-based processes,Mechanism_Response,True
+S001,S001-cmoc-8208f5,instructional input,Mechanism_Resource,TRIGGERS,relative reliance on analytic and similarity-based processes,Mechanism_Response,True
 S003,S003-cmoc-8d24f5,novice diagnosticians,Context,ENABLES,improved performance in novice diagnosticians,Outcome,True
+S003,S003-cmoc-8d24f5,feature-oriented and similarity-trusting cognitive orientation,Mechanism_Response,LEADS_TO,improved performance in novice diagnosticians,Outcome,True
+S003,S003-cmoc-8d24f5,feature-oriented and similarity-trusting instructions,Mechanism_Resource,TRIGGERS,feature-oriented and similarity-trusting cognitive orientation,Mechanism_Response,True
+S003,S003-cmoc-8d24f5,diagnostic reasoning instruction,Intervention,PROVIDES,feature-oriented and similarity-trusting instructions,Mechanism_Resource,True
+S004,S004-cmoc-c39872,greater non-analytic tendency reliance,Mechanism_Response,LEADS_TO,lower accuracy under incorrect suggestion without guidance,Outcome,True
 S004,S004-cmoc-9a1d45,diagnostic reasoning instruction,Intervention,PROVIDES,feature-oriented and similarity-trusting instructions,Mechanism_Resource,True
 S004,S004-cmoc-9a1d45,feature-oriented and similarity-trusting instructions,Mechanism_Resource,TRIGGERS,avoidance of single-mode reasoning,Mechanism_Response,True
 S004,S004-cmoc-9a1d45,novice diagnosticians,Context,ENABLES,avoidance of single-mode reasoning,Mechanism_Response,True
@@ -25,17 +26,11 @@ S004,S004-cmoc-c39872,unguided diagnostic practice with diagnostic suggestion,In
 S004,S004-cmoc-c39872,unguided diagnostic practice with diagnostic suggestion,Intervention,PROVIDES,incorrect diagnostic suggestion,Mechanism_Resource,True
 S004,S004-cmoc-c39872,incorrect diagnostic suggestion,Mechanism_Resource,TRIGGERS,greater non-analytic tendency reliance,Mechanism_Response,True
 S004,S004-cmoc-c39872,novice diagnosticians,Context,ENABLES,greater non-analytic tendency reliance,Mechanism_Response,True
-S004,S004-cmoc-c39872,greater non-analytic tendency reliance,Mechanism_Response,LEADS_TO,lower accuracy under incorrect suggestion without guidance,Outcome,True
-S005,S005-cmoc-010803,diagnostic reasoning instruction,Intervention,PROVIDES,feature-oriented and similarity-trusting instructions,Mechanism_Resource,True
-S005,S005-cmoc-010803,diagnostic reasoning instruction,Intervention,PROVIDES,feature list and disease list support,Mechanism_Resource,True
-S005,S005-cmoc-010803,feature-oriented and similarity-trusting instructions,Mechanism_Resource,TRIGGERS,guided combined strategy use,Mechanism_Response,True
-S005,S005-cmoc-010803,feature list and disease list support,Mechanism_Resource,TRIGGERS,guided combined strategy use,Mechanism_Response,True
 S005,S005-cmoc-010803,newly trained ECG novices,Context,ENABLES,guided combined strategy use,Mechanism_Response,True
-S005,S005-cmoc-010803,guided combined strategy use,Mechanism_Response,LEADS_TO,improved diagnostic accuracy with combined reasoning,Outcome,True
-S005,S005-cmoc-0efba5,contrastive learning instruction,Intervention,PROVIDES,compare-and-contrast category prompts,Mechanism_Resource,True
-S005,S005-cmoc-0efba5,compare-and-contrast category prompts,Mechanism_Resource,TRIGGERS,diagnosticity awareness and reduced premature closure,Mechanism_Response,True
-S005,S005-cmoc-0efba5,confusable ECG categories with shared features,Context,ENABLES,diagnosticity awareness and reduced premature closure,Mechanism_Response,True
-S005,S005-cmoc-0efba5,diagnosticity awareness and reduced premature closure,Mechanism_Response,LEADS_TO,greater accuracy after contrastive learning,Outcome,True
+S005,S005-cmoc-010803,feature list and disease list support,Mechanism_Resource,TRIGGERS,guided combined strategy use,Mechanism_Response,True
+S005,S005-cmoc-010803,feature-oriented and similarity-trusting instructions,Mechanism_Resource,TRIGGERS,guided combined strategy use,Mechanism_Response,True
+S005,S005-cmoc-010803,diagnostic reasoning instruction,Intervention,PROVIDES,feature list and disease list support,Mechanism_Resource,True
+S005,S005-cmoc-010803,diagnostic reasoning instruction,Intervention,PROVIDES,feature-oriented and similarity-trusting instructions,Mechanism_Resource,True
 S005,S005-cmoc-eb6482,spontaneous reasoning instruction,Intervention,PROVIDES,natural-strategy instruction with optional feature list,Mechanism_Resource,True
 S005,S005-cmoc-eb6482,natural-strategy instruction with optional feature list,Mechanism_Resource,TRIGGERS,unguided or less effective strategy implementation,Mechanism_Response,True
 S005,S005-cmoc-eb6482,newly trained ECG novices,Context,ENABLES,unguided or less effective strategy implementation,Mechanism_Response,True
@@ -44,10 +39,33 @@ S005,S005-cmoc-eb6482,newly trained ECG novices,Context,CONSTRAINS,lower accurac
 S005,S005-cmoc-7be1c7,one-to-one ECG diagnostic training,Intervention,PROVIDES,practice with ECG examples,Mechanism_Resource,True
 S005,S005-cmoc-7be1c7,practice with ECG examples,Mechanism_Resource,TRIGGERS,similarity-based processes operational,Mechanism_Response,True
 S005,S005-cmoc-7be1c7,prior exposure to specific ECGs,Context,ENABLES,similarity-based processes operational,Mechanism_Response,True
-S005,S005-cmoc-7be1c7,newly trained ECG novices,Context,ENABLES,similarity-based processes operational,Mechanism_Response,True
-S005,S005-cmoc-7be1c7,similarity-based processes operational,Mechanism_Response,LEADS_TO,higher accuracy for previously seen ECGs,Outcome,True
-S005,S005-cmoc-7be1c7,similarity-based processes operational,Mechanism_Response,LEADS_TO,retained accuracy for previously seen ECGs,Outcome,True
 S005,S005-cmoc-7be1c7,prior exposure to specific ECGs,Context,ENABLES,higher accuracy for previously seen ECGs,Outcome,True
+S005,S005-cmoc-7be1c7,similarity-based processes operational,Mechanism_Response,LEADS_TO,retained accuracy for previously seen ECGs,Outcome,True
+S005,S005-cmoc-7be1c7,similarity-based processes operational,Mechanism_Response,LEADS_TO,higher accuracy for previously seen ECGs,Outcome,True
+S005,S005-cmoc-7be1c7,newly trained ECG novices,Context,ENABLES,similarity-based processes operational,Mechanism_Response,True
+S005,S005-cmoc-0efba5,diagnosticity awareness and reduced premature closure,Mechanism_Response,LEADS_TO,greater accuracy after contrastive learning,Outcome,True
+S005,S005-cmoc-0efba5,confusable ECG categories with shared features,Context,ENABLES,diagnosticity awareness and reduced premature closure,Mechanism_Response,True
+S005,S005-cmoc-0efba5,compare-and-contrast category prompts,Mechanism_Resource,TRIGGERS,diagnosticity awareness and reduced premature closure,Mechanism_Response,True
+S005,S005-cmoc-0efba5,contrastive learning instruction,Intervention,PROVIDES,compare-and-contrast category prompts,Mechanism_Resource,True
+S005,S005-cmoc-010803,guided combined strategy use,Mechanism_Response,LEADS_TO,improved diagnostic accuracy with combined reasoning,Outcome,True
+S006,S006-cmoc-d7c61b,superficial example processing,Mechanism_Response,LEADS_TO,poor diagnostic knowledge performance,Outcome,True
+S006,S006-cmoc-12e22c,complex diagnostic learning tasks,Context,ENABLES,error identification and correct-solution comparison,Mechanism_Response,True
+S006,S006-cmoc-12e22c,error identification and correct-solution comparison,Mechanism_Response,LEADS_TO,highest diagnostic knowledge scores,Outcome,True
+S006,S006-cmoc-12e22c,error identification and correct-solution comparison,Mechanism_Response,LEADS_TO,students profited from erroneous examples with feedback,Outcome,True
+S006,S006-cmoc-d7c61b,worked examples with errors and KCR feedback,Intervention,PROVIDES,severe erroneous diagnostic examples,Mechanism_Resource,True
+S006,S006-cmoc-d7c61b,worked examples with errors and KCR feedback,Intervention,PROVIDES,right-or-wrong KCR feedback,Mechanism_Resource,True
+S006,S006-cmoc-12e22c,severe erroneous diagnostic examples,Mechanism_Resource,TRIGGERS,error identification and correct-solution comparison,Mechanism_Response,True
+S006,S006-cmoc-d7c61b,right-or-wrong KCR feedback,Mechanism_Resource,TRIGGERS,insufficient deep conceptual understanding,Mechanism_Response,True
+S006,S006-cmoc-12e22c,worked examples with errors and elaborated feedback,Intervention,PROVIDES,elaborated explanatory feedback,Mechanism_Resource,True
+S006,S006-cmoc-d7c61b,complex learning environments,Context,ENABLES,insufficient deep conceptual understanding,Mechanism_Response,True
+S006,S006-cmoc-d7c61b,insufficient deep conceptual understanding,Mechanism_Response,LEADS_TO,superficial example processing,Mechanism_Response,True
+S006,S006-cmoc-d7c61b,superficial example processing,Mechanism_Response,LEADS_TO,detrimental effect of errors with KCR,Outcome,True
+S006,S006-cmoc-12e22c,elaborated explanatory feedback,Mechanism_Resource,TRIGGERS,error identification and correct-solution comparison,Mechanism_Response,True
+S006,S006-cmoc-d7c61b,complex learning environments,Context,CONSTRAINS,poor diagnostic knowledge performance,Outcome,True
+S006,S006-cmoc-8f0637,case-based worked examples with feedback variations,Intervention,PROVIDES,elaborated explanatory feedback,Mechanism_Resource,True
+S006,S006-cmoc-8f0637,elaborated explanatory feedback,Mechanism_Resource,TRIGGERS,processing elaborated feedback information,Mechanism_Response,True
+S006,S006-cmoc-8f0637,processing elaborated feedback information,Mechanism_Response,LEADS_TO,increased learning time,Outcome,True
+S006,S006-cmoc-8f0637,realistic unrestricted learning conditions,Context,ENABLES,increased learning time,Outcome,True
 S006,S006-cmoc-2a537e,computer-supported case-based worked examples,Intervention,PROVIDES,worked examples of diagnostic cases,Mechanism_Resource,True
 S006,S006-cmoc-2a537e,computer-supported case-based worked examples,Intervention,PROVIDES,structured diagnostic process schema,Mechanism_Resource,True
 S006,S006-cmoc-2a537e,worked examples of diagnostic cases,Mechanism_Resource,TRIGGERS,lower cognitive load during example study,Mechanism_Response,True
@@ -56,24 +74,6 @@ S006,S006-cmoc-2a537e,students with deficient diagnostic knowledge base,Context,
 S006,S006-cmoc-2a537e,schema construction investment,Mechanism_Response,LEADS_TO,effective and efficient worked-example approach,Outcome,True
 S006,S006-cmoc-2a537e,schema construction investment,Mechanism_Response,LEADS_TO,higher arterial hypertension MCQ scores after six weeks,Outcome,True
 S006,S006-cmoc-12e22c,worked examples with errors and elaborated feedback,Intervention,PROVIDES,severe erroneous diagnostic examples,Mechanism_Resource,True
-S006,S006-cmoc-12e22c,worked examples with errors and elaborated feedback,Intervention,PROVIDES,elaborated explanatory feedback,Mechanism_Resource,True
-S006,S006-cmoc-12e22c,severe erroneous diagnostic examples,Mechanism_Resource,TRIGGERS,error identification and correct-solution comparison,Mechanism_Response,True
-S006,S006-cmoc-12e22c,elaborated explanatory feedback,Mechanism_Resource,TRIGGERS,error identification and correct-solution comparison,Mechanism_Response,True
-S006,S006-cmoc-12e22c,complex diagnostic learning tasks,Context,ENABLES,error identification and correct-solution comparison,Mechanism_Response,True
-S006,S006-cmoc-12e22c,error identification and correct-solution comparison,Mechanism_Response,LEADS_TO,highest diagnostic knowledge scores,Outcome,True
-S006,S006-cmoc-12e22c,error identification and correct-solution comparison,Mechanism_Response,LEADS_TO,students profited from erroneous examples with feedback,Outcome,True
-S006,S006-cmoc-d7c61b,worked examples with errors and KCR feedback,Intervention,PROVIDES,severe erroneous diagnostic examples,Mechanism_Resource,True
-S006,S006-cmoc-d7c61b,worked examples with errors and KCR feedback,Intervention,PROVIDES,right-or-wrong KCR feedback,Mechanism_Resource,True
-S006,S006-cmoc-d7c61b,right-or-wrong KCR feedback,Mechanism_Resource,TRIGGERS,insufficient deep conceptual understanding,Mechanism_Response,True
-S006,S006-cmoc-d7c61b,complex learning environments,Context,ENABLES,insufficient deep conceptual understanding,Mechanism_Response,True
-S006,S006-cmoc-d7c61b,insufficient deep conceptual understanding,Mechanism_Response,LEADS_TO,superficial example processing,Mechanism_Response,True
-S006,S006-cmoc-d7c61b,superficial example processing,Mechanism_Response,LEADS_TO,detrimental effect of errors with KCR,Outcome,True
-S006,S006-cmoc-d7c61b,superficial example processing,Mechanism_Response,LEADS_TO,poor diagnostic knowledge performance,Outcome,True
-S006,S006-cmoc-d7c61b,complex learning environments,Context,CONSTRAINS,poor diagnostic knowledge performance,Outcome,True
-S006,S006-cmoc-8f0637,case-based worked examples with feedback variations,Intervention,PROVIDES,elaborated explanatory feedback,Mechanism_Resource,True
-S006,S006-cmoc-8f0637,elaborated explanatory feedback,Mechanism_Resource,TRIGGERS,processing elaborated feedback information,Mechanism_Response,True
-S006,S006-cmoc-8f0637,processing elaborated feedback information,Mechanism_Response,LEADS_TO,increased learning time,Outcome,True
-S006,S006-cmoc-8f0637,realistic unrestricted learning conditions,Context,ENABLES,increased learning time,Outcome,True
 S007,S007-cmoc-3d417c,Integrated Cases Section course,Intervention,PROVIDES,clinical reasoning-oriented course exposure,Mechanism_Resource,True
 S007,S007-cmoc-3d417c,Integrated Cases Section course,Intervention,TRIGGERS,increased confidence in diagnostic reasoning,Mechanism_Response,True
 S007,S007-cmoc-3d417c,Integrated Cases Section course,Intervention,TRIGGERS,significant clinical reasoning gain on script concordance test,Outcome,True
@@ -87,24 +87,24 @@ S008,S008-cmoc-eafdab,querying initial diagnostic hypothesis,Intervention,PROVID
 S008,S008-cmoc-eafdab,initial hypothesis query prompt,Mechanism_Resource,TRIGGERS,thinking during hypothesis query,Mechanism_Response,True
 S008,S008-cmoc-eafdab,thinking during hypothesis query,Mechanism_Response,LEADS_TO,no harm to correct diagnosis,Outcome,True
 S008,S008-cmoc-eafdab,correct initial diagnosis,Context,ENABLES,no harm to correct diagnosis,Outcome,True
+S009,S009-cmoc-4dc371,diligent study and practice,Intervention,TRIGGERS,logical connection to disease mechanisms,Mechanism_Response,True
 S009,S009-cmoc-614119,clinical pathology courses or instructors,Intervention,PROVIDES,laboratory data revealing hidden disease,Mechanism_Resource,True
 S009,S009-cmoc-614119,laboratory data revealing hidden disease,Mechanism_Resource,TRIGGERS,discovery of laboratory data’s explanatory power,Mechanism_Response,True
 S009,S009-cmoc-614119,discovery of laboratory data’s explanatory power,Mechanism_Response,LEADS_TO,piqued interest in clinical pathology,Outcome,True
-S009,S009-cmoc-614119,clinical pathology courses or instructors,Intervention,TRIGGERS,piqued interest in clinical pathology,Outcome,True
 S009,S009-cmoc-4dc371,experienced diagnosticians with developed expertise,Context,ENABLES,logical connection to disease mechanisms,Mechanism_Response,True
 S009,S009-cmoc-4dc371,cascade of data abnormalities,Context,ENABLES,logical connection to disease mechanisms,Mechanism_Response,True
-S009,S009-cmoc-4dc371,diligent study and practice,Intervention,TRIGGERS,logical connection to disease mechanisms,Mechanism_Response,True
 S009,S009-cmoc-4dc371,logical connection to disease mechanisms,Mechanism_Response,LEADS_TO,identification of failing organ systems,Outcome,True
-S010,S010-cmoc-0c508a,case-based clinical reasoning seminar intervention,Intervention,PROVIDES,explicit cognitive-features focus,Mechanism_Resource,True
-S010,S010-cmoc-0c508a,explicit cognitive-features focus,Mechanism_Resource,TRIGGERS,intended insight into cognitive features of reasoning,Mechanism_Response,True
+S009,S009-cmoc-614119,clinical pathology courses or instructors,Intervention,TRIGGERS,piqued interest in clinical pathology,Outcome,True
 S010,S010-cmoc-0c508a,case-based clinical reasoning seminar intervention,Intervention,TRIGGERS,improved aspects of diagnostic competence,Outcome,True
+S010,S010-cmoc-0c508a,explicit cognitive-features focus,Mechanism_Resource,TRIGGERS,intended insight into cognitive features of reasoning,Mechanism_Response,True
+S010,S010-cmoc-0c508a,case-based clinical reasoning seminar intervention,Intervention,PROVIDES,explicit cognitive-features focus,Mechanism_Resource,True
+S011,S011-cmoc-9baec0,virtual prior experience with real patient videos,Mechanism_Resource,TRIGGERS,stimulated clinical diagnostic reasoning,Mechanism_Response,True
 S011,S011-cmoc-afe52b,short undergraduate primary care rotations,Context,CONSTRAINS,accelerated acquisition of targeted reasoning skills,Outcome,True
 S011,S011-cmoc-afe52b,video-enriched virtual patient cases,Intervention,PROVIDES,multiplied verbal and non-verbal patient encounters,Mechanism_Resource,True
 S011,S011-cmoc-afe52b,multiplied verbal and non-verbal patient encounters,Mechanism_Resource,TRIGGERS,practising and refining GP reasoning,Mechanism_Response,True
 S011,S011-cmoc-afe52b,practising and refining GP reasoning,Mechanism_Response,LEADS_TO,accelerated acquisition of targeted reasoning skills,Outcome,True
 S011,S011-cmoc-9baec0,GP diagnostic approaches not explicitly taught,Context,CONSTRAINS,primary-care-specific reasoning skill acquisition,Outcome,True
 S011,S011-cmoc-9baec0,video-enriched virtual patient cases,Intervention,PROVIDES,virtual prior experience with real patient videos,Mechanism_Resource,True
-S011,S011-cmoc-9baec0,virtual prior experience with real patient videos,Mechanism_Resource,TRIGGERS,stimulated clinical diagnostic reasoning,Mechanism_Response,True
 S011,S011-cmoc-9baec0,stimulated clinical diagnostic reasoning,Mechanism_Response,LEADS_TO,primary-care-specific reasoning skill acquisition,Outcome,True
 S011,S011-cmoc-4b1064,GP reasoning using rule-outs and probabilities,Context,ENABLES,estimating and adjusting diagnostic probability,Mechanism_Response,True
 S011,S011-cmoc-4b1064,diagnostic decision tree VP cases,Intervention,PROVIDES,virtual experience of real-time reasoning techniques,Mechanism_Resource,True
@@ -210,6 +210,7 @@ S017,S017-cmoc-7a2dce,schema-based diagnostic reasoning instruction,Intervention
 S017,S017-cmoc-7a2dce,same factual information organised differently,Mechanism_Resource,TRIGGERS,selective organisation into structured knowledge,Mechanism_Response,True
 S017,S017-cmoc-7a2dce,novice medical students with basic cardiac exam exposure,Context,ENABLES,selective organisation into structured knowledge,Mechanism_Response,True
 S017,S017-cmoc-7a2dce,selective organisation into structured knowledge,Mechanism_Response,LEADS_TO,unchanged factual knowledge performance,Outcome,True
+S018,S018-cmoc-893d67,varied same-process clinical cases,Mechanism_Resource,TRIGGERS,more secure faster case representations,Mechanism_Response,True
 S018,S018-cmoc-9fdf3a,reasoning through multiple similar cases,Intervention,PROVIDES,varied same-process clinical cases,Mechanism_Resource,True
 S018,S018-cmoc-9fdf3a,reasoning through multiple similar cases,Intervention,PROVIDES,official diagnosis feedback after each case,Mechanism_Resource,True
 S018,S018-cmoc-9fdf3a,varied same-process clinical cases,Mechanism_Resource,TRIGGERS,reminded of previous cases,Mechanism_Response,True
@@ -218,7 +219,6 @@ S018,S018-cmoc-9fdf3a,advanced students with prior endocrinology training,Contex
 S018,S018-cmoc-9fdf3a,comparison of prior knowledge and cases,Mechanism_Response,LEADS_TO,learning enabling conditions and consequences,Outcome,True
 S018,S018-cmoc-9fdf3a,comparison of prior knowledge and cases,Mechanism_Response,LEADS_TO,accurate conclusions about case variations,Outcome,True
 S018,S018-cmoc-893d67,reasoning through multiple similar cases,Intervention,PROVIDES,varied same-process clinical cases,Mechanism_Resource,True
-S018,S018-cmoc-893d67,varied same-process clinical cases,Mechanism_Resource,TRIGGERS,more secure faster case representations,Mechanism_Response,True
 S018,S018-cmoc-893d67,prior clinical case exposure,Context,ENABLES,more secure faster case representations,Mechanism_Response,True
 S018,S018-cmoc-893d67,more secure faster case representations,Mechanism_Response,LEADS_TO,implicit learning and faster recognition,Outcome,True
 S018,S018-cmoc-36ea43,diagnose explain and learn from cases,Intervention,PROVIDES,reflection during explanation format,Mechanism_Resource,True

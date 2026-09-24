@@ -704,6 +704,10 @@ def export_results() -> None:
 @app.command("run-all")
 def run_all(
     skip_extract: bool = typer.Option(False, help="Reuse existing CMOCs (skip re-extraction)."),
+    refresh: bool = typer.Option(
+        True, "--refresh/--no-refresh",
+        help="Re-extract studies that already have CMOCs (default). --no-refresh only "
+             "extracts studies with none, which makes a second run a no-op."),
 ) -> None:
     """Run the full pipeline end-to-end (ingest → screen → extract → synthesize → verify → report).
 
@@ -718,7 +722,7 @@ def run_all(
     ingest(source=None)
     screen(limit=None)
     if not skip_extract:
-        extract(limit=None)
+        extract(limit=None, refresh=refresh)
     synthesize()
     detect_communities_cmd(min_size=2)
     verify()
@@ -736,6 +740,79 @@ def webui(port: int = typer.Option(8000, help="Port for the review console.")) -
 
     console.print(f"[green]Review console:[/green] http://127.0.0.1:{port}", markup=False)
     uvicorn.run("res_pipeline.webui:app", host="127.0.0.1", port=port, log_level="warning")
+
+
+@app.command()
+def outputs() -> None:
+    """List every file a run produces, what it is, and whether it is current.
+
+    Exists because the most common question asked of this project is "show me the output",
+    and the honest answer is a list of files with what each one is for — not a summary
+    written about them.
+    """
+    from datetime import datetime, timezone
+
+    from res_pipeline.core.config import OUTPUTS_DIR
+
+    described: list[tuple[str, str]] = [
+        ("RESULTS.html", "THE ONE TO OPEN: whole review, human vs machine, searchable"),
+        ("exports/cmocs.csv", "Every finding, one row each (study, direction, statement)"),
+        ("exports/entities.csv", "Every concept + the verbatim sentence and character span"),
+        ("exports/relationships.csv", "Every causal link (from -> relation -> to)"),
+        ("exports/big_concepts.csv", "Mechanisms the Leiden algorithm discovered"),
+        ("lkg/entities.parquet", "Knowledge graph nodes, for programmatic use"),
+        ("lkg/relationships.parquet", "Knowledge graph edges"),
+        ("lkg/communities.parquet", "Discovered mechanism clusters"),
+        ("lkg/cmocs.parquet", "Findings, columnar"),
+    ]
+    globbed: list[tuple[str, str]] = [
+        ("runs/verify-*/verification_report.md", "Scorecard vs Richmond, human-readable"),
+        ("runs/verify-*/verification_report.json", "The same numbers, machine-readable"),
+        ("runs/verify-*/dashboard.html", "Scorecard as a dashboard"),
+        ("runs/report-*/prisma_flow.md", "PRISMA study-flow diagram"),
+        ("runs/report-*/cmoc_evidence_table.md", "Evidence table, Richmond's genre"),
+        ("runs/report-*/programme_theory.md", "The programme theory the system wrote"),
+        ("runs/report-*/theory_diagram.html", "Programme theory as a diagram"),
+        ("runs/report-*/audit_trail.md", "What was done, by whom, when"),
+        ("logs/*.log", "Full console log of the run"),
+    ]
+
+    now = datetime.now(timezone.utc)
+    table = Table(title="Output files")
+    table.add_column("File")
+    table.add_column("What it is")
+    table.add_column("Size", justify="right")
+    table.add_column("Age", justify="right")
+
+    def _row(path, what: str) -> None:
+        stat = path.stat()
+        age_h = (now.timestamp() - stat.st_mtime) / 3600
+        age = f"{age_h:.0f}h" if age_h >= 1 else f"{age_h * 60:.0f}m"
+        size = (f"{stat.st_size / 1_048_576:.1f} MB" if stat.st_size >= 1_048_576
+                else f"{stat.st_size / 1024:.1f} KB" if stat.st_size >= 1024
+                else f"{stat.st_size} B")
+        table.add_row(str(path.relative_to(OUTPUTS_DIR)), what, size, age)
+
+    missing: list[str] = []
+    for rel, what in described:
+        path = OUTPUTS_DIR / rel
+        if path.exists():
+            _row(path, what)
+        else:
+            missing.append(rel)
+    for pattern, what in globbed:
+        matches = sorted(OUTPUTS_DIR.glob(pattern), key=lambda p: p.stat().st_mtime)
+        if matches:
+            _row(matches[-1], what + (f"  (newest of {len(matches)})" if len(matches) > 1 else ""))
+        else:
+            missing.append(pattern)
+
+    console.print(table)
+    console.print(f"[dim]Root: {OUTPUTS_DIR}[/dim]")
+    if missing:
+        console.print(f"[yellow]Not yet generated:[/yellow] {', '.join(missing)}", markup=False)
+    console.print("Open [bold]outputs/RESULTS.html[/bold] first — it renders everything above "
+                  "in one page, with the verification table.")
 
 
 @app.command()

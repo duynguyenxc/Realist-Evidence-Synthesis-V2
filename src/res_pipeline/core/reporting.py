@@ -48,34 +48,48 @@ def _fetch_theory() -> dict | None:
 
 
 def write_prisma(out: Path) -> None:
+    """PRISMA-style flow for one screening run.
+
+    This used to aggregate `screening_decisions` across every run ever stored, which on a
+    28-study corpus produced "159 auto-included" and "final included 162" — numbers a
+    reviewer would stop reading at. The counts now come from `screening_metrics()`, the same
+    single-run function the verification harness uses, so the flow diagram and the scorecard
+    can never disagree.
+    """
+    from res_pipeline.verification.metrics import screening_metrics
+
+    s = screening_metrics()
     with get_connection() as conn:
-        n_records = conn.execute("SELECT count(*) AS n FROM studies").fetchone()["n"]
-        combined = conn.execute(
-            "SELECT decision, count(*) AS n FROM screening_decisions "
-            "WHERE decider LIKE 'combined:%' GROUP BY decision"
-        ).fetchall()
-        human_inc = conn.execute(
-            "SELECT count(*) AS n FROM screening_decisions "
-            "WHERE decider LIKE 'human:%' AND decision='include'"
-        ).fetchone()["n"]
         extracted = conn.execute(
             "SELECT count(DISTINCT study_id) AS n FROM cmocs"
         ).fetchone()["n"]
-    tally = {r["decision"]: r["n"] for r in combined}
-    out.write_text(
-        "# PRISMA-style Flow (benchmark-corpus run)\n\n"
-        "> Note: this run operates on the Richmond benchmark corpus (the 28 included\n"
-        "> studies); a distractor-pool precision test is a separate verification step.\n\n"
-        f"| Stage | n |\n|---|---|\n"
-        f"| Records in registry | {n_records} |\n"
-        f"| Auto-included (dual-model union) | {tally.get('include', 0)} |\n"
-        f"| Auto-excluded | {tally.get('exclude', 0)} |\n"
-        f"| Uncertain → HITL-1 | {tally.get('uncertain', 0)} |\n"
-        f"| Human-adjudicated includes | {human_inc} |\n"
-        f"| Final included | {tally.get('include', 0) + human_inc} |\n"
-        f"| Studies with extracted CMOCs | {extracted} |\n",
-        encoding="utf-8",
-    )
+
+    n = s["n_gold_includes"]
+    auto = s["auto_include"]
+    uncertain = len(s["uncertain_routed_to_hitl"])
+    excluded = len(s["false_excludes"])
+    human_inc = round(s["final_sensitivity_after_hitl"] * n) - auto
+    lines = [
+        "# PRISMA-style Flow (benchmark-corpus run)",
+        "",
+        "> This run operates on the Richmond benchmark corpus (the 28 studies Richmond",
+        "> included), so every record is a known include and this flow measures recall only.",
+        "> Specificity is measured separately against a distractor pool (`res precision-test`).",
+        "",
+        f"> Screening run scored: `{s['screening_run_id']}`",
+        "",
+        "| Stage | n |",
+        "|---|---|",
+        f"| Records in registry | {n} |",
+        f"| Auto-included (dual-model union) | {auto} |",
+        f"| Auto-excluded | {excluded} |",
+        f"| Uncertain, routed to HITL-1 | {uncertain} |",
+        f"| Human-adjudicated includes | {human_inc} |",
+        f"| Final included | {auto + human_inc} |",
+        f"| Studies with extracted CMOCs | {extracted} |",
+        "",
+    ]
+    out.write_text("\n".join(lines), encoding="utf-8")
 
 
 def write_evidence_table(out: Path) -> None:
