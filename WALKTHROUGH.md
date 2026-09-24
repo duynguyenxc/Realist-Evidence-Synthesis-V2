@@ -994,3 +994,57 @@ gpt-5.5; empty `config/prompts/`; the per-paper gold is LLM output).
 (blocks every agreement-style number); `res feedback` still violates a NOT NULL constraint; the
 unfiltered `DELETE`s in normalize/communities/synthesize still discard other runs' rows and HITL-3
 resolutions.
+
+---
+
+## M34 (2026-09-24) — the first complete end-to-end run
+
+After three credit exhaustions, `res extract --resume extract-9035e95e` finished the five
+remaining studies and the pipeline ran through synthesize → communities → verify → build-lkg →
+report → exports without error. **One extraction vintage, 26 studies, one screening run** — the
+first time every published number belongs to a single execution.
+
+**Corpus:** 91 CMOCs · 544 entity instances · 460 typed relations · 9 emergent mechanisms.
+
+**Scorecard (run `verify-0cc8eff6`, gold v3), with exact intervals:**
+
+| | Result |
+|---|---|
+| Screening sensitivity | 92.9% unaided → **100%** (95% CI 87.7–100) after one human check |
+| Quotes resolving to a verbatim span | **95.6%** (93.5–97.2) — exact 83, normalized 437, fuzzy 13, failed 11 |
+| Concept coverage, same realist role | **37/46 = 80.4%** (66.1–90.6), per-sample 78.3–82.6% |
+| Concept coverage, role-tolerant | 46/46 — **saturated, no longer informative** |
+| Relation anchored | **32/40 = 80.0%** (64.4–90.9); 88.9% over the arrows Richmond actually draws |
+| Relation strict | 1/40 (R26) — first non-zero |
+| Relation type-level | 39/40, **saturable: only 8 patterns exist in our graph** |
+| Emergent mechanisms | 19/28 = 67.9% (47.6–84.1), 9 communities |
+| Programme theory | **0.87 independent judge vs 0.51 same-family — gap 0.36** |
+
+**Against the previous (mixed-provenance) numbers**, relations improved materially — anchored
+72.5% → 80.0%, strict 0 → 1 — and verbatim grounding rose 92.8% → 95.6%. Concept coverage within
+role is flat (38→37 of 46), which is the honest read: the extraction changed, the concept matcher
+did not get better.
+
+**A new saturation flag, raised against ourselves.** Role-tolerant concept coverage reached
+**46/46**. A metric that matches everything has stopped discriminating, exactly like the
+type-level relation score. `res verify` now leads with the like-for-like figure, prints the
+role-tolerant one beneath it marked `⚠ SATURATED — not informative`, and prints the type-level
+ceiling inline. The summary table previously hardcoded `/47` and `E01-E47`; it now reads the
+denominators from the report.
+
+**Resumability, which is what made this run possible.** Extraction had been all-or-nothing, so
+each of the three top-ups paid again for the same 25 studies and never reached the end — the same
+study (S026) killed it twice. `--resume <run-id>` skips studies already extracted under that id;
+the final resume cost five studies instead of twenty-six. A mixed-vintage guard
+(`extraction_vintages()`) now puts a red banner on RESULTS.html and a warning on the CLI whenever
+the CMOC layer holds more than one run, so an interrupted state can never be quoted silently.
+
+**Cost, measured:** extraction is 81% of all tokens, essentially all of it gpt-5.5 reading each
+full paper twice (draft + Self-Refine revise) and generating ~4.4k reasoning tokens per call —
+~22.5k prompt and ~10.9k completion per study. Two low-risk reductions are available and not yet
+implemented: skip the revise round when the critique finds nothing material (~30–40%), and
+restructure the revise prompt so the paper text is a stable cacheable prefix (`cached_tokens` is
+currently 0, so prompt caching is being wasted entirely).
+
+**Human HITL-3 contradiction resolutions** were snapshotted to `contradictions_hitl3_m35` before
+`synthesize` (which still issues an unfiltered DELETE) — that defect remains open.

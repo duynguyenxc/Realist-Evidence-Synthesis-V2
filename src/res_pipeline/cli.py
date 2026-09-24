@@ -580,19 +580,39 @@ def verify() -> None:
     table.add_row("Screening sensitivity (auto)", f"{s['auto_sensitivity']:.1%}")
     table.add_row("Screening sensitivity (after HITL-1)",
                   f"{s['final_sensitivity_after_hitl']:.1%}")
-    e_range = (f"  [range {e['recall_min']:.0%}–{e['recall_max']:.0%} over {e['samples']}]"
+    n_e, n_r = e["gold_entities"], r["gold_relations"]
+    e_range = (f"  [per-sample {e['recall_min']:.0%}–{e['recall_max']:.0%} over {e['samples']}]"
                if "recall_min" in e else "")
-    table.add_row("Entity coverage (E01-E47)",
-                  f"{e['recall']:.1%} ({e['matched']}/47, majority-vote){e_range}")
-    table.add_row("Relation coverage strict (R01-R40)",
-                  f"{r['recall']:.1%} ({r['recovered']}/40)")
-    table.add_row("Relation coverage type-level (pattern)",
-                  f"{r.get('type_recall', 0):.1%} ({r.get('type_recovered', 0)}/40)")
-    table.add_row("Citation faithfulness", f"{f['faithfulness']:.1%}")
-    t_range = (f"  [range {t['mean_min']:.2f}–{t['mean_max']:.2f} over {t['samples']}]"
-               if "mean_min" in t else "")
-    table.add_row("Theory correspondence (mean)",
-                  f"{t.get('mean_correspondence', 0):.2f}{t_range}")
+    # Lead with the like-for-like figure. The role-tolerant one saturates — it has reached
+    # 100% — and a score that matches everything has stopped discriminating.
+    table.add_row("Concept coverage (same realist role)",
+                  f"{e['matched_within_type'] / n_e:.1%} "
+                  f"({e['matched_within_type']}/{n_e}){e_range}")
+    table.add_row("  …role-tolerant",
+                  f"{e['recall']:.1%} ({e['matched']}/{n_e}, "
+                  f"{e['matched_cross_type']} cross-role)"
+                  + ("  ⚠ SATURATED — not informative" if e["matched"] == n_e else ""))
+    table.add_row("Relation strict (exact concept pair)",
+                  f"{r['recall']:.1%} ({r['recovered']}/{n_r})")
+    table.add_row("Relation anchored (lead with this)",
+                  f"{r.get('anchored_recall', 0):.1%} "
+                  f"({r.get('anchored_recovered', 0)}/{n_r})")
+    ceiling = r.get("type_level_ceiling", {})
+    table.add_row("Relation type-level (pattern)",
+                  f"{r.get('type_recall', 0):.1%} ({r.get('type_recovered', 0)}/{n_r})"
+                  f"  ⚠ saturable: only "
+                  f"{ceiling.get('distinct_patterns_in_our_graph', '?')} patterns exist")
+    tiers = f.get("tiers", {})
+    table.add_row("Quotes resolving to a verbatim span",
+                  f"{f.get('strict_plus_normalized', 0):.1%} "
+                  f"(exact {tiers.get('exact', 0)}, normalized {tiers.get('normalized', 0)}, "
+                  f"fuzzy {tiers.get('fuzzy', 0)}, failed {tiers.get('unresolved', 0)})")
+    same = t.get("same_family_judge", {})
+    table.add_row("Theory correspondence",
+                  f"{t.get('mean_correspondence', 0):.2f} independent judge vs "
+                  f"{same.get('mean_correspondence', 0):.2f} same-family "
+                  f"(gap {abs(t.get('self_preference_gap', 0)):.2f} — judge-dependent, "
+                  "do not quote one number)")
     ca = report.get("community_alignment", {})
     if "alignment_recall" in ca:
         table.add_row("Community↔Richmond mechanism alignment",
