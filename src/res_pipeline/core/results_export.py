@@ -136,6 +136,22 @@ def _fetch(cur, sql: str, params: tuple = ()) -> list[dict[str, Any]]:
     return list(cur.fetchall())
 
 
+def extraction_vintages() -> list[tuple[str, int]]:
+    """Which extraction runs the CMOC layer currently holds, largest first.
+
+    More than one means the layer is a composite of different runs — different prompts,
+    possibly different models, certainly different days. Every metric computed over it is
+    then a cross-vintage average that belongs to no single execution, which is exactly the
+    defect the screening metric was fixed for. Callers that publish numbers must check this.
+    """
+    with get_connection() as conn:
+        rows = conn.execute(
+            "SELECT run_id, count(DISTINCT study_id) AS n FROM cmocs "
+            "GROUP BY run_id ORDER BY n DESC"
+        ).fetchall()
+    return [(r["run_id"], r["n"]) for r in rows]
+
+
 def collect() -> dict[str, Any]:
     """Read everything the page shows. No computation beyond joining and counting."""
     verify_run, verification = _latest_verification()
@@ -242,6 +258,7 @@ def collect() -> dict[str, Any]:
             ORDER BY study_id
         """, ("combined:%",))
 
+    data["vintages"] = extraction_vintages()
     data["side_by_side"] = _build_side_by_side(data)
     return data
 
@@ -424,6 +441,24 @@ document.querySelectorAll('[data-filter]').forEach(function(box){
     if(out) out.textContent = shown + ' of ' + rows.length + ' shown';
   });
 });
+"""
+
+
+def _vintage_warning(d: dict[str, Any]) -> str:
+    """A banner when the CMOC layer mixes extraction runs — never a silent composite."""
+    vintages = d.get("vintages") or []
+    if len(vintages) <= 1:
+        return ""
+    rows = " · ".join(f"<code>{_e(run)}</code> ({n} studies)" for run, n in vintages)
+    return f"""
+<div class="callout" style="border-left-color:var(--gap);background:var(--gap-bg)">
+  <p><strong>This page is built from an incomplete extraction.</strong> The findings below
+  come from {len(vintages)} different extraction runs — {rows} — so every count and every
+  score on this page is a composite that belongs to no single execution. This happens when a
+  run is interrupted part-way. Finish the extraction
+  (<code>res extract --resume &lt;run-id&gt;</code>) and regenerate before quoting anything
+  here.</p>
+</div>
 """
 
 
@@ -900,6 +935,7 @@ def render(d: dict[str, Any]) -> str:
   answer for yourself.</p>
 </header>
 
+{_vintage_warning(d)}
 {_section_headline(d)}
 {_section_counts(d)}
 {_section_side_by_side(d)}

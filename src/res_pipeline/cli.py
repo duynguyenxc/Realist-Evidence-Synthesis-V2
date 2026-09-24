@@ -157,23 +157,44 @@ def extract(
     refresh: bool = typer.Option(
         False, "--refresh",
         help="Re-extract studies that already have CMOCs, replacing them one study at a time."),
+    resume: str = typer.Option(
+        None, "--resume",
+        help="Continue an interrupted extraction: pass its run id. Studies already extracted "
+             "under that run are skipped, so an API failure costs no repeated spend."),
 ) -> None:
     """Phase 3: CMOC extraction (typed, span-grounded, verified) for included studies.
 
-    By default this skips any study that already has CMOCs, so a second `res extract` is a
-    no-op — which silently printed n=0 and confused every re-run. Pass ``--refresh`` for a
-    genuine re-extraction: each study's previous CMOC layer is deleted **immediately before
-    that study is re-extracted**, never all up front, so a failure part-way through costs one
-    study rather than the whole corpus. Take a database backup first regardless.
+    Three modes, because extraction is the expensive stage and an interruption used to mean
+    paying for the same studies twice:
+
+    * **default** — extract only studies that have no CMOCs at all. A second plain
+      ``res extract`` is therefore a no-op (it used to print ``n=0`` with no explanation).
+    * ``--refresh`` — re-extract everything. Each study's previous layer is deleted
+      **immediately before that study is re-extracted**, never all up front, so a failure
+      part-way through costs one study rather than the corpus.
+    * ``--resume <run-id>`` — continue an interrupted run under its original id, skipping
+      the studies it already finished. This is what to use after the API runs out of credit:
+      top up, re-run with the same id, and only the remaining studies are paid for. The
+      result is still a single-vintage extraction, which is what the metrics require.
+
+    Take a database backup before ``--refresh`` regardless.
     """
     import uuid as _uuid
 
     from res_pipeline.core.db import get_connection
     from res_pipeline.plugins.realist.cmoc_extraction import extract_study_cmocs
 
-    run_id = f"extract-{_uuid.uuid4().hex[:8]}"
-    already_clause = "" if refresh else (
-        " AND study_id NOT IN (SELECT DISTINCT study_id FROM cmocs)")
+    run_id = resume or f"extract-{_uuid.uuid4().hex[:8]}"
+    if resume:
+        # Skip what this run already produced; re-extract everything else, so studies left
+        # holding an older run's rows (or cleared and never rewritten) are picked up.
+        already_clause = (" AND study_id NOT IN (SELECT DISTINCT study_id FROM cmocs "
+                          "WHERE run_id = %(run_id)s)")
+        refresh = True
+    elif refresh:
+        already_clause = ""
+    else:
+        already_clause = " AND study_id NOT IN (SELECT DISTINCT study_id FROM cmocs)"
     with get_connection() as conn:
         rows = conn.execute(
             f"""
@@ -181,9 +202,13 @@ def extract(
             WHERE ((decider LIKE 'combined:%%' AND decision='include')
                OR (decider LIKE 'human:%%' AND decision='include')){already_clause}
             ORDER BY study_id
-            """
+            """,
+            {"run_id": run_id},
         ).fetchall()
     study_ids = [r["study_id"] for r in rows]
+    if resume:
+        console.print(f"[green]Resuming {run_id}[/green] — "
+                      f"{len(study_ids)} studies left to extract", markup=False)
     if limit:
         study_ids = study_ids[:limit]
 
@@ -694,6 +719,15 @@ def export_results() -> None:
     """
     from res_pipeline.core.results_export import write
 
+    from res_pipeline.core.results_export import extraction_vintages
+
+    vintages = extraction_vintages()
+    if len(vintages) > 1:
+        console.print("[yellow]Warning: the CMOC layer mixes "
+                      f"{len(vintages)} extraction runs[/yellow] — "
+                      + ", ".join(f"{r} ({n} studies)" for r, n in vintages), markup=False)
+        console.print("Every number on the page will be a cross-run composite. Finish the "
+                      "extraction with `res extract --resume <run-id>` before quoting it.")
     target = write()
     size_kb = target.stat().st_size / 1024
     console.print(f"[green]Results page written:[/green] {target} ({size_kb:.0f} KB)",
@@ -740,6 +774,88 @@ def webui(port: int = typer.Option(8000, help="Port for the review console.")) -
 
     console.print(f"[green]Review console:[/green] http://127.0.0.1:{port}", markup=False)
     uvicorn.run("res_pipeline.webui:app", host="127.0.0.1", port=port, log_level="warning")
+
+
+@app.command()
+def progress(
+    watch: bool = typer.Option(False, "--watch", "-w",
+                               help="Refresh every 20s until the run finishes."),
+) -> None:
+    """Show how far the current (or last) run has got.
+
+    Reads the newest log in outputs/logs/ and the live database, so it works whether the
+    run was started from this terminal, another terminal, or a background process.
+    """
+    import time as _time
+    from datetime import datetime, timezone
+
+    from res_pipeline.core.config import OUTPUTS_DIR
+    from res_pipeline.core.db import get_connection
+
+    STAGES = [
+        ("Ingest", "Ingested "),
+        ("Screen", "include="),
+        ("Extract", "CMOC extraction run"),
+        ("Synthesize", "Demi-regularities"),
+        ("Communities", "conceptual entities"),
+        ("Verify", "Verification vs Richmond"),
+        ("Build LKG", "LKG exported"),
+        ("Report", "Artifacts written"),
+        ("Results page", "Results page written"),
+    ]
+
+    def _render() -> bool:
+        logs = sorted(OUTPUTS_DIR.glob("logs/*.log"), key=lambda p: p.stat().st_mtime)
+        if not logs:
+            console.print("[yellow]No run log found in outputs/logs/.[/yellow]")
+            return True
+        log = logs[-1]
+        text = log.read_text(encoding="utf-8", errors="replace")
+        age_s = datetime.now(timezone.utc).timestamp() - log.stat().st_mtime
+        failed = "RateLimitError" in text or "Traceback" in text
+        done = "Results page written" in text
+        alive = age_s < 180 and not done and not failed
+
+        table = Table(title=f"Run progress — {log.name}")
+        table.add_column("Stage")
+        table.add_column("Status")
+        for name, marker in STAGES:
+            hit = marker in text
+            table.add_row(name, "[green]done[/green]" if hit else "[dim]waiting[/dim]")
+        console.print(table)
+
+        extracted = text.count(" done")
+        if "CMOC extraction run" in text and not done:
+            console.print(f"  extracting: [bold]{extracted}[/bold] studies finished")
+
+        with get_connection() as conn:
+            counts = {t: conn.execute(f"SELECT count(*) AS n FROM {t}").fetchone()["n"]
+                      for t in ("cmocs", "entity_instances", "typed_relations")}
+        console.print(f"  database now: {counts['cmocs']} CMOCs · "
+                      f"{counts['entity_instances']} entities · "
+                      f"{counts['typed_relations']} relations", markup=False)
+
+        if failed:
+            console.print("[red]The run stopped with an error.[/red] "
+                          f"Last lines of {log}:")
+            for line in text.rstrip().splitlines()[-3:]:
+                console.print(f"  {line}", markup=False)
+        elif done:
+            console.print("[bold green]FINISHED[/bold green] — open outputs/RESULTS.html")
+        elif alive:
+            console.print(f"[green]RUNNING[/green] (log updated {age_s:.0f}s ago)")
+        else:
+            console.print(f"[yellow]STALLED?[/yellow] log has not changed for {age_s / 60:.0f} min")
+        return done or failed
+
+    if not watch:
+        _render()
+        return
+    while True:
+        console.clear()
+        if _render():
+            return
+        _time.sleep(20)
 
 
 @app.command()
