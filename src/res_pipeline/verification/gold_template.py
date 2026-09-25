@@ -107,6 +107,67 @@ def build_coding_workbook(out_path: Path | None = None, coder_label: str = "code
     for col, width in zip("ABCD", (10, 40, 16, 40)):
         ws.column_dimensions[col].width = width
 
+    # --- Worked example -------------------------------------------------------------
+    # A coder who has never done this needs to see one paper already coded far more than
+    # they need another paragraph of instructions. The example is Richmond's own Context-2
+    # statement (p.714), where the authors themselves tagged each element in the sentence —
+    # so it shows the target without anyone having to invent one.
+    ws = wb.create_sheet("EXAMPLE — read this first")
+    ws.cell(row=1, column=1, value=(
+        "WORKED EXAMPLE. This is what ONE coded paper looks like. Do not edit this sheet — "
+        "it is here to show you the target. Each study sheet has these same seven columns."
+    )).font = Font(bold=True, size=12)
+    ws.cell(row=2, column=1, value=(
+        "The source sentence is Richmond et al. (2020) p.714, where the authors marked the "
+        "elements themselves:  \"When an expert's reasoning processes or thoughts are "
+        "explicitly revealed and discussed (Mresource) with students with sufficient "
+        "domain-specific knowledge (C), this promotes understanding (Mresponse) leading to "
+        "insight (Mresponse) into the reasoning process (O) and a positive learning "
+        "experience (O).\"   That one sentence becomes the four rows below: one CMOC."
+    )).alignment = _WRAP
+    ws.row_dimensions[2].height = 60
+    ws.append([])
+    ws.append(["CMOC #", "Element type", "E-code", "Your label", "Verbatim quote",
+               "Page", "Polarity"])
+    _style_header(ws, row=4)
+    for row in [
+        [1, "Context", "E03", "students with high domain-specific knowledge",
+         "students with sufficient domain-specific knowledge", "714", "positive"],
+        [1, "Mechanism_Resource", "E07", "expert's reasoning made explicit and discussed",
+         "an expert's reasoning processes or thoughts are explicitly revealed and discussed",
+         "714", "positive"],
+        [1, "Mechanism_Response", "E20", "understanding of the reasoning process",
+         "this promotes understanding", "714", "positive"],
+        [1, "Outcome", "E22", "positive learning experience",
+         "a positive learning experience", "714", "positive"],
+    ]:
+        ws.append(row)
+    ws.append([])
+    for note in [
+        "HOW TO READ IT:",
+        "  * All four rows share CMOC # = 1, because they are one causal story. The next "
+        "story in the same paper would be CMOC # 2.",
+        "  * 'Your label' is your own short wording. 'Verbatim quote' must be copied from the "
+        "paper exactly — if you cannot find a sentence, do not code that element.",
+        "  * E-code is the closest match from the 'E-code reference' sheet, or type NEW if the "
+        "paper says something genuinely outside that list.",
+        "  * Most papers give 2-5 CMOCs. Twenty means you are coding sentences, not claims.",
+        "",
+        "THE DISTINCTION PEOPLE GET WRONG MOST OFTEN:",
+        "  Mechanism_Response = inside one learner's head (understood, panicked, felt at ease).",
+        "  Outcome            = a result you could put in a results table (accuracy rose, "
+        "scores unchanged, similar decision speed across groups).",
+        "  'The two groups showed similar decision speed' is an OUTCOME, not a response — "
+        "even though it is about learners.",
+    ]:
+        r = ws.max_row + 1
+        c = ws.cell(row=r, column=1, value=note)
+        c.alignment = _WRAP
+        if note.endswith(":"):
+            c.font = Font(bold=True)
+    for col, width in zip("ABCDEFG", (8, 22, 10, 40, 70, 8, 10)):
+        ws.column_dimensions[col].width = width
+
     with get_connection() as conn:
         studies = conn.execute(
             "SELECT study_id, title, year FROM studies ORDER BY study_id"
