@@ -149,6 +149,11 @@ def _print_run_cost(run_id: str) -> None:
             f"  tokens {row['model']}: prompt={row['pt']:,} completion={row['ct']:,}",
             markup=False,
         )
+    from res_pipeline.core.budget import budget_usd, run_spend_usd
+
+    spent, cap = run_spend_usd(run_id), budget_usd()
+    console.print(f"  estimated spend this run: ${spent:.2f}"
+                  + (f" of ${cap:.2f}" if cap else ""), markup=False)
 
 
 @app.command()
@@ -217,7 +222,26 @@ def extract(
                 "LowSupp", "ChkFlag"):
         table.add_column(col, justify="right" if col != "StudyID" else "left")
 
+    if study_ids:
+        from res_pipeline.core.budget import BudgetExceeded, budget_usd, check, preflight
+
+        funded, message = preflight()
+        console.print(f"  pre-flight: {message}", markup=False)
+        if not funded:
+            raise typer.Exit(1)
+        cap = budget_usd()
+        if cap:
+            console.print(f"  budget guard: ${cap:.2f} per run, halting at a study boundary",
+                          markup=False)
+
     for study_id in study_ids:
+        try:
+            # Between studies only — stopping mid-extraction is what made the September
+            # failures expensive, because the study had been cleared but not rewritten.
+            spent = check(run_id, where=f"before {study_id}")
+        except BudgetExceeded as exc:
+            console.print(f"[yellow]{exc}[/yellow]", markup=False)
+            break
         if refresh:
             _clear_study_cmocs(study_id)
         stats = extract_study_cmocs(study_id, run_id)

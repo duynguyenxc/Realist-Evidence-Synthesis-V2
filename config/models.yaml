@@ -46,7 +46,27 @@ tiers:
       traded for independence deliberately: the question this tier answers is whether the
       score survives a judge with no stake in the output."
 
+# Approximate USD per million tokens, used only to estimate spend against the guard below.
+# These are not billing figures — the provider's dashboard is authoritative. They exist so a run
+# can stop itself before the balance does, which is what three consecutive killed runs in
+# September 2026 cost us.
+pricing_usd_per_mtok:
+  gpt-5.5:        {input: 1.25, cached_input: 0.125, output: 10.00}
+  gpt-5.4:        {input: 1.10, cached_input: 0.110, output:  8.80}
+  gpt-5.4-mini:   {input: 0.25, cached_input: 0.025, output:  2.00}
+  gpt-4.1-mini:   {input: 0.40, cached_input: 0.100, output:  1.60}
+
 budget:
   pilot_paper_count: 3
-  max_usd_per_full_run: null   # set after pilot measurement
+  # CALIBRATION. The rates above are published list prices applied to our own token counts, and
+  # they under-report: summed over all history they give $26 where the account actually spent
+  # appreciably more. Until someone reconciles a single run against the provider dashboard and
+  # replaces this number, the estimate is multiplied by a deliberately pessimistic factor — an
+  # over-estimate stops a run early, which is recoverable; an under-estimate lets the balance
+  # run out mid-extraction, which is what happened three times in September 2026.
+  # TO CALIBRATE: run one stage, read the true cost from the dashboard, set factor = true/estimate.
+  cost_calibration_factor: 2.0
+  # Sized to one full run (~$35-45 observed), not several. Raise deliberately, never casually.
+  max_usd_per_full_run: 45.0
+  warn_fraction: 0.90
   log_token_usage: true
