@@ -188,6 +188,26 @@ by the system, one or more per paper, each carrying the verbatim sentence it cam
 remaining papers are abstract-only records too short to support a configuration, and the system
 correctly declines to invent one.</p>
 
+<h3>What the system actually produced — real examples</h3>
+<p class="sub">The counts above say <em>how much</em>. These say <em>what</em>. Every block below
+is copied straight from the database, unedited. Section 6 holds all of it.</p>
+
+<h4 style="margin-top:22px">A finding — one of 94</h4>
+<div class="col machine"><blockquote>When dermatological diagnosis learners differ by expertise level, reasoning-process instruction triggers relative reliance on analytic and similarity-based processes, leading to instructionally modifiable reasoning-process reliance.</blockquote><p class="small">From study <code>S001</code> · direction <span class="pol pol-mixed">mixed</span> · assembled from these elements:</p><div class="tablewrap"><table><tbody><tr><td class='num'>Context</td><td>dermatological diagnosis domain</td></tr><tr><td class='num'>Context</td><td>learner expertise level</td></tr><tr><td class='num'>Intervention</td><td>reasoning-process instruction</td></tr><tr><td class='num'>Mechanism_Response</td><td>relative reliance on analytic and similarity-based processes</td></tr><tr><td class='num'>Outcome</td><td>instructionally modifiable reasoning-process reliance</td></tr></tbody></table></div></div>
+
+<h4 style="margin-top:22px">Concepts, each with the sentence it came from</h4>
+<p class="small">This is the part a single prompt cannot produce: every concept is pinned to a
+character position in the source paper, so any claim here can be checked against the original.</p>
+<div class="tablewrap"><table><thead><tr><th>Role</th><th>Concept</th><th>The sentence it came from</th></tr></thead><tbody><tr><td class="num">Context</td><td><strong>dermatological diagnosis domain</strong><div class="small"><span class="cid">cont:dermatology-diagnosis</span></div></td><td class="quote">"Coordination of Analytic and Similarity-Based Processing Strategies and Expertise in Dermatological Diagnosis"<div class="small">study S001 · characters 7–116 · verified present in the source</div></td></tr><tr><td class="num">Context</td><td><strong>learner expertise level</strong><div class="small"><span class="cid">cont:expertise-comparison</span></div></td><td class="quote">"The relative reliance on analytic and similarity-based processes is amenable to instruction and dependent on expertise."<div class="small">study S001 · characters 128–247 · verified present in the source</div></td></tr><tr><td class="num">Intervention</td><td><strong>reasoning-process instruction</strong><div class="small"><span class="cid">inte:reasoning-process-instruction</span></div></td><td class="quote">"The relative reliance on analytic and similarity-based processes is amenable to instruction and dependent on expertise."<div class="small">study S001 · characters 128–247 · verified present in the source</div></td></tr><tr><td class="num">Mechanism_Response</td><td><strong>relative reliance on analytic and similarity-based processes</strong><div class="small"><span class="cid">mech:reasoning-strategy-shift</span></div></td><td class="quote">"The relative reliance on analytic and similarity-based processes is amenable to instruction and dependent on expertise."<div class="small">study S001 · characters 128–247 · verified present in the source</div></td></tr></tbody></table></div>
+
+<h4 style="margin-top:22px">Causal links</h4>
+<div class="tablewrap"><table><thead><tr><th>From</th><th>Relation</th><th>To</th></tr></thead><tbody><tr><td>relative reliance on analytic and similarity-based processes<div class="small">Mechanism_Response</div></td><td class="num">&rarr; LEADS_TO &rarr;</td><td>instructionally modifiable reasoning-process reliance<div class="small">Outcome</div></td></tr><tr><td>reasoning-process instruction<div class="small">Intervention</div></td><td class="num">&rarr; TRIGGERS &rarr;</td><td>relative reliance on analytic and similarity-based processes<div class="small">Mechanism_Response</div></td></tr><tr><td>learner expertise level<div class="small">Context</div></td><td class="num">&rarr; ENABLES &rarr;</td><td>relative reliance on analytic and similarity-based processes<div class="small">Mechanism_Response</div></td></tr><tr><td>learner expertise level<div class="small">Context</div></td><td class="num">&rarr; CONSTRAINS &rarr;</td><td>instructionally modifiable reasoning-process reliance<div class="small">Outcome</div></td></tr></tbody></table></div>
+
+<h4 style="margin-top:22px">A mechanism the algorithm found by itself</h4>
+<p class="small">Nobody wrote these. Leiden community detection grouped the concept graph; each
+cluster was then named and defined from its own members.</p>
+<div class="col machine"><p><strong>Supported self-directed practice</strong> <span class="small">· Mechanism_Resource · 32 member concepts · found across 11 studies</span></p><p>A set of prompts, formats, and practice structures that let learners engage repeatedly and voluntarily with cases while receiving guidance, feedback, or decision support.</p><p class="small"><strong>Grouped from concepts like:</strong> repeated use across different days, higher end-of-rotation usage, FY1 shadowing programme, explanations of incorrect distractors, self-directed VP cases, AM I HERO NOW not used in simulated practice</p></div>
+
 
 <h2><span class="num">2b</span>OUTPUT FILES — where each thing actually lives</h2>
 <p class="sub"><strong>What this section is:</strong> the answer to “where are the entities?
@@ -5873,7 +5893,7 @@ listed by us rather than found by a reviewer.</p>
 
 
 <footer>
-  <p>Generated 2026-09-25 10:53 UTC from the project database
+  <p>Generated 2026-09-25 10:57 UTC from the project database
   (28 studies, 94 CMOCs, 547 entities,
   459 relations). Verification run
   <code>verify-edcbf790</code>. Human standard:

@@ -597,8 +597,74 @@ with its confidence interval and who judged it.</p></div>
 """
 
 
+def _sample_blocks(d: dict[str, Any]) -> dict[str, str]:
+    """Real rows from the database, for the OUTPUT section.
+
+    Counts answer "how much did it produce". A reader opening this page wants "what did it
+    produce", and that answer has to be visible without scrolling to the raw-data section —
+    otherwise the output looks like a row of numbers.
+    """
+    cmocs = [c for c in d["cmocs"] if len(c["narrative_statement"] or "") > 120]
+    cmoc = cmocs[0] if cmocs else (d["cmocs"][0] if d["cmocs"] else None)
+    cmoc_html = "<p class='small'>(no findings yet)</p>"
+    if cmoc:
+        order = {"Context": 0, "Intervention": 1, "Mechanism_Resource": 2,
+                 "Mechanism_Response": 3, "Outcome": 4}
+        ents = sorted((e for e in d["entities"] if e["cmoc_id"] == cmoc["cmoc_id"]),
+                      key=lambda e: order.get(e["entity_type"], 9))
+        parts = "".join(
+            f"<tr><td class='num'>{_e(e['entity_type'])}</td><td>{_e(e['label'])}</td></tr>"
+            for e in ents)
+        cmoc_html = (
+            '<div class="col machine">'
+            f"<blockquote>{_e(cmoc['narrative_statement'])}</blockquote>"
+            f"<p class=\"small\">From study <code>{_e(cmoc['study_id'])}</code> · direction "
+            f"<span class=\"pol pol-{_e(cmoc['polarity'])}\">{_e(cmoc['polarity'])}</span>"
+            " · assembled from these elements:</p>"
+            f'<div class="tablewrap"><table><tbody>{parts}</tbody></table></div></div>')
+
+    quoted = [e for e in d["entities"]
+              if e["quote_resolved"] and len(e["verbatim_quote"] or "") > 60][:4]
+    ent_rows = "".join(
+        f'<tr><td class="num">{_e(e["entity_type"])}</td>'
+        f'<td><strong>{_e(e["label"])}</strong>'
+        f'<div class="small"><span class="cid">{_e(e["canonical_id"])}</span></div></td>'
+        f'<td class="quote">"{_e(e["verbatim_quote"])}"'
+        f'<div class="small">study {_e(e["study_id"])} · characters '
+        f'{_e(e["char_start"])}–{_e(e["char_end"])} · verified present in the source</div>'
+        "</td></tr>" for e in quoted)
+    ent_html = ('<div class="tablewrap"><table><thead><tr><th>Role</th><th>Concept</th>'
+                "<th>The sentence it came from</th></tr></thead>"
+                f"<tbody>{ent_rows}</tbody></table></div>")
+
+    rel_rows = "".join(
+        f'<tr><td>{_e(r["subject"])}<div class="small">{_e(r["subject_type"])}</div></td>'
+        f'<td class="num">&rarr; {_e(r["predicate"])} &rarr;</td>'
+        f'<td>{_e(r["object"])}<div class="small">{_e(r["object_type"])}</div></td></tr>'
+        for r in d["relations"][:4])
+    rel_html = ('<div class="tablewrap"><table><thead><tr><th>From</th><th>Relation</th>'
+                f"<th>To</th></tr></thead><tbody>{rel_rows}</tbody></table></div>")
+
+    mech_html = "<p class='small'>(no mechanisms yet)</p>"
+    if d["big_concepts"]:
+        m = d["big_concepts"][0]
+        members = ", ".join((m["member_labels"] or [])[:6])
+        mech_html = (
+            '<div class="col machine">'
+            f"<p><strong>{_e(m['community_label'])}</strong> <span class=\"small\">· "
+            f"{_e(m['realist_role'])} · {m['member_count']} member concepts · found across "
+            f"{len(m['study_ids'] or [])} studies</span></p>"
+            f"<p>{_e(m['definition'])}</p>"
+            f"<p class=\"small\"><strong>Grouped from concepts like:</strong> "
+            f"{_e(members)}</p></div>")
+
+    return {"cmoc": cmoc_html, "entities": ent_html,
+            "relations": rel_html, "mechanism": mech_html}
+
+
 def _section_counts(d: dict[str, Any]) -> str:
     c = d["counts"]
+    samples = _sample_blocks(d)
     tiles = [
         (c.get("studies", 0), "Papers ingested"),
         (c.get("cmocs", 0), "CMOCs extracted"),
@@ -627,6 +693,26 @@ by the system, one or more per paper, each carrying the verbatim sentence it cam
 {c.get('studies_with_cmocs', 0)} of the {c.get('studies', 0)} papers yielded at least one; the
 remaining papers are abstract-only records too short to support a configuration, and the system
 correctly declines to invent one.</p>
+
+<h3>What the system actually produced — real examples</h3>
+<p class="sub">The counts above say <em>how much</em>. These say <em>what</em>. Every block below
+is copied straight from the database, unedited. Section 6 holds all of it.</p>
+
+<h4 style="margin-top:22px">A finding — one of {c.get('cmocs', 0)}</h4>
+{samples['cmoc']}
+
+<h4 style="margin-top:22px">Concepts, each with the sentence it came from</h4>
+<p class="small">This is the part a single prompt cannot produce: every concept is pinned to a
+character position in the source paper, so any claim here can be checked against the original.</p>
+{samples['entities']}
+
+<h4 style="margin-top:22px">Causal links</h4>
+{samples['relations']}
+
+<h4 style="margin-top:22px">A mechanism the algorithm found by itself</h4>
+<p class="small">Nobody wrote these. Leiden community detection grouped the concept graph; each
+cluster was then named and defined from its own members.</p>
+{samples['mechanism']}
 """
 
 
