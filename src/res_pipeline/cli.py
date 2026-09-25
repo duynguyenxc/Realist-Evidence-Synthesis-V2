@@ -695,14 +695,67 @@ def gold_code() -> None:
 
 
 @app.command("gold-template")
-def gold_template() -> None:
-    """Generate the human coding workbooks (coder_A, coder_B) for the per-paper gold standard."""
+def gold_template(
+    compare: bool = typer.Option(
+        False, "--compare",
+        help="Both workbooks are filled: compute inter-coder agreement. Run this BEFORE anyone "
+             "looks at machine output."),
+) -> None:
+    """Generate the human coding workbooks, or compare two filled ones.
+
+    See `docs/HUMAN_CODING_GUIDE.md` for the protocol. The agreement this produces is the
+    human ceiling every machine-vs-Richmond figure needs in order to be interpretable.
+    """
+    import json as _json
+
+    from res_pipeline.core.config import OUTPUTS_DIR
+
+    if compare:
+        from res_pipeline.verification.agreement import compare as compare_coders
+
+        a = OUTPUTS_DIR / "gold" / "per_paper_coding_coder_A.xlsx"
+        b = OUTPUTS_DIR / "gold" / "per_paper_coding_coder_B.xlsx"
+        for path in (a, b):
+            if not path.exists():
+                console.print(f"[red]Missing workbook:[/red] {path}", markup=False)
+                raise typer.Exit(1)
+        result = compare_coders(a, b)
+        out = OUTPUTS_DIR / "gold" / "inter_coder_agreement.json"
+        out.write_text(_json.dumps(result, indent=2, default=str), encoding="utf-8")
+
+        el, ro = result["element_agreement"], result["role_agreement"]
+        table = Table(title="Inter-coder agreement — the human ceiling")
+        table.add_column("Measure")
+        table.add_column("Value")
+        table.add_column("How to read it")
+        table.add_row("Studies coded by both", str(len(result["studies_coded_by_both"])), "")
+        table.add_row("Elements: A / B",
+                      f"{el['elements_coder_a']} / {el['elements_coder_b']}",
+                      f"{el['elements_agreed']} agreed")
+        table.add_row("Positive specific agreement",
+                      str(el["overall"]) if el["overall"] is not None else "—",
+                      "the correct statistic for span marking — not Cohen's kappa")
+        table.add_row("Role: percent agreement", str(ro["percent_agreement"]), "")
+        table.add_row("Role: Krippendorff alpha", str(ro["krippendorff_alpha"]),
+                      ">= .800 firm; .667-.800 tentative only")
+        table.add_row("Role: Gwet AC1", str(ro["gwet_ac1"]),
+                      "robust where kappa misbehaves at skewed prevalence")
+        console.print(table)
+        if ro.get("confusion"):
+            console.print("Role disagreements — each one becomes an adjudication rule:")
+            for k, n in list(ro["confusion"].items())[:8]:
+                console.print(f"  {k}: {n}", markup=False)
+        console.print(f"Written: {out}", markup=False)
+        console.print("Adjudicate these in writing, THEN look at machine output — not before.")
+        return
+
     from res_pipeline.verification.gold_template import build_coding_workbook
 
     for coder in ("coder_A", "coder_B"):
         path = build_coding_workbook(coder_label=coder)
         console.print(f"[green]Wrote[/green] {path}", markup=False)
-    console.print("Two independent coders fill these in BLIND, then adjudicate + compute kappa.")
+    console.print("Two coders fill these in BLIND (docs/HUMAN_CODING_GUIDE.md), then run "
+                  "`res gold-template --compare`.")
 
 
 @app.command("build-lkg")
@@ -900,6 +953,66 @@ def progress(
         if _render():
             return
         _time.sleep(20)
+
+
+@app.command()
+def baseline() -> None:
+    """Run the trivial baseline: what does ONE LLM call score on the same benchmark?
+
+    Without this number the framework's contribution is unfalsifiable. If a single prompt
+    over the same papers recovers most of Richmond's concepts, the difference is what the
+    pipeline actually buys — and that difference is the result worth reporting.
+    """
+    import uuid as _uuid
+
+    from res_pipeline.core.budget import preflight
+    from res_pipeline.core.config import OUTPUTS_DIR
+    from res_pipeline.verification.baseline import run_single_call_baseline
+
+    funded, message = preflight()
+    console.print(f"  pre-flight: {message}", markup=False)
+    if not funded:
+        raise typer.Exit(1)
+
+    run_id = f"baseline-{_uuid.uuid4().hex[:8]}"
+    out_dir = OUTPUTS_DIR / "runs" / run_id
+    console.print("Running the single-call baseline (this is the ChatGPT counterfactual)...")
+    result = run_single_call_baseline(run_id, out_dir)
+
+    table = Table(title="Trivial baseline vs the pipeline")
+    table.add_column("")
+    table.add_column("Single LLM call")
+    table.add_column("Full pipeline")
+    n = result["gold_entities"]
+    pipeline = _latest_pipeline_coverage()
+    table.add_row("Concepts produced", str(result["n_concepts_produced"]),
+                  str(pipeline.get("n_concepts", "?")))
+    table.add_row(f"Gold concepts matched (of {n})",
+                  result["recall_ci"]["display"],
+                  pipeline.get("within_role_display", "?"))
+    console.print(table)
+    console.print(f"Report: {out_dir / 'baseline_single_call.json'}", markup=False)
+    _print_run_cost(run_id)
+
+
+def _latest_pipeline_coverage() -> dict:
+    """The newest verification run's like-for-like concept coverage, for side-by-side."""
+    import json as _json
+
+    from res_pipeline.core.config import OUTPUTS_DIR
+    from res_pipeline.core.db import get_connection
+
+    runs = sorted(OUTPUTS_DIR.glob("runs/verify-*/verification_report.json"),
+                  key=lambda p: p.stat().st_mtime)
+    if not runs:
+        return {}
+    e = _json.loads(runs[-1].read_text(encoding="utf-8"))["entity_coverage"]
+    with get_connection() as conn:
+        n_concepts = conn.execute(
+            "SELECT count(DISTINCT canonical_id) AS n FROM entity_instances"
+        ).fetchone()["n"]
+    ci = e.get("recall_within_type_ci", {})
+    return {"n_concepts": n_concepts, "within_role_display": ci.get("display", "?")}
 
 
 @app.command()

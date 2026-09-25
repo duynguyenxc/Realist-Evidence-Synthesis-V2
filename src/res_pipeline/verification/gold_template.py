@@ -67,10 +67,12 @@ def build_coding_workbook(out_path: Path | None = None, coder_label: str = "code
         ("3. For each CMOC element, pick the closest Richmond E-code from the dropdown (or write "
          "'NEW' + a short label if genuinely outside the E01-E47 vocabulary), and paste the "
          "verbatim supporting quote with its page.", False),
-        ("4. ADJUDICATION: after both coders finish blind, compare; compute Cohen's kappa "
-         "(res_pipeline.verification.gold_template.compute_kappa). Only THEN consult the "
-         "'Model candidates' sheet to check for anything both humans missed; disagreements are "
-         "resolved by discussion and logged.", False),
+        ("4. ADJUDICATION: after both coders finish blind, run `res gold-template --compare`. "
+         "It reports positive specific agreement on the elements (the correct statistic for "
+         "span marking — Cohen's kappa is undefined here, per Hripcsak & Rothschild 2005) plus "
+         "Krippendorff's alpha and Gwet's AC1 on the role assignment. ONLY THEN open "
+         "ADJUDICATION_ONLY_model_candidates.xlsx, which is a separate file for this reason.",
+         False),
         ("5. The reconciled workbook becomes gold/per_paper_gold/ — the ground truth for the "
          "CMOC-extraction verification metric.", False),
         ("", False),
@@ -134,10 +136,29 @@ def build_coding_workbook(out_path: Path | None = None, coder_label: str = "code
         for col, width in zip("ABCDEFG", (8, 20, 10, 32, 60, 8, 10)):
             ws.column_dimensions[col].width = width
 
-    # --- Model candidates (for adjudication only) ---
-    ws = wb.create_sheet("Model candidates")
-    ws.append(["DO NOT CONSULT UNTIL BLIND CODING IS COMPLETE (step 4)."])
-    ws["A1"].font = Font(bold=True, color="B23B3B")
+    # The machine's own answers are deliberately NOT in this file. They used to be, on a
+    # sheet headed "DO NOT CONSULT" — but a warning label in the same workbook a coder has
+    # open all day is not a control. Coding done after seeing model output agrees with the
+    # model, not independently: Dai, Xiong & Ku (Findings of EMNLP 2023) measured
+    # human-with-LLM agreement at kappa 0.87 against the person who did it and 0.54 against
+    # an independent third coder. They are written to a separate file, opened only at
+    # adjudication, after `res gold-template --compare` has produced the human ceiling.
+
+    wb.save(out_path)
+    _write_model_candidates(out_path.parent / "ADJUDICATION_ONLY_model_candidates.xlsx")
+    return out_path
+
+
+def _write_model_candidates(out_path: Path) -> Path:
+    """The pipeline's own extraction, in a separate file for the adjudication step only."""
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Model candidates"
+    ws.cell(row=1, column=1, value=(
+        "DO NOT OPEN until BOTH coders have finished and `res gold-template --compare` has "
+        "been run. Seeing these before coding makes your coding agree with the machine rather "
+        "than independently, which destroys the only thing this exercise produces."
+    )).font = Font(bold=True, color="B23B3B")
     ws.append(["Study", "CMOC", "Element type", "Model label", "Verbatim quote", "Support"])
     _style_header(ws, row=2)
     with get_connection() as conn:
@@ -151,7 +172,6 @@ def build_coding_workbook(out_path: Path | None = None, coder_label: str = "code
                    (row["verbatim_quote"] or "")[:200], round(row["verifier_support"] or 0, 2)])
     for col, width in zip("ABCDEF", (8, 20, 20, 32, 60, 10)):
         ws.column_dimensions[col].width = width
-
     wb.save(out_path)
     return out_path
 
