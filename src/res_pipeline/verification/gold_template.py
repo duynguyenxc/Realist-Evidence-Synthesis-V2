@@ -105,7 +105,6 @@ def build_coding_workbook(out_path: Path | None = None, coder_label: str = "code
     for col, width in zip("ABCD", (10, 40, 16, 40)):
         ws.column_dimensions[col].width = width
 
-    # --- One coding sheet per study ---
     with get_connection() as conn:
         studies = conn.execute(
             "SELECT study_id, title, year FROM studies ORDER BY study_id"
