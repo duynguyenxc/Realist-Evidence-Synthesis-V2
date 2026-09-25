@@ -1,0 +1,222 @@
+{
+  "coder_a_file": "D:\\Realist-Evidence-Synthesis\\Realist-Evidence-Synthesis-V2\\outputs\\gold\\per_paper_coding_coder_A.xlsx",
+  "coder_b_file": "D:\\Realist-Evidence-Synthesis\\Realist-Evidence-Synthesis-V2\\outputs\\gold\\per_paper_coding_coder_B.xlsx",
+  "studies_coded_by_both": [
+    "S001",
+    "S002",
+    "S003",
+    "S004",
+    "S005",
+    "S006",
+    "S007",
+    "S008",
+    "S009",
+    "S010",
+    "S011",
+    "S012",
+    "S013",
+    "S014",
+    "S015",
+    "S016",
+    "S017",
+    "S018",
+    "S019",
+    "S020",
+    "S021",
+    "S022",
+    "S023",
+    "S024",
+    "S025",
+    "S026",
+    "S027",
+    "S028"
+  ],
+  "studies_only_a": [],
+  "studies_only_b": [],
+  "element_agreement": {
+    "statistic": "positive specific agreement (= mean pairwise F-measure)",
+    "why": "Cohen's kappa is undefined for span marking \u2014 no fixed count of negatives (Hripcsak & Rothschild, JAMIA 2005).",
+    "overall": 0.785,
+    "elements_coder_a": 192,
+    "elements_coder_b": 139,
+    "elements_agreed": 130,
+    "per_study": {
+      "S001": {
+        "coder_a": 4,
+        "coder_b": 3,
+        "agreed": 3,
+        "psa": 0.857
+      },
+      "S002": {
+        "coder_a": 7,
+        "coder_b": 3,
+        "agreed": 2,
+        "psa": 0.4
+      },
+      "S003": {
+        "coder_a": 4,
+        "coder_b": 3,
+        "agreed": 3,
+        "psa": 0.857
+      },
+      "S004": {
+        "coder_a": 6,
+        "coder_b": 3,
+        "agreed": 3,
+        "psa": 0.667
+      },
+      "S005": {
+        "coder_a": 7,
+        "coder_b": 6,
+        "agreed": 6,
+        "psa": 0.923
+      },
+      "S006": {
+        "coder_a": 8,
+        "coder_b": 4,
+        "agreed": 4,
+        "psa": 0.667
+      },
+      "S007": {
+        "coder_a": 8,
+        "coder_b": 7,
+        "agreed": 6,
+        "psa": 0.8
+      },
+      "S008": {
+        "coder_a": 7,
+        "coder_b": 4,
+        "agreed": 4,
+        "psa": 0.727
+      },
+      "S009": {
+        "coder_a": 4,
+        "coder_b": 4,
+        "agreed": 4,
+        "psa": 1.0
+      },
+      "S010": {
+        "coder_a": 4,
+        "coder_b": 3,
+        "agreed": 3,
+        "psa": 0.857
+      },
+      "S011": {
+        "coder_a": 11,
+        "coder_b": 8,
+        "agreed": 8,
+        "psa": 0.842
+      },
+      "S012": {
+        "coder_a": 3,
+        "coder_b": 3,
+        "agreed": 3,
+        "psa": 1.0
+      },
+      "S013": {
+        "coder_a": 7,
+        "coder_b": 4,
+        "agreed": 2,
+        "psa": 0.364
+      },
+      "S014": {
+        "coder_a": 4,
+        "coder_b": 4,
+        "agreed": 4,
+        "psa": 1.0
+      },
+      "S015": {
+        "coder_a": 8,
+        "coder_b": 4,
+        "agreed": 3,
+        "psa": 0.5
+      },
+      "S016": {
+        "coder_a": 8,
+        "coder_b": 4,
+        "agreed": 4,
+        "psa": 0.667
+      },
+      "S017": {
+        "coder_a": 8,
+        "coder_b": 7,
+        "agreed": 7,
+        "psa": 0.933
+      },
+      "S018": {
+        "coder_a": 8,
+        "coder_b": 7,
+        "agreed": 7,
+        "psa": 0.933
+      },
+      "S019": {
+        "coder_a": 4,
+        "coder_b": 3,
+        "agreed": 3,
+        "psa": 0.857
+      },
+      "S020": {
+        "coder_a": 8,
+        "coder_b": 4,
+        "agreed": 3,
+        "psa": 0.5
+      },
+      "S021": {
+        "coder_a": 8,
+        "coder_b": 7,
+        "agreed": 7,
+        "psa": 0.933
+      },
+      "S022": {
+        "coder_a": 8,
+        "coder_b": 7,
+        "agreed": 6,
+        "psa": 0.8
+      },
+      "S023": {
+        "coder_a": 8,
+        "coder_b": 8,
+        "agreed": 7,
+        "psa": 0.875
+      },
+      "S024": {
+        "coder_a": 7,
+        "coder_b": 7,
+        "agreed": 7,
+        "psa": 1.0
+      },
+      "S025": {
+        "coder_a": 7,
+        "coder_b": 6,
+        "agreed": 6,
+        "psa": 0.923
+      },
+      "S026": {
+        "coder_a": 7,
+        "coder_b": 4,
+        "agreed": 4,
+        "psa": 0.727
+      },
+      "S027": {
+        "coder_a": 8,
+        "coder_b": 4,
+        "agreed": 4,
+        "psa": 0.667
+      },
+      "S028": {
+        "coder_a": 11,
+        "coder_b": 8,
+        "agreed": 7,
+        "psa": 0.737
+      }
+    }
+  },
+  "role_agreement": {
+    "n": 115,
+    "percent_agreement": 1.0,
+    "krippendorff_alpha": 1.0,
+    "gwet_ac1": 1.0,
+    "interpretation": "alpha >= .800 firm; .667-.800 tentative only; below .667 unreliable (Krippendorff). Report AC1 alongside because realist roles are unevenly distributed and kappa-family statistics behave badly there.",
+    "confusion": {}
+  }
+}

@@ -40,11 +40,13 @@ def read_workbook(path: Path) -> dict[str, list[dict[str, Any]]]:
     """
     from openpyxl import load_workbook
 
+    # The worked-example sheet is pre-filled demonstration data, not anyone's coding; counting
+    # it would inflate both coders identically and manufacture agreement out of nothing.
     skip = {"Instructions", "E-code reference", "R-code reference", "Model candidates"}
     wb = load_workbook(path, data_only=True)
     out: dict[str, list[dict[str, Any]]] = {}
     for name in wb.sheetnames:
-        if name in skip:
+        if name in skip or name.upper().startswith("EXAMPLE"):
             continue
         ws = wb[name]
         rows = []

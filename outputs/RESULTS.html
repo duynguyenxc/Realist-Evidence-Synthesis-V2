@@ -189,6 +189,31 @@ remaining papers are abstract-only records too short to support a configuration,
 correctly declines to invent one.</p>
 
 
+<h2><span class="num">2b</span>OUTPUT FILES — where each thing actually lives</h2>
+<p class="sub"><strong>What this section is:</strong> the answer to “where are the entities?
+where are the relationships? where is the knowledge graph?”. All paths are relative to the
+project folder.</p>
+<div class="tablewrap"><table>
+<thead><tr><th style="min-width:180px">What</th><th>File</th><th>What is in it</th></tr></thead>
+<tbody>
+<tr><td><strong>The entities</strong><div class="small">547 rows</div></td>
+<td><code>outputs/exports/entities.csv</code></td><td class="small">Every concept the system found, with the exact sentence it came from and the character position of that sentence in the source paper. Opens in Excel.</td></tr>
+<tr><td><strong>The relationships</strong><div class="small">459 rows</div></td>
+<td><code>outputs/exports/relationships.csv</code></td><td class="small">Every causal link: from-concept, relation type, to-concept. Opens in Excel.</td></tr>
+<tr><td><strong>The findings (CMOCs)</strong><div class="small">94 rows</div></td>
+<td><code>outputs/exports/cmocs.csv</code></td><td class="small">One row per finding — “for this student, this teaching produced this result”.</td></tr>
+<tr><td><strong>The discovered mechanisms</strong><div class="small">8 rows</div></td>
+<td><code>outputs/exports/big_concepts.csv</code></td><td class="small">Clusters the Leiden algorithm found on its own, with their member concepts.</td></tr>
+<tr><td><strong>The KNOWLEDGE GRAPH</strong><div class="small">547 nodes, 459 edges</div></td>
+<td><code>outputs/lkg/entities.parquet + relationships.parquet</code></td><td class="small">The graph itself, in the standard columnar format. Load into Neo4j with <code>res load-neo4j</code> to click through it, or read with pandas.</td></tr>
+<tr><td><strong>The scorecard</strong></td>
+<td><code>outputs/runs/verify-edcbf790/verification_report.md</code></td><td class="small">Every verification number with its confidence interval.</td></tr>
+<tr><td><strong>This page</strong></td>
+<td><code>outputs/RESULTS.html</code></td><td class="small">Regenerate any time with <code>res export-results</code> — free, no API needed.</td></tr></tbody></table></div>
+<p class="small">Everything above is exported from one PostgreSQL database, which is the system's
+real output. These files are copies of it made for reading and sharing.</p>
+
+
 <h2><span class="num">3</span>COMPARISON — Richmond vs us, one student type at a time</h2>
 <p class="sub"><strong>What this section is:</strong> the main comparison. Richmond organised
 their review around five kinds of student. For each one: their conclusion on the left, ours on the
@@ -318,6 +343,26 @@ close to absent from the text of the 28 papers we hold. Richmond's reviewers bro
 the wider simulation and emotion literature, which is a legitimate human move a text-grounded
 extractor is designed not to make. Forcing the system to produce them would mean letting it invent
 claims, which is exactly what the verbatim-quote requirement exists to prevent.</p></div>
+
+
+<h2><span class="num">3b</span>HUMAN CEILING — how well do two people agree?</h2>
+<p class="sub"><strong>What this section is:</strong> two research assistants read the same papers
+independently and coded them by hand, without seeing any system output. Their numbers are what
+makes the system's number readable as good or bad.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Who</th><th>Concepts found</th><th></th></tr></thead>
+<tbody><tr><td><strong>Coder A (human)</strong></td><td class='num'>30/46 &nbsp;(65%)</td><td class='small'>read the papers, coded independently</td></tr><tr><td><strong>Coder B (human)</strong></td><td class='num'>28/46 &nbsp;(61%)</td><td class='small'>read the papers, coded independently</td></tr><tr><td><strong>Both humans agreed</strong></td><td class='num'>28/46 &nbsp;(61%)</td><td class='small'>found by A and B</td></tr><tr><td><strong>THE SYSTEM</strong></td><td class='num'>34/46 &nbsp;(74%)</td><td class='small'>same realist role as Richmond assigned</td></tr></tbody></table></div>
+<p><strong>The two coders agreed with each other at
+78.5%</strong> (positive specific agreement: coder A marked
+192 elements, coder B marked 139, and
+130 were the same). That is the ceiling — two trained people reading the same
+text do not produce the same coding, and no automated system should be expected to do better than
+people do with each other.</p>
+<div class="callout"><p><strong>How to read this honestly.</strong> Of the 28 concepts
+both humans found, the system found 26. The system's own score moves between 31 and 37
+across ten scorings of an unchanged graph, so compare it as a range, not a point. And both coders
+worked through all 28 papers in one sitting — this is a human ceiling under time pressure, not an
+idealised one.</p></div>
 
 
 <h2><span class="num">4</span>VERIFICATION — how each number was checked</h2>
@@ -5828,7 +5873,7 @@ listed by us rather than found by a reviewer.</p>
 
 
 <footer>
-  <p>Generated 2026-09-25 10:44 UTC from the project database
+  <p>Generated 2026-09-25 10:53 UTC from the project database
   (28 studies, 94 CMOCs, 547 entities,
   459 relations). Verification run
   <code>verify-edcbf790</code>. Human standard:

@@ -258,6 +258,10 @@ def collect() -> dict[str, Any]:
             ORDER BY study_id
         """, ("combined:%",))
 
+    ceiling_path = OUTPUTS / "gold" / "human_ceiling.json"
+    if ceiling_path.exists():
+        with ceiling_path.open(encoding="utf-8") as fh:
+            data["human_ceiling"] = json.load(fh)
     data["vintages"] = extraction_vintages()
     data["side_by_side"] = _build_side_by_side(data)
     return data
@@ -623,6 +627,98 @@ by the system, one or more per paper, each carrying the verbatim sentence it cam
 {c.get('studies_with_cmocs', 0)} of the {c.get('studies', 0)} papers yielded at least one; the
 remaining papers are abstract-only records too short to support a configuration, and the system
 correctly declines to invent one.</p>
+"""
+
+
+def _section_files(d: dict[str, Any]) -> str:
+    """Name the files, because "where is the output?" is asked of this project constantly.
+
+    A reader who wants the entities, the relations or the graph should not have to infer
+    which artifact holds them from a page that renders their contents.
+    """
+    c = d["counts"]
+    rows = [
+        ("The entities", f"{c.get('entities', 0)} rows",
+         "outputs/exports/entities.csv",
+         "Every concept the system found, with the exact sentence it came from and the "
+         "character position of that sentence in the source paper. Opens in Excel."),
+        ("The relationships", f"{c.get('relations', 0)} rows",
+         "outputs/exports/relationships.csv",
+         "Every causal link: from-concept, relation type, to-concept. Opens in Excel."),
+        ("The findings (CMOCs)", f"{c.get('cmocs', 0)} rows",
+         "outputs/exports/cmocs.csv",
+         "One row per finding — “for this student, this teaching produced this result”."),
+        ("The discovered mechanisms", f"{c.get('big_concepts', 0)} rows",
+         "outputs/exports/big_concepts.csv",
+         "Clusters the Leiden algorithm found on its own, with their member concepts."),
+        ("The KNOWLEDGE GRAPH", f"{c.get('entities', 0)} nodes, {c.get('relations', 0)} edges",
+         "outputs/lkg/entities.parquet + relationships.parquet",
+         "The graph itself, in the standard columnar format. Load into Neo4j with "
+         "<code>res load-neo4j</code> to click through it, or read with pandas."),
+        ("The scorecard", "",
+         f"outputs/runs/{_e(d.get('verify_run') or '')}/verification_report.md",
+         "Every verification number with its confidence interval."),
+        ("This page", "",
+         "outputs/RESULTS.html",
+         "Regenerate any time with <code>res export-results</code> — free, no API needed."),
+    ]
+    body = "".join(f"""
+<tr><td><strong>{name}</strong>{f'<div class="small">{size}</div>' if size else ''}</td>
+<td><code>{path}</code></td><td class="small">{what}</td></tr>"""
+        for name, size, path, what in rows)
+    return f"""
+<h2><span class="num">2b</span>OUTPUT FILES — where each thing actually lives</h2>
+<p class="sub"><strong>What this section is:</strong> the answer to “where are the entities?
+where are the relationships? where is the knowledge graph?”. All paths are relative to the
+project folder.</p>
+<div class="tablewrap"><table>
+<thead><tr><th style="min-width:180px">What</th><th>File</th><th>What is in it</th></tr></thead>
+<tbody>{body}</tbody></table></div>
+<p class="small">Everything above is exported from one PostgreSQL database, which is the system's
+real output. These files are copies of it made for reading and sharing.</p>
+"""
+
+
+def _section_ceiling(d: dict[str, Any]) -> str:
+    """The human ceiling, without which a coverage number cannot be read as good or bad."""
+    hc = d.get("human_ceiling")
+    if not hc:
+        return ""
+    ent = d["verification"].get("entity_coverage", {})
+    n = hc["n_gold"]
+    rows = [
+        ("Coder A (human)", len(hc["coder_a_found"]), "read the papers, coded independently"),
+        ("Coder B (human)", len(hc["coder_b_found"]), "read the papers, coded independently"),
+        ("Both humans agreed", len(hc["both_found"]), "found by A and B"),
+        ("THE SYSTEM", ent.get("matched_within_type", 0),
+         "same realist role as Richmond assigned"),
+    ]
+    body = "".join(
+        f"<tr><td><strong>{name}</strong></td><td class='num'>{k}/{n}"
+        f" &nbsp;({k / n:.0%})</td><td class='small'>{note}</td></tr>"
+        for name, k, note in rows)
+    both = set(hc["both_found"])
+    return f"""
+<h2><span class="num">3b</span>HUMAN CEILING — how well do two people agree?</h2>
+<p class="sub"><strong>What this section is:</strong> two research assistants read the same papers
+independently and coded them by hand, without seeing any system output. Their numbers are what
+makes the system's number readable as good or bad.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Who</th><th>Concepts found</th><th></th></tr></thead>
+<tbody>{body}</tbody></table></div>
+<p><strong>The two coders agreed with each other at
+{hc['positive_specific_agreement']:.1%}</strong> (positive specific agreement: coder A marked
+{hc['elements_coder_a']} elements, coder B marked {hc['elements_coder_b']}, and
+{hc['elements_agreed']} were the same). That is the ceiling — two trained people reading the same
+text do not produce the same coding, and no automated system should be expected to do better than
+people do with each other.</p>
+<div class="callout"><p><strong>How to read this honestly.</strong> Of the {len(both)} concepts
+both humans found, the system found {len(both & set(
+    c for c, v in d['verification'].get('entity_coverage', {}).get('per_entity', {}).items()
+    if v.get('matched') and v.get('type_agrees')))}. The system's own score moves between 31 and 37
+across ten scorings of an unchanged graph, so compare it as a range, not a point. And both coders
+worked through all 28 papers in one sitting — this is a human ceiling under time pressure, not an
+idealised one.</p></div>
 """
 
 
@@ -1023,7 +1119,9 @@ def render(d: dict[str, Any]) -> str:
 {_section_orientation(d)}
 {_section_headline(d)}
 {_section_counts(d)}
+{_section_files(d)}
 {_section_side_by_side(d)}
+{_section_ceiling(d)}
 {_section_matrix(d)}
 {_section_concepts(d)}
 {_section_browse(d)}
