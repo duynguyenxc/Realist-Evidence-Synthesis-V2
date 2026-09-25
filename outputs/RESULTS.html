@@ -119,34 +119,32 @@ footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--line);
 
 
 <section class="orient">
-  <h2 style="border:none;margin-top:0;padding-top:0">What you are looking at</h2>
-  <p>Richmond et al. (2020) is a published <em>realist review</em>: five reviewers read 28
-  studies by hand and worked out <strong>which teaching helps which student, and why</strong>.
-  We gave our system the same 28 papers and asked it to do the same analytic work, with a human
-  approving at four points. This page puts the two side by side.</p>
+  <h2 style="border:none;margin-top:0;padding-top:0">HOW TO READ THIS PAGE</h2>
+  <p><strong>Richmond et al. (2020)</strong> is a published review: five people read 28 studies
+  by hand and worked out <strong>which teaching helps which student, and why</strong>.
+  <strong>We gave our system the same 28 papers.</strong> This page puts the two side by side.</p>
 
   <div class="chain"><div class="step"><div class="n">28</div><div class="w">papers</div><div class="small">the same 28 Richmond reviewed</div></div><div class="arrow">→</div><div class="step"><div class="n">94</div><div class="w">findings</div><div class="small">one C→M→O configuration each</div></div><div class="arrow">→</div><div class="step"><div class="n">183</div><div class="w">concepts</div><div class="small">from 547 quoted mentions</div></div><div class="arrow">→</div><div class="step"><div class="n">459</div><div class="w">causal links</div><div class="small">typed, between concepts</div></div><div class="arrow">→</div><div class="step"><div class="n">8</div><div class="w">mechanisms</div><div class="small">found by the algorithm, not written</div></div><div class="arrow">→</div><div class="step final"><div class="n">1</div><div class="w">programme theory</div><div class="small">our conclusion</div></div></div>
   <p class="small" style="margin-top:6px"><strong>The programme theory is our conclusion.</strong>
-  Everything else on this page is either the evidence underneath it or the check on it.</p>
+  Everything else on this page is the evidence under it, or the check on it.</p>
 
-  <h3 style="margin-top:26px">Where to look for what</h3>
+  <h3 style="margin-top:26px">The seven sections, in one line each</h3>
   <ol class="tight">
-    <li><strong>The answer</strong> — §1 below: Richmond's conclusion and ours, side by side.</li>
-    <li><strong>Judge it yourself</strong> — §3: Richmond's five kinds of student, one block each,
-    their finding on the left and ours on the right. No statistics needed.</li>
-    <li><strong>How we checked</strong> — §4: one row per question, each with who judged it —
-    a machine or a language model. This is the part that answers <em>"how do you verify this?"</em></li>
-    <li><strong>Check any single case</strong> — §5 and §6: every concept, every finding, every
-    quote, searchable.</li>
-    <li><strong>What is not yet verified</strong> — §7. Read it before quoting anything.</li>
+    <li><strong>THE ANSWER</strong> — their conclusion and ours, side by side.</li>
+    <li><strong>OUTPUT</strong> — how much the system produced.</li>
+    <li><strong>COMPARISON</strong> — the main one. Five kinds of student, one block each.
+    <em>Start here if you only read one section.</em></li>
+    <li><strong>VERIFICATION</strong> — how each number was checked, and by machine or by AI.</li>
+    <li><strong>CONCEPT CHECKLIST</strong> — did we find each concept Richmond named?</li>
+    <li><strong>RAW DATA</strong> — every finding, concept and quote, searchable.</li>
+    <li><strong>LIMITS</strong> — what we have not proved yet.</li>
   </ol>
 </section>
 
 
-<h2><span class="num">01</span>The one-minute answer</h2>
-<p class="sub">Richmond's five reviewers spent months producing a realist review of 28 studies.
-Our system was given the same 28 studies and asked to do the same analytic work. Here is what
-each side concluded, in their own words.</p>
+<h2><span class="num">1</span>THE ANSWER — what Richmond concluded, what we concluded</h2>
+<p class="sub"><strong>What this section is:</strong> the conclusion each side reached, in
+its own words. Richmond's five reviewers on the left, our system on the right.</p>
 
 <div class="grid2">
   <div class="col human">
@@ -169,18 +167,18 @@ each side concluded, in their own words.</p>
 Richmond's central claim — that the same teaching resource helps or hinders depending on the
 student's prior knowledge — and it recovers all 28 studies,
 93.1% of its claims resolve to a verbatim span in the
-source, and it recovers 27 of 40 of
+source, and it recovers 29 of 40 of
 Richmond's causal links with at least one endpoint pinned to the matching concept.
 It does <em>not</em> recover Richmond's two emotion/coping contexts, it reconstructs
-37 of Richmond's 46 named concepts in
+34 of Richmond's 46 named concepts in
 the same realist role, and it recovers <em>none</em> of the 40 causal links at the strictest
 exact-concept-pair level. Sections 4 and 5 show exactly how each of those numbers was produced,
 with its confidence interval and who judged it.</p></div>
 
 
-<h2><span class="num">02</span>What the machine produced</h2>
-<p class="sub">Every count here is read live from the project database, which is the single
-source of truth for what the pipeline produced.</p>
+<h2><span class="num">2</span>OUTPUT — what the system produced</h2>
+<p class="sub"><strong>What this section is:</strong> how much the system produced. Counts
+read live from the database.</p>
 <div class="tiles"><div class="tile"><div class="n">28</div><div class="l">Papers ingested</div></div><div class="tile"><div class="n">94</div><div class="l">CMOCs extracted</div></div><div class="tile"><div class="n">547</div><div class="l">Entity instances</div></div><div class="tile"><div class="n">183</div><div class="l">Distinct concepts</div></div><div class="tile"><div class="n">459</div><div class="l">Causal relations</div></div><div class="tile"><div class="n">8</div><div class="l">Emergent mechanisms</div></div><div class="tile"><div class="n">32</div><div class="l">Demi-regularities</div></div><div class="tile"><div class="n">20</div><div class="l">Contradictions</div></div><div class="tile"><div class="n">28</div><div class="l">Human decisions</div></div><div class="tile"><div class="n">1084</div><div class="l">Audit events</div></div></div>
 <p><strong>A CMOC</strong> — Context–Mechanism–Outcome configuration — is the unit of a realist
 review. It is one sentence of the form <em>"for this kind of student, this teaching triggers this
@@ -191,11 +189,10 @@ remaining papers are abstract-only records too short to support a configuration,
 correctly declines to invent one.</p>
 
 
-<h2><span class="num">03</span>Side by side, context by context</h2>
-<p class="sub">Richmond organised the whole review around five kinds of student. This is the
-heart of the verification: for each of those five, Richmond's published conclusion sits on the
-left and everything our system found for the same context sits on the right. Read one block and
-you can judge the system yourself, without any statistic.</p>
+<h2><span class="num">3</span>COMPARISON — Richmond vs us, one student type at a time</h2>
+<p class="sub"><strong>What this section is:</strong> the main comparison. Richmond organised
+their review around five kinds of student. For each one: their conclusion on the left, ours on the
+right, and a verdict. <strong>No statistics needed — read a block and judge for yourself.</strong></p>
 
 <div class="ctx-head">
   <h3>Low knowledge</h3>
@@ -218,7 +215,7 @@ you can judge the system yourself, without any statistic.</p>
               <ul class="tight"><li>When students have insufficiently integrated diagnostic schemata, computer-supported case-based worked examples provide severe erroneous examples plus elaborated GP feedback, triggering effective processing, error identification and correct-solution understanding, leading to improved diagnostic knowledge acquisition. <span class="small">— <code>S006</code></span></li><li>When learners have underdeveloped illness scripts, demanding step-by-step case comparison may trigger high cognitive load, exhaustion, or confusion, leading to poorer immediate diagnostic performance. <span class="small">— <code>S016</code></span></li><li>When learners have underdeveloped illness scripts, speeded single-diagnosis instruction lowers the likelihood of reflective processing, leading to no significant signs of immediate-test learning in the non-reflection conditions. <span class="small">— <code>S016</code></span></li><li>When learners have underdeveloped illness scripts, an alternative-diagnosis generation prompt likely triggers only partial reflective processing, leading to less delayed learning than structured reflection and a significant immediate-to-delayed decrease within that condition. <span class="small">— <code>S016</code></span></li><li>When students have incomplete and error-prone knowledge, a similar-case series provides multiple related endocrine cases that can trigger active biomedical debugging effort, leading in some students to partial remediation of misconceptions while others ignore errors. <span class="small">— <code>S018</code></span></li><li>When students have very poor, incomplete, or error-prone prior knowledge, unsupported similar-case reasoning with official diagnosis feedback only is insufficient for debugging unresolved reasoning errors, leading to hampered biomedical fault integration. <span class="small">— <code>S018</code></span></li><li>When students’ specific knowledge is less elaborate and they work from clinical case summaries, self-explanation diagnostic case solving provides an opportunity to generate explanations to oneself, triggering active but error-prone knowledge construction and staying closer to the case text, leading to more paraphrases and errors. <span class="small">— <code>S020</code></span></li></ul>
   </div>
 </div>
-<p class="small"><strong>Why the matcher linked these:</strong> The evidence explicitly describes students whose relevant knowledge is incomplete and error-prone, which corresponds to low clinical domain-specific knowledge / inability to use knowledge in reasoning.</p>
+<p class="small"><strong>Why the matcher linked these:</strong> The evidence explicitly says students had &#x27;basic relevant knowledge&#x27; that was &#x27;incomplete and error-prone,&#x27; which denotes low or insufficient clinical domain-specific knowledge.</p>
 <p class="small"><strong>Study-level overlap:</strong> Richmond assigns 22 studies to this context; our system assigns 4; <strong>2</strong> are the same paper (S016, S020).</p>
 
 <div class="ctx-head">
@@ -242,12 +239,12 @@ you can judge the system yourself, without any statistic.</p>
               <ul class="tight"><li>When students have insufficiently integrated diagnostic schemata, computer-supported case-based worked examples provide severe erroneous examples plus elaborated GP feedback, triggering effective processing, error identification and correct-solution understanding, leading to improved diagnostic knowledge acquisition. <span class="small">— <code>S006</code></span></li><li>When learners have underdeveloped illness scripts, demanding step-by-step case comparison may trigger high cognitive load, exhaustion, or confusion, leading to poorer immediate diagnostic performance. <span class="small">— <code>S016</code></span></li><li>When learners have underdeveloped illness scripts, speeded single-diagnosis instruction lowers the likelihood of reflective processing, leading to no significant signs of immediate-test learning in the non-reflection conditions. <span class="small">— <code>S016</code></span></li><li>When learners have underdeveloped illness scripts, an alternative-diagnosis generation prompt likely triggers only partial reflective processing, leading to less delayed learning than structured reflection and a significant immediate-to-delayed decrease within that condition. <span class="small">— <code>S016</code></span></li><li>When students have incomplete and error-prone knowledge, a similar-case series provides multiple related endocrine cases that can trigger active biomedical debugging effort, leading in some students to partial remediation of misconceptions while others ignore errors. <span class="small">— <code>S018</code></span></li><li>When students have very poor, incomplete, or error-prone prior knowledge, unsupported similar-case reasoning with official diagnosis feedback only is insufficient for debugging unresolved reasoning errors, leading to hampered biomedical fault integration. <span class="small">— <code>S018</code></span></li><li>When students’ specific knowledge is less elaborate and they work from clinical case summaries, self-explanation diagnostic case solving provides an opportunity to generate explanations to oneself, triggering active but error-prone knowledge construction and staying closer to the case text, leading to more paraphrases and errors. <span class="small">— <code>S020</code></span></li></ul>
   </div>
 </div>
-<p class="small"><strong>Why the matcher linked these:</strong> Matches the same construct of students&#x27; domain knowledge level. The extracted concept explicitly covers learners with underdeveloped/incomplete knowledge; the gold entity is the positive counterpart, high clinical domain-specific knowledge.</p>
+<p class="small"><strong>Why the matcher linked these:</strong> Matches the same construct of students&#x27; domain knowledge level; the extracted context explicitly refers to learners with incomplete/underdeveloped knowledge, which aligns with high clinical domain-specific knowledge as the opposite end of the same knowledge construct.</p>
 <p class="small"><strong>Study-level overlap:</strong> Richmond assigns 7 studies to this context; our system assigns 4; <strong>1</strong> are the same paper (S020).</p>
 
 <div class="ctx-head">
   <h3>Positive coping / self-efficacy</h3>
-  <span class="badge b-gap">Not recovered</span>
+  <span class="badge b-partial">Recovered (different studies)</span>
   <span class="small">Richmond E04 · Results 3.2, pp.712-714</span>
 </div>
 <div class="grid2">
@@ -260,10 +257,10 @@ you can judge the system yourself, without any statistic.</p>
   </div>
   <div class="col machine">
     <h4>What our system found</h4>
-    <p>The system produced <strong>no configuration</strong> for this context.</p>
+    <p>The system produced <strong>no configuration</strong> for this context.</p><p class="small">The matcher proposed <span class="cid">mech:clinical-reasoning-confidence-and-affect</span> but it did not pass the agreement bar.</p>
   </div>
 </div>
-
+<p class="small"><strong>Why the matcher linked these:</strong> This extracted mechanism captures student affect/self-confidence in reasoning, including feeling cocooned and challenged; it is the closest same-construct match for positive coping/self-efficacy.</p>
 <p class="small"><strong>Study-level overlap:</strong> Richmond assigns 5 studies to this context; our system assigns 0; <strong>0</strong> are the same paper.</p>
 
 <div class="ctx-head">
@@ -281,11 +278,14 @@ you can judge the system yourself, without any statistic.</p>
   </div>
   <div class="col machine">
     <h4>What our system found</h4>
-    <p>The system produced <strong>no configuration</strong> for this context.</p>
+    
+              <p class="small">Matched to our concept <span class="cid">cont:decision-making-preparedness</span>
+              </p>
+              <ul class="tight"><li>When advanced students nearing FY1 transition feel unprepared for clinical decision making, the tool, tutorial and simulated ward scenarios trigger positive adaptation and learning, leading to increased subjective preparedness for FY1 decision making. <span class="small">— <code>S015</code></span></li></ul>
   </div>
 </div>
-
-<p class="small"><strong>Study-level overlap:</strong> Richmond assigns 4 studies to this context; our system assigns 0; <strong>0</strong> are the same paper.</p>
+<p class="small"><strong>Why the matcher linked these:</strong> The evidence says students &#x27;feel unprepared for clinical decision making&#x27; and &#x27;lack effective&#x27; coping/preparedness, which aligns with lacking self-confidence/self-efficacy.</p>
+<p class="small"><strong>Study-level overlap:</strong> Richmond assigns 4 studies to this context; our system assigns 1; <strong>1</strong> are the same paper (S015).</p>
 
 <div class="ctx-head">
   <h3>Mixed knowledge in one group</h3>
@@ -308,7 +308,7 @@ you can judge the system yourself, without any statistic.</p>
               <ul class="tight"><li>When dermatological diagnosis learners differ by expertise level, reasoning-process instruction triggers relative reliance on analytic and similarity-based processes, leading to instructionally modifiable reasoning-process reliance. <span class="small">— <code>S001</code></span></li><li>When diagnosticians have developed expertise and encounter a cascade of data abnormalities, years of diligent study and practice support logical connection of abnormalities to disease mechanisms, leading to identification of failing organ systems. <span class="small">— <code>S009</code></span></li><li>When clinically relevant expertise groups are compared for assessment, timer-based case solving is designed to trigger intrinsic motivation under time pressure, but the measured time required to solve cases is not a valid assessment parameter. <span class="small">— <code>S022</code></span></li><li>When participants have different levels of biliary-disease expertise, realistic biliary decision cases trigger use of clinical experience in case solving, leading to decision accuracy that discriminates expertise levels. <span class="small">— <code>S022</code></span></li><li>When there is an experience gap between practising clinicians and learners, a tacit pick-up approach provides only automated reasoning on display, triggering difficulty grasping the reasoning, leading to a barrier to learning clinical reasoning. <span class="small">— <code>S028</code></span></li></ul>
   </div>
 </div>
-<p class="small"><strong>Why the matcher linked these:</strong> This is the same underlying construct of heterogeneous knowledge/expertise levels within a group; the extracted context explicitly mentions different expertise levels and experience gaps among participants.</p>
+<p class="small"><strong>Why the matcher linked these:</strong> The evidence explicitly concerns different expertise levels within a learner group, which is the same underlying construct as differing levels of knowledge within a group.</p>
 <p class="small"><strong>Study-level overlap:</strong> Richmond assigns 9 studies to this context; our system assigns 4; <strong>0</strong> are the same paper.</p>
 
 <div class="callout"><p><strong>How to read the two "Not recovered" blocks.</strong> Richmond's
@@ -320,11 +320,10 @@ extractor is designed not to make. Forcing the system to produce them would mean
 claims, which is exactly what the verbatim-quote requirement exists to prevent.</p></div>
 
 
-<h2><span class="num">04</span>The verification matrix — how each number is made</h2>
-<p class="sub">This is the answer to "how do you verify it?". One row per question a reviewer can
-ask: Richmond's artefact, our artefact, the exact comparison, the result with an exact
-(Clopper–Pearson) confidence interval, and — the column that matters most — whether a machine or
-a language model did the judging.</p>
+<h2><span class="num">4</span>VERIFICATION — how each number was checked</h2>
+<p class="sub"><strong>What this section is:</strong> the answer to <em>"how did you check
+it?"</em>. One row per question. The last column says whether a <strong>machine</strong> checked it
+(exact, same answer every time) or an <strong>AI</strong> judged it (varies between runs).</p>
 <div class="tablewrap"><table>
 <thead><tr><th style="min-width:250px">Question</th><th>Richmond's artefact</th>
 <th>Our artefact</th><th>Statistic</th><th>Result</th><th>Judged by</th></tr></thead>
@@ -344,9 +343,9 @@ a language model did the judging.</p>
       deterministic</span></td>
 </tr>
 <tr>
-  <td><strong>Did we find the same concepts?</strong><div class="small">With role-crossing allowed it is 38/46, of which 1 sit under a different realist role than Richmond used. Lead with the like-for-like figure. A language model judges whether two differently-worded concepts name the same construct, sampled 3× and majority-voted; per-sample range 73.9%–82.6%. Human ratification still required.</div></td>
+  <td><strong>Did we find the same concepts?</strong><div class="small">With role-crossing allowed it is 41/46, of which 7 sit under a different realist role than Richmond used. Lead with the like-for-like figure. A language model judges whether two differently-worded concepts name the same construct, sampled 3× and majority-voted; per-sample range 67.4%–78.3%. Human ratification still required.</div></td>
   <td>The 46 concepts Richmond names in Figures 2 and 3</td><td>Our 183 canonical concepts</td><td>Recall, same realist role</td>
-  <td class="num"><strong>80.4%</strong><br><span class='small'>95% CI 66.1%–90.6%<br>37/46</span></td>
+  <td class="num"><strong>73.9%</strong><br><span class='small'>95% CI 58.9%–85.7%<br>34/46</span></td>
   <td><span class="badge b-partial">
       model-judged</span></td>
 </tr>
@@ -358,30 +357,30 @@ a language model did the judging.</p>
       deterministic</span></td>
 </tr>
 <tr>
-  <td><strong>…anchored to a real concept?</strong><div class="small">Same predicate, one endpoint the exact matched concept, the other of the correct realist role. <strong>This is the number to lead with for causal structure.</strong> Counting only the arrows Richmond actually draws — excluding 4 transitive shortcuts that exist in the benchmark but not in the figure — it rises to 75.0%.</div></td>
+  <td><strong>…anchored to a real concept?</strong><div class="small">Same predicate, one endpoint the exact matched concept, the other of the correct realist role. <strong>This is the number to lead with for causal structure.</strong> Counting only the arrows Richmond actually draws — excluding 4 transitive shortcuts that exist in the benchmark but not in the figure — it rises to 80.6%.</div></td>
   <td>The same arrows</td><td>Our 459 typed relations</td><td>Anchored recall</td>
-  <td class="num"><strong>67.5%</strong><br><span class='small'>95% CI 50.9%–81.4%<br>27/40</span></td>
+  <td class="num"><strong>72.5%</strong><br><span class='small'>95% CI 56.1%–85.4%<br>29/40</span></td>
   <td><span class="badge b-auto">
       deterministic</span></td>
 </tr>
 <tr>
   <td><strong>…between the exact same two concepts?</strong><div class="small">The honest floor, and the open problem. Bounded by concept recall squared and by our concepts carrying different names from Richmond's. The causal structure is largely present, as the row above shows; exact concept-pair reconstruction is not.</div></td>
   <td>The same arrows</td><td>Our 459 typed relations</td><td>Strict recall</td>
-  <td class="num"><strong>12.5%</strong><br><span class='small'>95% CI 4.2%–26.8%<br>5/40</span></td>
+  <td class="num"><strong>15.0%</strong><br><span class='small'>95% CI 5.7%–29.8%<br>6/40</span></td>
   <td><span class="badge b-auto">
       deterministic</span></td>
 </tr>
 <tr>
   <td><strong>Did we find the same mechanisms?</strong><div class="small">Our mechanisms are discovered by clustering the concept graph, not authored by anyone — the one part of the method with no human counterpart to copy from. A human mechanism mapping is required before publication.</div></td>
   <td>Richmond's 28 mechanism entities</td><td>8 clusters found bottom-up by the Leiden algorithm</td><td>Alignment recall</td>
-  <td class="num"><strong>60.7%</strong><br><span class='small'>95% CI 40.6%–78.5%<br>17/28</span></td>
+  <td class="num"><strong>67.9%</strong><br><span class='small'>95% CI 47.6%–84.1%<br>19/28</span></td>
   <td><span class="badge b-partial">
       model-judged</span></td>
 </tr>
 <tr>
-  <td><strong>Did we reach the same theory?</strong><div class="small"><strong>Do not quote a single number here.</strong> Two judges from different model families differ by 0.44 on a 0–1 scale given identical inputs. That spread is the finding: this measure is judge-dependent and is not defensible until human experts rate the same chains. Note the gap runs opposite to self-preference — the independent judge is the <em>more</em> generous one, which points at judge capability rather than vanity.</div></td>
+  <td><strong>Did we reach the same theory?</strong><div class="small"><strong>Do not quote a single number here.</strong> Two judges from different model families differ by 0.29 on a 0–1 scale given identical inputs. That spread is the finding: this measure is judge-dependent and is not defensible until human experts rate the same chains. Note the gap runs opposite to self-preference — the independent judge is the <em>more</em> generous one, which points at judge capability rather than vanity.</div></td>
   <td>Richmond's five programme-theory chains</td><td>Our signed programme theory</td><td>Mean correspondence, 0–1</td>
-  <td class="num"><strong>0.94</strong><br><span class='small'>independent judge<br>0.50 same-family judge</span></td>
+  <td class="num"><strong>0.82</strong><br><span class='small'>independent judge<br>0.53 same-family judge</span></td>
   <td><span class="badge b-partial">
       model-judged</span></td>
 </tr></tbody></table></div>
@@ -399,16 +398,16 @@ items. Reporting that split <em>is</em> the method, not an apology for it.</p></
 <div class="tablewrap"><table>
 <thead><tr><th>Chain</th><th>Independent judge</th><th>Same-family judge</th>
 <th>The independent judge's reasoning</th></tr></thead>
-<tbody><tr><td class="num">PTS1</td><td class="num">0.97</td><td class="num">0.87</td><td>PTS1 concerns students with low knowledge or inability to use knowledge in reasoning, matching the SYSTEM contexts of novices with little prior experience or underprepared learners. The SYSTEM theory details how combined diagnostic instruction, explicit reasoning, feedback, and scaffolding help these learners attend to features, organize knowledge, and improve diagnostic accuracy, which aligns well with PTS1&#x27;s interventions (e.g., explicit explanations, feedback) and outcomes (learning gain, diagnostic accuracy). The mechanism direction (resource leading to learner cognitive engagement leading to improved outcomes) and outcome family (learning gain, diagnostic accuracy) correspond closely.</td></tr><tr><td class="num">PTS2</td><td class="num">0.95</td><td class="num">0.34</td><td>PTS2 addresses students with high clinical domain-specific knowledge, involving expert reasoning discussion and analytical reasoning leading to insight, positive learning experience, and high diagnostic accuracy. SYSTEM&#x27;s configurations for advanced or near-practice students (section 6) describe analytic scaffolds, authentic scenarios, and structured communication prompts leading to improved diagnostic accuracy and confidence, matching PTS2&#x27;s context, mechanisms, and outcomes. The C-&gt;M-&gt;O logic aligns well structurally and conceptually.</td></tr><tr><td class="num">PTS3</td><td class="num">0.93</td><td class="num">0.31</td><td>PTS3 involves positive coping strategies or self-confidence, with interventions like teaching resources allowing mistakes, real-life scenarios, and real cases leading to gratefulness, understanding, and positive learning outcomes. SYSTEM theory includes mechanisms where learners actively elaborate, generate inferences, revise knowledge, and build coherent models (section 4), which corresponds to positive coping and self-efficacy facilitating active learning and improved outcomes. The context of learners working with less familiar but bounded cases fits well. The mechanism and outcome families correspond closely.</td></tr><tr><td class="num">PTS4</td><td class="num">0.90</td><td class="num">0.53</td><td>PTS4 concerns negative coping strategies or lacking self-confidence, with real-life scenarios leading to fear, stress, increased cognitive load, and negative learning outcomes. SYSTEM theory explicitly addresses negative contexts where strategy coaching fails due to underdeveloped knowledge, leading to confusion, superficial reasoning, and poor outcomes (section 2). The mechanism direction (resource leading to negative learner responses leading to negative outcomes) and context match well, as do the outcome families.</td></tr><tr><td class="num">PTS5</td><td class="num">0.97</td><td class="num">0.45</td><td>PTS5 involves students with different knowledge levels within a group, with strategies promoting knowledge retention, feedback, and absence or errors in feedback leading to building on prior knowledge, confusion, and various learning outcomes. SYSTEM theory discusses the importance of feedback quality, schema construction, and confusion when feedback is thin or ambiguous (sections 1, 5, 7). The context of mixed knowledge levels and the mechanisms of feedback and knowledge building correspond well. The outcome families (learning, engagement, confusion) align structurally and conceptually.</td></tr></tbody></table></div>
+<tbody><tr><td class="num">PTS1</td><td class="num">0.93</td><td class="num">0.86</td><td>PTS1 context is students with low knowledge or inability to use knowledge in reasoning, matching SYSTEM contexts of novices with little prior experience or underprepared learners. The mechanisms in PTS1 include explicit feedback, explanation, and combined analytic/non-analytic instruction, which correspond well to SYSTEM mechanisms of combined diagnostic instruction, schema scaffolds, worked examples, and elaborated feedback. Outcomes of increased or decreased learning gain or diagnostic accuracy align with SYSTEM outcomes of improved or failed diagnostic accuracy and learning. Minor differences arise because SYSTEM theory emphasizes the importance of bounded, scaffolded instruction and the risk of backfire if instruction is ambiguous or too demanding, which is implicit but less explicit in PTS1. Overall, strong structural and conceptual correspondence.</td></tr><tr><td class="num">PTS2</td><td class="num">0.87</td><td class="num">0.36</td><td>PTS2 context is students with high clinical domain-specific knowledge, matching SYSTEM contexts of advanced or near-practice students. PTS2 mechanisms include expert reasoning discussion and analytical reasoning instruction, which correspond to SYSTEM&#x27;s clinical reasoning scaffolding, analytic reasoning tables, and authentic decision practice. Outcomes of insight, positive learning experience, and high diagnostic accuracy align with SYSTEM outcomes of improved diagnostic accuracy, preparedness, and confidence. SYSTEM adds nuance about authenticity and graduated responsibility, which is not explicit in PTS2. Overall, good correspondence in context, mechanism direction, and outcome family.</td></tr><tr><td class="num">PTS3</td><td class="num">0.80</td><td class="num">0.33</td><td>PTS3 context is positive coping strategies or appropriate self-confidence, which partially overlaps with SYSTEM contexts of learners with some knowledge and ability to engage in reflection and self-explanation. PTS3 mechanisms include teaching resources allowing mistakes, real-life scenarios, and real cases, which correspond to SYSTEM mechanisms of self-explanation, feedback, example-driven reasoning, and simulation. Outcomes of positive impact on learning and more accurate reasoning align with SYSTEM outcomes of improved diagnostic performance and reasoning competence. However, SYSTEM theory emphasizes the boundary conditions and cognitive load issues more explicitly. The context is somewhat broader in PTS3, and the mechanism is less detailed. Moderate to good correspondence.</td></tr><tr><td class="num">PTS4</td><td class="num">0.70</td><td class="num">0.58</td><td>PTS4 context is negative coping strategies or lacking self-confidence, which corresponds to SYSTEM contexts of underprepared learners or novices with fragmented knowledge. PTS4 mechanisms include real-life scenarios leading to fear, stress, and increased cognitive load, resulting in negative learning outcomes. SYSTEM theory addresses similar negative outcomes when instruction is ambiguous, feedback is thin, or task demand is excessive, leading to confusion, frustration, or failure to learn. However, SYSTEM theory frames these as failures of resource design or mismatch rather than inherent to the context alone. The outcome family matches negative learning outcomes. Overall, moderate correspondence with some conceptual differences in framing.</td></tr><tr><td class="num">PTS5</td><td class="num">0.78</td><td class="num">0.51</td><td>PTS5 context is students with different levels of knowledge within a group, which partially overlaps with SYSTEM contexts of learners with varying knowledge and the importance of cognitive congruence and near-peer modelling. PTS5 mechanisms include strategies promoting knowledge retention, accurate feedback, and feedback absence or errors, leading to increased or decreased learning and reasoning outcomes. SYSTEM theory includes modelling from peers and experts, elaborated feedback, and the risk of confusion from poor feedback. Outcomes align with improved or decreased learning and reasoning. However, SYSTEM theory is more detailed about the mechanisms of modelling and feedback quality, and PTS5 is more focused on group heterogeneity. Moderate correspondence overall.</td></tr></tbody></table></div>
 <p class="small">The same programme theory, the same five gold chains, two judges — and scores
 that differ by up to 0.6 on individual chains. That is why the row above carries no single
 number.</p></details>
 
 
-<h2><span class="num">05</span>Every one of Richmond's concepts, one by one</h2>
-<p class="sub">No aggregate to hide behind. For each concept Richmond named in their figures:
-did we find it, which of our concepts matched it, and what was the matcher's stated reason. Search
-the table to check any single case yourself.</p>
+<h2><span class="num">5</span>CONCEPT CHECKLIST — did we find each of Richmond's concepts?</h2>
+<p class="sub"><strong>What this section is:</strong> a checklist. Every concept Richmond named
+in their figures, one row each: did we find it, what did we match it to, and why. Use the search
+box to check any single one.</p>
 <input class="filter" data-filter="concepts" placeholder="Search Richmond's concepts, our concepts, or the reasoning…">
 <p class="small" id="concepts-count">46 of 46 shown</p>
 <div class="tablewrap"><table id="concepts">
@@ -420,35 +419,35 @@ the table to check any single case yourself.</p>
   <td>students with &#x27;low knowledge,&#x27; low clinical domain-specific knowledge, or an inability to use knowledge in a reasoning situation<div class="small">Context · Results 3.2 / Figure 2, pp.712-714</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">cont:knowledge-deficits</span></td>
-  <td class="small">The evidence explicitly describes students whose relevant knowledge is incomplete and error-prone, which corresponds to low clinical domain-specific knowledge / inability to use knowledge in reasoning.</td>
+  <td class="small">The evidence explicitly says students had &#x27;basic relevant knowledge&#x27; that was &#x27;incomplete and error-prone,&#x27; which denotes low or insufficient clinical domain-specific knowledge.</td>
 </tr>
 <tr>
   <td class="num">E03</td>
   <td>students with high clinical domain-specific knowledge<div class="small">Context · Results 3.2, pp.712-714</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">cont:knowledge-deficits</span></td>
-  <td class="small">Matches the same construct of students&#x27; domain knowledge level. The extracted concept explicitly covers learners with underdeveloped/incomplete knowledge; the gold entity is the positive counterpart, high clinical domain-specific knowledge.</td>
+  <td class="small">Matches the same construct of students&#x27; domain knowledge level; the extracted context explicitly refers to learners with incomplete/underdeveloped knowledge, which aligns with high clinical domain-specific knowledge as the opposite end of the same knowledge construct.</td>
 </tr>
 <tr>
   <td class="num">E04</td>
   <td>positive student coping strategies or appropriate level of self-confidence or self-efficacy<div class="small">Context · Results 3.2, pp.712-714</div></td>
-  <td><span class="badge b-gap">Not found</span></td>
-  <td>—</td>
-  <td class="small"></td>
+  <td><span class="badge b-partial">Found, other role</span></td>
+  <td><span class="cid">mech:clinical-reasoning-confidence-and-affect</span></td>
+  <td class="small">This extracted mechanism captures student affect/self-confidence in reasoning, including feeling cocooned and challenged; it is the closest same-construct match for positive coping/self-efficacy.</td>
 </tr>
 <tr>
   <td class="num">E05</td>
   <td>negative student coping strategies or lacking self-confidence or self-efficacy<div class="small">Context · Results 3.2, pp.712-714</div></td>
   <td><span class="badge b-gap">Not found</span></td>
-  <td>—</td>
-  <td class="small"></td>
+  <td><span class="cid">cont:decision-making-preparedness</span></td>
+  <td class="small">The evidence says students &#x27;feel unprepared for clinical decision making&#x27; and &#x27;lack effective&#x27; coping/preparedness, which aligns with lacking self-confidence/self-efficacy.</td>
 </tr>
 <tr>
   <td class="num">E06</td>
   <td>students with different levels of knowledge within a group<div class="small">Context · Results 3.2, pp.712-714</div></td>
   <td><span class="badge b-gap">Not found</span></td>
   <td><span class="cid">cont:expertise-comparison</span></td>
-  <td class="small">This is the same underlying construct of heterogeneous knowledge/expertise levels within a group; the extracted context explicitly mentions different expertise levels and experience gaps among participants.</td>
+  <td class="small">The evidence explicitly concerns different expertise levels within a learner group, which is the same underlying construct as differing levels of knowledge within a group.</td>
 </tr>
 <tr>
   <td class="num">E07</td>
@@ -462,210 +461,210 @@ the table to check any single case yourself.</p>
   <td>instructed to use analytical reasoning alone<div class="small">Intervention · Results 3.2.2, p.714</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">inte:analytic-training</span></td>
-  <td class="small">This concept is explicitly analytic reasoning training, aligning with instruction to use analytical reasoning alone.</td>
+  <td class="small">This concept is explicitly about analytic reasoning training, aligning with instruction to use analytical reasoning alone.</td>
 </tr>
 <tr>
   <td class="num">E09</td>
   <td>teaching resources that allow them to make mistakes<div class="small">Intervention · Results 3.2.3, p.714</div></td>
   <td><span class="badge b-match">Found</span></td>
-  <td><span class="cid">inte:serious-game</span></td>
-  <td class="small">A serious game developed to train diagnosis/management is a teaching resource where learners can make mistakes in a low-stakes environment.</td>
+  <td><span class="cid">inte:worked-examples</span></td>
+  <td class="small">Worked examples and erroneous examples are teaching resources that let learners see and learn from mistakes, matching resources that allow them to make mistakes.</td>
 </tr>
 <tr>
   <td class="num">E10</td>
   <td>real-life scenarios, including simulation and simulated patients<div class="small">Intervention · Results 3.2.3, p.714</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">inte:casebook</span></td>
-  <td class="small">The evidence says it is a Virtual Patient teaching application, which fits real-life scenarios including simulation and simulated patients.</td>
+  <td class="small">The evidence says Casebook is a virtual patient teaching application, which fits real-life scenarios including simulation and simulated patients.</td>
 </tr>
 <tr>
   <td class="num">E11</td>
   <td>real cases<div class="small">Intervention · Results 3.2.3, p.714</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:real-case-practice</span></td>
-  <td class="small">The evidence explicitly refers to real-life medical situations that genuinely occurred, matching real cases.</td>
+  <td class="small">The evidence explicitly refers to cases from real-life medical situations that genuinely occurred, matching real cases.</td>
 </tr>
 <tr>
   <td class="num">E12</td>
   <td>strategies that promote knowledge retention<div class="small">Intervention · Results 3.2.5, p.716</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:mastery-practice</span></td>
-  <td class="small">Repeated practice to mastery and automaticity is a strategy aimed at knowledge retention.</td>
+  <td class="small">Repeated practice to mastery and automaticity is a strategy aimed at retention, matching strategies that promote knowledge retention.</td>
 </tr>
 <tr>
   <td class="num">E13</td>
   <td>accurate and timely feedback<div class="small">Intervention · Results 3.2.5, p.716</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:immediate-feedback</span></td>
-  <td class="small">The evidence explicitly states students were given immediate educational feedback, which is accurate and timely feedback.</td>
+  <td class="small">Immediate educational feedback is accurate and timely feedback.</td>
 </tr>
 <tr>
   <td class="num">E14</td>
   <td>feedback is absent, incomplete or contains errors<div class="small">Intervention · Results 3.2.5, p.716</div></td>
   <td><span class="badge b-match">Found</span></td>
-  <td><span class="cid">inte:self-explanation-diagnostic-case-solving</span></td>
-  <td class="small">The evidence says no feedback was provided to students, matching absent feedback.</td>
+  <td><span class="cid">mech:unprompted-recordings</span></td>
+  <td class="small">The evidence for unprompted resident SE recordings indicates no prompts/feedback during the examples, fitting absent or incomplete feedback.</td>
 </tr>
 <tr>
   <td class="num">E15</td>
   <td>explicit and clear explanation of expert&#x27;s reasoning<div class="small">Intervention · Figure 3, p.715</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:reasoning-clarification-prompts</span></td>
-  <td class="small">Questions like &#x27;Why did you ask that?&#x27; and &#x27;How does that information help you&#x27; are explicit prompts to clarify and explain reasoning.</td>
+  <td class="small">The evidence includes questions like &#x27;Why did you ask that?&#x27; and &#x27;How does that information help you&#x27;, which are explicit prompts to explain reasoning clearly.</td>
 </tr>
 <tr>
   <td class="num">E16</td>
   <td>passive observation of experts without receiving explanation about their reasoning processes<div class="small">Intervention · Figure 3, p.715</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">inte:expert-examples</span></td>
-  <td class="small">Listening to expert/peer recordings without mention of explanation about their reasoning processes corresponds to passive observation/listening to experts without explanation.</td>
+  <td class="small">Listening to expert or peer SE examples without mention of explanation about the reasoning processes corresponds to passive observation of experts without receiving explanation.</td>
 </tr>
 <tr>
   <td class="num">E17</td>
   <td>listen to near-peer think aloud their reasoning with the use of prompts and examples<div class="small">Intervention · Figure 3, p.715</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">inte:resident-se-examples</span></td>
-  <td class="small">The evidence explicitly mentions resident SE examples with prompts, matching listening to near-peer think-aloud reasoning with prompts and examples.</td>
+  <td class="small">The resident SE examples with prompts and the evidence about being prompted while listening directly match near-peer think-aloud reasoning with prompts and examples.</td>
 </tr>
 <tr>
   <td class="num">E18</td>
   <td>instructing to use both &#x27;non-analytical&#x27; or pattern recognition and analytical or step-wise approach to reasoning<div class="small">Intervention · Figure 3, p.715</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:feature-and-similarity-instructions</span></td>
-  <td class="small">The evidence describes instructions to be feature oriented and to trust similarity, which combines analytical and non-analytical/pattern-recognition approaches.</td>
+  <td class="small">The evidence explicitly instructs learners to use both feature-oriented and similarity-based strategies, matching combined non-analytical pattern recognition and analytical step-wise reasoning.</td>
 </tr>
 <tr>
   <td class="num">E19</td>
   <td>multiple relevant resources<div class="small">Mechanism_Resource · Figure 2, p.713</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">inte:multiple-case-learning-task</span></td>
-  <td class="small">An unguided multiple-case learning task involves multiple cases/resources relevant to the learning task, matching multiple relevant resources.</td>
+  <td class="small">A multiple-case learning task involves several cases/resources, which best matches multiple relevant resources.</td>
 </tr>
 <tr>
   <td class="num">E20</td>
   <td>understanding<div class="small">Mechanism_Response · Results 3.2.2, p.714</div></td>
   <td><span class="badge b-match">Found</span></td>
-  <td><span class="cid">mech:reasoning-insight</span></td>
-  <td class="small">The evidence quote explicitly mentions a grasp of the correct path/diagnosis and insight into cognitive features of reasoning, which corresponds to understanding.</td>
+  <td><span class="cid">mech:knowledge-elaboration</span></td>
+  <td class="small">The evidence for knowledge elaboration includes schema construction and integration, which expresses understanding being built/developed.</td>
 </tr>
 <tr>
   <td class="num">E21</td>
   <td>insight into the reasoning process when diagnosing and managing patients<div class="small">Mechanism_Response · Results 3.2.2, p.714</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:reasoning-insight</span></td>
-  <td class="small">This concept directly concerns insight into the reasoning process when diagnosing and managing patients.</td>
+  <td class="small">The quoted evidence explicitly mentions grasping the correct path/diagnosis and insight into cognitive features of reasoning, matching insight into the reasoning process when diagnosing and managing patients.</td>
 </tr>
 <tr>
   <td class="num">E22</td>
   <td>positive learning experience<div class="small">Outcome · Results 3.2.2, p.714</div></td>
   <td><span class="badge b-match">Found</span></td>
-  <td><span class="cid">outc:learner-engagement-and-uptake</span></td>
-  <td class="small">The evidence explicitly mentions increased interest and repeated use, which indicates a positive learning experience.</td>
+  <td><span class="cid">outc:worked-example-learning-benefits</span></td>
+  <td class="small">The evidence and label indicate a beneficial learning experience from the intervention; this is the closest direct match to a positive learning experience.</td>
 </tr>
 <tr>
   <td class="num">E23</td>
   <td>frustrated<div class="small">Mechanism_Response · Results 3.2.2, p.714</div></td>
-  <td><span class="badge b-gap">Not found</span></td>
+  <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:cognitive-overload-or-confusion</span></td>
-  <td class="small">The quote includes stress/frustration-like affect during demanding tasks; among extracted concepts, this is the closest same underlying response state, though it is broader and not a precise frustration label.</td>
+  <td class="small">The evidence quote explicitly says &#x27;It was stressful&#x27; in a difficult paging/patient situation; this supports frustration/stress-related affect, but the closest direct construct among extracted concepts is confusion/stress rather than frustration. However, no better exact match is present, so this is not a reliable match.</td>
 </tr>
 <tr>
   <td class="num">E24</td>
   <td>rely on non-analytical reasoning<div class="small">Mechanism_Response · Results 3.2.2, p.714</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:reasoning-strategy-shift</span></td>
-  <td class="small">The extracted concept includes reliance on analytic reasoning versus similarity-based processes, which is the opposite/alternative of relying on non-analytical reasoning and thus expresses the same reasoning-strategy construct.</td>
+  <td class="small">This concept covers reliance on analytic reasoning and similarity-based processes; the evidence mentions novices relying on conscious, analytic reasoning, which is the opposite of non-analytical reasoning, so it does not match the gold construct.</td>
 </tr>
 <tr>
   <td class="num">E25</td>
   <td>high diagnostic accuracy<div class="small">Outcome · Results 3.2.2, p.714</div></td>
   <td><span class="badge b-match">Found</span></td>
-  <td><span class="cid">outc:diagnostic-accuracy-improvement</span></td>
-  <td class="small">This concept directly denotes improved diagnostic accuracy, matching high diagnostic accuracy.</td>
+  <td><span class="cid">outc:improved-diagnostic-accuracy</span></td>
+  <td class="small">This concept directly states improved diagnostic accuracy, which corresponds to high diagnostic accuracy.</td>
 </tr>
 <tr>
   <td class="num">E26</td>
   <td>grateful for the learning experience<div class="small">Mechanism_Response · Results 3.2.3, p.714</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:positive-adaptation-and-learning</span></td>
-  <td class="small">The evidence indicates positive learning/adaptation from the experience, which best matches being grateful for the learning experience.</td>
+  <td class="small">The evidence for positive adaptation and learning includes positive student reception and understanding what the clinician was thinking, which can reflect gratitude for the learning experience, though gratitude is not explicit.</td>
 </tr>
 <tr>
   <td class="num">E27</td>
   <td>build understanding<div class="small">Mechanism_Response · Results 3.2.3, p.714</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:knowledge-elaboration</span></td>
-  <td class="small">Knowledge elaboration and schema construction reflect building understanding.</td>
+  <td class="small">Knowledge elaboration and schema construction directly correspond to building understanding.</td>
 </tr>
 <tr>
   <td class="num">E28</td>
   <td>positive impact on learning<div class="small">Outcome · Results 3.2.3, p.714</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">outc:learning-and-schema-integration</span></td>
-  <td class="small">The evidence describes implicit learning and strengthened concept links, which is a positive impact on learning.</td>
+  <td class="small">The evidence quote explicitly describes much implicit learning and strengthened concept links, indicating a positive impact on learning.</td>
 </tr>
 <tr>
   <td class="num">E29</td>
   <td>more complete illness scripts<div class="small">Outcome · Results 3.2.3, p.714</div></td>
-  <td><span class="badge b-match">Found</span></td>
-  <td><span class="cid">outc:structured-knowledge-and-reasoning</span></td>
-  <td class="small">The evidence refers to coherent disease representation and higher structured knowledge, consistent with more complete illness scripts.</td>
+  <td><span class="badge b-partial">Found, other role</span></td>
+  <td><span class="cid">mech:clinical-knowledge-development</span></td>
+  <td class="small">This directly refers to illness-script development and knowledge growth, matching the construct of more complete illness scripts.</td>
 </tr>
 <tr>
   <td class="num">E30</td>
   <td>more accurate non-analytical reasoning<div class="small">Outcome · Results 3.2.3, p.714</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">outc:clinical-reasoning-improvement</span></td>
-  <td class="small">The evidence states students learn decision-making skills and enhanced clinical reasoning ability, aligning with more accurate non-analytical reasoning.</td>
+  <td class="small">The evidence quote says students learn decision-making skills and enhanced clinical reasoning ability, consistent with more accurate non-analytical reasoning.</td>
 </tr>
 <tr>
   <td class="num">E31</td>
   <td>pressure that their decision making could have a real impact<div class="small">Mechanism_Response · Results 3.2.3, p.714</div></td>
   <td><span class="badge b-gap">Not found</span></td>
   <td>—</td>
-  <td class="small"></td>
+  <td class="small">The extracted concepts include speeded/timed case challenge and stress from performance demands; this matches pressure that decision making could have a real impact.</td>
 </tr>
 <tr>
   <td class="num">E32</td>
   <td>fear<div class="small">Mechanism_Response · Results 3.2.4, p.716</div></td>
   <td><span class="badge b-gap">Not found</span></td>
   <td><span class="cid">mech:cognitive-overload-or-confusion</span></td>
-  <td class="small">The evidence quote includes stressful situations and confusion-like overload; among extracted concepts this is the closest match to fear as an immediate emotional response, though not perfect.</td>
+  <td class="small">Fear is not named verbatim, but the closest same-affect construct in the extracted set is stress/fear-like negative affect under demanding conditions.</td>
 </tr>
 <tr>
   <td class="num">E33</td>
   <td>stress<div class="small">Mechanism_Response · Results 3.2.4, p.716</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:cognitive-overload-or-confusion</span></td>
-  <td class="small">The evidence quote explicitly says &#x27;It was stressful,&#x27; matching stress.</td>
+  <td class="small">The evidence explicitly includes &#x27;It was stressful&#x27; and mentions stress from pager interruption, matching stress.</td>
 </tr>
 <tr>
   <td class="num">E34</td>
   <td>pressure to perform<div class="small">Mechanism_Response · Results 3.2.4, p.716</div></td>
   <td><span class="badge b-gap">Not found</span></td>
   <td>—</td>
-  <td class="small"></td>
+  <td class="small">This directly captures pressure to perform under time/assessment demands.</td>
 </tr>
 <tr>
   <td class="num">E35</td>
   <td>cognitive load is increased<div class="small">Mechanism_Response · Results 3.2.4, p.716</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:cognitive-load</span></td>
-  <td class="small">This concept directly addresses cognitive load, including higher or lower load.</td>
+  <td class="small">The extracted concept explicitly concerns cognitive load, including lower or higher cognitive load, matching increased cognitive load.</td>
 </tr>
 <tr>
   <td class="num">E36</td>
   <td>poor illness script development<div class="small">Outcome · Results 3.2.4, p.716</div></td>
-  <td><span class="badge b-match">Found</span></td>
-  <td><span class="cid">outc:learning-and-schema-integration</span></td>
-  <td class="small">The evidence mentions limited ability to exploit case learning and implicit learning, which best fits poor illness script development.</td>
+  <td><span class="badge b-partial">Found, other role</span></td>
+  <td><span class="cid">mech:clinical-knowledge-development</span></td>
+  <td class="small">Poor illness script development is the negative pole of illness-script development; the extracted concept explicitly concerns illness-script development and limited conceptual understanding.</td>
 </tr>
 <tr>
   <td class="num">E37</td>
   <td>faulty future non-analytical reasoning<div class="small">Outcome · Results 3.2.4, p.716</div></td>
-  <td><span class="badge b-gap">Not found</span></td>
-  <td><span class="cid">outc:poorer-diagnostic-performance</span></td>
-  <td class="small">The evidence indicates worse immediate performance after reflection, consistent with faulty future non-analytical reasoning.</td>
+  <td><span class="badge b-match">Found</span></td>
+  <td><span class="cid">outc:instruction-effects-on-reasoning</span></td>
+  <td class="small">Faulty future non-analytical reasoning is about later reasoning-process reliance; the extracted outcome concerns instructionally modifiable reasoning-process reliance, which is the same underlying construct at the level of future reasoning style.</td>
 </tr>
 <tr>
   <td class="num">E38</td>
@@ -679,70 +678,69 @@ the table to check any single case yourself.</p>
   <td>build upon what they already know<div class="small">Mechanism_Response · Results 3.2.5, p.716</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:knowledge-elaboration</span></td>
-  <td class="small">Schema construction and elaboration build on existing knowledge structures, matching building upon what they already know.</td>
+  <td class="small">Knowledge elaboration and schema construction imply building on existing knowledge.</td>
 </tr>
 <tr>
   <td class="num">E40</td>
   <td>increased learning<div class="small">Outcome · Results 3.2.5, p.716</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">outc:learning-and-schema-integration</span></td>
-  <td class="small">The evidence explicitly describes much implicit learning and strengthening of links, indicating increased learning.</td>
+  <td class="small">The evidence quote explicitly mentions much implicit learning, which supports increased learning.</td>
 </tr>
 <tr>
   <td class="num">E41</td>
   <td>further engagement<div class="small">Outcome · Results 3.2.5, p.716</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">outc:learner-engagement-and-uptake</span></td>
-  <td class="small">The evidence mentions piqued interest, popularity among students, and repeated use, which reflects further engagement.</td>
+  <td class="small">The concept describes piqued interest, popularity among students, and repeated use, which reflects further engagement.</td>
 </tr>
 <tr>
   <td class="num">E42</td>
   <td>develop understanding of their successes and failures and generate plans for improvement<div class="small">Mechanism_Response · Results 3.2.5, p.716</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:diagnostic-error-analysis</span></td>
-  <td class="small">The evidence about identifying errors and understanding the correct solution aligns with developing understanding of successes/failures and planning improvement.</td>
+  <td class="small">This concept includes error identification, understanding the correct solution, and examining error causes and sequences, which aligns with developing understanding of successes and failures and generating plans for improvement.</td>
 </tr>
 <tr>
   <td class="num">E43</td>
   <td>complete illness scripts<div class="small">Mechanism_Response · Results 3.2.5, p.716</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:clinical-knowledge-development</span></td>
-  <td class="small">The extracted concept explicitly mentions illness-script development, which matches completing illness scripts.</td>
+  <td class="small">The evidence explicitly says students need similar patients or scenarios in order to build illness scripts, matching complete illness scripts.</td>
 </tr>
 <tr>
   <td class="num">E44</td>
   <td>successful non-analytical reasoning in the future<div class="small">Outcome · Results 3.2.5, p.716</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">outc:diagnostic-skill-development</span></td>
-  <td class="small">The evidence describes acquisition of clinical reasoning skills and improved unfamiliar-case diagnosis, consistent with successful non-analytical reasoning in the future.</td>
+  <td class="small">Successful non-analytical reasoning in the future corresponds to improved nonanalytic pattern-recognition skill development and positive diagnostic skill acquisition.</td>
 </tr>
 <tr>
   <td class="num">E45</td>
   <td>confusion<div class="small">Mechanism_Response · Results 3.2.5, p.716</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">mech:cognitive-overload-or-confusion</span></td>
-  <td class="small">The concept explicitly includes confusion in the evidence quote.</td>
+  <td class="small">The concept explicitly includes possible confusion, which matches confusion.</td>
 </tr>
 <tr>
   <td class="num">E46</td>
   <td>increase in learning gain or outcomes, or increase in diagnostic accuracy<div class="small">Outcome · Figure 3, p.715</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">outc:improved-diagnostic-accuracy</span></td>
-  <td class="small">This concept covers improved diagnostic accuracy and performance, matching an increase in learning gain/outcomes or diagnostic accuracy.</td>
+  <td class="small">Improved diagnostic accuracy directly matches an increase in diagnostic accuracy; the concept also covers improved performance/learning gains broadly.</td>
 </tr>
 <tr>
   <td class="num">E47</td>
   <td>decrease in learning gain or outcomes, or decrease in diagnostic accuracy<div class="small">Outcome · Figure 3, p.715</div></td>
   <td><span class="badge b-match">Found</span></td>
   <td><span class="cid">outc:lower-diagnostic-accuracy-relative-to-analytic-reasoning</span></td>
-  <td class="small">This concept directly denotes lower diagnostic accuracy, matching a decrease in diagnostic accuracy.</td>
+  <td class="small">This concept explicitly indicates lower diagnostic accuracy, matching a decrease in diagnostic accuracy.</td>
 </tr></tbody></table></div>
 
 
-<h2><span class="num">06</span>Browse the machine's actual output</h2>
-<p class="sub">The complete output, not a sample. Open a section, type in the box to filter.
-This is the same data as <code>outputs/exports/*.csv</code> — the spreadsheets are for Excel,
-this is for reading.</p>
+<h2><span class="num">6</span>RAW DATA — every finding, concept, quote and link</h2>
+<p class="sub"><strong>What this section is:</strong> all the raw data, not a sample. Click a
+heading to open it, type in the box to search. Same content as the CSV files, but readable here.</p>
 
 <details open><summary>All 94 CMOCs — the review's findings, one sentence each</summary>
 <input class="filter" data-filter="cmocs" placeholder="Filter configurations…">
@@ -5809,8 +5807,9 @@ context–driver–outcome appearing in two or more independent studies.</p>
 <td class="num">2</td></tr></tbody></table></div></details>
 
 
-<h2><span class="num">07</span>What is not yet verified</h2>
-<p class="sub">Stated here so it never has to be discovered by a reviewer.</p>
+<h2><span class="num">7</span>LIMITS — what is NOT verified yet</h2>
+<p class="sub"><strong>What this section is:</strong> everything we have NOT yet proved,
+listed by us rather than found by a reviewer.</p>
 <ol class="tight">
   <li><strong>No human coder has checked the extraction.</strong> The per-paper reference coding
   was produced by a different model family, blind — honest, but it is not a human gold standard.
@@ -5829,10 +5828,10 @@ context–driver–outcome appearing in two or more independent studies.</p>
 
 
 <footer>
-  <p>Generated 2026-09-24 17:11 UTC from the project database
+  <p>Generated 2026-09-25 10:44 UTC from the project database
   (28 studies, 94 CMOCs, 547 entities,
   459 relations). Verification run
-  <code>verify-91a39a5c</code>. Human standard:
+  <code>verify-edcbf790</code>. Human standard:
   <code>gold/RICHMOND_CONCLUSIONS.md</code> and <code>gold/richmond_gold_v2.json</code>,
   both grounded line by line in Richmond et al. (2020),
   <em>BMC Medical Education</em> 20:187.</p>

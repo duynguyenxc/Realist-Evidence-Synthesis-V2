@@ -481,26 +481,25 @@ def _section_orientation(d: dict[str, Any]) -> str:
     )
     return f"""
 <section class="orient">
-  <h2 style="border:none;margin-top:0;padding-top:0">What you are looking at</h2>
-  <p>Richmond et al. (2020) is a published <em>realist review</em>: five reviewers read 28
-  studies by hand and worked out <strong>which teaching helps which student, and why</strong>.
-  We gave our system the same 28 papers and asked it to do the same analytic work, with a human
-  approving at four points. This page puts the two side by side.</p>
+  <h2 style="border:none;margin-top:0;padding-top:0">HOW TO READ THIS PAGE</h2>
+  <p><strong>Richmond et al. (2020)</strong> is a published review: five people read 28 studies
+  by hand and worked out <strong>which teaching helps which student, and why</strong>.
+  <strong>We gave our system the same 28 papers.</strong> This page puts the two side by side.</p>
 
   <div class="chain">{chain}</div>
   <p class="small" style="margin-top:6px"><strong>The programme theory is our conclusion.</strong>
-  Everything else on this page is either the evidence underneath it or the check on it.</p>
+  Everything else on this page is the evidence under it, or the check on it.</p>
 
-  <h3 style="margin-top:26px">Where to look for what</h3>
+  <h3 style="margin-top:26px">The seven sections, in one line each</h3>
   <ol class="tight">
-    <li><strong>The answer</strong> — §1 below: Richmond's conclusion and ours, side by side.</li>
-    <li><strong>Judge it yourself</strong> — §3: Richmond's five kinds of student, one block each,
-    their finding on the left and ours on the right. No statistics needed.</li>
-    <li><strong>How we checked</strong> — §4: one row per question, each with who judged it —
-    a machine or a language model. This is the part that answers <em>"how do you verify this?"</em></li>
-    <li><strong>Check any single case</strong> — §5 and §6: every concept, every finding, every
-    quote, searchable.</li>
-    <li><strong>What is not yet verified</strong> — §7. Read it before quoting anything.</li>
+    <li><strong>THE ANSWER</strong> — their conclusion and ours, side by side.</li>
+    <li><strong>OUTPUT</strong> — how much the system produced.</li>
+    <li><strong>COMPARISON</strong> — the main one. Five kinds of student, one block each.
+    <em>Start here if you only read one section.</em></li>
+    <li><strong>VERIFICATION</strong> — how each number was checked, and by machine or by AI.</li>
+    <li><strong>CONCEPT CHECKLIST</strong> — did we find each concept Richmond named?</li>
+    <li><strong>RAW DATA</strong> — every finding, concept and quote, searchable.</li>
+    <li><strong>LIMITS</strong> — what we have not proved yet.</li>
   </ol>
 </section>
 """
@@ -559,10 +558,9 @@ def _section_headline(d: dict[str, Any]) -> str:
     ent = v.get("entity_coverage", {})
     rel = v.get("relation_coverage", {})
     return f"""
-<h2><span class="num">01</span>The one-minute answer</h2>
-<p class="sub">Richmond's five reviewers spent months producing a realist review of 28 studies.
-Our system was given the same 28 studies and asked to do the same analytic work. Here is what
-each side concluded, in their own words.</p>
+<h2><span class="num">1</span>THE ANSWER — what Richmond concluded, what we concluded</h2>
+<p class="sub"><strong>What this section is:</strong> the conclusion each side reached, in
+its own words. Richmond's five reviewers on the left, our system on the right.</p>
 
 <div class="grid2">
   <div class="col human">
@@ -614,9 +612,9 @@ def _section_counts(d: dict[str, Any]) -> str:
         for n, label in tiles
     )
     return f"""
-<h2><span class="num">02</span>What the machine produced</h2>
-<p class="sub">Every count here is read live from the project database, which is the single
-source of truth for what the pipeline produced.</p>
+<h2><span class="num">2</span>OUTPUT — what the system produced</h2>
+<p class="sub"><strong>What this section is:</strong> how much the system produced. Counts
+read live from the database.</p>
 <div class="tiles">{tile_html}</div>
 <p><strong>A CMOC</strong> — Context–Mechanism–Outcome configuration — is the unit of a realist
 review. It is one sentence of the form <em>"for this kind of student, this teaching triggers this
@@ -630,11 +628,10 @@ correctly declines to invent one.</p>
 
 def _section_side_by_side(d: dict[str, Any]) -> str:
     parts = ["""
-<h2><span class="num">03</span>Side by side, context by context</h2>
-<p class="sub">Richmond organised the whole review around five kinds of student. This is the
-heart of the verification: for each of those five, Richmond's published conclusion sits on the
-left and everything our system found for the same context sits on the right. Read one block and
-you can judge the system yourself, without any statistic.</p>
+<h2><span class="num">3</span>COMPARISON — Richmond vs us, one student type at a time</h2>
+<p class="sub"><strong>What this section is:</strong> the main comparison. Richmond organised
+their review around five kinds of student. For each one: their conclusion on the left, ours on the
+right, and a verdict. <strong>No statistics needed — read a block and judge for yourself.</strong></p>
 """]
     for row in d["side_by_side"]:
         kind, label = _verdict(row)
@@ -842,11 +839,10 @@ def _section_matrix(d: dict[str, Any]) -> str:
     )
 
     return f"""
-<h2><span class="num">04</span>The verification matrix — how each number is made</h2>
-<p class="sub">This is the answer to "how do you verify it?". One row per question a reviewer can
-ask: Richmond's artefact, our artefact, the exact comparison, the result with an exact
-(Clopper–Pearson) confidence interval, and — the column that matters most — whether a machine or
-a language model did the judging.</p>
+<h2><span class="num">4</span>VERIFICATION — how each number was checked</h2>
+<p class="sub"><strong>What this section is:</strong> the answer to <em>"how did you check
+it?"</em>. One row per question. The last column says whether a <strong>machine</strong> checked it
+(exact, same answer every time) or an <strong>AI</strong> judged it (varies between runs).</p>
 <div class="tablewrap"><table>
 <thead><tr><th style="min-width:250px">Question</th><th>Richmond's artefact</th>
 <th>Our artefact</th><th>Statistic</th><th>Result</th><th>Judged by</th></tr></thead>
@@ -893,10 +889,10 @@ def _section_concepts(d: dict[str, Any]) -> str:
 </tr>""")
     n = len(rows)
     return f"""
-<h2><span class="num">05</span>Every one of Richmond's concepts, one by one</h2>
-<p class="sub">No aggregate to hide behind. For each concept Richmond named in their figures:
-did we find it, which of our concepts matched it, and what was the matcher's stated reason. Search
-the table to check any single case yourself.</p>
+<h2><span class="num">5</span>CONCEPT CHECKLIST — did we find each of Richmond's concepts?</h2>
+<p class="sub"><strong>What this section is:</strong> a checklist. Every concept Richmond named
+in their figures, one row each: did we find it, what did we match it to, and why. Use the search
+box to check any single one.</p>
 <input class="filter" data-filter="concepts" placeholder="Search Richmond's concepts, our concepts, or the reasoning…">
 <p class="small" id="concepts-count">{n} of {n} shown</p>
 <div class="tablewrap"><table id="concepts">
@@ -942,10 +938,9 @@ def _section_browse(d: dict[str, Any]) -> str:
         for x in d["demi_regularities"])
 
     return f"""
-<h2><span class="num">06</span>Browse the machine's actual output</h2>
-<p class="sub">The complete output, not a sample. Open a section, type in the box to filter.
-This is the same data as <code>outputs/exports/*.csv</code> — the spreadsheets are for Excel,
-this is for reading.</p>
+<h2><span class="num">6</span>RAW DATA — every finding, concept, quote and link</h2>
+<p class="sub"><strong>What this section is:</strong> all the raw data, not a sample. Click a
+heading to open it, type in the box to search. Same content as the CSV files, but readable here.</p>
 
 <details open><summary>All {len(d['cmocs'])} CMOCs — the review's findings, one sentence each</summary>
 <input class="filter" data-filter="cmocs" placeholder="Filter configurations…">
@@ -988,8 +983,9 @@ context–driver–outcome appearing in two or more independent studies.</p>
 
 def _section_limits(d: dict[str, Any]) -> str:
     return """
-<h2><span class="num">07</span>What is not yet verified</h2>
-<p class="sub">Stated here so it never has to be discovered by a reviewer.</p>
+<h2><span class="num">7</span>LIMITS — what is NOT verified yet</h2>
+<p class="sub"><strong>What this section is:</strong> everything we have NOT yet proved,
+listed by us rather than found by a reviewer.</p>
 <ol class="tight">
   <li><strong>No human coder has checked the extraction.</strong> The per-paper reference coding
   was produced by a different model family, blind — honest, but it is not a human gold standard.
