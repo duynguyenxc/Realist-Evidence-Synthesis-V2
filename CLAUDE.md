@@ -26,6 +26,14 @@ Richmond's human outputs. **Method > platform; human judgment stays sovereign.**
   `../LLM-Knowledge-Graph/` is the **old version** (built with Cursor/Antigravity) — read it
   for reference and lessons, but do not build there.
 - Aim for professional, tidy, optimized structure down to naming conventions. Quality over speed.
+- **Append a `WALKTHROUGH.md` entry at the end of every session** — detailed enough that the next
+  session can pick the work up *without re-reading the repository*, and without re-deciding
+  something already decided. Say what was verified and **how**; say what was found and left
+  unfixed; say what the next session must not assume. This is the cheapest thing in the project
+  and the only thing that makes the rest cheap to come back to.
+- **Orient from two files, not from the repo**: this one, then `WALKTHROUGH.md` (newest entry
+  first, it is append-only). Open `docs/PROJECT_CONTEXT.md` and the rest only when the task needs
+  them. Reading everything every time burns tokens and still gets the history wrong.
 
 ## Where things are
 - `data/` — Richmond corpus: `20-paper-of-Richmond/` (20 PDFs) + 8 abstract/metadata records,
@@ -52,6 +60,13 @@ The benchmark is `gold/richmond_gold_v3.json` (corrected 2026-09-23; `RES_GOLD=v
 every earlier published number). Never quote the relation type-level score without the anchored
 and strict tiers, never quote entity coverage role-tolerant without like-for-like, and never quote
 a single programme-theory correspondence number — two judges differ by 0.31 on identical inputs.
+
+## There are two projects, and they are not related
+This one, and **OpenMAIC** in `~/Downloads/OpenMAIC` — Tsinghua's multi-agent classroom, which the
+professor asked to have installed and extended in levels (Level 2 done and deployed; Level 3 not
+started). It has its own `CLAUDE.md` and `WALKTHROUGH.md`; read those, not this file, for anything
+about it. **No code is shared between the two projects, in either direction.** October 2026 was
+spent entirely on OpenMAIC, which is why this log jumps from 30 September to M38.
 
 ## Status pointer
 **Architecture v1.0 adopted** (`docs/ARCHITECTURE.md`, grounded in `docs/research/SOTA_REPORT.md`).

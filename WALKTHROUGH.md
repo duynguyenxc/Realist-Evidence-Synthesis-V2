@@ -1370,3 +1370,48 @@ independently coded any paper yet", which the coding workbooks have since made f
 so the fix belongs in `FOR_THE_PROFESSOR.template.md`. That file also tells the professor to reproduce
 numbers with `run-all`, which `RESTORE.md` forbids — a re-run costs money and yields a different graph
 that would invalidate every figure already reported.
+
+---
+
+## M38 — Two months of silence explained, and a deliverable quietly regressed (2026-10-01 → 10-19)
+
+**Nothing happened in this project in October, and that was deliberate.** The project owner paused
+it after M37 to answer the professor's other work stream: installing and then extending Tsinghua's
+**OpenMAIC** classroom. That work is real, finished to Level 2, and lives entirely in
+`~/Downloads/OpenMAIC` — a separate repository, a separate Vercel deployment, and **none of this
+project's code was imported into it**. Its own log is `~/Downloads/OpenMAIC/WALKTHROUGH.md`; start
+there if the question is about OpenMAIC. Nothing in that work changes a single figure here.
+
+This entry exists so that the gap between 30 September and 19 October is not read, later, as a
+project that stalled.
+
+**What this session actually found here, while committing the backlog.**
+
+Eighty-five files showed as modified. **Eighty-two of them had not changed.** The move from the
+Windows machine rewrote nearly every tracked file with CRLF endings — 17,363 deleted lines that
+delete nothing. Committing that would have buried the three real changes and left `git blame`
+pointing at the migration for every line of the pipeline, in a project whose whole argument rests
+on an audit trail. `.gitattributes` now fixes LF in the repository whatever machine is working, and
+the index is renormalised.
+
+The three real changes were **M36 and M37**, written on 25–30 September and never committed, and
+the **pypdf pin** that M37 argued for, now actually in `pyproject.toml` with its reason beside it.
+
+**The serious finding: `outputs/RESULTS.html` on disk was worse than the one in git.** The working
+copy reported **0 human decisions** where the committed artefact reports **28**, and rendered one
+concept list as a raw Python repr (`['repeated use across different days', …`) instead of the clean
+comma list, truncated mid-structure. It has been **restored from git**, and the broken copy kept
+out of the way rather than destroyed.
+
+**The cause is not established, and must not be guessed at.** The exporter source on disk is
+byte-identical to the committed source once line endings are ignored, so the same code produced
+both files — which points at the *database* the export was run against, i.e. the snapshot restored
+on the new machine in M37, rather than at the code. Two things follow:
+
+- **Do not run `res export-results` until this is understood.** It is not a pipeline re-run and so
+  it is not covered by the standing prohibition, but it overwrote the project's single most
+  important deliverable with a worse version, silently, and the overwrite sat on disk unnoticed
+  for weeks. The committed `RESULTS.html` is the artefact of record.
+- **Check `screening_decisions` and the human-decision count in the restored database** before
+  trusting any freshly exported number. M37 claimed the restore verified every deterministic
+  metric; the human-decision count is apparently not among them.
