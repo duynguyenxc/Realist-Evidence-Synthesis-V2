@@ -1098,3 +1098,275 @@ the run id.
 **Resumability paid for itself.** Credit ran out twice more during this work, at 18/28 and again
 mid-run. Each time `--resume` continued under the original run id; the 16 studies extracted
 before the first failure were banked to `*_fbrun`, restored afterwards, and never paid for twice.
+
+## M36 — Judge variance, the trivial baseline, gold v3, and the papers (2026-09-25 → 09-30)
+
+**The session that changed what this project is allowed to claim.**
+
+**Gold v3.** `richmond_gold_v1` was still being scored: all five programme-theory chains had been
+transcribed from a draft of Richmond's figures rather than the published ones, and E01
+("undergraduate students in medical or health care professions education") was being scored despite
+being the review's population description, which any extraction matches trivially. v3 fixes both:
+denominator 46, not 47; E21/E43 re-typed to Mechanism_Response; R37–R40 flagged `derived`;
+`reference_to_study_id["28"] = ["S004"]` corrected. `RES_GOLD` switches between versions so every
+earlier published number remains reproducible.
+
+**The empty exports.** `scripts/export_outputs.py` used `pandas.read_sql` over a psycopg
+`dict_row` cursor, which turned every row into its own column names. Every CSV the project had ever
+sent the supervisor contained the header repeated and nothing else. Fixed with a raw cursor and
+explicit `columns=`. This is why eight months of "I never see any output" had a literal cause.
+
+**Judge variance — the headline.** Ten verification runs over one frozen graph
+(`extract-fb045429`, 547 instances, 94 CMOCs, 459 relations). Everything deterministic returned
+byte-identical values ten times out of ten. Everything a model judged moved: concept coverage
+31–37 (SD 1.96), anchored relations 24–31 (SD 2.31), mechanisms 16–21 (SD 1.32), and a
+programme-theory gap of 0.319 between judge families that is thirteen times either SD and perfectly
+reproducible. **Minimum detectable difference ≈ 7.8 items ≈ 17 pp on one comparison per arm.**
+Written up in `docs/MEASUREMENT_NOISE.md`.
+
+**The trivial baseline.** `verification/baseline.py` — one LLM call over the same 28 papers, no
+pipeline. It recovers **32 of 46**, inside our own 31–37 range. The framework cannot be claimed
+superior on concept coverage, and no further tuning would change that because the measurement
+cannot resolve it. The contribution has to be claimed where the baseline produces nothing:
+anchored quotes, per-study provenance, typed relations, algorithmic mechanisms, logged checkpoints.
+
+**Three dishonest figures withdrawn.** "91.5% concept recovery" came from an unvoted recovery pass
+and sat outside its own sampling range (76.6–85.1%); fixed with K=3 voting plus guards against
+hallucinated codes and duplicate matches, giving 89.1%. "96.9% citation faithfulness, resolved to
+an exact source span" conflated exact, normalised and fuzzy tiers under the word *exact*; exact is
+53/547 = 9.7%. Screening had been blending six runs; now one named run with a registry denominator.
+
+**Manual coding, and a correction to how it is described.** The RA coded all 28 papers by hand
+against a frame built from the 46 benchmark concepts: 192 elements marked, 30 of 46 recovered. A
+second pass under the identical frame recovered 28 of 46 across 139 elements, agreeing with the
+first on 130 elements — positive specific agreement 0.785, the correct statistic because Cohen's κ
+is undefined for span marking (Hripcsak & Rothschild, 2005). **That second pass was ChatGPT acting
+as a coder, not a second person.** It is therefore not inter-rater reliability and is no longer
+described as a human ceiling. What it does establish is the project's first human data point — 30
+of 46 — and, read with the baseline (32) and the pipeline (31–37), the suggestion that roughly 30
+of Richmond's 46 concepts are recoverable from the included studies at all. A second human coder
+remains outstanding.
+
+**The systematic failure.** Five concepts were recovered at no tier: E05, E06, E31, E32, E34 —
+negative coping and low self-efficacy, mixed-knowledge groups, pressure of real consequences, fear,
+pressure to perform. **Four of five are negative affect under pressure.** The pipeline recovers
+positive affect and misses the negative half, which is precisely the half Richmond's central claim
+depends on. Cause unknown: ontology, prompt, or corpus. This is the best open question the project
+has.
+
+**Architecture described from the code, not the docs.** There is no retrieval anywhere: extraction
+passes whole papers (mean 22,977 chars), and `_evidence_pack()` passes the entire evidence base
+unfiltered at 50,026 characters ≈ 12,506 tokens. Leiden is implemented — the global-search half of
+GraphRAG — while subgraph retrieval is not, correctly, since at this corpus size retrieval could
+only remove evidence. One genuine defect found: `_batched_cluster` merges across batches by exact
+normalised label, which will fragment at scale. Assessed and recommended against integrating
+LangChain or GraphRAG retrieval: neither addresses a measured limitation, and both would interpose
+an abstraction between the code and the two properties the validation rests on.
+
+**Delivered.** A six-file bundle and a seven-page comparison report to the supervisor on 09-25; the
+supervisor's AERA draft completed on 09-30 with all 16 placeholders filled, the stale prose
+corrected, four new Findings paragraphs, Table 2 grown to 16 rows, and references 9 → 14.
+
+**Lost.** PostgreSQL was uninstalled from the machine before a dump could be taken. The database is
+gone; the parquet snapshot and CSV exports survive, and the restore path is import, never re-run —
+a re-run would produce a different graph and invalidate every figure in the submission.
+`HANDOFF_FOR_NEW_MACHINE.md` records all of it.
+
+## M37 — The database restored on the new machine, and the affect gap diagnosed (2026-09-30)
+
+**The project now runs on macOS, and the "lost" database is back.** Nothing was re-run and no
+extraction was paid for; the whole CMOC layer was imported from the snapshot.
+
+**A latent defect that would have silently corrupted every span.** `pyproject.toml` declares
+`pypdf>=4.2`. It matters far more than that. Re-ingesting the 20 PDFs under pypdf 6.19 produced
+canonical text differing from the July run for **16 of 28 studies** (−1 to −23 characters); under
+4.2 the drift reached −525. Every `char_start`/`char_end` in `entities.parquet` indexes into that
+text, so importing the snapshot on top of a differently-extracted corpus would have made citation
+faithfulness collapse for no reason — and the 93.1% figure in the AERA submission is a
+*recomputed* metric, so it would have moved. Probing the version range found **pypdf 6.8–6.15
+reproduces the July text exactly**; 6.12.0 gives sha256 identity on all 28. The pin belongs in
+`pyproject.toml`, and `scripts/import_snapshot.py` refuses to import unless the hashes match.
+
+**`scripts/import_snapshot.py`** — the importer `HANDOFF_FOR_NEW_MACHINE.md` §7.1 said was still
+missing. It restores `cmocs` (94), `entity_instances` (547), `typed_relations` (459),
+`concept_families` (183), `conceptual_entities` (8), `screening_decisions` (86, reconstructed from
+the audit trail for run `screen-70a5d070` plus the two HITL-1 includes), and `audit_log` (1,084
+events, also from the rendered trail); recomputes `demi_regularities` (32) and `contradictions`
+(20) deterministically; and parses `programme_theories` v12 back out of the rendered markdown.
+
+**The restore verifies.** Every deterministic metric reproduces exactly: screening 26/28 → 28/28
+after HITL-1 with S018 and S028 as the two uncertain records; citation faithfulness tiers
+`{exact 53, normalized 456, fuzzy 22, unresolved 16}` — 9.7% exact, 93.1% verbatim, 97.1% all
+tiers. `res export-results` regenerates RESULTS.html at 547 / 459 / 94 / 8, which is the check
+`RESTORE.md` specifies. That the 32 demi-regularities and 20 contradictions were *recomputed* from
+the imported graph rather than copied, and came out at the published values, is the strongest
+evidence the import is faithful.
+
+**Not restored, because nothing exported it:** `token_usage`; the per-item `hitl_feedback`
+payloads and the original screening rationales (the markdown renderer truncated the audit
+`detail` column); `ipt_versions`; `agent_feedback`; `distractor_studies`. Consequence to expect:
+RESULTS.html now shows **0 human decisions** where it used to show 28/17. That is an honest loss,
+not a regression.
+
+**The affect gap is no longer "cause unknown".** All 28 primary studies were read, and the five
+concepts recovered at no tier decompose into four corpus limits and one polarity mismatch — none
+of them an extraction failure:
+
+- Richmond built Contexts 3 and 4 from five studies (refs 36, 37, 46, 50, 51). In our corpus
+  **two are unusable** — S009 (Bender & Danielson) is a first-page-only PDF, 2,129 chars; S014
+  (Pinnock) is a 185-character fragment — and **S023 (Bloice), a full text, contains no affect
+  vocabulary at all**. S022 has `pressure` once and `frustrat` twice. Essentially the entire
+  affective evidence base for those two contexts survives in **one study, S015 (McGregor)**.
+- **E34 (pressure to perform) and E31 (pressure of real consequences)**: corpus. The only
+  occurrence of "pressure" in S015 is *blood pressure cuff*.
+- **E05 (lacking self-confidence or self-efficacy)**: corpus. `self-efficacy` and
+  `self-confidence` occur **0 times** across all 28 studies.
+- **E06 (different levels of knowledge within a group)**: corpus, and not an affect item —
+  no study contains that construct's phrasing. The "four of five are negative affect" framing in
+  `HANDOFF_FOR_NEW_MACHINE.md` §2.4 counts E06 among them and should be corrected.
+- **E32 (fear)**: **polarity inversion, not blindness.** The extractor *did* capture fear from
+  S015 — `reduced fear during referral`, typed `Mechanism_Response`, quote *"The SBAR structure
+  was really useful. It took a bit of the fear away definitely"*. But that is fear being
+  *reduced by a tool*, whereas Richmond's E32 is fear *induced* by simulation in low-coping
+  learners. Same word, opposite causal role. A strict matcher declining it is arguably correct.
+
+So the extractor is not affect-blind: 12 of its 117 `Mechanism_Response` instances name an
+affect, span-grounded and correctly typed. What the corpus cannot supply, it correctly declines to
+invent — which is the faithfulness constraint working as designed.
+
+**A real normalisation defect found on the way, distinct from the above.** Concept normalisation
+merges unrelated and opposite constructs under one canonical label: `mech:reduced-fear-or-premature-closure`
+bundles reduced fear with premature closure; `mech:game-engagement` absorbs `novice frustration`;
+`mech:cognitive-load` absorbs `hypothesised overwhelmed cognitive load` and `perceived time and
+complexity burden`. Corpus-wide **no canonical concept name contains "stress", "panic", "anxiety"
+or "pressure"**, and only one contains "fear". The matcher is shown `canonical_id` plus at most
+**three** member labels plus **one** representative quote, so a concept with more than three
+members can hide content from it — `novice frustration` is the fourth label of four in
+`mech:game-engagement` and is never shown. This did not cause the E32 miss, but it is the
+antonym-collapse hazard `IMPROVEMENT_PLAN.md` warned about for E02/E03, already occurring in the
+existing LLM clustering without any embeddings involved. Cheap test: show the matcher the full
+member list.
+
+**Two smaller defects.** `registry.py:_pdf_title` references `PdfReader`, which is imported only
+inside `build_registry_from_dir`, so it raises `NameError`, is swallowed by its bare
+`except Exception`, and every generic-ingest title silently falls back to the filename stem — the
+"scale to any folder of PDFs" path does not extract titles. And `gold/richmond_gold.json` is still
+byte-identical to v1 (MD5 `c3edd83…`); `metrics.py` defaults to v3, but `gold_coder.py` (×2),
+`gold_template.py`, `tests/test_ontology.py` and `scripts/build_correspondence.py` still read the
+uncorrected v1, so the coding frame behind the 30/46 human figure carries v1's wrong typings.
+
+**Also on the record:** the 85 files `git status` reports as modified are CRLF→LF noise from the
+Windows→Mac move; `git diff -w` shows one real change, the M36 entry. Seventeen commits remain
+unpushed. `outputs/RESULTS.html` §3b still says "two research assistants" and "Coder B (human)" —
+the integrity correction of §3 of the handoff has not reached it. `outputs/Richmond_Correspondence.md`
+is stale (22/40 anchored, 0/40 strict). The delivered `0_REPORT` footer cites "Richmond, H. et al."
+
+### M37b — the last reading pass: what the entity matcher is actually counting
+
+Finishing the file-by-file sweep (the eight `outputs/runs/report-*` sets, the three July HTML
+reports, `03_Richmond_Correspondence_full.md`, the Microsoft GraphRAG paper and the earlier
+KG specification) turned up one finding that bears directly on the headline number, and four
+smaller ones.
+
+**The headline concept figure is not injective.** `RESULTS.html` §4 leads with 34/46 (73.9%)
+like-for-like concept recall and sets it beside the human ceiling — Coder A 30/46, Coder B 28/46,
+both agreeing 28/46 — and concludes the system clears it. But the 34 matches in
+`outputs/runs/verify-edcbf790/verification_report.json` rest on only **28 distinct canonical
+concepts**. Four concepts each answer for two or three of Richmond's:
+
+| concept | Richmond codes it is counted for |
+|---|---|
+| `mech:knowledge-elaboration` | E20 *understanding*, E27 *build understanding*, E39 *build upon what they already know* |
+| `mech:cognitive-overload-or-confusion` | E23 *frustrated*, E33 *stress*, E45 *confusion* |
+| `outc:improved-diagnostic-accuracy` | E25, E46 |
+| `outc:learning-and-schema-integration` | E28, E40 |
+
+The two human coders could not do this: the E-code sheet gives one code per element, so a human
+match is one-to-one by construction. Under the same constraint the system scores **28/46 (60.9%)** —
+equal to Coder B and to the both-agreed set, not above them. The comparison in §4 is therefore not
+like-for-like, and the sentence "the system clears the ceiling" should not be shown to the professor
+until either the matcher is made injective or the ceiling is recomputed without that constraint.
+E23/E33/E45 collapsing into one concept is also the same antonym/valence collapse recorded above for
+E02/E03, now visible on three affect items at once.
+
+**The judge contradicts its own verdict in writing.** In the same run, `E03` (students with *high*
+domain knowledge) is matched to `cont:knowledge-deficits` with the rationale "...which aligns with
+high clinical domain-specific knowledge **as the opposite**", and `E24` (*rely on non-analytical
+reasoning*) is matched to `mech:reasoning-strategy-shift` with "...which is the opposite of
+non-analytical reasoning, **so it does not match**" — both stored as `matched: true`. E03 is excluded
+from the like-for-like 34 by the `cross_type` flag, but E24 is inside it. A rationale that states a
+non-match must not be allowed to set `matched: true`; this is a one-line guard in `metrics.py`.
+
+**The July artefacts still in `outputs/` contradict the current ones and must not be sent.**
+`Preliminary_Results_v2.html`, `Professor_Report.html` and `Knowledge_Graph_Report.html` carry the
+superseded figures (180 concepts, 439 relations, 91 CMOCs, 14 contradictions, 36 demi-regularities,
+"96.9% grounded in an exact source quote", 43/47 concepts) against today's 183 / 459 / 94 / 20 / 32
+and 9.7% exact. `Preliminary_Results_v2.html` also says "4 of Richmond's **6** student-context
+types"; Richmond has **five** contexts (E02–E06) — E01 is the review population and
+`richmond_gold_v3.json` marks it `scored: false` with the note "not one of the five contexts".
+`outputs/Richmond_Correspondence.md` is byte-identical (MD5 `13c8a21…`) to both submission copies,
+i.e. all three are the July file.
+
+**A PRISMA table that cannot be true was generated and shipped.**
+`outputs/runs/report-51b61f45/prisma_flow.md` reports 159 auto-includes and 162 final includes from a
+registry of 28 records, because it counted screening rows across every run in the database rather
+than one named run. The July pair (`3754dce7`, `84f18e6c`) has the milder form, 31 final from 28.
+Runs from `7fa4d4ff` onward print "Screening run scored: `screen-…`" and give 28. The same
+run-blending is still live in `verification/distractor_pool.py::run_precision_test`, which selects
+`DISTINCT ON (study_id) … ORDER BY created_at DESC` across all runs.
+
+**Grounding confirmed, and one honest divergence named.** The GraphRAG paper (Edge et al. 2024)
+does support two choices the docs attribute to it: Leiden via `graspologic` (§4.1.3, named
+explicitly) and the draft→critique→revise gleaning loop (§A.2 self-reflection, with the measured
+result that a 600-token chunk yields nearly twice the entity references of a 2400-token chunk). What
+this project does *not* take from it is the query-time half — community summaries feeding map-reduce
+query-focused summarization. Our synthesis stage is deterministic aggregation over the communities,
+not QFS, so the system is GraphRAG-indexed, not GraphRAG-answered, and the paper should say so
+rather than cite GraphRAG wholesale.
+
+**Ontology gap behind the polarity problem.** The KG specification's own relation table shows why
+valence keeps escaping: Richmond's R15/R16 make E31 (*pressure that their decision making could have
+a real impact*) lead to a **positive** learning experience, while R20/R23 make E34 (*pressure to
+perform*) lead to increased cognitive load and negative outcomes. The two are opposite-signed, and
+`mech:time-pressure` was counted for both in the September 23 run. There is no polarity field on an
+entity or a relation anywhere in the schema — which is also why
+`neo4j_adapter._MOTIF_QUERIES["expertise_reversal"]` filters `r1.polarity` on edges created with only
+`{study_id, cmoc_id}` and can never return a row. HANDOFF §2.4's "four of five are negative affect"
+over-counts for the same reason: E31 is positive-valence pressure.
+
+### M37c — a machine-vs-human comparison, because the professor keeps asking for one
+
+The professor's recurring questions in meetings are always the same six: where are you, what have you
+built, what does the pipeline do, show me the output, is it good enough, and **have you compared your
+final result with Richmond's final result**. The last one had no single artefact behind it:
+`RESULTS.html` §1 compares the two conclusions, §3 compares context by context, §4 holds the human
+ceiling and §5 the 46-item checklist — but nothing put the machine result and the human result side by
+side at every level Richmond published. Written now as `docs/MACHINE_VS_HUMAN.md`.
+
+Assembling it surfaced two things the existing documents do not say.
+
+**The context–study overlap is 4 of 47.** `results_export.py` already computes, per context, how many
+studies Richmond assigns, how many we assign, and how many are the same paper — and it prints the line
+in §3 — but the total is nowhere. It is: Richmond makes 47 context–study assignments across E02–E06,
+we make 13, and **4 are the same paper**. On E02, Richmond's largest context at 22 studies, we agree on
+2. The two reviews reach similar conclusions from substantially different readings of which paper
+supports what. For a realist review that is as important as the concept count, and it is currently
+unreported.
+
+**The theory judges disagree in the direction nobody assumed.** `self_preference_gap` is **−0.289**:
+the independent judge (different model family) scored the theory *higher* than the judge from the
+composer's own family, which means the published 0.817 is the **more generous** of the two numbers,
+not the conservative one. Per chain the gap reaches 0.507 (PTS2) and 0.473 (PTS3) — about half the
+scale on identical inputs. The same-family mean is 0.528. Two numbers that far apart cannot be
+averaged, so the honest position is that theory-level correspondence is *unmeasured* pending an expert
+rating, which is stronger than quoting 0.817 with a caveat.
+
+**Also found:** `results_export.py:594` hardcodes "it recovers <em>none</em> of the 40 causal links at
+the strictest exact-concept-pair level" while every other figure in the same sentence is interpolated
+from the report. The current run recovers **6/40 (15.0%)**, and §4 of the same page says so. The
+headline section therefore contradicts the verification matrix two screens below it, and it understates
+our own result. `docs/FOR_THE_PROFESSOR.md` carries the same stale 0/40 and still states "No human has
+independently coded any paper yet", which the coding workbooks have since made false; it is generated,
+so the fix belongs in `FOR_THE_PROFESSOR.template.md`. That file also tells the professor to reproduce
+numbers with `run-all`, which `RESTORE.md` forbids — a re-run costs money and yields a different graph
+that would invalidate every figure already reported.

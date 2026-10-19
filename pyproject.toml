@@ -19,7 +19,12 @@ dependencies = [
     "psycopg[binary]>=3.1",      # PostgreSQL, the system of record
     "pandas>=2.2",               # exports
     "pyarrow>=16.0",             # parquet knowledge-graph artefact
-    "pypdf>=4.2",                # corpus ingest
+    # PINNED, and not casually. Every char_start/char_end in the knowledge graph indexes into
+    # the canonical text this library produces, so a version that extracts differently silently
+    # invalidates all 547 spans and moves citation faithfulness — a *recomputed* metric. Measured
+    # 2026-09-30 against the sha256 values in the July audit trail: 6.8-6.15 reproduce the
+    # canonical text exactly; 6.19 shifts 16 of 28 studies by 1-23 chars and 4.2 by up to 525.
+    "pypdf>=6.8,<6.16",          # corpus ingest
     "networkx>=3.3",             # concept graph construction
     "graspologic>=3.4",          # Leiden community detection (NOT optional)
     "scipy>=1.11",               # Clopper-Pearson intervals

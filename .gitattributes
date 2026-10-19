@@ -1,0 +1,17 @@
+# This repository moved from a Windows machine to a Mac, and the Windows copy
+# rewrote nearly every tracked file with CRLF endings. That produced a diff of
+# 17,000 changed lines in which only three files had changed at all, which is
+# the kind of noise that makes `git log -p` and `git blame` useless for a
+# project whose whole claim rests on an audit trail.
+#
+# Normalize to LF in the repository, whatever the working machine does.
+* text=auto eol=lf
+
+# Binary, never normalized.
+*.pdf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.xlsx  binary
+*.parquet binary
