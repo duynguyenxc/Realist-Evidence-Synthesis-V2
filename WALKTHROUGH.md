@@ -1415,3 +1415,154 @@ on the new machine in M37, rather than at the code. Two things follow:
 - **Check `screening_decisions` and the human-decision count in the restored database** before
   trusting any freshly exported number. M37 claimed the restore verified every deterministic
   metric; the human-decision count is apparently not among them.
+
+---
+
+## M39 — A new assignment, a live key in a public repo, and M38 finally explained (2026-11-02)
+
+**The project has a new direction.** Prof. Zheng's email of **2026-10-30** (*"New Research
+Assignment: Emotional Awareness and Regulation Using Our AI Realist Synthesis Pipeline"*) says to
+**return to this pipeline and park the learning platform**: *"rather than continuing with the
+learning platform at this stage. Before I provide further instructions for the learning
+platform…"* OpenMAIC is finished to Level 3, deployed and pushed, so it parks cleanly — see
+`~/Downloads/OpenMAIC/WALKTHROUGH.md` L20.
+
+The new topic is **students' emotional awareness and emotional regulation during learning**, realist
+framing, **higher education with a STEM focus**. He asks for six outputs, and names Pekrun (2006),
+Gross (1998), Brackett et al. (2012) and Durlak et al. (2011) as seeds. **§5 of the email delegates
+the human-in-the-loop role to the RA in writing** — routine screening, extraction verification and
+pipeline execution are the RA's to decide and document, escalating only research directions,
+uncertain interpretations and substantial methodological changes. That authority did not exist
+before. The email is the specification; this entry is only what was *done*.
+
+This session did the five things that had to happen before any new-topic work can start safely.
+
+### 1. A live OpenAI key was one `git add -A` from a public repository
+
+The 2026-09-30 machine move wrote **dotless copies of the dotfiles**: `env`, `env.example`,
+`gitignore`, each byte-identical to its dotted original (verified with `diff`). `.gitignore` covers
+`.env` and `.env.*`; its Python section has **`env/`** — *with a trailing slash, so it matches a
+directory named env and never matched the stray `env` file*, which carried a live `OPENAI_API_KEY`
+(164 chars), `POSTGRES_PASSWORD` and `NEO4J_PASSWORD`. `gh repo view` confirms this repository is
+**PUBLIC**.
+
+**Nothing leaked.** `git log --all -- env .env` is empty and a regex sweep for `sk-[A-Za-z0-9_-]{20,}`
+over every blob in `git rev-list --all` returns nothing, so **no rotation is needed** — the risk was
+prospective. The three duplicates are deleted and named in `.gitignore` *without* a slash. Also
+deleted: a **158 MB** `WindowsMigrationAssistantSetup.exe` sitting untracked in `docs/`, equally
+un-ignored, which would have been unremovable from history once committed.
+
+### 2. The artefacts the professor asks for were not in the repository
+
+His item 1 asks for *"the complete pipeline … and relevant GitHub repository"*. Cloning it would
+**not** have produced `outputs/SEND_TO_PROFESSOR/` (the eight-file report package),
+`docs/MACHINE_VS_HUMAN.md` (the machine-versus-human comparison he asks about every meeting),
+`docs/ANSWERS_TO_FIVE_QUESTIONS.md` (answers he requested twice), or `scripts/import_snapshot.py`.
+All four were untracked. Now committed — they are our generated outputs, not source papers, so no
+copyrighted PDF was published.
+
+### 3. The project was understating its own evidence — and I overstated the correction
+
+`VERIFICATION_PROTOCOL.md` **contradicted itself**: §2.3 reports concept recovery, and §3.1 forty
+lines later says *"No human has coded anything (blocking C2)"* and calls every agreement number
+uninterpretable. §3.1 was written 23 September and was obsolete on the **25th**, when two RAs
+finished coding **all 28 papers** blind — more than §3.1 asked for, which was a 25–35% subsample.
+`CLAUDE.md` repeated the stale claim. Both are corrected, §3.1 marked rather than deleted.
+
+**The correction is not that the system beats the humans.** Reading `MACHINE_VS_HUMAN.md` §5
+properly: the 34/46 headline rests on only **28 distinct concepts** — four of ours each count
+against two or three of Richmond's, which a human cannot do, because the frame gives one code per
+element. Under that same one-to-one constraint the system scores **28/46 (60.9%), equal to Coder B
+and the both-agreed set.** That document already states the rule: *the word "exceeds" should not
+appear.* I had told the RA the system "clears the human ceiling" before reading §5 to the end; it
+does not.
+
+Also recorded: **the "38/46 like-for-like" figure in §2.3 is superseded** by that recount, and the
+matcher defect found 2026-09-30 is **still open** — verified today that `verification/metrics.py`
+has no guard and no commit has touched it since. `E03` and `E24` are stored `matched: true` under
+rationales that *state a non-match* ("…as the opposite", "…so it does not match"), and **E24 is
+inside the headline 34**. So **28/46 is the only concept-recovery figure safe to send out**, because
+it does not depend on the broken matcher.
+
+### 4. M38 is explained, and the answer was in our own docstring
+
+M38 found the on-disk `RESULTS.html` reporting **0** human decisions where the committed one reports
+**28**, could not establish the cause, and forbade `res export-results` until it was understood.
+
+**It is understood now, and it is not a regression.** The database was never restored from a SQL
+dump — `scripts/import_snapshot.py` rebuilds it from `audit_trail.md`, a **markdown** export, and
+its own docstring says what that costs:
+
+> *`hitl_feedback` — the per-item human decisions. The audit trail records that the batches happened
+> … but its `detail` column was **TRUNCATED by the markdown renderer**, so the per-item payloads are
+> **unrecoverable**.*
+
+Confirmed in the live database: `hitl_feedback` **0 rows**; `screening_decisions` 86 rows of which
+only **2** are human, labelled `human:restored-from-audit`; and two audit payloads literally carry a
+field named **`_truncated_in_export`**. `token_usage`, `agent_feedback`, `ipt_versions` and
+`distractor_studies` are gone for the same reason.
+
+Everything the snapshot *could* carry restored **exactly**, against the docstring's own expectation
+of `547 / 459 / 94 / 8`:
+
+| Table | Expected | Actual |
+|---|---|---|
+| `entity_instances` | 547 | **547** |
+| `typed_relations` | 459 | **459** |
+| `cmocs` | 94 | **94** |
+| `conceptual_entities` | 8 | **8** |
+
+**So the rule changes from conditional to permanent.** `res export-results` will now *always* report
+0 human decisions, because the rows do not exist and cannot be reconstructed. The **committed
+`outputs/RESULTS.html` is the only surviving record of the 28 human decisions** and must never be
+regenerated. This is no longer "wait until understood" — it is understood, and the answer is that
+the artefact is irreplaceable.
+
+### 5. A second review now has somewhere to go
+
+`POSTGRES_DB` was overridable; the directories were not. `CONFIG_DIR`, `DATA_DIR`, `GOLD_DIR` and
+`OUTPUTS_DIR` were computed from `PROJECT_ROOT` at import with no override, so a new topic had
+nowhere to write but over Richmond's — including `outputs/RESULTS.html`, the file §4 just
+established is irreplaceable. Each now reads an `RES_*_DIR` variable and falls back to today's path,
+so **every existing invocation is unchanged** (verified: `res status` prints the same paths, 7
+original tests still pass).
+
+Two details worth keeping: `load_dotenv` **moved above** the directory definitions — it was below,
+so a directory set in `.env` would have been read after the paths were fixed and silently ignored;
+and a **blank** value means unset rather than resolving to `PROJECT_ROOT` itself, which would make
+`CONFIG_DIR/"ontology.yaml"` miss without error. There is a test for each. `res status` now prints
+the active config/data/gold/outputs/database first and marks what was overridden, because isolation
+you cannot see is isolation you forget you configured.
+
+Suite: **11 passed** (7 before, 4 added).
+
+### What the next session must not assume
+
+- **`outputs/RESULTS.html` is irreplaceable.** Not "regenerate with `res export-results`" — that
+  command cannot reproduce the human-decision count and never will. `CLAUDE.md` still says
+  *"regenerate with `res export-results`"* in its reading list; **that line is now wrong** and was
+  left for a session that can decide how to reword it without breaking the reading order.
+- **Do not quote 34/46 or 38/46.** Quote **28/46** until the `metrics.py` matcher defect is fixed.
+  Fixing it will *lower* the headline, which is the correct direction.
+- **The pipeline has no literature search.** Grepped `pubmed|openalex|crossref|semantic_scholar`
+  across `src/`, `scripts/`, `config/` — nothing. Richmond's 28 papers were handed to it.
+  `docs/PROFESSOR_VISION_AND_GAPS.md` §2 already lists Search & Retrieval, Full-Text Acquisition and
+  a named Deduplication agent as **missing against the professor's own vision**, so the new topic's
+  largest build is a debt the project already recorded, not a new requirement.
+- **Synthesis will not scale to a bigger corpus as built.** `ARCHITECTURE.md` §4 is honest about it:
+  *"there is no global/local search — the composer receives the entire evidence pack inline, which is
+  context stuffing, not retrieval"*, and there are **no embeddings** (normalisation is LLM clustering
+  over alphabetical batches of 40). That holds for 28 papers; the professor is asking for a broader
+  search. This is the real technical risk of the new assignment.
+- **The ontology does not need rewriting for the new topic.** The five entity types are
+  domain-neutral, `Intervention` is already first-class — so the professor's C/I/M/O framing needs no
+  schema change — and `Mechanism_Response` is already defined as *"the cognitive **or emotional**
+  reaction … panic, frustration, … gratitude"*. What *is* domain-coupled and must be rewritten:
+  `protocol.yaml` entirely, `initial_programme_theory.yaml` entirely, and the `shared_expertise`
+  block plus all eight personas in `agents.yaml`, which hardcode clinical reasoning and dual-process
+  theory. The agent **topology** and all five HITL checkpoints carry over.
+- **`config/prompts/` is empty.** The professor asks for "prompts" by name in item 1; they are
+  currently embedded in code and must be extracted before that package is complete.
+- **Work in `~/Downloads/Realist-Evidence-Synthesis-V2`.** `~/Project_of_my_work/Realist-Evidence-Synthesis/Realist-Evidence-Synthesis-V2`
+  is a stale non-git extraction of the 30 September zip (M35, 430 files) and is missing
+  `MACHINE_VS_HUMAN.md` and `ANSWERS_TO_FIVE_QUESTIONS.md` entirely.
