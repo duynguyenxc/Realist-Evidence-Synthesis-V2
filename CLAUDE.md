@@ -52,10 +52,11 @@ Richmond's human outputs. **Method > platform; human judgment stays sovereign.**
    one; and every CMOC, entity, relation and emergent mechanism, searchable. This is the artefact
    to send to the professor or open in an interview. No server, no database.
 2. **`docs/VERIFICATION_PROTOCOL.md`** — why those are the right metrics, with citations, and the
-   honest list of what is still missing. **Human coding is done** (two RAs, all 28 papers, blind,
-   2026-09-25; positive specific agreement 0.785), so the ceiling exists and the agreement numbers
-   are interpretable. The defensible claim is **non-inferiority, not superiority** — under the
-   one-to-one constraint the humans worked under, the system scores 28/46, equal to Coder B.
+   honest list of what is still missing. **Coding of all 28 papers is done, but only ONE of the two
+   passes was human** (the AERA draft says so explicitly; `MACHINE_VS_HUMAN.md` §5 wrongly labels
+   both as human — unresolved, see VERIFICATION_PROTOCOL §3.1). So the 0.785 is **human-vs-model,
+   not a human–human ceiling**, and a second human pass is still owed. The defensible claim is
+   **non-inferiority, not superiority** — under the one-to-one constraint, the system scores 28/46.
    `docs/MACHINE_VS_HUMAN.md` §5 is the authoritative record; the word *exceeds* must not appear.
    **The live blocking gap is now a matcher defect**: `verification/metrics.py` lets a rationale
    that states a non-match set `matched: true` (E03, E24 — and E24 is inside the headline 34),
