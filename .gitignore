@@ -35,3 +35,16 @@ Thumbs.db
 outputs/**/graphrag_data/
 *.parquet
 *.log
+
+# Windows-migration debris (2026-09-30 machine move): the migration wrote dotless
+# copies of the dotfiles. `env/` above has a trailing slash, so it matches a
+# DIRECTORY named env and never matched the stray `env` FILE — which held a live
+# OpenAI key in a public repository. Named without a slash here so it cannot recur.
+/env
+/env.example
+/gitignore
+PROJECT_BACKUP_*/
+*.exe
+
+# Claude Code machine-local settings (permissions differ per machine)
+.claude/settings.local.json

@@ -1,0 +1,621 @@
+<title>Reproducing Richmond (2020)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+:root{
+  --paper:#FBFBFC;
+  --panel:#F1F3F5;
+  --panel-2:#E8EBEE;
+  --ink:#15181B;
+  --ink-soft:#565E66;
+  --ink-faint:#7C858D;
+  --rule:#D8DDE1;
+  --accent:#1F5673;
+  --accent-soft:#E2EDF3;
+  --c-context:#1F5673;
+  --c-mres:#7A4A1E;
+  --c-mresp:#5B3A78;
+  --c-out:#2F6B4F;
+  --good:#2F6B4F;
+  --warn:#8A6220;
+  --gap:#8C3239;
+  --shadow:0 1px 2px rgba(21,24,27,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#121417; --panel:#1A1E22; --panel-2:#222831;
+    --ink:#E7EAED; --ink-soft:#A3ACB4; --ink-faint:#7C858D;
+    --rule:#2C333A; --accent:#7FBCDC; --accent-soft:#1B2D38;
+    --c-context:#7FBCDC; --c-mres:#D7A46A; --c-mresp:#B694D6; --c-out:#7CC29B;
+    --good:#7CC29B; --warn:#D7A46A; --gap:#E08b90;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121417; --panel:#1A1E22; --panel-2:#222831;
+  --ink:#E7EAED; --ink-soft:#A3ACB4; --ink-faint:#7C858D;
+  --rule:#2C333A; --accent:#7FBCDC; --accent-soft:#1B2D38;
+  --c-context:#7FBCDC; --c-mres:#D7A46A; --c-mresp:#B694D6; --c-out:#7CC29B;
+  --good:#7CC29B; --warn:#D7A46A; --gap:#E08b90;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:56px 28px 96px}
+
+/* ---------- masthead ---------- */
+.masthead{border-bottom:2px solid var(--ink);padding-bottom:22px;margin-bottom:8px}
+.eyebrow{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-faint);margin-bottom:14px;
+}
+h1{
+  font-family:Spectral,Georgia,serif; font-weight:600;
+  font-size:clamp(30px,4.4vw,44px); line-height:1.12; letter-spacing:-.015em;
+  margin:0 0 10px; text-wrap:balance;
+}
+.dek{
+  font-family:Spectral,Georgia,serif; font-size:19px; line-height:1.5;
+  color:var(--ink-soft); max-width:62ch; margin:0;
+}
+.runline{
+  display:flex; flex-wrap:wrap; gap:6px 22px; margin-top:20px;
+  font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-faint);
+}
+.runline b{color:var(--ink-soft);font-weight:500}
+
+/* ---------- sections ---------- */
+section{
+  display:grid; grid-template-columns:78px minmax(0,1fr); gap:0 28px;
+  padding:38px 0; border-bottom:1px solid var(--rule);
+}
+section:last-of-type{border-bottom:none}
+.num{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:.1em;
+  color:var(--accent); padding-top:7px;
+}
+.body>*:first-child{margin-top:0}
+.body>*:last-child{margin-bottom:0}
+h2{
+  font-family:Spectral,Georgia,serif; font-weight:600;
+  font-size:25px; line-height:1.24; letter-spacing:-.01em;
+  margin:0 0 14px; text-wrap:balance;
+}
+h3{
+  font-size:13px; font-weight:600; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink-soft); margin:30px 0 10px;
+}
+p{margin:0 0 14px; max-width:68ch}
+.lede{font-size:17px;color:var(--ink-soft)}
+ul{margin:0 0 14px; padding-left:20px; max-width:68ch}
+li{margin-bottom:7px}
+strong{font-weight:600}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.88em}
+code{background:var(--panel);padding:1px 5px;border-radius:3px;color:var(--ink-soft)}
+a{color:var(--accent)}
+
+/* ---------- tables ---------- */
+.scroll{overflow-x:auto;margin:0 0 16px;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+th{
+  text-align:left; font-weight:600; font-size:11.5px; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--ink-faint);
+  padding:0 14px 7px 0; border-bottom:1px solid var(--ink);
+  white-space:nowrap;
+}
+td{padding:9px 14px 9px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.num-cell{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ci{color:var(--ink-faint);font-size:12.5px;display:block}
+
+/* judged-by chips */
+.chip{
+  display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:10.5px;
+  letter-spacing:.05em; text-transform:uppercase; padding:2px 7px; border-radius:2px;
+  white-space:nowrap; border:1px solid currentColor;
+}
+.chip.det{color:var(--good)}
+.chip.judge{color:var(--warn)}
+
+/* ---------- CMOC quote block ---------- */
+.cmoc{
+  border-left:3px solid var(--accent); background:var(--panel);
+  padding:18px 20px; margin:0 0 16px; border-radius:0 3px 3px 0;
+}
+.cmoc .ctx{font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:9px}
+.cmoc q, .cmoc .stmt{
+  font-family:Spectral,Georgia,serif; font-style:italic; font-size:16px; line-height:1.55;
+  display:block; quotes:none;
+}
+.role{
+  font-family:"IBM Plex Mono",monospace; font-style:normal; font-weight:500;
+  font-size:11.5px; letter-spacing:.03em;
+}
+.r-c{color:var(--c-context)} .r-mr{color:var(--c-mres)}
+.r-mp{color:var(--c-mresp)} .r-o{color:var(--c-out)}
+.cmoc .studies{
+  font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-faint);
+  margin-top:12px; padding-top:10px; border-top:1px solid var(--rule);
+}
+
+/* ---------- record sample ---------- */
+.record{
+  background:var(--panel); border:1px solid var(--rule); border-radius:3px;
+  padding:14px 16px; margin:0 0 16px;
+  font-family:"IBM Plex Mono",monospace; font-size:12.5px; line-height:1.75;
+  overflow-x:auto;
+}
+.record .k{color:var(--ink-faint)}
+.record .v{color:var(--ink)}
+
+/* ---------- pipeline ---------- */
+.stages{list-style:none;padding:0;margin:0 0 16px;max-width:none}
+.stages li{
+  display:grid; grid-template-columns:22px minmax(0,1fr); gap:0 12px;
+  padding:9px 0; border-bottom:1px solid var(--rule); margin:0; font-size:14.5px;
+}
+.stages li:last-child{border-bottom:none}
+.stages .s{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-faint);padding-top:2px}
+.stages .what{margin:0}
+.stages .how{display:block;color:var(--ink-soft);font-size:13px;margin-top:2px}
+.hitl{
+  display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  letter-spacing:.05em;color:var(--accent);border:1px solid var(--accent);
+  border-radius:2px;padding:1px 5px;margin-left:7px;vertical-align:1px;
+}
+
+/* ---------- callout ---------- */
+.note{
+  border:1px solid var(--rule); border-left:3px solid var(--gap);
+  background:var(--panel); padding:16px 18px; margin:0 0 16px; border-radius:0 3px 3px 0;
+}
+.note p:last-child{margin-bottom:0}
+.note .h{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gap);margin-bottom:7px}
+
+/* ---------- files ---------- */
+.files{list-style:none;padding:0;margin:0 0 16px;max-width:none}
+.files li{
+  display:grid; grid-template-columns:minmax(0,max-content) minmax(0,1fr);
+  gap:4px 20px; padding:10px 0; border-bottom:1px solid var(--rule); margin:0;
+}
+.files li:last-child{border-bottom:none}
+.files .fn{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--accent);font-weight:500}
+.files .fd{font-size:14px;color:var(--ink-soft)}
+
+footer{
+  margin-top:44px; padding-top:20px; border-top:1px solid var(--rule);
+  font-size:13px; color:var(--ink-faint); max-width:68ch;
+}
+
+@media (max-width:720px){
+  .wrap{padding:36px 18px 64px}
+  section{grid-template-columns:1fr;gap:0}
+  .num{padding:0 0 6px}
+  .files li{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- print / PDF ---------- */
+@page{size:A4;margin:16mm 14mm}
+@media print{
+  :root{
+    --paper:#fff; --panel:#F4F5F7; --panel-2:#E9ECEF;
+    --ink:#101215; --ink-soft:#4A5259; --ink-faint:#6E767D;
+    --rule:#CDD3D8; --accent:#1B4E68; --accent-soft:#E6EFF4;
+    --c-context:#1B4E68; --c-mres:#6E4119; --c-mresp:#4F3269; --c-out:#265C43;
+    --good:#265C43; --warn:#7A5518; --gap:#7E2B31;
+  }
+  body{background:#fff;color:#101215;font-size:10.2pt;line-height:1.5}
+  .wrap{max-width:none;padding:0}
+  h1{font-size:26pt}
+  .dek{font-size:12pt}
+  h2{font-size:15pt}
+  h3{font-size:8.6pt;margin-top:16pt}
+  p,li{font-size:10.2pt}
+  table{font-size:8.8pt;min-width:0}
+  th{font-size:7.6pt}
+  .ci{font-size:7.8pt}
+  .record{font-size:8.4pt;line-height:1.6}
+  .cmoc .stmt{font-size:10.4pt}
+  .stages li{font-size:9.6pt}
+  .stages .how{font-size:9pt}
+  .files .fd{font-size:9.4pt}
+  .runline{font-size:8.4pt}
+
+  section{break-inside:auto;page-break-inside:auto;padding:20pt 0}
+  h2,h3{break-after:avoid;page-break-after:avoid}
+  tr,.cmoc,.record,.note,.stages li,.files li{break-inside:avoid;page-break-inside:avoid}
+  thead{display:table-header-group}
+  .scroll{overflow:visible}
+  a{color:var(--accent);text-decoration:none}
+  footer{break-inside:avoid;page-break-inside:avoid}
+}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <div class="eyebrow">Progress report &middot; 25 September 2026</div>
+  <h1>Reproducing Richmond (2020)</h1>
+  <p class="dek">An agentic pipeline was run over the 28 papers of a published realist review, and its
+  output compared against what the human review team produced. This is what it found, how that was
+  checked, and why the checking is trustworthy.</p>
+  <div class="runline">
+    <span><b>Prepared by</b> Duy Nguyen</span>
+    <span><b>Extraction run</b> extract-fb045429</span>
+    <span><b>Verification run</b> verify-edcbf790</span>
+    <span><b>Benchmark</b> richmond_gold_v3</span>
+  </div>
+</header>
+
+<!-- ============ 1 ============ -->
+<section>
+  <div class="num">01</div>
+  <div class="body">
+    <h2>What Richmond et al. concluded</h2>
+    <p class="lede">The benchmark is a realist review of educational interventions for clinical
+    reasoning in undergraduate medicine, published in <em>Medical Education</em> (2020), built from
+    28 included studies.</p>
+
+    <p>Their organising result is that the decisive factor is the <strong>student</strong>, not the
+    teaching method. They identify five student-level contexts that determine whether an intervention
+    works (p.&nbsp;713):</p>
+
+    <div class="scroll"><table>
+      <thead><tr><th>Context</th><th>Illustrative mechanism &amp; outcome (Fig. 2)</th></tr></thead>
+      <tbody>
+        <tr><td>(a) Low knowledge, or unable to use knowledge in a reasoning situation</td>
+            <td>Many resources and reactions; outcomes positive <em>or</em> negative depending on which mechanism fires</td></tr>
+        <tr><td>(b) High clinical domain-specific knowledge</td>
+            <td>Forcing analytic reasoning alone adds nothing; discussing the reasoning process with a facilitator consolidates it</td></tr>
+        <tr><td>(c) Positive coping, adequate self-confidence or self-efficacy</td>
+            <td>Authentic or simulated settings &rarr; learners feel safe to err &rarr; illness scripts refined</td></tr>
+        <tr><td>(d) Negative coping, lacking self-confidence or self-efficacy</td>
+            <td><em>The same resource</em> &rarr; fear, stress, anxiety &rarr; negative learning outcomes</td></tr>
+        <tr><td>(e) Mixed levels of knowledge within one group</td>
+            <td>Timely comprehensive feedback helps; thin or erroneous feedback produces confusion</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>Their conclusion (p.&nbsp;717) is that interventions work mainly by increasing knowledge
+    acquisition, mobilisation and recall alongside practice in real or simulated settings; that low
+    knowledge states are what most determines success or failure, so knowing what a student already
+    knows matters; and that developing learners should be encouraged to use non-analytical reasoning
+    as experts do, switching back to analytical reasoning under complexity or uncertainty. The
+    headline they draw is that contexts shape outcomes
+    <q>both positively and negatively</q>.</p>
+
+    <p>Every one of those claims is written down as a machine-readable target before our system runs:
+    46 concepts, 40 relations, 5 programme-theory chains, and the study membership of each context.
+    That file is the benchmark. It was fixed first, and not edited afterwards.</p>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section>
+  <div class="num">02</div>
+  <div class="body">
+    <h2>What our system produced</h2>
+    <p class="lede">The pipeline read the same 28 papers with no access to Richmond's findings, and
+    wrote its own review.</p>
+
+    <div class="scroll"><table>
+      <thead><tr><th>Output</th><th>Count</th><th>Where it lives</th></tr></thead>
+      <tbody>
+        <tr><td>Papers with extractable full text</td><td class="num-cell">26 / 28</td><td><span class="mono">studies</span></td></tr>
+        <tr><td>CMOC configurations</td><td class="num-cell">94</td><td><span class="mono">cmoc_evidence_table.md</span></td></tr>
+        <tr><td>Concept instances, each with a source quote</td><td class="num-cell">547</td><td><span class="mono">entities.csv</span></td></tr>
+        <tr><td>Typed causal relations</td><td class="num-cell">459</td><td><span class="mono">relationships.csv</span></td></tr>
+        <tr><td>Mechanisms found by clustering, not by prompt</td><td class="num-cell">8</td><td><span class="mono">programme_theory.md</span></td></tr>
+        <tr><td>Context-specific chains in the programme theory</td><td class="num-cell">9</td><td><span class="mono">programme_theory.md</span></td></tr>
+      </tbody>
+    </table></div>
+    <p style="font-size:14px;color:var(--ink-soft)">Two of the 28 (<span class="mono">S002</span>,
+    <span class="mono">S012</span>) are abstract-only records for which no full text could be
+    obtained, so there was nothing for the system to read.</p>
+
+    <h3>What the output actually looks like</h3>
+    <p>The system writes its programme theory in the same form Richmond print theirs — a statement
+    per context, with the studies behind it and the evidence that contradicts it. This is its first
+    chain, unedited:</p>
+
+    <div class="cmoc">
+      <div class="ctx">Context 1 &middot; Novices with little prior domain exposure facing confusable diagnostic categories</div>
+      <span class="stmt">When <span class="role r-c">(C)</span> undergraduate novices have little or no
+      prior experience in a diagnostic domain and the categories are visually or clinically confusable,
+      <span class="role r-mr">(Mresource)</span> combined diagnostic instruction, schema-guided reasoning
+      and diagnostic scaffolds offer explicit feature cues, contrasts, annotated cases or schema-based
+      distinguishing relations; <span class="role r-mp">(Mresponse)</span> learners attend to
+      diagnostically decisive features, compare similar alternatives, organise knowledge into usable
+      diagnostic structures, and temper premature familiarity-based closure; leading to
+      <span class="role r-o">(O)</span> improved diagnostic accuracy, structured knowledge, and better
+      performance on taught and some untaught cases.</span>
+      <div class="studies">Supporting studies: S003 &middot; S005 &middot; S017 &middot; S021 &nbsp;|&nbsp;
+      Conflicting evidence recorded: feature analysis turned negative where the feature table was
+      unclear or too exhaustive</div>
+    </div>
+
+    <p>Underneath every such statement is a chain of individual records. Each carries the sentence it
+    came from and that sentence's character position in the source, so any claim can be traced back to
+    the page it came off:</p>
+
+    <div class="record">
+      <span class="k">study_id&nbsp;&nbsp;&nbsp;&nbsp;</span> <span class="v">S001</span><br>
+      <span class="k">entity_type&nbsp;&nbsp;</span> <span class="v">Context</span><br>
+      <span class="k">label&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span class="v">learner expertise level</span><br>
+      <span class="k">canonical_id</span> <span class="v">cont:expertise-comparison</span><br>
+      <span class="k">quote&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span class="v">&ldquo;The relative reliance on analytic and similarity-based
+      processes is amenable to instruction and dependent on&hellip;&rdquo;</span><br>
+      <span class="k">char_span&nbsp;&nbsp;&nbsp;</span> <span class="v">resolved to an exact offset in the source PDF text</span>
+    </div>
+
+    <p>532 of the 547 locate successfully; the 15 that do not are flagged
+    <span class="mono">quote_resolved = False</span> in the attached file rather than quietly
+    dropped. The verifier, applying a stricter tier test, counts 531.</p>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section>
+  <div class="num">03</div>
+  <div class="body">
+    <h2>How it was verified</h2>
+    <p class="lede">Seven of Richmond's observable outputs have a counterpart in ours, and each is
+    compared on its own terms. Nothing is scored on a single blended number.</p>
+
+    <div class="scroll"><table>
+      <thead><tr><th>What is compared</th><th>Result</th><th>Judged by</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Screening — finding the 28 papers<span class="ci">automatic decisions only</span></td>
+          <td class="num-cell">26 / 28 &middot; 92.9%<span class="ci">95% CI 76.5–99.1</span></td>
+          <td><span class="chip det">deterministic</span></td>
+        </tr>
+        <tr>
+          <td>Screening — after the two uncertain cases went to a human</td>
+          <td class="num-cell">28 / 28 &middot; 100%<span class="ci">95% CI 87.7–100 · no false excludes</span></td>
+          <td><span class="chip det">deterministic</span></td>
+        </tr>
+        <tr>
+          <td>Concepts recovered, same realist role</td>
+          <td class="num-cell">34 / 46 &middot; 73.9%<span class="ci">95% CI 58.9–85.7</span></td>
+          <td><span class="chip judge">model judge</span></td>
+        </tr>
+        <tr>
+          <td>Concepts recovered, allowing a different role</td>
+          <td class="num-cell">41 / 46 &middot; 89.1%<span class="ci">95% CI 76.4–96.4</span></td>
+          <td><span class="chip judge">model judge</span></td>
+        </tr>
+        <tr>
+          <td>Relations — right pair, right direction, anchored to the same concepts</td>
+          <td class="num-cell">29 / 40 &middot; 72.5%<span class="ci">95% CI 56.1–85.4</span></td>
+          <td><span class="chip judge">model judge</span></td>
+        </tr>
+        <tr>
+          <td>Relations — exact predicate as well<span class="ci">the strictest tier we report</span></td>
+          <td class="num-cell">6 / 40 &middot; 15.0%<span class="ci">95% CI 5.7–29.8</span></td>
+          <td><span class="chip judge">model judge</span></td>
+        </tr>
+        <tr>
+          <td>Quotes matching the source exactly, character for character</td>
+          <td class="num-cell">53 / 547 &middot; 9.7%<span class="ci">95% CI 7.3–12.5</span></td>
+          <td><span class="chip det">deterministic</span></td>
+        </tr>
+        <tr>
+          <td>Quotes matching after normalising hyphenation and whitespace</td>
+          <td class="num-cell">509 / 547 &middot; 93.1%<span class="ci">95% CI 90.6–95.0</span></td>
+          <td><span class="chip det">deterministic</span></td>
+        </tr>
+        <tr>
+          <td>Mechanisms from clustering matching Richmond's</td>
+          <td class="num-cell">19 / 28 &middot; 67.9%<span class="ci">95% CI 47.6–84.1</span></td>
+          <td><span class="chip judge">model judge</span></td>
+        </tr>
+        <tr>
+          <td>Programme theory against Richmond's five chains</td>
+          <td class="num-cell">0.82<span class="ci">independent judge · same-family judge gives 0.53</span></td>
+          <td><span class="chip judge">model judge</span></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <p>The split in the third column is the point. Two of these numbers come from counting and
+    reproduce exactly on every re-run. The rest come from a language model deciding whether two
+    differently-worded concepts are the same concept, and they do not.</p>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section>
+  <div class="num">04</div>
+  <div class="body">
+    <h2>Why the verification can be trusted</h2>
+    <p class="lede">A score against a benchmark means nothing on its own. Three controls were run so
+    that these numbers can be read — and two of them cost us claims we had previously made.</p>
+
+    <h3>Control 1 &mdash; What a person achieves on the same task</h3>
+    <p>I read all 28 papers myself and marked, for each one, which of Richmond's 46 concepts appear in
+    it and where. I then ran a second pass in which a general-purpose LLM, given the same coding frame
+    and nothing else, coded the same 28 papers independently. Neither pass had sight of the pipeline's
+    output.</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Coder</th><th>Concepts found, of 46</th><th>Elements marked</th></tr></thead>
+      <tbody>
+        <tr><td>Human coder (the author)</td><td class="num-cell">30 &middot; 65%</td><td class="num-cell">192</td></tr>
+        <tr><td>Independent LLM pass, same frame</td><td class="num-cell">28 &middot; 61%</td><td class="num-cell">139</td></tr>
+        <tr><td>Agreed by both</td><td class="num-cell">28</td><td class="num-cell">130</td></tr>
+        <tr><td>The pipeline</td><td class="num-cell">31&ndash;37</td><td class="num-cell">547</td></tr>
+      </tbody>
+    </table></div>
+    <p>The two passes agree at <strong>0.785</strong> &mdash; positive specific agreement, the correct
+    statistic here because Cohen's &kappa; is undefined when coders mark spans of text and there is no
+    countable set of negatives (Hripcsak &amp; Rothschild, <em>JAMIA</em> 2005). Per paper it ranges
+    from 0.36 to 1.00.</p>
+    <div class="note">
+      <div class="h">What this control does and does not establish</div>
+      <p>This is not a human&ndash;human reliability figure and is not presented as one: only one of the
+      two passes was done by a person. What it does establish is the first human data point this
+      project has had &mdash; a careful reader working through all 28 papers recovers <strong>30 of
+      Richmond's 46 concepts</strong>. That is the number every machine figure should be read against,
+      and it indicates Richmond's 46 are <em>not</em> fully recoverable from these 28 papers by anyone;
+      several were drawn from the wider literature rather than from the included studies.</p>
+      <p>A genuine inter-rater reliability figure still requires a second person, and is the first item
+      listed as outstanding below.</p>
+    </div>
+    <p>Read against the single human coding, <strong>the pipeline's 31&ndash;37 sits at or a little
+    above one careful reader working under time pressure</strong>, all 28 papers in one sitting. That
+    is a weaker claim than a ceiling, but it is the one the data supports. It also found ten concepts
+    neither pass marked, which have not yet been read through and about which no claim is made.</p>
+
+    <h3>What the pipeline misses is not random</h3>
+    <p>Five of Richmond's 46 concepts were not recovered at all. They are worth listing, because they
+    are not a scatter:</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Code</th><th>Richmond role</th><th>Concept</th></tr></thead>
+      <tbody>
+        <tr><td class="num-cell">E05</td><td>Context</td><td>negative coping strategies, or lacking self-confidence or self-efficacy</td></tr>
+        <tr><td class="num-cell">E06</td><td>Context</td><td>students with different levels of knowledge within a group</td></tr>
+        <tr><td class="num-cell">E31</td><td>Mechanism response</td><td>pressure that their decision making could have a real impact</td></tr>
+        <tr><td class="num-cell">E32</td><td>Mechanism response</td><td>fear</td></tr>
+        <tr><td class="num-cell">E34</td><td>Mechanism response</td><td>pressure to perform</td></tr>
+      </tbody>
+    </table></div>
+    <p>Four of the five are negative affect under pressure. The pipeline recovers what a student is
+    given and what they learn, and it recovers positive affect (E04, confidence and engagement), but
+    it does not recover fear, pressure, or low self-efficacy. Richmond's argument that the same
+    resource helps a confident learner and harms an anxious one depends on exactly this half of the
+    picture, so <strong>the gap sits on the benchmark's central claim rather than at its edges</strong>.
+    Whether the cause is that these appear only in discussion sections, that our ontology has no
+    comfortable home for affect, or that the extraction prompt steers away from it, is the most
+    worthwhile diagnostic question this evaluation has produced. It has not yet been answered.</p>
+
+    <h3>Control 2 — How much the measuring instrument moves on its own</h3>
+    <p>The verification was run ten times over one <strong>frozen, unchanged</strong> graph. Only the
+    judge ran again.</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Metric</th><th>Range over 10 identical runs</th><th>SD</th></tr></thead>
+      <tbody>
+        <tr><td>Concept coverage, same role</td><td class="num-cell">31 – 37</td><td class="num-cell">1.96</td></tr>
+        <tr><td>Relations, anchored</td><td class="num-cell">24 – 31</td><td class="num-cell">2.31</td></tr>
+        <tr><td>Mechanisms aligned</td><td class="num-cell">16 – 21</td><td class="num-cell">1.32</td></tr>
+        <tr><td>Screening sensitivity</td><td class="num-cell">identical all 10</td><td class="num-cell">0</td></tr>
+        <tr><td>Quote grounding</td><td class="num-cell">identical all 10</td><td class="num-cell">0</td></tr>
+      </tbody>
+    </table></div>
+    <p>Everything a model judged moved; everything counted did not. So every model-judged figure is
+    reported as a range, and a single before/after comparison in this design
+    <strong>cannot resolve a difference smaller than about 17 percentage points</strong>. That limit
+    is stated rather than worked around. It also forced the retraction of an earlier result in this
+    project that had been reported as a success.</p>
+
+    <h3>Control 3 — What you get without the pipeline at all</h3>
+    <p>One LLM call over the same 28 papers, with no ontology, no per-study extraction, no span
+    grounding, no graph and no checkpoints, recovers <strong>32 of the 46 concepts</strong> — inside
+    the pipeline's own 31–37 range.</p>
+    <div class="note">
+      <div class="h">The claim this forecloses</div>
+      <p>On concept coverage the framework and a single prompt are indistinguishable, and no further
+      tuning would change that, because the measurement cannot resolve it. The contribution has to be
+      claimed where the baseline produces <em>nothing</em>: quotes anchored to character positions,
+      per-study attribution, 459 typed relations, mechanisms derived by an algorithm rather than
+      asserted, four logged human checkpoints, and a full audit trail. Those are differences in kind,
+      which no coverage statistic measures.</p>
+    </div>
+
+    <h3>Why the statistics are the right ones</h3>
+    <ul>
+      <li><strong>Clopper–Pearson exact intervals</strong>, not normal approximations — the
+      denominators here are 28, 40 and 46, and several proportions sit at or near 1.0, where the
+      normal approximation is invalid.</li>
+      <li><strong>Positive specific agreement</strong> for span marking, and Krippendorff's α with
+      Gwet's AC1 reserved for the fixed-category role judgements, where a chance correction is
+      defined.</li>
+      <li><strong>Two judges from different model families</strong> on the programme theory, reported
+      side by side. They differ by 0.29 on identical input, reproducibly — thirteen times either
+      standard deviation. The score is judge-determined, so quoting one number alone would mislead
+      whichever was chosen.</li>
+      <li><strong>Tiered reporting</strong> for quotes and relations. The exact-match figure is
+      always given first and never absorbed into the looser one.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section>
+  <div class="num">05</div>
+  <div class="body">
+    <h2>The architecture</h2>
+    <p class="lede">Eight stages, each writing to one database that serves as the single source of
+    truth, with four points where a human must sign off before the run continues.</p>
+
+    <ul class="stages">
+      <li><span class="s">1</span><p class="what">Ingest
+        <span class="how">PDF → text with page and character offsets preserved, so every later quote can be located.</span></p></li>
+      <li><span class="s">2</span><p class="what">Screen<span class="hitl">human checkpoint</span>
+        <span class="how">Include / exclude / uncertain against the review's criteria. Anything uncertain is routed to a person — which is how the two borderline papers were recovered.</span></p></li>
+      <li><span class="s">3</span><p class="what">Extract CMOCs
+        <span class="how">Per study, into the realist ontology: Context, Intervention, Mechanism resource, Mechanism response, Outcome — the Dalkin et al. (2015) split of mechanism into what is offered and how learners react.</span></p></li>
+      <li><span class="s">4</span><p class="what">Critique and revise
+        <span class="how">A separate critic agent scores each draft; drafts below threshold go back once for revision. Draft, critique and revision are all kept.</span></p></li>
+      <li><span class="s">5</span><p class="what">Ground every quote
+        <span class="how">Exact match first; then normalised for the hyphenation PDFs introduce; then fuzzy above 70% similarity. Which tier each quote resolved at is recorded, never averaged away.</span></p></li>
+      <li><span class="s">6</span><p class="what">Build the graph<span class="hitl">human checkpoint</span>
+        <span class="how">Concepts are canonicalised across studies and relations typed and direction-checked, giving 547 instances and 459 relations.</span></p></li>
+      <li><span class="s">7</span><p class="what">Find mechanisms
+        <span class="how">Leiden community detection over the concept graph (graspologic, resolution 1.0, fixed seed). The 8 mechanisms are what the algorithm groups — they are not asked for by name, which is why they can be compared with Richmond's independently.</span></p></li>
+      <li><span class="s">8</span><p class="what">Synthesise and verify<span class="hitl">two human checkpoints</span>
+        <span class="how">Cross-study synthesis into context-specific chains with conflicting evidence recorded, then scoring against the benchmark. Theory sign-off is still pending.</span></p></li>
+    </ul>
+
+    <p>The run is reproducible: fixed seeds, pinned models, every prompt and response written to an
+    audit log, and a budget guard that stops at a study boundary rather than mid-extraction. Re-running
+    the verification reproduces the counted metrics byte for byte.</p>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section>
+  <div class="num">06</div>
+  <div class="body">
+    <h2>What is attached, and what is still missing</h2>
+
+    <ul class="files">
+      <li><span class="fn">1_programme_theory.md</span><span class="fd">The system's own conclusion — nine context-specific chains in Richmond's format, each with supporting studies and conflicting evidence.</span></li>
+      <li><span class="fn">2_RESULTS.html</span><span class="fd">Everything in one page: Richmond's conclusions beside ours context by context, all 46 benchmark concepts one by one, and every record, searchable. Opens in a browser.</span></li>
+      <li><span class="fn">3_entities.csv</span><span class="fd">All 547 concepts with source quote, character offsets and which tier each resolved at.</span></li>
+      <li><span class="fn">4_relationships.csv</span><span class="fd">All 459 typed causal relations with subject, predicate, object and the CMOC they came from.</span></li>
+      <li><span class="fn">5_cmoc_evidence_table.md</span><span class="fd">All 94 configurations with their supporting quotes.</span></li>
+    </ul>
+
+    <h3>Not yet done</h3>
+    <ul>
+      <li>There is still only one human coder. A second person coding the same 28 papers is needed before any inter-rater reliability figure can appear in the paper; the 0.785 above is human against an independent LLM pass, and is reported as such.</li>
+      <li>Everything rests on one benchmark. A second published realist review would let us say the system does realist synthesis, rather than that it fits Richmond.</li>
+      <li>Programme-theory sign-off (checkpoint 4) is pending a human expert rating; the model-judged figure is a placeholder for it.</li>
+      <li>Richmond's own figures were transcribed by one person, so the benchmark's reliability is itself unmeasured.</li>
+    </ul>
+
+    <h3>Two questions for you</h3>
+    <ul>
+      <li>Is the right framing a first feasibility study with a worked example and a measured evaluation, rather than a claim that the system matches human reviewers? The human coding supports the first and not the second.</li>
+      <li>If a second realist review is worth doing, which one would you use?</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  All figures on this page come from run <span class="mono">verify-edcbf790</span> over extraction
+  <span class="mono">extract-fb045429</span>, scored against <span class="mono">richmond_gold_v3</span>.
+  Benchmark: Richmond, H. et al. (2020), <em>Medical Education</em> 54(8):709–719.
+</footer>
+
+</div>
