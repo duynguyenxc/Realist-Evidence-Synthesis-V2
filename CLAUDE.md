@@ -52,8 +52,14 @@ Richmond's human outputs. **Method > platform; human judgment stays sovereign.**
    one; and every CMOC, entity, relation and emergent mechanism, searchable. This is the artefact
    to send to the professor or open in an interview. No server, no database.
 2. **`docs/VERIFICATION_PROTOCOL.md`** — why those are the right metrics, with citations, and the
-   honest list of what is still missing. The blocking gap is that **no human has coded anything**,
-   so there is no human–human ceiling and the agreement-style numbers are uninterpretable.
+   honest list of what is still missing. **Human coding is done** (two RAs, all 28 papers, blind,
+   2026-09-25; positive specific agreement 0.785), so the ceiling exists and the agreement numbers
+   are interpretable. The defensible claim is **non-inferiority, not superiority** — under the
+   one-to-one constraint the humans worked under, the system scores 28/46, equal to Coder B.
+   `docs/MACHINE_VS_HUMAN.md` §5 is the authoritative record; the word *exceeds* must not appear.
+   **The live blocking gap is now a matcher defect**: `verification/metrics.py` lets a rationale
+   that states a non-match set `matched: true` (E03, E24 — and E24 is inside the headline 34),
+   unfixed since it was found on 2026-09-30. Until it is fixed, quote **28/46** and nothing looser.
 3. **`gold/RICHMOND_CONCLUSIONS.md`** — what Richmond actually concluded, grounded line by line.
 
 The benchmark is `gold/richmond_gold_v3.json` (corrected 2026-09-23; `RES_GOLD=v1` reproduces

@@ -125,6 +125,11 @@ Two things make this honest rather than decorative:
 **Report as:** 38/46 like-for-like (95% CI 68.6–92.2), 45/46 with role-crossing allowed, of which 7
 are role disagreements. Never the role-tolerant figure alone.
 
+> **Superseded — do not quote 38/46.** A recount for `MACHINE_VS_HUMAN.md` §5 put the figure at
+> **34/46**, and showed those 34 rest on 28 distinct concepts; under the one-to-one constraint the
+> human coders worked under it is **28/46**. The matcher defect recorded in §3.1 is still open, so
+> even 34 is an overcount. **28/46 is the only concept-recovery figure safe to send out today.**
+
 ### 2.4 Relation recovery — three tiers, and one of them cannot fail
 
 | Tier | Question | Result |
@@ -215,15 +220,40 @@ Correlated model errors inflate agreement without improving correspondence to an
 
 Nothing below is a nice-to-have. Each is a specific reason a reviewer could reject a claim.
 
-### 3.1 No human has coded anything (blocking C2)
+### 3.1 ~~No human has coded anything~~ — **DONE 2026-09-25. No longer blocking.**
 
-There is no human–human ceiling, so every agreement-style number here is uninterpretable. Xiao et
-al. (2023, IUI) report GPT-3 at κ = 0.61 — which reads as a success until you see the expert–expert
-ceiling of κ = 0.88 on the same items.
+> **This section was written on 23 September and was obsolete two days later.** It is corrected
+> rather than deleted, because it was the project's headline caveat for weeks and anyone who read
+> it then should see what replaced it. The authoritative record is `docs/MACHINE_VS_HUMAN.md` §5.
 
-**What to run.** Two coders, blind to machine output, code a **design-based random sample of 8–10 of
-the 28 papers (~25–35%)** into the typed CMOC schema. Compute **human–human agreement first**, then
-machine-vs-each-human.
+**What was actually run** — more than this section asked for. Two research assistants coded **all 28
+papers**, not a 25–35% subsample, independently and blind to machine output, against the same
+46-item frame. So a human–human ceiling exists and the agreement-style numbers are interpretable.
+
+| Coder | Concepts found | Elements coded |
+|---|---|---|
+| Coder A (human) | 30/46 (65%) | 192 |
+| Coder B (human) | 28/46 (61%) | 139 |
+| Both humans agreed | 28/46 (61%) | 130 agreed |
+| The system | 34/46 (74%) | 547 mentions |
+
+Positive specific agreement between the two humans: **0.785** — the statistic this section argued
+for, and the ceiling it said was missing.
+
+**The claim this licenses is non-inferiority, not superiority.** The system's 34 matches rest on
+only **28 distinct canonical concepts**: four of ours are each counted against two or three of
+Richmond's. A human cannot do that — the frame gives one code per element, so human matching is
+one-to-one by construction. Under the same constraint the system scores **28/46 (60.9%), equal to
+Coder B and to the both-agreed set, not above them.** `MACHINE_VS_HUMAN.md` §5 states the rule
+plainly: *the word "exceeds" should not appear.*
+
+**What is still open, and it inflates the headline.** Two matcher defects found 2026-09-30 are
+**unfixed** in `verification/metrics.py` (confirmed 2026-11-02: no guard exists and no commit has
+touched the file since). `E03` and `E24` are recorded as `matched: true` carrying rationales that
+*state a non-match* — "…**as the opposite**", "…**so it does not match**" — and **E24 is inside the
+headline 34**. A rationale that states a non-match must not be allowed to set a match. Until that
+is fixed, 34/46 is an overcount of unknown size and **no concept-recovery number should be sent
+out**; 28/46 one-to-one is the figure to quote, because it does not depend on the broken matcher.
 
 **Which statistic.** Not Cohen's κ. For span/CMOC extraction there is **no well-defined number of
 negative cases**, and Hripcsak & Rothschild (2005, *JAMIA* 12(3), 296–298) prove that in exactly this
