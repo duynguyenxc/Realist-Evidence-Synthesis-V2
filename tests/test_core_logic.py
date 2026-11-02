@@ -62,3 +62,57 @@ def test_relation_demotion_preserves_untyped_candidate():
     rel = TypedRelation(relation_id="r", predicate=Predicate.UNTYPED_CANDIDATE,
                         subject=outcome, object=context, provenance=prov)
     assert rel.predicate is Predicate.UNTYPED_CANDIDATE
+
+
+# ---------------------------------------------------------------------------
+# Review isolation. Richmond's corpus, gold standard and published outputs live
+# at the default paths; a second review on a new topic must be able to go
+# somewhere else. Before 2026-11-02 only POSTGRES_DB was overridable, so a new
+# review had nowhere to write but over `outputs/RESULTS.html` — the artefact of
+# record, which M38 found had already been silently overwritten once.
+# ---------------------------------------------------------------------------
+def _reload_config(monkeypatch, **env):
+    """Re-import config under a patched environment; paths resolve at import."""
+    import importlib
+
+    for key in ("RES_CONFIG_DIR", "RES_DATA_DIR", "RES_GOLD_DIR", "RES_OUTPUTS_DIR"):
+        monkeypatch.delenv(key, raising=False)
+    for key, value in env.items():
+        monkeypatch.setenv(key, value)
+    import res_pipeline.core.config as cfg
+
+    return importlib.reload(cfg)
+
+
+def test_paths_default_to_the_project_root(monkeypatch):
+    cfg = _reload_config(monkeypatch)
+    assert cfg.CONFIG_DIR == cfg.PROJECT_ROOT / "config"
+    assert cfg.OUTPUTS_DIR == cfg.PROJECT_ROOT / "outputs"
+    assert cfg.GOLD_DIR == cfg.PROJECT_ROOT / "gold"
+
+
+def test_a_second_review_can_be_pointed_away_from_richmond(monkeypatch):
+    cfg = _reload_config(
+        monkeypatch, RES_CONFIG_DIR="config-emotion", RES_OUTPUTS_DIR="outputs-emotion"
+    )
+    assert cfg.CONFIG_DIR == cfg.PROJECT_ROOT / "config-emotion"
+    assert cfg.OUTPUTS_DIR == cfg.PROJECT_ROOT / "outputs-emotion"
+    # Richmond's gold standard is not dragged along by an unrelated override.
+    assert cfg.GOLD_DIR == cfg.PROJECT_ROOT / "gold"
+    # And nothing the second review writes lands under the first review's outputs.
+    assert cfg.PROJECT_ROOT / "outputs" not in cfg.OUTPUTS_DIR.parents
+
+
+def test_absolute_override_is_honoured_and_blank_falls_back(monkeypatch):
+    cfg = _reload_config(monkeypatch, RES_OUTPUTS_DIR="/tmp/res-out", RES_CONFIG_DIR="   ")
+    assert str(cfg.OUTPUTS_DIR) == "/tmp/res-out"
+    # A blank value must mean "unset", not resolve to the project root itself —
+    # which would make CONFIG_DIR/"ontology.yaml" silently miss.
+    assert cfg.CONFIG_DIR == cfg.PROJECT_ROOT / "config"
+
+
+def test_active_paths_marks_what_was_overridden(monkeypatch):
+    cfg = _reload_config(monkeypatch, RES_OUTPUTS_DIR="outputs-emotion")
+    shown = cfg.active_paths()
+    assert "[overridden]" in shown["outputs"]
+    assert "[overridden]" not in shown["config"]

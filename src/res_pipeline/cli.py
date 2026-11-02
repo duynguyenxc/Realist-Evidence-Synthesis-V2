@@ -1105,8 +1105,19 @@ def outputs() -> None:
 
 @app.command()
 def status() -> None:
-    """Show corpus and pipeline status."""
+    """Show which review this process is pointed at, and its corpus/pipeline status."""
+    from res_pipeline.core.config import active_paths
     from res_pipeline.core.db import get_connection
+
+    # Printed first and unconditionally: every destructive command in this CLI
+    # writes under these paths, and a second review pointed at the first one's
+    # outputs would overwrite published figures.
+    where = Table(title="Active review")
+    where.add_column("What")
+    where.add_column("Where")
+    for name, value in active_paths().items():
+        where.add_row(name, value)
+    console.print(where)
 
     optional = ("cmocs", "entity_instances", "typed_relations", "demi_regularities",
                 "contradictions", "programme_theories")
