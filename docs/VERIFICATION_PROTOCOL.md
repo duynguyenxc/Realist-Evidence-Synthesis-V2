@@ -226,33 +226,36 @@ Nothing below is a nice-to-have. Each is a specific reason a reviewer could reje
 > rather than deleted, because it was the project's headline caveat for weeks and anyone who read
 > it then should see what replaced it. The authoritative record is `docs/MACHINE_VS_HUMAN.md` §5.
 
-**What was actually run.** Coding of **all 28 papers** against the same 46-item frame, not a 25–35%
-subsample — but **only one of the two passes was performed by a person**, so the human–human ceiling
-this section asked for **still does not exist.**
+**What was actually run** — more than this section asked for. **Two human coders**, coding **all 28
+papers** rather than the 25–35% subsample proposed here, independently and blind to machine output,
+against the same 46-item frame. **The human–human ceiling exists**, and the agreement-style numbers
+in this document are interpretable.
 
-> **Two project documents contradict each other on this, and it is load-bearing.**
-> `MACHINE_VS_HUMAN.md` §5 is headed *"Machine vs the two **human** coders"* and labels both rows
-> `(human)`. The AERA paper draft says the opposite, in the same numbers: *"The **first author** …
-> coded all 28 papers **manually** … recovering 30 of 46 across 192 marked elements. **A
-> general-purpose model** was then given the identical frame and coded the same corpus
-> independently, recovering 28 of 46 across 139 elements … **This is not an inter-rater reliability
-> figure, as only one pass was human.**"*
-> The paper is taken as correct here: it is the later document, it was written for peer review where
-> this claim would be fatal, it *weakens* its own result by saying so, and `RA_A_completed.xlsx`
-> carries an `EXAMPLE — read this first` sheet that `RA_B_completed.xlsx` does not. **Only the RA can
-> settle it, and should.** Until then the conservative reading stands, because it is the one that
-> cannot overstate the evidence.
+**Confirmed by the RA on 2026-11-02**, who was Coder A and is the only person who can settle it.
+That confirmation matters because two documents disagreed:
+
+| Document | Says |
+|---|---|
+| `MACHINE_VS_HUMAN.md` §5 | *"the two **human** coders"*, both rows `(human)` — **correct** |
+| AERA paper draft, *Preliminary Findings* | *"**a general-purpose model** was then given the identical frame … **only one pass was human**"* — **wrong, and it is in the manuscript** |
+
+> ⚠ **The paper understates its own method and must be fixed before submission.** It reports Coder
+> B's exact figures (28/46, 139 elements) while attributing them to a model, and then withdraws the
+> reliability claim it was entitled to make: *"This is not an inter-rater reliability figure."* It
+> **is** one. A reviewer who compares the manuscript against this document finds the project
+> disagreeing with itself about who produced its own reference standard — which is worse than
+> either version being true. See the session log (M39/M40) for how this was traced.
 
 | Coder | Concepts found | Elements coded |
 |---|---|---|
-| Coder A — **human** (first author) | 30/46 (65%) | 192 |
-| Coder B — **a model**, same frame | 28/46 (61%) | 139 |
-| The two passes agreed | 28/46 (61%) | 130 agreed |
+| Coder A — human (the RA) | 30/46 (65%) | 192 |
+| Coder B — human, same frame, blind | 28/46 (61%) | 139 |
+| Both humans agreed | 28/46 (61%) | 130 agreed |
 | The system | 34/46 (74%) | 547 mentions |
 
-Positive specific agreement between the two passes: **0.785**. This is the statistic this section
-argued for, but **it is human-vs-model, not inter-rater reliability**, so it is not the ceiling that
-was missing. A second *human* pass is still owed.
+**Positive specific agreement between the two humans: 0.785** — the statistic this section argued
+for (Hripcsak & Rothschild 2005), and the ceiling it said was missing. Per paper it ranges
+0.36–1.00, median 0.85.
 
 **The claim this licenses is non-inferiority, not superiority.** The system's 34 matches rest on
 only **28 distinct canonical concepts**: four of ours are each counted against two or three of
