@@ -22,9 +22,8 @@ version: "0.1-seed"
 derived_from:
   - "config/protocol.yaml (review_question + initial_programme_theory_summary)"
   - "public learning-science theory (see seed_theories) — NOT Richmond's results"
-ratified_by: null            # set to human name at checkpoint 0
-ratified_at: null
-
+ratified_by: "ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)"   # HITL-0; a bare name here means a person, see webui._actor
+ratified_at: "2026-11-04"
 # --- The public theories the seed is built on (Richmond used these same public
 #     theories to build their own IPT; citing them here is not contamination) ---
 seed_theories:

@@ -199,9 +199,13 @@ depends on it); a **budget ceiling was never set**.
    `delegate:claude-code(RA-authorized-2026-07-14)` or `expert:claude(delegated-reviewer-per-RA-2026-07-14)`,
    and `initial_programme_theory.yaml` has `ratified_by: null`. The `/review` console is built and
    unused. This is the project's defining claim and the one operation never exercised.
-3. **A negative-affect blind spot.** Five gold concepts are recovered at no tier, four of them about
-   fear, pressure or low self-efficacy. Cause is open between ontology, prompt and corpus. This
-   matters now rather than later because the new topic is emotion.
+3. **The negative-affect gap is diagnosed, and it is not a defect.** Five gold concepts are
+   recovered at no tier, four about fear, pressure or low self-efficacy. Measured 2026-11-04:
+   `emotion` and `self-efficacy` occur **zero times** in all 28 papers, and the extractor *did*
+   capture affect wherever it occurred (9 of 117 `Mechanism_Response` instances). Cause is the
+   **corpus plus the verbatim constraint**, not the ontology or the prompts. What it exposes is a
+   real gap — **retroduction without a quote**, which realist synthesis requires. And it means
+   Richmond gives **no evidence either way** about the pipeline on an emotional topic.
 4. **No literature search and no full-text acquisition.** Richmond's 28 papers were handed to the
    pipeline. `docs/PROFESSOR_VISION_AND_GAPS.md` §2 has the full gap table.
 5. **`config/prompts/` is empty** — prompts are embedded in code, and the professor asks for them by

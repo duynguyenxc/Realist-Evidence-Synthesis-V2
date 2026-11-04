@@ -1,4 +1,17 @@
 id,run_id,actor,action,subject_ref,detail,created_at
+1144,webui-c3843d,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-1,{},2026-11-04T16:21:43.054307+07:00
+1149,webui-7350b8,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-6,{},2026-11-04T16:21:43.093126+07:00
+1152,webui-41c453,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-9,{},2026-11-04T16:21:43.105128+07:00
+1155,webui-0f058b,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-12,{},2026-11-04T16:21:43.118331+07:00
+1158,webui-1da760,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-15,{},2026-11-04T16:21:43.131157+07:00
+1161,webui-cf458f,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-18,{},2026-11-04T16:21:43.143225+07:00
+1164,webui-fe3d5b,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl4,theory-v12,{},2026-11-04T16:21:55.509287+07:00
+1145,webui-388e6b,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-2,{},2026-11-04T16:21:43.066549+07:00
+1150,webui-fac018,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-7,{},2026-11-04T16:21:43.097562+07:00
+1153,webui-e1bb47,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-10,{},2026-11-04T16:21:43.109391+07:00
+1156,webui-de2c8c,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-13,{},2026-11-04T16:21:43.123610+07:00
+1159,webui-300f3f,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-16,{},2026-11-04T16:21:43.135126+07:00
+1162,webui-3e7d58,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-19,{},2026-11-04T16:21:43.147199+07:00
 59,ingest-97bfbd41,ingestion,registry_built,,"{""n_studies"": 28}",2026-07-14T20:57:29+07:00
 60,ingest-97bfbd41,ingestion,study_ingested,S001,"{""sha256"": ""50d5f4210bd9"", ""n_chars"": 247, ""n_units"": 1, ""source_kind"": ""abstract_only""}",2026-07-14T20:57:29+07:00
 61,ingest-97bfbd41,ingestion,study_ingested,S002,"{""sha256"": ""1cd4e71ae018"", ""n_chars"": 349, ""n_units"": 1, ""source_kind"": ""abstract_only""}",2026-07-14T20:57:29+07:00
@@ -512,6 +525,7 @@ id,run_id,actor,action,subject_ref,detail,created_at
 569,screen-32155d36,screening_agent,study_screened,S010,"{""second"": ""include"", ""primary"": ""include"", ""combined"": ""include"", ""prompt_version"": ""screening-v1.0""}",2026-07-22T11:16:27+07:00
 570,screen-32155d36,screening_agent,study_screened,S011,"{""second"": ""uncertain"", ""primary"": ""include"", ""combined"": ""include"", ""prompt_version"": ""screening-v1.0""}",2026-07-22T11:16:30+07:00
 571,screen-32155d36,screening_agent,study_screened,S012,"{""second"": ""uncertain"", ""primary"": ""include"", ""combined"": ""include"", ""prompt_version"": ""screening-v1.0""}",2026-07-22T11:16:34+07:00
+1146,webui-73e068,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-3,{},2026-11-04T16:21:43.073605+07:00
 572,screen-32155d36,screening_agent,study_screened,S013,"{""second"": ""include"", ""primary"": ""include"", ""combined"": ""include"", ""prompt_version"": ""screening-v1.0""}",2026-07-22T11:16:37+07:00
 573,screen-32155d36,screening_agent,study_screened,S014,"{""second"": ""uncertain"", ""primary"": ""include"", ""combined"": ""include"", ""prompt_version"": ""screening-v1.0""}",2026-07-22T11:16:42+07:00
 574,screen-32155d36,screening_agent,study_screened,S015,"{""second"": ""uncertain"", ""primary"": ""include"", ""combined"": ""include"", ""prompt_version"": ""screening-v1.0""}",2026-07-22T11:16:45+07:00
@@ -770,6 +784,7 @@ id,run_id,actor,action,subject_ref,detail,created_at
 826,synth-e1c81001,normalization_agent,entity_type_normalized,Intervention,"{""n_labels"": 61, ""n_concepts"": 36, ""prompt_version"": ""normalization-v1.0""}",2026-07-23T22:17:14+07:00
 827,synth-e1c81001,normalization_agent,entity_type_normalized,Outcome,"{""n_labels"": 111, ""n_concepts"": 29, ""prompt_version"": ""normalization-v1.0""}",2026-07-23T22:17:22+07:00
 828,synth-e1c81001,normalization_agent,entity_type_normalized,Context,"{""n_labels"": 78, ""n_concepts"": 18, ""prompt_version"": ""normalization-v1.0""}",2026-07-23T22:17:30+07:00
+1147,webui-6d25f7,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-4,{},2026-11-04T16:21:43.080605+07:00
 830,synth-e1c81001,normalization_agent,entity_type_normalized,Mechanism_Response,"{""n_labels"": 107, ""n_concepts"": 55, ""prompt_version"": ""normalization-v1.0""}",2026-07-23T22:17:48+07:00
 831,synth-e1c81001,normalization_agent,families_built,Intervention,"{""n_concepts"": 36, ""n_families"": 6}",2026-07-23T22:17:51+07:00
 832,synth-e1c81001,normalization_agent,families_built,Outcome,"{""n_concepts"": 29, ""n_families"": 7}",2026-07-23T22:17:53+07:00
@@ -1084,3 +1099,9 @@ id,run_id,actor,action,subject_ref,detail,created_at
 1141,community-e7f98186,community_analyst,communities_detected,,"{""edges"": 1068, ""nodes"": 183, ""algorithm"": ""leiden(graspologic)"", ""communities_total"": 8, ""conceptual_entities"": 8}",2026-09-24T12:08:19+07:00
 1142,lkg-1eadef21,lkg_export,lkg_exported,,"{""cmocs"": 94, ""entities"": 547, ""communities"": 47, ""relationships"": 459}",2026-09-24T12:11:03+07:00
 1143,synth-2dfada15,synthesis_agent,synthesis_computed,,"{""contradictions"": 20, ""demi_regularities"": 32}",2026-09-30T22:26:47.557773+07:00
+1148,webui-43cd41,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-5,{},2026-11-04T16:21:43.087338+07:00
+1151,webui-47514c,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-8,{},2026-11-04T16:21:43.101379+07:00
+1154,webui-7f231e,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-11,{},2026-11-04T16:21:43.114339+07:00
+1157,webui-1943a7,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-14,{},2026-11-04T16:21:43.126944+07:00
+1160,webui-89ae7d,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-17,{},2026-11-04T16:21:43.138662+07:00
+1163,webui-ef6117,"ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)",webui_hitl3,contradiction-20,{},2026-11-04T16:21:43.151055+07:00

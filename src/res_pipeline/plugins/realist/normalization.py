@@ -22,6 +22,7 @@ from pydantic import BaseModel, Field
 
 from res_pipeline.core.db import get_connection, log_audit_event
 from res_pipeline.core.llm import call_structured
+from res_pipeline.core.prompts import P
 
 PROMPT_VERSION = "normalization-v1.0"
 
@@ -67,7 +68,8 @@ def _batched_cluster(items: list[str], system_prompt: str, run_id: str,
         batch = ordered[start:start + _BATCH]
         result = call_structured(
             tier="normalization",
-            system_prompt=system_prompt,
+            system_prompt=P("normalization.1",
+                system_prompt),
             user_prompt=f"{noun}:\n" + "\n".join(f"- {x}" for x in batch),
             schema=ClusteringResult,
             run_id=run_id,
@@ -117,6 +119,7 @@ def build_concept_families(run_id: str) -> dict[str, int]:
         clusters = _batched_cluster(
             concepts,
             system_prompt=(
+                P("normalization.2",
                 f"You are grouping {entity_type} concepts from a realist synthesis of "
                 "clinical-reasoning education into BROAD analytic families, at the "
                 "granularity a published realist review would use for cross-study "
@@ -125,7 +128,7 @@ def build_concept_families(run_id: str) -> dict[str, int]:
                 "virtual patients', 'self-explanation', 'reasoning-strategy instruction', "
                 "'feedback', 'worked examples', 'test-enhanced learning'). Rules: every "
                 "provided concept id appears in exactly one family; copy ids exactly; "
-                "prefer 4-12 families; name each family with a short analytic label."
+                "prefer 4-12 families; name each family with a short analytic label.")
             ),
             run_id=run_id, noun="CONCEPT IDS",
         )
@@ -184,13 +187,14 @@ def normalize_entities(run_id: str) -> dict[str, int]:
         clusters = _batched_cluster(
             reps,
             system_prompt=(
+                P("normalization.3",
                 "You are canonicalizing concept labels for a realist-synthesis knowledge "
                 f"graph. All labels below are of type {entity_type}. Group labels that refer "
                 "to the SAME underlying concept (synonyms, paraphrases, granularity variants) "
                 "into clusters and give each cluster a short canonical label. Rules: every "
                 "provided label appears in EXACTLY one cluster; copy member labels exactly; "
                 "do NOT invent labels; when unsure, keep labels in separate clusters "
-                "(over-merging corrupts the analysis, under-merging is recoverable)."
+                "(over-merging corrupts the analysis, under-merging is recoverable).")
             ),
             run_id=run_id,
         )

@@ -37,6 +37,7 @@ from pydantic import BaseModel, Field
 from res_pipeline.core.config import GOLD_DIR
 from res_pipeline.core.db import get_connection
 from res_pipeline.core.llm import call_structured
+from res_pipeline.core.prompts import P
 from res_pipeline.verification.stats import clopper_pearson
 
 
@@ -291,7 +292,8 @@ def entity_coverage(run_id: str) -> dict:
             batch = call_structured(
                 tier="extraction_verifier",
                 system_prompt=(
-                    "You are scoring entity coverage for a systematic-review verification. For "
+                    P("metrics.1",
+                "You are scoring entity coverage for a systematic-review verification. For "
                     "each GOLD entity, decide whether any EXTRACTED concept expresses the SAME "
                     "underlying construct — judged on both the concept labels and the verbatim "
                     "evidence quote provided. Semantic equivalence, not string match; but a "
@@ -299,7 +301,7 @@ def entity_coverage(run_id: str) -> dict:
                     "if the label wording differs (e.g. 'perceived information overload' matches "
                     "'cognitive load is increased'; 'virtual patient application' matches "
                     "'real-life scenarios including simulation'). Do NOT match merely adjacent or "
-                    "broader concepts. " + _POLARITY_RULE + "Provide the matched concept id or leave empty."
+                    "broader concepts. " + _POLARITY_RULE + "Provide the matched concept id or leave empty.")
                 ),
                 user_prompt=(
                     "GOLD ENTITIES:\n"
@@ -363,6 +365,7 @@ def entity_coverage(run_id: str) -> dict:
         recovery = call_structured(
             tier="extraction_verifier",
             system_prompt=(
+                P("metrics.2",
                 "You are recovering cross-category matches for a systematic-review "
                 "verification. Each GOLD entity below was NOT matched to an extracted "
                 "concept of its own realist type. Decide whether any EXTRACTED concept (of "
@@ -370,7 +373,7 @@ def entity_coverage(run_id: str) -> dict:
                 "on labels and the verbatim evidence quote. The realist role may differ; that "
                 "is expected and must NOT lower the bar. Require genuine construct identity, "
                 "not adjacency or broader/narrower concepts. " + _POLARITY_RULE + "Give the "
-                "matched concept id or leave empty."
+                "matched concept id or leave empty.")
             ),
             user_prompt=(
                 "GOLD ENTITIES (still unmatched):\n"
@@ -644,12 +647,13 @@ def _score_theory(tier: str, gold: dict, theory, run_id: str) -> dict:
         batch = call_structured(
             tier=tier,
             system_prompt=(
+                P("metrics.3",
                 "You are an external methods assessor. Score how well the SYSTEM programme "
                 "theory corresponds to each GOLD programme-theory statement (structural and "
                 "conceptual correspondence of the C->M->O logic, NOT wording). 1.0 = same "
                 "context, same mechanism direction, same outcome family; 0 = absent. "
                 "Be strict and justify each score. NOTE: this is a model-based rating that "
-                "must be complemented by human expert rating before publication."
+                "must be complemented by human expert rating before publication.")
             ),
             user_prompt=(
                 "GOLD PROGRAMME THEORY STATEMENTS:\n"
@@ -723,12 +727,13 @@ def community_alignment(run_id: str) -> dict:
         batch = call_structured(
             tier="extraction_verifier",
             system_prompt=(
+                P("metrics.4",
                 "You are assessing whether emergent graph communities (data-derived conceptual "
                 "entities) capture the mechanisms a human review team articulated. For each GOLD "
                 "mechanism, decide whether any COMMUNITY expresses the SAME underlying mechanism "
                 "(semantic correspondence of the C->M->O role, not wording). Provide the matched "
                 "community id (e.g. COMM2) or leave empty. Do not match merely adjacent concepts. "
-                + _POLARITY_RULE
+                + _POLARITY_RULE)
             ),
             user_prompt=(
                 "GOLD MECHANISMS:\n"

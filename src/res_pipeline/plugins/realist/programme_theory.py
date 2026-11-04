@@ -19,6 +19,7 @@ from pydantic import BaseModel, Field
 from res_pipeline.core.agents import persona
 from res_pipeline.core.db import get_connection, log_audit_event
 from res_pipeline.core.llm import call_structured
+from res_pipeline.core.prompts import P
 from res_pipeline.plugins.realist.ipt import ipt_prompt_block
 
 PROMPT_VERSION = "programme-theory-v2.0-ipt"
@@ -82,7 +83,8 @@ def compose_programme_theory(run_id: str) -> ProgrammeTheory:
     theory = call_structured(
         tier="synthesis",
         system_prompt=(
-            persona("synthesis_lead") + "\n\n"
+            P("programme_theory.1",
+                persona("synthesis_lead") + "\n\n"
             "Compose a programme theory about how educational interventions develop "
             "analytical and non-analytical clinical reasoning in undergraduate health "
             "professions students.\n\nHARD RULES:\n"
@@ -95,7 +97,7 @@ def compose_programme_theory(run_id: str) -> ProgrammeTheory:
             "5. Where the conceptual_entities (emergent graph communities) name a mechanism "
             "family, use it as the mechanism vocabulary — they are your data-derived concepts.\n"
             "6. The boundary_statement must state that final interpretive judgement and "
-            "normative theory choice remain with human researchers."
+            "normative theory choice remain with human researchers.")
         ),
         user_prompt=(
             ipt_prompt_block() + "\n\n"

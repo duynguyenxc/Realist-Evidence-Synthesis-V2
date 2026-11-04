@@ -24,6 +24,7 @@ from pydantic import BaseModel, Field
 from res_pipeline.core.agents import persona
 from res_pipeline.core.db import get_connection
 from res_pipeline.core.llm import call_structured
+from res_pipeline.core.prompts import P
 from res_pipeline.plugins.realist.ipt import record_refinement, register_seed
 
 
@@ -81,10 +82,11 @@ def _reflect(run_id: str) -> str:
     ipt = load_ipt()
     reflection = call_structured(
         tier="synthesis",
-        system_prompt=persona("ipt_manager") + "\n\n"
+        system_prompt=P("retroduction.1",
+                persona("ipt_manager") + "\n\n"
         "You are auditing the programme theory against the hypotheses you seeded. For each "
         "hypothesis, state whether the accumulated evidence CONFIRMS, REFINES, or REJECTS it. "
-        "Be evidence-led; do not defend the seed.",
+        "Be evidence-led; do not defend the seed."),
         user_prompt=(
             "SEEDED HYPOTHESES:\n"
             + json.dumps({k: ipt[k] for k in ("hypothesised_context_dimensions",

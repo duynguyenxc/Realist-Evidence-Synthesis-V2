@@ -27,9 +27,10 @@ import urllib.parse
 import urllib.request
 
 from res_pipeline.core.db import get_connection, log_audit_event
+from res_pipeline.core.llm import call_structured
+from res_pipeline.core.prompts import P
 from res_pipeline.core.registry import StudyRecord
 from res_pipeline.core.screening import ScreeningVote, _combine, _system_prompt, _user_prompt
-from res_pipeline.core.llm import call_structured
 
 _EPMC = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?"
 
@@ -119,9 +120,11 @@ def _screen_distractor(row: dict, run_id: str) -> str:
         metadata_confidence=1.0,
     )
     system, user = _system_prompt(), _user_prompt(pseudo)
-    primary = call_structured(tier="screening_primary", system_prompt=system,
+    primary = call_structured(tier="screening_primary", system_prompt=P("distractor_pool.1",
+                system),
                               user_prompt=user, schema=ScreeningVote, run_id=run_id)
-    second = call_structured(tier="screening_second_vote", system_prompt=system,
+    second = call_structured(tier="screening_second_vote", system_prompt=P("distractor_pool.2",
+                system),
                              user_prompt=user, schema=ScreeningVote, run_id=run_id)
     combined = _combine(primary, second)
     with get_connection() as conn:

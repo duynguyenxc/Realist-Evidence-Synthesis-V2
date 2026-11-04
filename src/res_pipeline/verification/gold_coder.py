@@ -29,6 +29,7 @@ from pydantic import BaseModel, Field
 from res_pipeline.core.config import GOLD_DIR
 from res_pipeline.core.db import get_connection, log_audit_event
 from res_pipeline.core.llm import call_structured
+from res_pipeline.core.prompts import P
 
 PROMPT_VERSION = "gold-coder-v1.0"
 GOLD_PER_PAPER_DIR = GOLD_DIR / "per_paper_gold"
@@ -78,7 +79,8 @@ def code_study(study_id: str, run_id: str) -> GoldCoding:
         f"STUDY {study_id}: {row['title']} ({row['year']}).\n\nPAPER TEXT:\n{row['canonical_text']}"
         "\n\nCode the CMOCs this paper supports, using only the E-codes above."
     )
-    coding = call_structured(tier="gold_coder", system_prompt=system, user_prompt=user,
+    coding = call_structured(tier="gold_coder", system_prompt=P("gold_coder.1",
+                system), user_prompt=user,
                              schema=GoldCoding, run_id=run_id)
 
     GOLD_PER_PAPER_DIR.mkdir(parents=True, exist_ok=True)
@@ -141,12 +143,13 @@ def compute_per_paper_fidelity(run_id: str) -> dict:
             ).fetchone()["source_kind"]
         matched = call_structured(
             tier="extraction_verifier",
-            system_prompt="Match each Richmond E-code to a pipeline entity expressing the SAME "
+            system_prompt=P("gold_coder.2",
+                "Match each Richmond E-code to a pipeline entity expressing the SAME "
             "underlying construct, judged on BOTH the label and its verbatim evidence quote. "
             "Semantic equivalence, not string match: a concept whose evidence quote clearly "
             "denotes the gold construct COUNTS even if the label wording differs (e.g. 'perceived "
             "information overload' matches 'cognitive load is increased'). Do NOT match merely "
-            "adjacent or broader concepts. Return only genuinely matched E-codes.",
+            "adjacent or broader concepts. Return only genuinely matched E-codes."),
             user_prompt=("RICHMOND E-CODES:\n"
                          + "\n".join(f"{c}: {ecode_labels[c]}" for c in gold_codes)
                          + "\n\nPIPELINE ENTITIES (label :: evidence):\n"

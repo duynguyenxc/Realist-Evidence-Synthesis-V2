@@ -1,5 +1,5 @@
 {
- "exported_at": "2026-11-04T15:59:36",
+ "exported_at": "2026-11-04T16:31:23",
  "database": "realist_synthesis",
  "tables": [
   {
@@ -18,7 +18,7 @@
   },
   {
    "table": "audit_log",
-   "rows": 1085,
+   "rows": 1106,
    "columns": [
     "id",
     "run_id",
@@ -144,7 +144,7 @@
   },
   {
    "table": "hitl_feedback",
-   "rows": 0,
+   "rows": 21,
    "columns": [
     "id",
     "checkpoint",

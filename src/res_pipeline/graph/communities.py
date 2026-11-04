@@ -27,6 +27,7 @@ from pydantic import BaseModel, Field
 from res_pipeline.core.agents import persona
 from res_pipeline.core.db import get_connection, log_audit_event
 from res_pipeline.core.llm import call_structured
+from res_pipeline.core.prompts import P
 
 RESOLUTION = 1.0
 _SEED = 20260714
@@ -157,7 +158,8 @@ def detect_communities(run_id: str, min_size: int = 2) -> dict:
             # concept" entity (name, realist role, definition, a short report, and rationale).
             named = call_structured(
                 tier="normalization",
-                system_prompt=persona("community_analyst"),
+                system_prompt=P("communities.1",
+                persona("community_analyst")),
                 user_prompt=(
                     f"This Leiden community clusters {len(nodes)} entities (dominant realist type "
                     f"{dominant_type}) that recur together across {len(studies)} studies:\n"

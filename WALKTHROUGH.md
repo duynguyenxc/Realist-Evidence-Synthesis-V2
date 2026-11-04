@@ -1588,11 +1588,13 @@ between the system and the professor's stated goal, and it is not a code gap.
 
 **(b) The pipeline's documented blind spot is negative affect, and the new topic is emotion.** Five
 gold concepts are recovered at no tier; four concern fear, pressure or low self-efficacy (E05, E31,
-E32, E34). The cause is still open between ontology, prompt and corpus. `config/ontology.yaml`
-already defines `Mechanism_Response` as *"the cognitive **or emotional** reaction … panic,
-frustration … gratitude"*, so the ontology is not obviously the culprit. Carrying this into a review
-*about* emotional regulation would produce silently wrong results with **no gold standard to catch
-them**. Diagnosing it is a precondition of the new assignment, not housekeeping.
+E32, E34). At the time of writing the cause was recorded as open between ontology, prompt and
+corpus.
+
+> **Resolved later the same day — see §7.** It is the corpus. `emotion` and `self-efficacy` occur
+> **zero** times in all 28 papers, and the extractor captured affect wherever it did occur. Not a
+> defect, and nothing to fix here. The statement above is left as written because the correction is
+> part of the record.
 
 **(c) Coverage is the wrong thing to optimise.** The unstructured baseline recovered **32/46**,
 inside the pipeline's own per-sample range of 31–37. What the architecture buys is not more

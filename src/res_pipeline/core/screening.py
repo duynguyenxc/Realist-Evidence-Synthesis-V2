@@ -19,6 +19,7 @@ from pydantic import BaseModel, Field
 from res_pipeline.core.config import load_yaml_config
 from res_pipeline.core.db import get_connection, log_audit_event
 from res_pipeline.core.llm import call_structured
+from res_pipeline.core.prompts import P
 from res_pipeline.core.registry import StudyRecord
 
 PROMPT_VERSION = "screening-v1.0"
@@ -102,11 +103,13 @@ def screen_study(study: StudyRecord, run_id: str) -> dict:
     user = _user_prompt(study)
 
     primary = call_structured(
-        tier="screening_primary", system_prompt=system, user_prompt=user,
+        tier="screening_primary", system_prompt=P("screening.1",
+                system), user_prompt=user,
         schema=ScreeningVote, run_id=run_id,
     )
     second = call_structured(
-        tier="screening_second_vote", system_prompt=system, user_prompt=user,
+        tier="screening_second_vote", system_prompt=P("screening.2",
+                system), user_prompt=user,
         schema=ScreeningVote, run_id=run_id,
     )
     combined = _combine(primary, second)

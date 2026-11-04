@@ -23,6 +23,7 @@ from pydantic import BaseModel, Field
 from res_pipeline.core.agents import persona
 from res_pipeline.core.db import get_connection, log_audit_event
 from res_pipeline.core.llm import call_structured
+from res_pipeline.core.prompts import P
 from res_pipeline.plugins.realist.guidance import extraction_guidance_block, guidance_config
 from res_pipeline.plugins.realist.ontology import EntityType, Predicate, domain_range_map
 
@@ -210,7 +211,8 @@ def _critique_draft(study_id: str, cmocs: list[ExtractedCMOC],
     if not cmocs:
         return "", 0
     review = call_structured(
-        tier="gold_coder", system_prompt=persona("consistency_checker"),
+        tier="gold_coder", system_prompt=P("cmoc_extraction.1",
+                persona("consistency_checker")),
         user_prompt=(
             f"STUDY {study_id}. The lead coder DRAFTED these CMOCs. Independently check each for "
             f"consistency with its quotes and realist coding conventions (especially resource vs "
@@ -253,7 +255,8 @@ def extract_study_cmocs(study_id: str, run_id: str) -> dict:
         "Extract the CMOCs." + guidance
     )
     result = call_structured(
-        tier="extraction", system_prompt=_SYSTEM, user_prompt=user_prompt,
+        tier="extraction", system_prompt=P("cmoc_extraction.2",
+                _SYSTEM), user_prompt=user_prompt,
         schema=ExtractionResult, run_id=run_id, cache_key=f"extract:{study_id}",
     )
 
@@ -273,7 +276,8 @@ def extract_study_cmocs(study_id: str, run_id: str) -> dict:
         n_disputed >= max(1, round(draft_n * _REVISE_THRESHOLD)))
     if substantive:
         revised = call_structured(
-            tier="extraction", system_prompt=_SYSTEM,
+            tier="extraction", system_prompt=P("cmoc_extraction.3",
+                _SYSTEM),
             user_prompt=(
                 user_prompt + "\n\nYOUR DRAFT CMOCs:\n" + result.model_dump_json(indent=1)
                 + "\n\nAN INDEPENDENT SECOND REVIEWER RAISED THESE ISSUES WITH THE DRAFT:\n"
@@ -302,9 +306,10 @@ def extract_study_cmocs(study_id: str, run_id: str) -> dict:
         # Verifier pass (cross-critique): do the quotes support the configuration?
         verdict = call_structured(
             tier="extraction_verifier",
-            system_prompt="You are a sceptical audit reviewer. Given a CMOC and its quotes, "
+            system_prompt=P("cmoc_extraction.4",
+                "You are a sceptical audit reviewer. Given a CMOC and its quotes, "
             "judge whether the quotes GENUINELY support each labelled element and the causal "
-            "reading. Penalise paraphrased or off-topic quotes.",
+            "reading. Penalise paraphrased or off-topic quotes."),
             user_prompt=cmoc.model_dump_json(indent=1),
             schema=VerifierVerdict, run_id=run_id,
         )
@@ -388,7 +393,8 @@ def _run_consistency_checker(
     listing = _cmoc_listing([cmoc for _, cmoc in persisted])
     review = call_structured(
         tier="gold_coder",  # deliberately a different model family than the extractor
-        system_prompt=persona("consistency_checker"),
+        system_prompt=P("cmoc_extraction.5",
+                persona("consistency_checker")),
         user_prompt=(
             f"STUDY {study_id}. The lead coder proposed these CMOCs. Independently check each "
             f"one for consistency with its quotes and realist coding conventions.\n\n{listing}"

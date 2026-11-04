@@ -87,6 +87,33 @@ from outside the corpus** — from theory and expert consensus, which their meth
 ("responses … can be theorised from existing theories of learning"). A system restricted to verbatim
 grounding structurally cannot produce them. This is a finding about the method, not a bug.
 
+**Measured properly on 2026-11-04**, over all 28 canonical texts and all 547 extracted entities.
+The corpus barely contains affect at all:
+
+| term | occurrences in all 28 papers | papers |
+|---|---|---|
+| `emotion` | **0** | 0 |
+| `self-efficacy` | **0** | 0 |
+| `anxious`, `worry` | **0** | 0 |
+| `anxiety` | 1 | 1 |
+| `fear` | 2 | 2 |
+| `frustrat` | 4 | 2 |
+
+And **the extractor captured affect wherever it did occur**: 9 of 117 `Mechanism_Response` instances
+carry affective content — *novice frustration*, *reduced fear during referral*, *stress from pager
+interruption*, *intended intrinsic motivation under time pressure*, *enjoyment and challenge*. So
+the gap is not a blind spot in the ontology or the prompts, both of which already admit emotion
+(`Mechanism_Response` is defined as "the cognitive **or emotional** reaction … panic, frustration").
+It is the corpus, plus the verbatim constraint.
+
+> **The consequence matters more than the finding, and it points at the new topic.** Richmond
+> **cannot** tell us how well this pipeline handles emotion, because there is almost no emotion in
+> Richmond to handle. Prof. Zheng's 2026-10-30 assignment is *emotional awareness and regulation*.
+> So this is not a known weakness carried into the new topic — it is an **unmeasured capability**,
+> and the new corpus will be full of exactly the vocabulary this one lacks. The real architectural
+> gap it exposes is **retroduction without a quote**: Richmond's humans reached E05/E31/E32/E34 by
+> theory-driven inference, which realist synthesis requires and verbatim grounding forbids.
+
 ### Level 3 — the same causal structure? *(arithmetic)*
 
 | Tier | Result | Honest reading |

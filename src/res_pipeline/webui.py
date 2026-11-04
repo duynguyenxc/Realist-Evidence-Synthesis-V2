@@ -17,6 +17,7 @@ from __future__ import annotations
 import glob
 import json
 import os
+import re
 import subprocess
 import sys
 import threading
@@ -1096,7 +1097,29 @@ def review():
     <h3>Checkpoints 1 &amp; 3 — Screening and contradictions</h3>
     {_review_block(pend)}
     <h3>Checkpoint 4 — Programme theory sign-off</h3>{tsign}"""
+    body += _countersign_block()
     return _page("/review", body)
+
+
+_ACTOR_PREFIX = re.compile(r"^[a-z][a-z0-9_-]*:")
+
+
+def _actor(reviewer: str) -> str:
+    """Record WHO actually made the call, not who the form assumed.
+
+    These three endpoints used to write ``_actor(reviewer)`` unconditionally, so an
+    AI-performed checkpoint was stored as a human one and became indistinguishable from
+    a real human decision afterwards. That is how the project ended up unable to say
+    which of its checkpoints had a person behind them (M40 §1a), and it cost two
+    reversals to settle the same question about the gold-standard coders.
+
+    A reviewer string that already names its own actor class — the convention the rest
+    of the database uses, e.g. ``delegate:claude-code(...)``, ``expert:claude(...)``,
+    ``ai-ra:claude(...)`` — is kept verbatim. A bare name is a person typing into the
+    form, so it keeps the ``human:`` prefix.
+    """
+    reviewer = (reviewer or "").strip()
+    return reviewer if _ACTOR_PREFIX.match(reviewer) else _actor(reviewer)
 
 
 @app.post("/review/screen")
@@ -1104,10 +1127,10 @@ def r_screen(sid: str = Form(), reviewer: str = Form(), reason: str = Form(), de
     rid = f"webui-{uuid.uuid4().hex[:6]}"
     with get_connection() as c:
         c.execute("INSERT INTO screening_decisions (study_id,stage,decider,decision,rationale,confidence,run_id) "
-                  "VALUES (%s,'title_abstract',%s,%s,%s,NULL,%s)", (sid, f"human:{reviewer}", decision, reason, rid))
+                  "VALUES (%s,'title_abstract',%s,%s,%s,NULL,%s)", (sid, _actor(reviewer), decision, reason, rid))
         c.execute("INSERT INTO hitl_feedback (checkpoint,subject_ref,action,feedback,payload,run_id) "
                   "VALUES ('HITL-1',%s,'edit',%s,%s,%s)", (sid, reason, '{"decision":"%s"}' % decision, rid))
-    log_audit_event(rid, f"human:{reviewer}", "webui_hitl1", subject_ref=sid, detail={"decision": decision})
+    log_audit_event(rid, _actor(reviewer), "webui_hitl1", subject_ref=sid, detail={"decision": decision})
     return RedirectResponse("/review", 303)
 
 
@@ -1115,10 +1138,10 @@ def r_screen(sid: str = Form(), reviewer: str = Form(), reason: str = Form(), de
 def r_conflict(cid: int = Form(), reviewer: str = Form(), resolution: str = Form()):
     rid = f"webui-{uuid.uuid4().hex[:6]}"
     with get_connection() as c:
-        c.execute("UPDATE contradictions SET resolution=%s,resolved_by=%s WHERE id=%s", (resolution, f"human:{reviewer}", cid))
+        c.execute("UPDATE contradictions SET resolution=%s,resolved_by=%s WHERE id=%s", (resolution, _actor(reviewer), cid))
         c.execute("INSERT INTO hitl_feedback (checkpoint,subject_ref,action,feedback,payload,run_id) "
                   "VALUES ('HITL-3',%s,'edit',%s,'{}',%s)", (f"contradiction-{cid}", resolution, rid))
-    log_audit_event(rid, f"human:{reviewer}", "webui_hitl3", subject_ref=f"contradiction-{cid}")
+    log_audit_event(rid, _actor(reviewer), "webui_hitl3", subject_ref=f"contradiction-{cid}")
     return RedirectResponse("/review", 303)
 
 
@@ -1126,14 +1149,113 @@ def r_conflict(cid: int = Form(), reviewer: str = Form(), resolution: str = Form
 def r_sign(version: int = Form(), reviewer: str = Form()):
     rid = f"webui-{uuid.uuid4().hex[:6]}"
     with get_connection() as c:
-        c.execute("UPDATE programme_theories SET signed_off_by=%s WHERE version=%s", (f"human:{reviewer}", version))
+        c.execute("UPDATE programme_theories SET signed_off_by=%s WHERE version=%s", (_actor(reviewer), version))
         c.execute("INSERT INTO hitl_feedback (checkpoint,subject_ref,action,feedback,payload,run_id) "
                   "VALUES ('HITL-4',%s,'approve',%s,'{}',%s)", (f"theory-v{version}", f"signed {reviewer}", rid))
-    log_audit_event(rid, f"human:{reviewer}", "webui_hitl4", subject_ref=f"theory-v{version}")
+    log_audit_event(rid, _actor(reviewer), "webui_hitl4", subject_ref=f"theory-v{version}")
     return RedirectResponse("/review", 303)
 
 
 # ── Machine result ───────────────────────────────────────────────────────────
+# ── Countersignature ─────────────────────────────────────────────────────────
+#
+# Checkpoints performed by AI under delegated authority are recorded honestly, as
+# `ai-ra:...` rather than `human:...` (see _actor). That keeps the record true, but on
+# its own it leaves the project exactly where M40 found it: no checkpoint with a person
+# behind it. This closes the loop — the RA reads what the AI decided and confirms or
+# overrides it, which is the arrangement Prof. Zheng's 2026-10-30 email section 5
+# describes: AI may "recommend appropriate actions", the RA "exercise your judgment".
+#
+# A countersignature APPENDS; it never overwrites who drafted the decision. Both actors
+# stay in the record, which is the point.
+def _awaiting_countersignature() -> dict:
+    with get_connection() as c:
+        conf = c.execute(
+            "SELECT id, driver_concept, resolution, resolved_by FROM contradictions "
+            "WHERE resolution IS NOT NULL AND resolved_by LIKE 'ai-%' "
+            "AND resolved_by NOT LIKE '%countersigned%' ORDER BY id").fetchall()
+        theory = c.execute(
+            "SELECT version, signed_off_by FROM programme_theories "
+            "WHERE signed_off_by LIKE 'ai-%' AND signed_off_by NOT LIKE '%countersigned%'"
+        ).fetchall()
+    return {"conf": [dict(r) for r in conf], "theory": [dict(r) for r in theory]}
+
+
+def _countersign_block() -> str:
+    """What the AI decided, laid out for the RA to confirm or dispute in one pass."""
+    pend = _awaiting_countersignature()
+    if not pend["conf"] and not pend["theory"]:
+        return ""
+    rows = ""
+    for r in pend["conf"]:
+        drafted = _esc(r["resolved_by"].split("(")[0])
+        rows += (
+            f'<div class="revcard"><div class="revtop">'
+            f'<b>#{r["id"]} &middot; {_esc(r["driver_concept"].split(":")[-1].replace("-"," "))}</b>'
+            f'<span class="tag part">drafted by {drafted}</span></div>'
+            f'<div class="revwhat"><div class="who m">The moderating context the AI named</div>'
+            f'<div style="margin:.3rem 0;font-size:.88rem">{_esc(r["resolution"])}</div></div>'
+            f'<div class="revask"><div class="who h">Do you agree?</div>'
+            f'<form class="f" method="post" action="/review/countersign">'
+            f'<input type="hidden" name="cid" value="{r["id"]}">'
+            f'<input name="reviewer" placeholder="Your name" required style="max-width:140px">'
+            f'<button class="btn human sm" name="action" value="confirm">Confirm</button>'
+            f'<button class="btn ghost sm" name="action" value="dispute">Dispute</button>'
+            f'</form></div></div>')
+    for t in pend["theory"]:
+        rows += (
+            f'<div class="revcard"><div class="revtop"><b>Programme theory v{t["version"]}</b>'
+            f'<span class="tag gap">HITL-4 &middot; final sign-off</span></div>'
+            f'<div class="revwhat"><div class="muted" style="font-size:.85rem">Signed '
+            f'{_esc(t["signed_off_by"])}. This is the review&rsquo;s final output; a human '
+            f'signature here is what the project&rsquo;s central claim rests on. Read it on '
+            f'<a href="/results">Machine result</a> first.</div></div>'
+            f'<div class="revask"><div class="who h">Countersign the programme theory</div>'
+            f'<form class="f" method="post" action="/review/countersign">'
+            f'<input type="hidden" name="version" value="{t["version"]}">'
+            f'<input name="reviewer" placeholder="Your name" required style="max-width:140px">'
+            f'<button class="btn human sm" name="action" value="confirm">Countersign</button>'
+            f'<button class="btn ghost sm" name="action" value="dispute">Dispute</button>'
+            f'</form></div></div>')
+    return (
+        '<h2 style="margin-top:1.6rem">Awaiting your countersignature</h2>'
+        '<p class="muted" style="max-width:62rem;margin:.2rem 0 .8rem">An AI acting as RA has '
+        'already read the evidence and drafted every decision below, recorded honestly as '
+        '<code>ai-ra:</code> rather than as a person. <b>Confirming is what puts a human behind '
+        'the checkpoint</b> &mdash; the thing this project claims and has never had. Your name '
+        'is appended; the AI&rsquo;s draft is never overwritten, so both stay in the record. '
+        'Dispute anything you disagree with and it is flagged rather than quietly kept.'
+        + rows)
+
+
+@app.post("/review/countersign")
+def r_countersign(reviewer: str = Form(), cid: int = Form(default=0),
+                  version: int = Form(default=0), action: str = Form(default="confirm")):
+    rid = f"webui-{uuid.uuid4().hex[:6]}"
+    who = _actor(reviewer)
+    with get_connection() as c:
+        if cid:
+            row = c.execute("SELECT resolved_by FROM contradictions WHERE id=%s", (cid,)).fetchone()
+            mark = f"{row['resolved_by']} + countersigned {who}" if action == "confirm" \
+                else f"{row['resolved_by']} + DISPUTED by {who}"
+            c.execute("UPDATE contradictions SET resolved_by=%s WHERE id=%s", (mark, cid))
+            subject, cp = f"contradiction-{cid}", "HITL-3"
+        else:
+            row = c.execute("SELECT signed_off_by FROM programme_theories WHERE version=%s",
+                            (version,)).fetchone()
+            mark = f"{row['signed_off_by']} + countersigned {who}" if action == "confirm" \
+                else f"{row['signed_off_by']} + DISPUTED by {who}"
+            c.execute("UPDATE programme_theories SET signed_off_by=%s WHERE version=%s",
+                      (mark, version))
+            subject, cp = f"theory-v{version}", "HITL-4"
+        c.execute("INSERT INTO hitl_feedback (checkpoint,subject_ref,action,feedback,payload,run_id) "
+                  "VALUES (%s,%s,%s,%s,'{}',%s)",
+                  (cp, subject, "approve" if action == "confirm" else "reject",
+                   f"{action} by {who}", rid))
+    log_audit_event(rid, who, f"webui_countersign_{cp.lower()}", subject_ref=subject)
+    return RedirectResponse("/review", 303)
+
+
 @app.get("/results", response_class=HTMLResponse)
 def results():
     with get_connection() as c:

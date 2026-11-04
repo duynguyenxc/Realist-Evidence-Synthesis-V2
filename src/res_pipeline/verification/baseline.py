@@ -32,6 +32,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field
 
+from res_pipeline.core.prompts import P
 from res_pipeline.core.db import get_connection
 from res_pipeline.core.llm import call_structured
 from res_pipeline.verification.metrics import (
@@ -106,10 +107,11 @@ def _score_concepts(concepts: list[BaselineConcept], run_id: str) -> dict:
             batch = call_structured(
                 tier="extraction_verifier",
                 system_prompt=(
-                    "You are scoring entity coverage for a systematic-review verification. For "
+                    P("baseline.1",
+                "You are scoring entity coverage for a systematic-review verification. For "
                     "each GOLD entity, decide whether any EXTRACTED concept expresses the SAME "
                     "underlying construct. Semantic equivalence, not string match. Do NOT match "
-                    "merely adjacent or broader concepts."
+                    "merely adjacent or broader concepts.")
                 ),
                 user_prompt=(
                     "GOLD ENTITIES:\n"
@@ -141,7 +143,8 @@ def run_single_call_baseline(run_id: str, out_dir: Path) -> dict:
     """One prompt, all 28 papers, no pipeline. The counterfactual a reviewer will name."""
     corpus, n_studies = _corpus_text()
     review = call_structured(
-        tier="extraction", system_prompt=_SINGLE_CALL_SYSTEM,
+        tier="extraction", system_prompt=P("baseline.2",
+                _SINGLE_CALL_SYSTEM),
         user_prompt=(f"{n_studies} PRIMARY STUDIES (each truncated to "
                      f"{_CHARS_PER_PAPER:,} characters):\n\n{corpus}\n\n"
                      "Produce the realist synthesis now."),
