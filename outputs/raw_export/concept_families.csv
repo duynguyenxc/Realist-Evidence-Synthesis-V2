@@ -1,0 +1,184 @@
+canonical_id,entity_type,family_id,family_label,run_id,created_at
+mech:simulated-gp-consultations,Mechanism_Resource,fam:mech:simulation-and-case-based-practice,Simulation and case-based practice,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:simulation-scenarios,Mechanism_Resource,fam:mech:simulation-and-case-based-practice,Simulation and case-based practice,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:timed-case-challenge-with-feedback,Mechanism_Resource,fam:mech:simulation-and-case-based-practice,Simulation and case-based practice,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:formative-assessment,Intervention,fam:inte:feedback-assessment-and-error-review,"Feedback, assessment, and error review",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:reduced-feedback-similar-case-reasoning,Intervention,fam:inte:feedback-assessment-and-error-review,"Feedback, assessment, and error review",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:diagnostic-error-case-viewing,Intervention,fam:inte:feedback-assessment-and-error-review,"Feedback, assessment, and error review",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:reasoning-pathway-review,Mechanism_Resource,fam:mech:self-explanation-and-pathway-review,Self-explanation and pathway review,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:self-explanation-prompts,Mechanism_Resource,fam:mech:self-explanation-and-pathway-review,Self-explanation and pathway review,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:time-compressed-virtual-patient-scenarios,Intervention,fam:inte:virtual-patient-simulation,virtual patient simulation,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:video-enriched-virtual-patient-cases,Intervention,fam:inte:virtual-patient-simulation,virtual patient simulation,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:diagnostic-error-reduction,Outcome,fam:outc:errors-barriers-and-corrective-support,"Errors, barriers, and corrective support",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:diagnostic-reasoning-barriers,Outcome,fam:outc:errors-barriers-and-corrective-support,"Errors, barriers, and corrective support",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:diagnostic-support-and-correction,Outcome,fam:outc:errors-barriers-and-corrective-support,"Errors, barriers, and corrective support",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:feature-bias-resistance,Outcome,fam:outc:errors-barriers-and-corrective-support,"Errors, barriers, and corrective support",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:suggestion-effects,Outcome,fam:outc:errors-barriers-and-corrective-support,"Errors, barriers, and corrective support",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:test-enhanced-case-presentation,Intervention,fam:inte:test-enhanced-case-work,test-enhanced case work,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:ecg-presentation-manipulation,Intervention,fam:inte:visual-and-image-based-training,Visual and image-based training,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:paired-image-training,Intervention,fam:inte:visual-and-image-based-training,Visual and image-based training,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:diagnostic-retention-and-delayed-effects,Outcome,fam:outc:transfer-retention-and-case-effects,"Transfer, retention, and case effects",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:diagnostic-transfer,Outcome,fam:outc:transfer-retention-and-case-effects,"Transfer, retention, and case effects",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:case-familiarity-effects,Outcome,fam:outc:transfer-retention-and-case-effects,"Transfer, retention, and case effects",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:lay-descriptions-resembled-standard-features,Outcome,fam:outc:transfer-retention-and-case-effects,"Transfer, retention, and case effects",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:decision-tree-virtual-patient-cases,Intervention,fam:inte:simulation-and-virtual-patient-environments,Simulation and virtual patient environments,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:evpaeds-intervention,Intervention,fam:inte:simulation-and-virtual-patient-environments,Simulation and virtual patient environments,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:self-directed-virtual-patient-access,Intervention,fam:inte:simulation-and-virtual-patient-environments,Simulation and virtual patient environments,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:self-directed-virtual-patient-cases,Intervention,fam:inte:simulation-and-virtual-patient-environments,Simulation and virtual patient environments,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:simulated-referral-task,Intervention,fam:inte:simulation-and-virtual-patient-environments,Simulation and virtual patient environments,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:simulated-ward-environment,Intervention,fam:inte:simulation-and-virtual-patient-environments,Simulation and virtual patient environments,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:voluntary-engagement-game-design,Mechanism_Resource,fam:mech:motivating-game-like-engagement,Motivating game-like engagement,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:cognitive-load-and-support,Context,fam:cont:support-scaffolding-and-information-load,"Support, scaffolding, and information load",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:clinical-case-summaries,Context,fam:cont:support-scaffolding-and-information-load,"Support, scaffolding, and information load",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:students-challenged-by-patient-information-navigation,Context,fam:cont:support-scaffolding-and-information-load,"Support, scaffolding, and information load",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:assessment-and-feedback-structure,Mechanism_Resource,fam:mech:feedback-and-assessment,Feedback and assessment,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:diagnostic-suggestion-feedback,Mechanism_Resource,fam:mech:feedback-and-assessment,Feedback and assessment,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:immediate-answer-feedback,Mechanism_Resource,fam:mech:feedback-and-assessment,Feedback and assessment,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:immediate-feedback,Mechanism_Resource,fam:mech:feedback-and-assessment,Feedback and assessment,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:immediate-reasoning-feedback,Mechanism_Resource,fam:mech:feedback-and-assessment,Feedback and assessment,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:item-level-feedback,Mechanism_Resource,fam:mech:feedback-and-assessment,Feedback and assessment,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:official-diagnosis-feedback,Mechanism_Resource,fam:mech:feedback-and-assessment,Feedback and assessment,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:laboratory-data-insight,Mechanism_Response,fam:mech:data-interpretation-and-evidence-use,Data interpretation and evidence use,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:worked-examples,Mechanism_Resource,fam:mech:worked-example-support,Worked-example support,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:case-based-reasoning-seminar,Intervention,fam:inte:case-based-and-worked-example-learning,Case-based and worked-example learning,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:casebook,Intervention,fam:inte:case-based-and-worked-example-learning,Case-based and worked-example learning,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:computer-assisted-key-feature-seminar,Intervention,fam:inte:case-based-and-worked-example-learning,Case-based and worked-example learning,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:expert-examples,Intervention,fam:inte:case-based-and-worked-example-learning,Case-based and worked-example learning,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:integrated-cases-section-course,Intervention,fam:inte:case-based-and-worked-example-learning,Case-based and worked-example learning,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:multiple-case-learning-task,Intervention,fam:inte:case-based-and-worked-example-learning,Case-based and worked-example learning,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:resident-se-examples,Intervention,fam:inte:case-based-and-worked-example-learning,Case-based and worked-example learning,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:similar-case-series,Intervention,fam:inte:case-based-and-worked-example-learning,Case-based and worked-example learning,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:cognitive-load,Mechanism_Response,fam:mech:cognitive-load-and-confusion,Cognitive load and confusion,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:cognitive-overload-or-confusion,Mechanism_Response,fam:mech:cognitive-load-and-confusion,Cognitive load and confusion,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:expert-reasoning-comprehension-difficulty,Mechanism_Response,fam:mech:cognitive-load-and-confusion,Cognitive load and confusion,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:case-difficulty-and-complexity,Context,fam:cont:case-and-task-characteristics,Case and task characteristics,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:case-familiarity,Context,fam:cont:case-and-task-characteristics,Case and task characteristics,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:uncommon-diagnosis-cases,Context,fam:cont:case-and-task-characteristics,Case and task characteristics,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:heart-failure-cases,Context,fam:cont:case-and-task-characteristics,Case and task characteristics,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:dermatology-diagnosis,Context,fam:cont:case-and-task-characteristics,Case and task characteristics,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:ecg-diagnostic-categories,Context,fam:cont:case-and-task-characteristics,Case and task characteristics,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:ecg-diagnosticians,Context,fam:cont:case-and-task-characteristics,Case and task characteristics,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:systolic-murmur-diagnosis-task,Context,fam:cont:case-and-task-characteristics,Case and task characteristics,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:single-best-diagnosis-request,Mechanism_Resource,fam:mech:prompted-diagnostic-reasoning,Prompted diagnostic reasoning,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:speeded-diagnosis-instruction,Mechanism_Resource,fam:mech:prompted-diagnostic-reasoning,Prompted diagnostic reasoning,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:structured-referral-prompt,Mechanism_Resource,fam:mech:prompted-diagnostic-reasoning,Prompted diagnostic reasoning,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:bias-and-error-reflection,Mechanism_Resource,fam:mech:bias-and-metacognition,Bias and metacognition,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:bias-countering-strategy,Mechanism_Resource,fam:mech:bias-and-metacognition,Bias and metacognition,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:metacognitive-bias-identification,Mechanism_Resource,fam:mech:bias-and-metacognition,Bias and metacognition,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:ecg-exemplar-exposure,Mechanism_Resource,fam:mech:examples-and-modeling,Examples and modeling,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:errorful-peer-examples,Mechanism_Resource,fam:mech:examples-and-modeling,Examples and modeling,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:labelled-exposure,Mechanism_Resource,fam:mech:examples-and-modeling,Examples and modeling,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:near-peer-reasoning-examples,Mechanism_Resource,fam:mech:examples-and-modeling,Examples and modeling,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:reasoning-process-modeling,Mechanism_Resource,fam:mech:examples-and-modeling,Examples and modeling,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:self-explanation-examples,Mechanism_Resource,fam:mech:examples-and-modeling,Examples and modeling,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:cardiac-physical-diagnosis-teaching,Intervention,fam:inte:clinical-exposure-and-apprenticeship,Clinical exposure and apprenticeship,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:cfs-training,Intervention,fam:inte:clinical-exposure-and-apprenticeship,Clinical exposure and apprenticeship,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:fy1-shadowing-programme,Intervention,fam:inte:clinical-exposure-and-apprenticeship,Clinical exposure and apprenticeship,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:expertise-practice,Intervention,fam:inte:clinical-exposure-and-apprenticeship,Clinical exposure and apprenticeship,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:analytic-response-time,Outcome,fam:outc:efficiency-speed-and-response-time,"Efficiency, speed, and response time",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:diagnostic-efficiency,Outcome,fam:outc:efficiency-speed-and-response-time,"Efficiency, speed, and response time",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:diagnostic-accuracy-improvement,Outcome,fam:outc:diagnostic-accuracy-and-performance,Diagnostic accuracy and performance,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:diagnostic-performance-unchanged,Outcome,fam:outc:diagnostic-accuracy-and-performance,Diagnostic accuracy and performance,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:improved-diagnostic-accuracy,Outcome,fam:outc:diagnostic-accuracy-and-performance,Diagnostic accuracy and performance,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:improved-performance-beyond-no-instructions,Outcome,fam:outc:diagnostic-accuracy-and-performance,Diagnostic accuracy and performance,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:lower-accuracy-with-explicit-instruction,Outcome,fam:outc:diagnostic-accuracy-and-performance,Diagnostic accuracy and performance,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:lower-diagnostic-accuracy-relative-to-analytic-reasoning,Outcome,fam:outc:diagnostic-accuracy-and-performance,Diagnostic accuracy and performance,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:poorer-diagnostic-performance,Outcome,fam:outc:diagnostic-accuracy-and-performance,Diagnostic accuracy and performance,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:mcq-performance,Outcome,fam:outc:diagnostic-accuracy-and-performance,Diagnostic accuracy and performance,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:presentation-control-and-repetition,Mechanism_Resource,fam:mech:presentation-control-and-repetition,Presentation control and repetition,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:contrastive-diagnostic-scaffolding,Mechanism_Resource,fam:mech:contrastive-comparison-and-feature-analysis,Contrastive comparison and feature analysis,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:feature-and-similarity-instructions,Mechanism_Resource,fam:mech:contrastive-comparison-and-feature-analysis,Contrastive comparison and feature analysis,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:feature-comparison-support,Mechanism_Resource,fam:mech:contrastive-comparison-and-feature-analysis,Contrastive comparison and feature analysis,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:first-impression-similarity-prompt,Mechanism_Resource,fam:mech:contrastive-comparison-and-feature-analysis,Contrastive comparison and feature analysis,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:key-feature-prompts,Mechanism_Resource,fam:mech:contrastive-comparison-and-feature-analysis,Contrastive comparison and feature analysis,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:normal-abnormal-image-pairs,Mechanism_Resource,fam:mech:contrastive-comparison-and-feature-analysis,Contrastive comparison and feature analysis,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:schema-based-features,Mechanism_Resource,fam:mech:contrastive-comparison-and-feature-analysis,Contrastive comparison and feature analysis,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:schema-grouping,Mechanism_Resource,fam:mech:contrastive-comparison-and-feature-analysis,Contrastive comparison and feature analysis,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:diagnostic-reasoning-approach,Context,fam:cont:reasoning-process-and-strategy,Reasoning process and strategy,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:diagnostic-back-tracing,Context,fam:cont:reasoning-process-and-strategy,Reasoning process and strategy,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:diagnostic-error-records,Context,fam:cont:reasoning-process-and-strategy,Reasoning process and strategy,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:decision-making-preparedness,Context,fam:cont:knowledge-and-preparedness,Knowledge and preparedness,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:knowledge-deficits,Context,fam:cont:knowledge-and-preparedness,Knowledge and preparedness,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:structured-diagnostic-tools-familiarity,Context,fam:cont:knowledge-and-preparedness,Knowledge and preparedness,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:curriculum-and-assessment-content,Context,fam:cont:knowledge-and-preparedness,Knowledge and preparedness,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:laboratory-career-interest,Context,fam:cont:knowledge-and-preparedness,Knowledge and preparedness,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:assessment-and-measurement-issues,Outcome,fam:outc:measurement-and-null-limited-effects,Measurement and null/limited effects,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:limited-cfs-benefit,Outcome,fam:outc:measurement-and-null-limited-effects,Measurement and null/limited effects,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:self-explanation-diagnostic-case-solving,Intervention,fam:inte:self-explanation-diagnostic-case-solving,inte:self-explanation-diagnostic-case-solving,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:shadowing-with-learner-follows,Mechanism_Resource,fam:mech:guided-observation-and-shadowing,Guided observation and shadowing,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:unprompted-recordings,Mechanism_Resource,fam:mech:guided-observation-and-shadowing,Guided observation and shadowing,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:analytic-training,Intervention,fam:inte:reasoning-instruction-and-strategy-coaching,Reasoning instruction and strategy coaching,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:clinical-reasoning-reflection-teaching,Intervention,fam:inte:reasoning-instruction-and-strategy-coaching,Reasoning instruction and strategy coaching,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:cognitive-forcing-instruction,Intervention,fam:inte:reasoning-instruction-and-strategy-coaching,Reasoning instruction and strategy coaching,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:consultation-skills-framework,Intervention,fam:inte:reasoning-instruction-and-strategy-coaching,Reasoning instruction and strategy coaching,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:contrastive-learning,Intervention,fam:inte:reasoning-instruction-and-strategy-coaching,Reasoning instruction and strategy coaching,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:diagnostic-hypothesis-querying,Intervention,fam:inte:reasoning-instruction-and-strategy-coaching,Reasoning instruction and strategy coaching,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:differential-diagnosis-practice,Intervention,fam:inte:reasoning-instruction-and-strategy-coaching,Reasoning instruction and strategy coaching,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:reasoning-instruction,Intervention,fam:inte:reasoning-instruction-and-strategy-coaching,Reasoning instruction and strategy coaching,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:reasoning-process-instruction,Intervention,fam:inte:reasoning-instruction-and-strategy-coaching,Reasoning instruction and strategy coaching,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:schema-based-instruction,Intervention,fam:inte:reasoning-instruction-and-strategy-coaching,Reasoning instruction and strategy coaching,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:structured-case-based-reasoning,Intervention,fam:inte:reasoning-instruction-and-strategy-coaching,Reasoning instruction and strategy coaching,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:reasoning-strategy-balance-and-bias,Mechanism_Response,fam:mech:strategy-calibration-and-bias-correction,Strategy calibration and bias correction,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:reasoning-strategy-shift,Mechanism_Response,fam:mech:strategy-calibration-and-bias-correction,Strategy calibration and bias correction,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:oversearching,Mechanism_Response,fam:mech:strategy-calibration-and-bias-correction,Strategy calibration and bias correction,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:reduced-incorrect-feature-identification,Mechanism_Response,fam:mech:strategy-calibration-and-bias-correction,Strategy calibration and bias correction,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:diagnostic-error-analysis,Mechanism_Response,fam:mech:strategy-calibration-and-bias-correction,Strategy calibration and bias correction,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:control-condition,Intervention,fam:inte:control-and-setting-modifiers,Control and setting modifiers,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:particular-courses-or-instructors,Intervention,fam:inte:control-and-setting-modifiers,Control and setting modifiers,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:clinical-reasoning-confidence-and-affect,Mechanism_Response,fam:mech:confidence-affect-and-engagement,"Confidence, affect, and engagement",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:communication-confidence,Mechanism_Response,fam:mech:confidence-affect-and-engagement,"Confidence, affect, and engagement",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:game-engagement,Mechanism_Response,fam:mech:confidence-affect-and-engagement,"Confidence, affect, and engagement",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:reduced-engagement-or-elaboration,Mechanism_Response,fam:mech:confidence-affect-and-engagement,"Confidence, affect, and engagement",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:reduced-fear-or-premature-closure,Mechanism_Response,fam:mech:confidence-affect-and-engagement,"Confidence, affect, and engagement",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:biliary-decision-practice,Mechanism_Resource,fam:mech:case-practice-and-exposure,Case practice and exposure,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:case-exposure-and-variation,Mechanism_Resource,fam:mech:case-practice-and-exposure,Case practice and exposure,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:clinical-reasoning-practice,Mechanism_Resource,fam:mech:case-practice-and-exposure,Case practice and exposure,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:mastery-practice,Mechanism_Resource,fam:mech:case-practice-and-exposure,Case practice and exposure,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:mixed-case-practice,Mechanism_Resource,fam:mech:case-practice-and-exposure,Case practice and exposure,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:multiple-similar-cases,Mechanism_Resource,fam:mech:case-practice-and-exposure,Case practice and exposure,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:real-case-practice,Mechanism_Resource,fam:mech:case-practice-and-exposure,Case practice and exposure,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:self-directed-case-access,Mechanism_Resource,fam:mech:case-practice-and-exposure,Case practice and exposure,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:worked-example-learning-session,Intervention,fam:inte:worked-examples,worked examples,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:worked-examples,Intervention,fam:inte:worked-examples,worked examples,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:clinical-knowledge-development,Mechanism_Response,fam:mech:knowledge-development-and-retention,Knowledge development and retention,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:knowledge-storage-and-change,Mechanism_Response,fam:mech:knowledge-development-and-retention,Knowledge development and retention,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:positive-adaptation-and-learning,Mechanism_Response,fam:mech:knowledge-development-and-retention,Knowledge development and retention,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:tacit-pick-up-approach,Intervention,fam:inte:implicit-or-opportunistic-strategy-learning,implicit or opportunistic strategy learning,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:whatever-strategy-comes-naturally-prompt,Intervention,fam:inte:implicit-or-opportunistic-strategy-learning,implicit or opportunistic strategy learning,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:clinical-reasoning-improvement,Outcome,fam:outc:reasoning-skill-competence-and-learning,"Reasoning skill, competence, and learning",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:diagnostic-skill-development,Outcome,fam:outc:reasoning-skill-competence-and-learning,"Reasoning skill, competence, and learning",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:improved-diagnostic-competence,Outcome,fam:outc:reasoning-skill-competence-and-learning,"Reasoning skill, competence, and learning",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:instruction-effects-on-reasoning,Outcome,fam:outc:reasoning-skill-competence-and-learning,"Reasoning skill, competence, and learning",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:learning-and-schema-integration,Outcome,fam:outc:reasoning-skill-competence-and-learning,"Reasoning skill, competence, and learning",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:structured-knowledge-and-reasoning,Outcome,fam:outc:reasoning-skill-competence-and-learning,"Reasoning skill, competence, and learning",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:worked-example-learning-benefits,Outcome,fam:outc:reasoning-skill-competence-and-learning,"Reasoning skill, competence, and learning",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:free-choice-reasoning-prompt,Mechanism_Resource,fam:mech:prompting-and-reasoning-cues,Prompting and reasoning cues,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:hypothesis-prompting,Mechanism_Resource,fam:mech:prompting-and-reasoning-cues,Prompting and reasoning cues,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:mnemonic-decision-prompt,Mechanism_Resource,fam:mech:prompting-and-reasoning-cues,Prompting and reasoning cues,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:reasoning-clarification-prompts,Mechanism_Resource,fam:mech:prompting-and-reasoning-cues,Prompting and reasoning cues,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:reasoning-focus-cues,Mechanism_Resource,fam:mech:prompting-and-reasoning-cues,Prompting and reasoning cues,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:medical-student-training-stage,Context,fam:cont:learner-stage-and-expertise,Learner stage and expertise,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:medical-students,Context,fam:cont:learner-stage-and-expertise,Learner stage and expertise,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:novice-learners,Context,fam:cont:learner-stage-and-expertise,Learner stage and expertise,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:novice-learners-in-specific-domains,Context,fam:cont:learner-stage-and-expertise,Learner stage and expertise,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:novice-undergraduate-learners,Context,fam:cont:learner-stage-and-expertise,Learner stage and expertise,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:undergraduate-medical-students,Context,fam:cont:learner-stage-and-expertise,Learner stage and expertise,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:expertise-comparison,Context,fam:cont:learner-stage-and-expertise,Learner stage and expertise,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:diagnostic-training-and-experience,Context,fam:cont:learner-stage-and-expertise,Learner stage and expertise,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:clinical-experience-limitations,Context,fam:cont:learner-stage-and-expertise,Learner stage and expertise,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:video-game-experienced-clinicians,Context,fam:cont:learner-stage-and-expertise,Learner stage and expertise,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:communication-and-handover-use,Outcome,fam:outc:communication-and-simulation-outcomes,Communication and simulation outcomes,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:simulation-and-preparation,Outcome,fam:outc:communication-and-simulation-outcomes,Communication and simulation outcomes,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:supervised-student-reasoning-consultation,Intervention,fam:inte:guided-reasoning-consultation,guided reasoning consultation,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:tripartite-clinical-decision-making-teaching,Intervention,fam:inte:guided-reasoning-consultation,guided reasoning consultation,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:am-i-hero-now-decision-tool,Intervention,fam:inte:serious-games-and-digital-decision-aids,Serious games and digital decision aids,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:medialis-serious-game,Intervention,fam:inte:serious-games-and-digital-decision-aids,Serious games and digital decision aids,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+inte:serious-game,Intervention,fam:inte:serious-games-and-digital-decision-aids,Serious games and digital decision aids,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:active-reasoning-and-self-explanation,Mechanism_Response,fam:mech:reasoning-activation-and-self-explanation,Reasoning activation and self-explanation,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:clinical-reasoning-activation,Mechanism_Response,fam:mech:reasoning-activation-and-self-explanation,Reasoning activation and self-explanation,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:self-explanation,Mechanism_Response,fam:mech:reasoning-activation-and-self-explanation,Reasoning activation and self-explanation,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:knowledge-elaboration,Mechanism_Response,fam:mech:reasoning-activation-and-self-explanation,Reasoning activation and self-explanation,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+mech:reasoning-insight,Mechanism_Response,fam:mech:reasoning-activation-and-self-explanation,Reasoning activation and self-explanation,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+cont:assessment-and-answer-format,Context,fam:cont:assessment-and-format-effects,Assessment and format effects,extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:diagnostic-reasoning-confidence,Outcome,fam:outc:confidence-engagement-and-uptake,"Confidence, engagement, and uptake",extract-fb045429,2026-09-30T22:26:47.477607+07:00
+outc:learner-engagement-and-uptake,Outcome,fam:outc:confidence-engagement-and-uptake,"Confidence, engagement, and uptake",extract-fb045429,2026-09-30T22:26:47.477607+07:00

@@ -1,0 +1,601 @@
+[
+ {
+  "id": 1,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "outcome_concept": "fam:outc:diagnostic-accuracy-and-performance",
+  "polarity": "positive",
+  "study_ids": [
+   "S003",
+   "S005",
+   "S008",
+   "S017",
+   "S019"
+  ],
+  "cmoc_ids": [
+   "S003-cmoc-a0fd62",
+   "S005-cmoc-02aa97",
+   "S008-cmoc-4644e2",
+   "S017-cmoc-0d224c",
+   "S017-cmoc-1c92e6",
+   "S019-cmoc-776181"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 2,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "outcome_concept": "fam:outc:diagnostic-accuracy-and-performance",
+  "polarity": "positive",
+  "study_ids": [
+   "S003",
+   "S005",
+   "S017",
+   "S019",
+   "S021"
+  ],
+  "cmoc_ids": [
+   "S003-cmoc-a0fd62",
+   "S005-cmoc-02aa97",
+   "S017-cmoc-0d224c",
+   "S017-cmoc-1c92e6",
+   "S019-cmoc-776181",
+   "S021-cmoc-a278d2"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 3,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:inte:case-based-and-worked-example-learning",
+  "outcome_concept": "fam:outc:reasoning-skill-competence-and-learning",
+  "polarity": "positive",
+  "study_ids": [
+   "S007",
+   "S010",
+   "S018",
+   "S023",
+   "S027"
+  ],
+  "cmoc_ids": [
+   "S007-cmoc-419908",
+   "S010-cmoc-075eb2",
+   "S018-cmoc-4a3129",
+   "S023-cmoc-13194d",
+   "S023-cmoc-d1780a",
+   "S023-cmoc-e74ea7",
+   "S027-cmoc-8f9b93"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 4,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "outcome_concept": "fam:outc:reasoning-skill-competence-and-learning",
+  "polarity": "positive",
+  "study_ids": [
+   "S008",
+   "S016",
+   "S017",
+   "S021",
+   "S028"
+  ],
+  "cmoc_ids": [
+   "S008-cmoc-22e879",
+   "S016-cmoc-de8805",
+   "S017-cmoc-38023d",
+   "S021-cmoc-45586b",
+   "S028-cmoc-0a511e"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 5,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:mech:case-practice-and-exposure",
+  "outcome_concept": "fam:outc:reasoning-skill-competence-and-learning",
+  "polarity": "positive",
+  "study_ids": [
+   "S011",
+   "S014",
+   "S018",
+   "S022",
+   "S023"
+  ],
+  "cmoc_ids": [
+   "S011-cmoc-3014e9",
+   "S014-cmoc-de591a",
+   "S018-cmoc-4a3129",
+   "S018-cmoc-d695ff",
+   "S022-cmoc-943a18",
+   "S023-cmoc-13194d",
+   "S023-cmoc-d1780a"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 6,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:mech:examples-and-modeling",
+  "outcome_concept": "fam:outc:reasoning-skill-competence-and-learning",
+  "polarity": "positive",
+  "study_ids": [
+   "S007",
+   "S021",
+   "S023",
+   "S028"
+  ],
+  "cmoc_ids": [
+   "S007-cmoc-419908",
+   "S021-cmoc-493325",
+   "S023-cmoc-13194d",
+   "S028-cmoc-0a511e"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 7,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "outcome_concept": "fam:outc:reasoning-skill-competence-and-learning",
+  "polarity": "positive",
+  "study_ids": [
+   "S016",
+   "S017",
+   "S021",
+   "S027"
+  ],
+  "cmoc_ids": [
+   "S016-cmoc-de8805",
+   "S017-cmoc-38023d",
+   "S021-cmoc-45586b",
+   "S021-cmoc-493325",
+   "S021-cmoc-a278d2",
+   "S027-cmoc-729257"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 8,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "outcome_concept": "fam:outc:transfer-retention-and-case-effects",
+  "polarity": "positive",
+  "study_ids": [
+   "S005",
+   "S016",
+   "S021"
+  ],
+  "cmoc_ids": [
+   "S005-cmoc-02aa97",
+   "S016-cmoc-de8805",
+   "S021-cmoc-493325"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 9,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:mech:prompting-and-reasoning-cues",
+  "outcome_concept": "fam:outc:reasoning-skill-competence-and-learning",
+  "polarity": "positive",
+  "study_ids": [
+   "S008",
+   "S010",
+   "S028"
+  ],
+  "cmoc_ids": [
+   "S008-cmoc-22e879",
+   "S010-cmoc-075eb2",
+   "S028-cmoc-cb3c24"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 10,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:mech:feedback-and-assessment",
+  "outcome_concept": "fam:outc:reasoning-skill-competence-and-learning",
+  "polarity": "positive",
+  "study_ids": [
+   "S018",
+   "S023",
+   "S027"
+  ],
+  "cmoc_ids": [
+   "S018-cmoc-d695ff",
+   "S023-cmoc-e74ea7",
+   "S027-cmoc-729257",
+   "S027-cmoc-8f9b93"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 11,
+  "context_concept": "fam:cont:case-and-task-characteristics",
+  "driver_concept": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "outcome_concept": "fam:outc:diagnostic-accuracy-and-performance",
+  "polarity": "positive",
+  "study_ids": [
+   "S004",
+   "S005"
+  ],
+  "cmoc_ids": [
+   "S004-cmoc-3b264f",
+   "S005-cmoc-7f4d16"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 12,
+  "context_concept": "fam:cont:case-and-task-characteristics",
+  "driver_concept": "fam:inte:visual-and-image-based-training",
+  "outcome_concept": "fam:outc:diagnostic-accuracy-and-performance",
+  "polarity": "positive",
+  "study_ids": [
+   "S004",
+   "S005"
+  ],
+  "cmoc_ids": [
+   "S004-cmoc-3b264f",
+   "S005-cmoc-26bf0a"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 13,
+  "context_concept": "fam:cont:case-and-task-characteristics",
+  "driver_concept": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "outcome_concept": "fam:outc:diagnostic-accuracy-and-performance",
+  "polarity": "positive",
+  "study_ids": [
+   "S004",
+   "S005"
+  ],
+  "cmoc_ids": [
+   "S004-cmoc-3b264f",
+   "S005-cmoc-7f4d16"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 14,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:inte:implicit-or-opportunistic-strategy-learning",
+  "outcome_concept": "fam:outc:errors-barriers-and-corrective-support",
+  "polarity": "negative",
+  "study_ids": [
+   "S004",
+   "S028"
+  ],
+  "cmoc_ids": [
+   "S004-cmoc-7bd054",
+   "S028-cmoc-dcd47e"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 15,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "outcome_concept": "fam:outc:errors-barriers-and-corrective-support",
+  "polarity": "negative",
+  "study_ids": [
+   "S004",
+   "S021"
+  ],
+  "cmoc_ids": [
+   "S004-cmoc-7bd054",
+   "S021-cmoc-a22fb7"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 16,
+  "context_concept": "fam:cont:case-and-task-characteristics",
+  "driver_concept": "fam:mech:feedback-and-assessment",
+  "outcome_concept": "fam:outc:errors-barriers-and-corrective-support",
+  "polarity": "negative",
+  "study_ids": [
+   "S004",
+   "S006"
+  ],
+  "cmoc_ids": [
+   "S004-cmoc-c241f2",
+   "S006-cmoc-5db6ab"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 17,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "outcome_concept": "fam:outc:transfer-retention-and-case-effects",
+  "polarity": "positive",
+  "study_ids": [
+   "S005",
+   "S016"
+  ],
+  "cmoc_ids": [
+   "S005-cmoc-02aa97",
+   "S016-cmoc-de8805"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 18,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:inte:control-and-setting-modifiers",
+  "outcome_concept": "fam:outc:diagnostic-accuracy-and-performance",
+  "polarity": "negative",
+  "study_ids": [
+   "S005",
+   "S019"
+  ],
+  "cmoc_ids": [
+   "S005-cmoc-b59748",
+   "S019-cmoc-b1cfa7"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 19,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:inte:simulation-and-virtual-patient-environments",
+  "outcome_concept": "fam:outc:confidence-engagement-and-uptake",
+  "polarity": "positive",
+  "study_ids": [
+   "S011",
+   "S014"
+  ],
+  "cmoc_ids": [
+   "S011-cmoc-1f928d",
+   "S014-cmoc-de591a"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 20,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:mech:simulation-and-case-based-practice",
+  "outcome_concept": "fam:outc:reasoning-skill-competence-and-learning",
+  "polarity": "positive",
+  "study_ids": [
+   "S011",
+   "S015"
+  ],
+  "cmoc_ids": [
+   "S011-cmoc-f020cb",
+   "S015-cmoc-8c0491"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 21,
+  "context_concept": "fam:cont:case-and-task-characteristics",
+  "driver_concept": "fam:inte:self-explanation-diagnostic-case-solving",
+  "outcome_concept": "fam:outc:diagnostic-accuracy-and-performance",
+  "polarity": "positive",
+  "study_ids": [
+   "S013",
+   "S025"
+  ],
+  "cmoc_ids": [
+   "S013-cmoc-ea1bd4",
+   "S025-cmoc-a5bac6"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 22,
+  "context_concept": "fam:cont:case-and-task-characteristics",
+  "driver_concept": "fam:mech:self-explanation-and-pathway-review",
+  "outcome_concept": "fam:outc:diagnostic-accuracy-and-performance",
+  "polarity": "positive",
+  "study_ids": [
+   "S013",
+   "S025"
+  ],
+  "cmoc_ids": [
+   "S013-cmoc-ea1bd4",
+   "S025-cmoc-a5bac6"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 23,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:inte:guided-reasoning-consultation",
+  "outcome_concept": "fam:outc:reasoning-skill-competence-and-learning",
+  "polarity": "positive",
+  "study_ids": [
+   "S015",
+   "S028"
+  ],
+  "cmoc_ids": [
+   "S015-cmoc-8c0491",
+   "S028-cmoc-cb3c24"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 24,
+  "context_concept": "fam:cont:case-and-task-characteristics",
+  "driver_concept": "fam:inte:clinical-exposure-and-apprenticeship",
+  "outcome_concept": "fam:outc:diagnostic-accuracy-and-performance",
+  "polarity": "negative",
+  "study_ids": [
+   "S017",
+   "S024"
+  ],
+  "cmoc_ids": [
+   "S017-cmoc-0af9d0",
+   "S024-cmoc-c87221"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 25,
+  "context_concept": "fam:cont:case-and-task-characteristics",
+  "driver_concept": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "outcome_concept": "fam:outc:diagnostic-accuracy-and-performance",
+  "polarity": "negative",
+  "study_ids": [
+   "S017",
+   "S024"
+  ],
+  "cmoc_ids": [
+   "S017-cmoc-0af9d0",
+   "S024-cmoc-c87221"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 26,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "outcome_concept": "fam:outc:diagnostic-accuracy-and-performance",
+  "polarity": "negative",
+  "study_ids": [
+   "S017",
+   "S024"
+  ],
+  "cmoc_ids": [
+   "S017-cmoc-32739a",
+   "S024-cmoc-bc7021"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 27,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:inte:case-based-and-worked-example-learning",
+  "outcome_concept": "fam:outc:reasoning-skill-competence-and-learning",
+  "polarity": "negative",
+  "study_ids": [
+   "S018",
+   "S025"
+  ],
+  "cmoc_ids": [
+   "S018-cmoc-153de8",
+   "S025-cmoc-420a84"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 28,
+  "context_concept": "fam:cont:learner-stage-and-expertise",
+  "driver_concept": "fam:inte:feedback-assessment-and-error-review",
+  "outcome_concept": "fam:outc:reasoning-skill-competence-and-learning",
+  "polarity": "positive",
+  "study_ids": [
+   "S018",
+   "S027"
+  ],
+  "cmoc_ids": [
+   "S018-cmoc-d695ff",
+   "S027-cmoc-729257"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 29,
+  "context_concept": "fam:cont:case-and-task-characteristics",
+  "driver_concept": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "outcome_concept": "fam:outc:errors-barriers-and-corrective-support",
+  "polarity": "negative",
+  "study_ids": [
+   "S019",
+   "S024"
+  ],
+  "cmoc_ids": [
+   "S019-cmoc-c397a4",
+   "S024-cmoc-c87221"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 30,
+  "context_concept": "fam:cont:case-and-task-characteristics",
+  "driver_concept": "fam:inte:self-explanation-diagnostic-case-solving",
+  "outcome_concept": "fam:outc:reasoning-skill-competence-and-learning",
+  "polarity": "positive",
+  "study_ids": [
+   "S020",
+   "S026"
+  ],
+  "cmoc_ids": [
+   "S020-cmoc-4ed174",
+   "S020-cmoc-d5fb36",
+   "S026-cmoc-15e102"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 31,
+  "context_concept": "fam:cont:case-and-task-characteristics",
+  "driver_concept": "fam:mech:self-explanation-and-pathway-review",
+  "outcome_concept": "fam:outc:reasoning-skill-competence-and-learning",
+  "polarity": "positive",
+  "study_ids": [
+   "S020",
+   "S026"
+  ],
+  "cmoc_ids": [
+   "S020-cmoc-4ed174",
+   "S020-cmoc-d5fb36",
+   "S026-cmoc-15e102"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 32,
+  "context_concept": "fam:cont:support-scaffolding-and-information-load",
+  "driver_concept": "fam:inte:case-based-and-worked-example-learning",
+  "outcome_concept": "fam:outc:diagnostic-accuracy-and-performance",
+  "polarity": "positive",
+  "study_ids": [
+   "S025",
+   "S026"
+  ],
+  "cmoc_ids": [
+   "S025-cmoc-ef96a0",
+   "S026-cmoc-20c24b"
+  ],
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ }
+]

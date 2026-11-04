@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "res-webui",
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": [
+        "-m",
+        "res_pipeline.cli",
+        "webui",
+        "--port",
+        "8899"
+      ],
+      "port": 8899
+    }
+  ]
+}

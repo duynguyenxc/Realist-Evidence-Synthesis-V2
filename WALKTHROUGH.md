@@ -1697,6 +1697,77 @@ still the right claim but now rests on **overlapping confidence intervals on a d
 not on parity.** The qualitative asymmetry is untouched: 547 grounded mentions against 192 and 139,
 every one traceable, which is what the architecture actually buys.
 
+### 5. Why HITL had never happened — the screen could not be answered
+
+The RA sat down at `res webui` and said, plainly: *"tôi vào cái http://localhost:8899 tôi cũng lú
+lắm, tôi chẳng hiểu 1 cái gì và tôi cũng ko biết nên làm cái gì luôn."* That was taken as a defect
+report on the console, not on the reader, and it was correct.
+
+`/review` asked **"which context flips the outcome?"** and showed, for each of the 20
+contradictions, only study ids and context-family codes. Measured against the stored rows:
+
+| | |
+|---|---|
+| Contradictions awaiting a human | **20** (0 resolved) |
+| Positive and negative context lists **identical** | **2/20** |
+| At least one study on **both** sides, unexplained | **14/20** |
+| Verbatim quotes shown | **0**, of 547 held |
+| Study titles shown | none — only `S003`, `S016` |
+
+So in two cases the screen displayed two identical lists and asked what distinguished them, and in
+fourteen it showed the same study as evidence for and against without saying why. **The question was
+not hard; it was unanswerable from what was on screen.** The HITL checkpoint had never been
+exercised because nobody *could* exercise it, which is a different problem from nobody trying.
+
+The deciding variable is usually in the CMOC narratives, not in the context taxonomy. Worked
+example, contradiction 12 — one of the two with identical context labels, and solvable in about
+thirty seconds once the narratives are visible:
+
+```
+worked      S004  "Half of all participants were INSTRUCTED to reason in a combined manner"
+                  -> accuracy held up under misleading information
+did not     S004  "Assign a diagnosis using WHATEVER STRATEGY COMES NATURALLY to you"
+                  -> accuracy fell when given an incorrect suggestion
+```
+
+Same paper, same novices, same ECGs. The difference is **whether the strategy was taught or left to
+the learner** — which no context family encodes, so the machine was blind to it by construction.
+That is exactly the judgement HITL-3 exists to collect, and it needs a person, not a better model.
+
+**`_contradiction_evidence()` now supplies what the decision requires**: study titles and years, the
+machine's own CMOC narrative for each side, two verbatim quotes per narrative, the **set difference**
+between the two context lists computed rather than left to the reader, an explicit statement when
+the two lists are identical, and a named explanation when a study appears on both sides. The prompt
+changed from *"which context flips the outcome?"* to *"what is actually different between the two
+sides?"* — answerable in the reviewer's own words, without the machine's vocabulary.
+
+### 6. A way to see the output that does not pass through an AI
+
+The RA's second objection was broader and is the more important of the two:
+
+> *"tôi muốn xem cái raw mà hệ thống thu được ... chứ ko phải cái thứ mà đã bị bạn xào nấu lại và
+> nhìn đẹp tươm tất rồi"*
+
+This is fair. `RESULTS.html`, `MACHINE_VS_HUMAN.md`, the report package and every figure quoted in
+conversation are all *written about* the run by an assistant that chose what to include. Nothing
+gave the RA or the professor an unmediated view of what the system holds.
+
+Two things now do, and neither interprets anything:
+
+- **`scripts/export_raw.py`** — selects every row of every table and writes JSON **and** CSV per
+  table plus a manifest. No filtering, no ranking, no prose. Current state: **16 tables, 2,736
+  rows, 4.6 MB**, committed under `outputs/raw_export/`. It only reads the database and only writes
+  into a new directory, so unlike `res export-results` it **cannot destroy anything** — that
+  distinction is written into its docstring so the two are never confused.
+- **`/raw`** in the console — every table as a chip with its row count, every row printed as stored,
+  full-text search across all columns, hover for the untruncated value.
+
+The empty tables are left visible on purpose. `hitl_feedback` **0** and `token_usage` **0** are
+real findings (M39 §4), and a page that hid them would be doing the thing the RA objected to.
+
+Verified: all nine console pages return 200 after the change, including `/` which renders the same
+review block in compact form.
+
 ### What the next session must not assume
 
 - **The HITL gap is not a missing feature.** `src/res_pipeline/webui.py` and the three `/review`
@@ -1715,3 +1786,9 @@ every one traceable, which is what the architecture actually buys.
   is import-only and irreplaceable (M39 §4), so the corrected figures live in the documents, not in
   it. Anyone reading the page alone will read the superseded numbers.
 - **The negative-affect diagnosis has not been started.** Audited and scoped only.
+- **`/review` is now answerable, but still unanswered.** The 20 contradictions remain at 0 resolved.
+  The console was the blocker; it is not any more, so the next session can ask the RA to sit down
+  and work through them, and `ratified_by` can finally stop being `null`.
+- **`outputs/raw_export/` is generated and safe to regenerate** — the opposite of `RESULTS.html`.
+  Re-run `python scripts/export_raw.py` whenever the database changes; it never writes outside its
+  own directory.

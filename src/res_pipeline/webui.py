@@ -148,7 +148,7 @@ def upload_clear():
 _NAV = [("/", "Control room"), ("/workflow", "Workflow & agents"), ("/inputs", "Inputs"),
         ("/ontology", "Ontology"), ("/graph", "Knowledge graph"), ("/review", "Human review"),
         ("/results", "Machine result"), ("/standard", "Human standard"),
-        ("/verify", "Comparison")]
+        ("/verify", "Comparison"), ("/raw", "Raw data")]
 
 _STYLE = """<style>
 :root{
@@ -179,6 +179,16 @@ nav{display:flex;gap:0;border-bottom:1px solid var(--rule);background:var(--pane
 nav a{font-size:.85rem;color:var(--muted);text-decoration:none;padding:.7rem .9rem;border-bottom:2px solid transparent;margin-bottom:-1px}
 nav a:hover{color:var(--ink)}
 nav a.on{color:var(--ink);border-bottom-color:var(--machine);font-weight:600}
+.rawchips{display:flex;flex-wrap:wrap;gap:.35rem;margin:1rem 0 .2rem}
+.rawchip{font-size:.78rem;padding:.3rem .55rem;border:1px solid var(--rule);border-radius:4px;
+  text-decoration:none;color:var(--ink);background:var(--panel)}
+.rawchip.on{border-color:var(--machine);font-weight:600}
+.rawscroll{overflow:auto;max-height:70vh;border:1px solid var(--rule)}
+.rawtable{border-collapse:collapse;font-size:.76rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.rawtable th{position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--rule);
+  padding:.4rem .5rem;text-align:left;white-space:nowrap;z-index:1}
+.rawtable td{border-bottom:1px solid var(--rule);padding:.35rem .5rem;vertical-align:top;
+  max-width:30rem;word-break:break-word}
 main{max-width:1000px;margin:0 auto;padding:1.8rem 2.2rem 4rem}
 h2.title{font-family:'Iowan Old Style',Georgia,serif;font-weight:600;font-size:1.7rem;margin:0 0 .2rem;letter-spacing:-.01em}
 .lead{color:var(--muted);margin:0 0 1.4rem;max-width:64ch;font-size:.96rem}
@@ -384,8 +394,61 @@ def _pending_reviews() -> dict:
                              "WHERE decider LIKE 'combined:%' ORDER BY study_id, created_at DESC) t WHERE decision='include'").fetchone()["n"]
         human_dec = c.execute("SELECT count(DISTINCT study_id) n FROM screening_decisions WHERE decider LIKE 'human:%'").fetchone()["n"]
         conf_done = c.execute("SELECT count(*) n FROM contradictions WHERE resolution IS NOT NULL").fetchone()["n"]
+        conf = [dict(x) for x in conf]
+        for x in conf:
+            x["evidence"] = _contradiction_evidence(c, x)
     return {"screen": [dict(r) for r in screen], "conf": [dict(r) for r in conf],
             "auto_inc": auto_inc, "human_dec": human_dec, "conf_done": conf_done}
+
+
+def _contradiction_evidence(c, r: dict) -> dict:
+    """The evidence a reviewer needs to answer "which context flips the outcome?".
+
+    The question is unanswerable from study ids and context family codes alone, which is
+    all this card used to show: measured 2026-11-04 over the 20 stored contradictions,
+    2 of them print IDENTICAL context lists on both sides, and 14 have at least one study
+    on BOTH sides with nothing to say why. The deciding variable is usually inside the
+    CMOC narratives — in contradiction 12 it is whether novices were *instructed* in a
+    strategy or told to use "whatever comes naturally", which no context family encodes.
+    So the narratives and their verbatim quotes are what this returns.
+    """
+    def _norm(v):
+        if v is None:
+            return []
+        if isinstance(v, str):
+            return [x.strip() for x in v.replace(";", ",").split(",") if x.strip()]
+        return list(v)
+
+    pos_s, neg_s = _norm(r.get("positive_studies")), _norm(r.get("negative_studies"))
+    pos_c, neg_c = set(_norm(r.get("positive_contexts"))), set(_norm(r.get("negative_contexts")))
+
+    def side(study_ids: list[str], polarity: str) -> list[dict]:
+        out = []
+        for sid in study_ids[:4]:
+            st = c.execute("SELECT title, year FROM studies WHERE study_id=%s", (sid,)).fetchone()
+            cmocs = c.execute(
+                "SELECT cmoc_id, narrative_statement FROM cmocs "
+                "WHERE study_id=%s AND polarity=%s ORDER BY cmoc_id LIMIT 2",
+                (sid, polarity)).fetchall()
+            items = []
+            for m in cmocs:
+                quotes = c.execute(
+                    "SELECT entity_type, label, verbatim_quote FROM entity_instances "
+                    "WHERE cmoc_id=%s AND verbatim_quote IS NOT NULL "
+                    "ORDER BY entity_id LIMIT 2", (m["cmoc_id"],)).fetchall()
+                items.append({"narrative": m["narrative_statement"],
+                              "quotes": [dict(q) for q in quotes]})
+            out.append({"sid": sid, "title": (st or {}).get("title", ""),
+                        "year": (st or {}).get("year", ""), "cmocs": items})
+        return out
+
+    return {
+        "pos": side(pos_s, "positive"), "neg": side(neg_s, "negative"),
+        "pos_more": max(0, len(pos_s) - 4), "neg_more": max(0, len(neg_s) - 4),
+        "both_sides": sorted(set(pos_s) & set(neg_s)),
+        "ctx_only_pos": sorted(pos_c - neg_c), "ctx_only_neg": sorted(neg_c - pos_c),
+        "ctx_identical": bool(pos_c) and pos_c == neg_c,
+    }
 
 
 def _esc(s) -> str:
@@ -420,23 +483,66 @@ def _review_block(pend: dict, *, compact: bool = False) -> str:
             f'<button class="btn ghost sm" name="decision" value="exclude">Exclude</button></form></div></div>')
     # ---- Contradictions: same driver, opposite outcomes ----
     for r in pend["conf"]:
-        pos = ", ".join(r.get("positive_studies") or []) or "—"
-        neg = ", ".join(r.get("negative_studies") or []) or "—"
-        pctx = "; ".join((r.get("positive_contexts") or [])[:3])
-        nctx = "; ".join((r.get("negative_contexts") or [])[:3])
+        ev = r.get("evidence") or {}
+
+        def _col(rows: list[dict], more: int) -> str:
+            # One side of the comparison: real titles, the machine's own sentence, its quotes.
+            if not rows:
+                return '<div class="muted">(no studies on this side)</div>'
+            html = ""
+            for st in rows:
+                html += (f'<div style="margin:.55rem 0 .8rem"><b>[{_esc(st["sid"])}]</b> '
+                         f'{_esc((st["title"] or "")[:120])} <span class="muted">({_esc(st["year"])})</span>')
+                for m in st["cmocs"]:
+                    html += (f'<div class="muted" style="margin:.25rem 0 .2rem .6rem;font-size:.84rem">'
+                             f'{_esc((m["narrative"] or "")[:260])}</div>')
+                    for q in m["quotes"]:
+                        html += (f'<div style="margin:.15rem 0 .3rem 1.1rem;font-size:.8rem">'
+                                 f'<span class="muted">{_esc(q["entity_type"])}: {_esc(q["label"])}</span><br>'
+                                 f'<span style="opacity:.85">&ldquo;{_esc((q["verbatim_quote"] or "")[:190])}&rdquo;</span></div>')
+                html += "</div>"
+            if more:
+                html += f'<div class="muted" style="font-size:.8rem">+{more} more study(ies) on this side</div>'
+            return html
+
+        # The two things that previously made the question unanswerable, now stated outright.
+        notes = ""
+        if ev.get("ctx_identical"):
+            notes += ('<div class="muted" style="margin:.3rem 0;font-size:.84rem">'
+                      '<b>The machine labelled both sides with the same contexts.</b> It cannot tell '
+                      'them apart from its context taxonomy &mdash; the deciding difference, if there is '
+                      'one, is in the evidence below. This is precisely the judgement it needs from you.</div>')
+        else:
+            only_p = ", ".join(x.split(":")[-1].replace("-", " ") for x in ev.get("ctx_only_pos", []))
+            only_n = ", ".join(x.split(":")[-1].replace("-", " ") for x in ev.get("ctx_only_neg", []))
+            if only_p or only_n:
+                notes += ('<div class="muted" style="margin:.3rem 0;font-size:.84rem">'
+                          f'<b>Context labels that differ</b> &mdash; only when it worked: '
+                          f'<i>{_esc(only_p or "none")}</i>; only when it did not: <i>{_esc(only_n or "none")}</i></div>')
+        if ev.get("both_sides"):
+            notes += ('<div class="muted" style="margin:.3rem 0;font-size:.84rem">'
+                      f'<b>{len(ev["both_sides"])} study(ies) appear on BOTH sides</b> '
+                      f'({_esc(", ".join(ev["both_sides"]))}) &mdash; the same paper reported the driver '
+                      'helping in one configuration and not in another, so the difference is inside the '
+                      'study, not between studies.</div>')
+
         out.append(
             f'<div class="revcard"><div class="revtop"><b>{_esc(r["driver_concept"].split(":")[-1].replace("-"," "))}</b>'
             f'<span class="tag gap">contradiction</span></div>'
-            f'<div class="revwhat"><div class="who m">What the machine found — the same driver led to opposite outcomes</div>'
-            f'<div class="two" style="margin-top:.3rem"><div><span class="pill pos">positive</span> '
-            f'<span class="muted">{_esc(pos)}</span><div class="muted" style="font-size:.82rem">{_esc(pctx)}</div></div>'
-            f'<div><span class="pill neg">negative</span> <span class="muted">{_esc(neg)}</span>'
-            f'<div class="muted" style="font-size:.82rem">{_esc(nctx)}</div></div></div></div>'
-            f'<div class="revask"><div class="who h">Your judgement — which context flips the outcome?</div>'
+            f'<div class="revwhat"><div class="who m">What the machine found &mdash; the same driver led to opposite outcomes</div>'
+            f'{notes}'
+            f'<div class="two" style="margin-top:.5rem">'
+            f'<div><span class="pill pos">it worked here</span>{_col(ev.get("pos", []), ev.get("pos_more", 0))}</div>'
+            f'<div><span class="pill neg">it did not work here</span>{_col(ev.get("neg", []), ev.get("neg_more", 0))}</div>'
+            f'</div></div>'
+            f'<div class="revask"><div class="who h">Your judgement &mdash; what is actually different between the two sides?</div>'
+            f'<div class="muted" style="font-size:.82rem;margin:.15rem 0 .4rem">Read the two columns and name the '
+            f'condition that separates them, in your own words. You do not need the machine&rsquo;s vocabulary.</div>'
             f'<form class="f" method="post" action="/review/conflict"><input type="hidden" name="cid" value="{r["id"]}">'
             f'<input name="reviewer" placeholder="Your name" required style="max-width:140px">'
-            f'<input name="resolution" placeholder="The moderating context that explains the difference" required style="min-width:300px">'
+            f'<input name="resolution" placeholder="e.g. students were explicitly taught the strategy, vs left to choose their own" required style="min-width:300px">'
             f'<button class="btn human sm" type="submit">Save resolution</button></form></div></div>')
+
     if not out:
         return ('<div class="panel" style="border-left:3px solid var(--good)">'
                 f'<b class="done">Nothing is waiting for you right now.</b><br>'
@@ -1169,3 +1275,104 @@ def verify():
     <h3>Conclusions, side by side</h3>{cmp_html}
     <h3>Integrity</h3>{integrity}"""
     return _page("/verify", body)
+
+
+# ── Raw data: the database with nothing written about it ─────────────────────
+#
+# Every other page on this site makes a choice about what to show. This one does not.
+# It lists every table, and prints every row exactly as stored. It exists because the RA
+# asked (2026-11-04) to see what the system actually holds rather than a summary of it,
+# and because any claim made in the documents should be checkable against the rows that
+# produced it. No ranking, no filtering beyond the search box, no commentary.
+@app.get("/raw", response_class=HTMLResponse)
+def raw(table: str = "", q: str = "", limit: int = 50, offset: int = 0):
+    limit = max(1, min(limit, 500))
+    with get_connection() as c:
+        tables = [r["table_name"] for r in c.execute(
+            "SELECT table_name FROM information_schema.tables "
+            "WHERE table_schema='public' AND table_type='BASE TABLE' "
+            "ORDER BY table_name").fetchall()]
+        counts = {}
+        for t in tables:
+            counts[t] = c.execute(f'SELECT count(*) n FROM "{t}"').fetchone()["n"]
+
+        chips = "".join(
+            f'<a href="/raw?table={t}" class="rawchip{" on" if t == table else ""}">'
+            f'{_esc(t)} <span class="muted">{counts[t]}</span></a>' for t in tables)
+
+        body = (
+            '<div class="eyebrow">Raw data &middot; the database, unedited</div>'
+            '<h1>Every row the system actually holds</h1>'
+            '<p class="muted" style="max-width:62rem">Every other page here decides what is '
+            'worth showing you. This one does not. These are the tables as the pipeline left '
+            'them &mdash; the same rows every figure in the reports was computed from, including '
+            'the empty ones. <b>Nothing on this page is summarised, ranked or written about.</b> '
+            f'Download the whole thing with <code>python scripts/export_raw.py</code> '
+            f'(JSON + CSV per table).</p>'
+            f'<div class="rawchips">{chips}</div>')
+
+        if not table:
+            body += ('<div class="panel" style="margin-top:1rem"><span class="muted">'
+                     'Pick a table above. <b>hitl_feedback</b> and <b>token_usage</b> are empty '
+                     'and that is a real finding, not a loading error &mdash; the snapshot restore '
+                     'could not carry them (see WALKTHROUGH M39 &sect;4).</span></div>')
+            return _page("/raw", body)
+
+        if table not in tables:
+            return _page("/raw", body + '<div class="panel">No such table.</div>')
+
+        cols = [r["column_name"] for r in c.execute(
+            "SELECT column_name FROM information_schema.columns "
+            "WHERE table_name=%s ORDER BY ordinal_position", (table,)).fetchall()]
+
+        if q:
+            where = " OR ".join(f'CAST("{col}" AS TEXT) ILIKE %s' for col in cols)
+            params = tuple([f"%{q}%"] * len(cols))
+            total = c.execute(f'SELECT count(*) n FROM "{table}" WHERE {where}',
+                              params).fetchone()["n"]
+            rows = c.execute(f'SELECT * FROM "{table}" WHERE {where} '
+                             f'LIMIT {limit} OFFSET {offset}', params).fetchall()
+        else:
+            total = counts[table]
+            rows = c.execute(f'SELECT * FROM "{table}" LIMIT {limit} OFFSET {offset}').fetchall()
+
+    head = "".join(f"<th>{_esc(col)}</th>" for col in cols)
+    trs = ""
+    for r in rows:
+        tds = ""
+        for col in cols:
+            v = dict(r).get(col)
+            txt = "" if v is None else str(v)
+            cell = _esc(txt if len(txt) <= 400 else txt[:400] + "…")
+            tds += (f'<td title="{_esc(txt[:1500])}">'
+                    f'{cell if txt else "<span class=muted>NULL</span>"}</td>')
+        trs += f"<tr>{tds}</tr>"
+    if not rows:
+        trs = f'<tr><td colspan="{len(cols)}" class="muted">No rows.</td></tr>'
+
+    shown_to = min(offset + limit, total)
+    pager = ""
+    if offset > 0:
+        pager += (f'<a class="btn ghost sm" href="/raw?table={table}&q={q}'
+                  f'&limit={limit}&offset={max(0, offset - limit)}">&larr; previous</a> ')
+    if shown_to < total:
+        pager += (f'<a class="btn ghost sm" href="/raw?table={table}&q={q}'
+                  f'&limit={limit}&offset={offset + limit}">next &rarr;</a>')
+
+    clear_link = (f' <a class="btn ghost sm" href="/raw?table={table}">clear</a>') if q else ""
+    body += (
+        f'<div class="panel" style="margin-top:1rem">'
+        f'<form method="get" action="/raw" class="f" style="margin-bottom:.6rem">'
+        f'<input type="hidden" name="table" value="{_esc(table)}">'
+        f'<input name="q" value="{_esc(q)}" placeholder="search every column of {_esc(table)}" '
+        f'style="min-width:280px"><button class="btn ghost sm" type="submit">Search</button>'
+        f'{clear_link}'
+        f'</form>'
+        f'<div class="muted" style="font-size:.84rem;margin-bottom:.4rem">'
+        f'<b>{_esc(table)}</b> &mdash; showing rows {offset + 1 if rows else 0}&ndash;{shown_to} '
+        f'of {total}{" matching" if q else ""} &middot; {len(cols)} columns &middot; '
+        f'hover a cell to see the full value</div>'
+        f'<div class="rawscroll"><table class="rawtable"><thead><tr>{head}</tr></thead>'
+        f'<tbody>{trs}</tbody></table></div>'
+        f'<div style="margin-top:.6rem">{pager}</div></div>')
+    return _page("/raw", body)

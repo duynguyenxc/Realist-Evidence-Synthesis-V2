@@ -1,0 +1,245 @@
+{
+ "exported_at": "2026-11-04T15:59:36",
+ "database": "realist_synthesis",
+ "tables": [
+  {
+   "table": "agent_feedback",
+   "rows": 0,
+   "columns": [
+    "id",
+    "agent_key",
+    "wrong",
+    "correct",
+    "note",
+    "study_id",
+    "run_id",
+    "created_at"
+   ]
+  },
+  {
+   "table": "audit_log",
+   "rows": 1085,
+   "columns": [
+    "id",
+    "run_id",
+    "actor",
+    "action",
+    "subject_ref",
+    "detail",
+    "created_at"
+   ]
+  },
+  {
+   "table": "canonical_texts",
+   "rows": 28,
+   "columns": [
+    "study_id",
+    "canonical_text",
+    "canonical_sha256",
+    "n_pages",
+    "ingested_at"
+   ]
+  },
+  {
+   "table": "cmocs",
+   "rows": 94,
+   "columns": [
+    "cmoc_id",
+    "study_id",
+    "polarity",
+    "narrative_statement",
+    "verifier_support",
+    "verifier_notes",
+    "checker_agrees",
+    "checker_notes",
+    "run_id",
+    "created_at"
+   ]
+  },
+  {
+   "table": "concept_families",
+   "rows": 183,
+   "columns": [
+    "canonical_id",
+    "entity_type",
+    "family_id",
+    "family_label",
+    "run_id",
+    "created_at"
+   ]
+  },
+  {
+   "table": "conceptual_entities",
+   "rows": 8,
+   "columns": [
+    "id",
+    "community_key",
+    "community_label",
+    "definition",
+    "entity_type",
+    "member_canonical_ids",
+    "member_labels",
+    "study_ids",
+    "member_count",
+    "algorithm",
+    "run_id",
+    "created_at",
+    "description",
+    "rationale",
+    "realist_role"
+   ]
+  },
+  {
+   "table": "contradictions",
+   "rows": 20,
+   "columns": [
+    "id",
+    "driver_concept",
+    "positive_studies",
+    "negative_studies",
+    "positive_contexts",
+    "negative_contexts",
+    "resolution",
+    "resolved_by",
+    "run_id",
+    "created_at"
+   ]
+  },
+  {
+   "table": "demi_regularities",
+   "rows": 32,
+   "columns": [
+    "id",
+    "context_concept",
+    "driver_concept",
+    "outcome_concept",
+    "polarity",
+    "study_ids",
+    "cmoc_ids",
+    "run_id",
+    "created_at"
+   ]
+  },
+  {
+   "table": "entity_instances",
+   "rows": 547,
+   "columns": [
+    "entity_id",
+    "study_id",
+    "cmoc_id",
+    "entity_type",
+    "label",
+    "canonical_id",
+    "verbatim_quote",
+    "char_start",
+    "char_end",
+    "quote_resolved",
+    "match_kind",
+    "extractor_model",
+    "prompt_version",
+    "confidence",
+    "run_id",
+    "created_at"
+   ]
+  },
+  {
+   "table": "hitl_feedback",
+   "rows": 0,
+   "columns": [
+    "id",
+    "checkpoint",
+    "subject_ref",
+    "action",
+    "feedback",
+    "payload",
+    "run_id",
+    "created_at"
+   ]
+  },
+  {
+   "table": "programme_theories",
+   "rows": 1,
+   "columns": [
+    "id",
+    "version",
+    "theory_json",
+    "signed_off_by",
+    "run_id",
+    "created_at"
+   ]
+  },
+  {
+   "table": "screening_decisions",
+   "rows": 86,
+   "columns": [
+    "id",
+    "study_id",
+    "stage",
+    "decider",
+    "decision",
+    "rationale",
+    "confidence",
+    "run_id",
+    "created_at"
+   ]
+  },
+  {
+   "table": "studies",
+   "rows": 28,
+   "columns": [
+    "study_id",
+    "record_id",
+    "doi",
+    "title",
+    "authors",
+    "year",
+    "journal",
+    "abstract",
+    "source_kind",
+    "pdf_path",
+    "metadata_confidence",
+    "created_at"
+   ]
+  },
+  {
+   "table": "text_units",
+   "rows": 165,
+   "columns": [
+    "text_unit_id",
+    "study_id",
+    "sequence",
+    "char_start",
+    "char_end",
+    "text"
+   ]
+  },
+  {
+   "table": "token_usage",
+   "rows": 0,
+   "columns": [
+    "id",
+    "run_id",
+    "tier",
+    "model",
+    "prompt_tokens",
+    "completion_tokens",
+    "created_at"
+   ]
+  },
+  {
+   "table": "typed_relations",
+   "rows": 459,
+   "columns": [
+    "relation_id",
+    "study_id",
+    "cmoc_id",
+    "predicate",
+    "subject_entity_id",
+    "object_entity_id",
+    "constraint_valid",
+    "run_id",
+    "created_at"
+   ]
+  }
+ ]
+}

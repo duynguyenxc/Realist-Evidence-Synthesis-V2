@@ -1,0 +1,1466 @@
+[
+ {
+  "canonical_id": "mech:simulated-gp-consultations",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:simulation-and-case-based-practice",
+  "family_label": "Simulation and case-based practice",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:simulation-scenarios",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:simulation-and-case-based-practice",
+  "family_label": "Simulation and case-based practice",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:timed-case-challenge-with-feedback",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:simulation-and-case-based-practice",
+  "family_label": "Simulation and case-based practice",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:formative-assessment",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:feedback-assessment-and-error-review",
+  "family_label": "Feedback, assessment, and error review",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:reduced-feedback-similar-case-reasoning",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:feedback-assessment-and-error-review",
+  "family_label": "Feedback, assessment, and error review",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:diagnostic-error-case-viewing",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:feedback-assessment-and-error-review",
+  "family_label": "Feedback, assessment, and error review",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:reasoning-pathway-review",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:self-explanation-and-pathway-review",
+  "family_label": "Self-explanation and pathway review",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:self-explanation-prompts",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:self-explanation-and-pathway-review",
+  "family_label": "Self-explanation and pathway review",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:time-compressed-virtual-patient-scenarios",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:virtual-patient-simulation",
+  "family_label": "virtual patient simulation",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:video-enriched-virtual-patient-cases",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:virtual-patient-simulation",
+  "family_label": "virtual patient simulation",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:diagnostic-error-reduction",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:errors-barriers-and-corrective-support",
+  "family_label": "Errors, barriers, and corrective support",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:diagnostic-reasoning-barriers",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:errors-barriers-and-corrective-support",
+  "family_label": "Errors, barriers, and corrective support",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:diagnostic-support-and-correction",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:errors-barriers-and-corrective-support",
+  "family_label": "Errors, barriers, and corrective support",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:feature-bias-resistance",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:errors-barriers-and-corrective-support",
+  "family_label": "Errors, barriers, and corrective support",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:suggestion-effects",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:errors-barriers-and-corrective-support",
+  "family_label": "Errors, barriers, and corrective support",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:test-enhanced-case-presentation",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:test-enhanced-case-work",
+  "family_label": "test-enhanced case work",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:ecg-presentation-manipulation",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:visual-and-image-based-training",
+  "family_label": "Visual and image-based training",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:paired-image-training",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:visual-and-image-based-training",
+  "family_label": "Visual and image-based training",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:diagnostic-retention-and-delayed-effects",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:transfer-retention-and-case-effects",
+  "family_label": "Transfer, retention, and case effects",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:diagnostic-transfer",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:transfer-retention-and-case-effects",
+  "family_label": "Transfer, retention, and case effects",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:case-familiarity-effects",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:transfer-retention-and-case-effects",
+  "family_label": "Transfer, retention, and case effects",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:lay-descriptions-resembled-standard-features",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:transfer-retention-and-case-effects",
+  "family_label": "Transfer, retention, and case effects",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:decision-tree-virtual-patient-cases",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:simulation-and-virtual-patient-environments",
+  "family_label": "Simulation and virtual patient environments",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:evpaeds-intervention",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:simulation-and-virtual-patient-environments",
+  "family_label": "Simulation and virtual patient environments",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:self-directed-virtual-patient-access",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:simulation-and-virtual-patient-environments",
+  "family_label": "Simulation and virtual patient environments",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:self-directed-virtual-patient-cases",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:simulation-and-virtual-patient-environments",
+  "family_label": "Simulation and virtual patient environments",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:simulated-referral-task",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:simulation-and-virtual-patient-environments",
+  "family_label": "Simulation and virtual patient environments",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:simulated-ward-environment",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:simulation-and-virtual-patient-environments",
+  "family_label": "Simulation and virtual patient environments",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:voluntary-engagement-game-design",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:motivating-game-like-engagement",
+  "family_label": "Motivating game-like engagement",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:cognitive-load-and-support",
+  "entity_type": "Context",
+  "family_id": "fam:cont:support-scaffolding-and-information-load",
+  "family_label": "Support, scaffolding, and information load",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:clinical-case-summaries",
+  "entity_type": "Context",
+  "family_id": "fam:cont:support-scaffolding-and-information-load",
+  "family_label": "Support, scaffolding, and information load",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:students-challenged-by-patient-information-navigation",
+  "entity_type": "Context",
+  "family_id": "fam:cont:support-scaffolding-and-information-load",
+  "family_label": "Support, scaffolding, and information load",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:assessment-and-feedback-structure",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:feedback-and-assessment",
+  "family_label": "Feedback and assessment",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:diagnostic-suggestion-feedback",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:feedback-and-assessment",
+  "family_label": "Feedback and assessment",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:immediate-answer-feedback",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:feedback-and-assessment",
+  "family_label": "Feedback and assessment",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:immediate-feedback",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:feedback-and-assessment",
+  "family_label": "Feedback and assessment",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:immediate-reasoning-feedback",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:feedback-and-assessment",
+  "family_label": "Feedback and assessment",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:item-level-feedback",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:feedback-and-assessment",
+  "family_label": "Feedback and assessment",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:official-diagnosis-feedback",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:feedback-and-assessment",
+  "family_label": "Feedback and assessment",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:laboratory-data-insight",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:data-interpretation-and-evidence-use",
+  "family_label": "Data interpretation and evidence use",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:worked-examples",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:worked-example-support",
+  "family_label": "Worked-example support",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:case-based-reasoning-seminar",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:case-based-and-worked-example-learning",
+  "family_label": "Case-based and worked-example learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:casebook",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:case-based-and-worked-example-learning",
+  "family_label": "Case-based and worked-example learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:computer-assisted-key-feature-seminar",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:case-based-and-worked-example-learning",
+  "family_label": "Case-based and worked-example learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:expert-examples",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:case-based-and-worked-example-learning",
+  "family_label": "Case-based and worked-example learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:integrated-cases-section-course",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:case-based-and-worked-example-learning",
+  "family_label": "Case-based and worked-example learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:multiple-case-learning-task",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:case-based-and-worked-example-learning",
+  "family_label": "Case-based and worked-example learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:resident-se-examples",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:case-based-and-worked-example-learning",
+  "family_label": "Case-based and worked-example learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:similar-case-series",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:case-based-and-worked-example-learning",
+  "family_label": "Case-based and worked-example learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:cognitive-load",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:cognitive-load-and-confusion",
+  "family_label": "Cognitive load and confusion",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:cognitive-overload-or-confusion",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:cognitive-load-and-confusion",
+  "family_label": "Cognitive load and confusion",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:expert-reasoning-comprehension-difficulty",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:cognitive-load-and-confusion",
+  "family_label": "Cognitive load and confusion",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:case-difficulty-and-complexity",
+  "entity_type": "Context",
+  "family_id": "fam:cont:case-and-task-characteristics",
+  "family_label": "Case and task characteristics",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:case-familiarity",
+  "entity_type": "Context",
+  "family_id": "fam:cont:case-and-task-characteristics",
+  "family_label": "Case and task characteristics",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:uncommon-diagnosis-cases",
+  "entity_type": "Context",
+  "family_id": "fam:cont:case-and-task-characteristics",
+  "family_label": "Case and task characteristics",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:heart-failure-cases",
+  "entity_type": "Context",
+  "family_id": "fam:cont:case-and-task-characteristics",
+  "family_label": "Case and task characteristics",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:dermatology-diagnosis",
+  "entity_type": "Context",
+  "family_id": "fam:cont:case-and-task-characteristics",
+  "family_label": "Case and task characteristics",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:ecg-diagnostic-categories",
+  "entity_type": "Context",
+  "family_id": "fam:cont:case-and-task-characteristics",
+  "family_label": "Case and task characteristics",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:ecg-diagnosticians",
+  "entity_type": "Context",
+  "family_id": "fam:cont:case-and-task-characteristics",
+  "family_label": "Case and task characteristics",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:systolic-murmur-diagnosis-task",
+  "entity_type": "Context",
+  "family_id": "fam:cont:case-and-task-characteristics",
+  "family_label": "Case and task characteristics",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:single-best-diagnosis-request",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:prompted-diagnostic-reasoning",
+  "family_label": "Prompted diagnostic reasoning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:speeded-diagnosis-instruction",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:prompted-diagnostic-reasoning",
+  "family_label": "Prompted diagnostic reasoning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:structured-referral-prompt",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:prompted-diagnostic-reasoning",
+  "family_label": "Prompted diagnostic reasoning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:bias-and-error-reflection",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:bias-and-metacognition",
+  "family_label": "Bias and metacognition",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:bias-countering-strategy",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:bias-and-metacognition",
+  "family_label": "Bias and metacognition",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:metacognitive-bias-identification",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:bias-and-metacognition",
+  "family_label": "Bias and metacognition",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:ecg-exemplar-exposure",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:examples-and-modeling",
+  "family_label": "Examples and modeling",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:errorful-peer-examples",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:examples-and-modeling",
+  "family_label": "Examples and modeling",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:labelled-exposure",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:examples-and-modeling",
+  "family_label": "Examples and modeling",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:near-peer-reasoning-examples",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:examples-and-modeling",
+  "family_label": "Examples and modeling",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:reasoning-process-modeling",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:examples-and-modeling",
+  "family_label": "Examples and modeling",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:self-explanation-examples",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:examples-and-modeling",
+  "family_label": "Examples and modeling",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:cardiac-physical-diagnosis-teaching",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:clinical-exposure-and-apprenticeship",
+  "family_label": "Clinical exposure and apprenticeship",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:cfs-training",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:clinical-exposure-and-apprenticeship",
+  "family_label": "Clinical exposure and apprenticeship",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:fy1-shadowing-programme",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:clinical-exposure-and-apprenticeship",
+  "family_label": "Clinical exposure and apprenticeship",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:expertise-practice",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:clinical-exposure-and-apprenticeship",
+  "family_label": "Clinical exposure and apprenticeship",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:analytic-response-time",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:efficiency-speed-and-response-time",
+  "family_label": "Efficiency, speed, and response time",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:diagnostic-efficiency",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:efficiency-speed-and-response-time",
+  "family_label": "Efficiency, speed, and response time",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:diagnostic-accuracy-improvement",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:diagnostic-accuracy-and-performance",
+  "family_label": "Diagnostic accuracy and performance",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:diagnostic-performance-unchanged",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:diagnostic-accuracy-and-performance",
+  "family_label": "Diagnostic accuracy and performance",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:improved-diagnostic-accuracy",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:diagnostic-accuracy-and-performance",
+  "family_label": "Diagnostic accuracy and performance",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:improved-performance-beyond-no-instructions",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:diagnostic-accuracy-and-performance",
+  "family_label": "Diagnostic accuracy and performance",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:lower-accuracy-with-explicit-instruction",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:diagnostic-accuracy-and-performance",
+  "family_label": "Diagnostic accuracy and performance",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:lower-diagnostic-accuracy-relative-to-analytic-reasoning",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:diagnostic-accuracy-and-performance",
+  "family_label": "Diagnostic accuracy and performance",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:poorer-diagnostic-performance",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:diagnostic-accuracy-and-performance",
+  "family_label": "Diagnostic accuracy and performance",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:mcq-performance",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:diagnostic-accuracy-and-performance",
+  "family_label": "Diagnostic accuracy and performance",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:presentation-control-and-repetition",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:presentation-control-and-repetition",
+  "family_label": "Presentation control and repetition",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:contrastive-diagnostic-scaffolding",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "family_label": "Contrastive comparison and feature analysis",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:feature-and-similarity-instructions",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "family_label": "Contrastive comparison and feature analysis",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:feature-comparison-support",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "family_label": "Contrastive comparison and feature analysis",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:first-impression-similarity-prompt",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "family_label": "Contrastive comparison and feature analysis",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:key-feature-prompts",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "family_label": "Contrastive comparison and feature analysis",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:normal-abnormal-image-pairs",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "family_label": "Contrastive comparison and feature analysis",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:schema-based-features",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "family_label": "Contrastive comparison and feature analysis",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:schema-grouping",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "family_label": "Contrastive comparison and feature analysis",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:diagnostic-reasoning-approach",
+  "entity_type": "Context",
+  "family_id": "fam:cont:reasoning-process-and-strategy",
+  "family_label": "Reasoning process and strategy",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:diagnostic-back-tracing",
+  "entity_type": "Context",
+  "family_id": "fam:cont:reasoning-process-and-strategy",
+  "family_label": "Reasoning process and strategy",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:diagnostic-error-records",
+  "entity_type": "Context",
+  "family_id": "fam:cont:reasoning-process-and-strategy",
+  "family_label": "Reasoning process and strategy",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:decision-making-preparedness",
+  "entity_type": "Context",
+  "family_id": "fam:cont:knowledge-and-preparedness",
+  "family_label": "Knowledge and preparedness",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:knowledge-deficits",
+  "entity_type": "Context",
+  "family_id": "fam:cont:knowledge-and-preparedness",
+  "family_label": "Knowledge and preparedness",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:structured-diagnostic-tools-familiarity",
+  "entity_type": "Context",
+  "family_id": "fam:cont:knowledge-and-preparedness",
+  "family_label": "Knowledge and preparedness",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:curriculum-and-assessment-content",
+  "entity_type": "Context",
+  "family_id": "fam:cont:knowledge-and-preparedness",
+  "family_label": "Knowledge and preparedness",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:laboratory-career-interest",
+  "entity_type": "Context",
+  "family_id": "fam:cont:knowledge-and-preparedness",
+  "family_label": "Knowledge and preparedness",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:assessment-and-measurement-issues",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:measurement-and-null-limited-effects",
+  "family_label": "Measurement and null/limited effects",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:limited-cfs-benefit",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:measurement-and-null-limited-effects",
+  "family_label": "Measurement and null/limited effects",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:self-explanation-diagnostic-case-solving",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:self-explanation-diagnostic-case-solving",
+  "family_label": "inte:self-explanation-diagnostic-case-solving",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:shadowing-with-learner-follows",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:guided-observation-and-shadowing",
+  "family_label": "Guided observation and shadowing",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:unprompted-recordings",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:guided-observation-and-shadowing",
+  "family_label": "Guided observation and shadowing",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:analytic-training",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "family_label": "Reasoning instruction and strategy coaching",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:clinical-reasoning-reflection-teaching",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "family_label": "Reasoning instruction and strategy coaching",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:cognitive-forcing-instruction",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "family_label": "Reasoning instruction and strategy coaching",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:consultation-skills-framework",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "family_label": "Reasoning instruction and strategy coaching",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:contrastive-learning",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "family_label": "Reasoning instruction and strategy coaching",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:diagnostic-hypothesis-querying",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "family_label": "Reasoning instruction and strategy coaching",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:differential-diagnosis-practice",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "family_label": "Reasoning instruction and strategy coaching",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:reasoning-instruction",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "family_label": "Reasoning instruction and strategy coaching",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:reasoning-process-instruction",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "family_label": "Reasoning instruction and strategy coaching",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:schema-based-instruction",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "family_label": "Reasoning instruction and strategy coaching",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:structured-case-based-reasoning",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "family_label": "Reasoning instruction and strategy coaching",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:reasoning-strategy-balance-and-bias",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:strategy-calibration-and-bias-correction",
+  "family_label": "Strategy calibration and bias correction",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:reasoning-strategy-shift",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:strategy-calibration-and-bias-correction",
+  "family_label": "Strategy calibration and bias correction",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:oversearching",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:strategy-calibration-and-bias-correction",
+  "family_label": "Strategy calibration and bias correction",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:reduced-incorrect-feature-identification",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:strategy-calibration-and-bias-correction",
+  "family_label": "Strategy calibration and bias correction",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:diagnostic-error-analysis",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:strategy-calibration-and-bias-correction",
+  "family_label": "Strategy calibration and bias correction",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:control-condition",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:control-and-setting-modifiers",
+  "family_label": "Control and setting modifiers",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:particular-courses-or-instructors",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:control-and-setting-modifiers",
+  "family_label": "Control and setting modifiers",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:clinical-reasoning-confidence-and-affect",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:confidence-affect-and-engagement",
+  "family_label": "Confidence, affect, and engagement",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:communication-confidence",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:confidence-affect-and-engagement",
+  "family_label": "Confidence, affect, and engagement",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:game-engagement",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:confidence-affect-and-engagement",
+  "family_label": "Confidence, affect, and engagement",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:reduced-engagement-or-elaboration",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:confidence-affect-and-engagement",
+  "family_label": "Confidence, affect, and engagement",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:reduced-fear-or-premature-closure",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:confidence-affect-and-engagement",
+  "family_label": "Confidence, affect, and engagement",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:biliary-decision-practice",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:case-practice-and-exposure",
+  "family_label": "Case practice and exposure",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:case-exposure-and-variation",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:case-practice-and-exposure",
+  "family_label": "Case practice and exposure",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:clinical-reasoning-practice",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:case-practice-and-exposure",
+  "family_label": "Case practice and exposure",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:mastery-practice",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:case-practice-and-exposure",
+  "family_label": "Case practice and exposure",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:mixed-case-practice",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:case-practice-and-exposure",
+  "family_label": "Case practice and exposure",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:multiple-similar-cases",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:case-practice-and-exposure",
+  "family_label": "Case practice and exposure",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:real-case-practice",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:case-practice-and-exposure",
+  "family_label": "Case practice and exposure",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:self-directed-case-access",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:case-practice-and-exposure",
+  "family_label": "Case practice and exposure",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:worked-example-learning-session",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:worked-examples",
+  "family_label": "worked examples",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:worked-examples",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:worked-examples",
+  "family_label": "worked examples",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:clinical-knowledge-development",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:knowledge-development-and-retention",
+  "family_label": "Knowledge development and retention",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:knowledge-storage-and-change",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:knowledge-development-and-retention",
+  "family_label": "Knowledge development and retention",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:positive-adaptation-and-learning",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:knowledge-development-and-retention",
+  "family_label": "Knowledge development and retention",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:tacit-pick-up-approach",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:implicit-or-opportunistic-strategy-learning",
+  "family_label": "implicit or opportunistic strategy learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:whatever-strategy-comes-naturally-prompt",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:implicit-or-opportunistic-strategy-learning",
+  "family_label": "implicit or opportunistic strategy learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:clinical-reasoning-improvement",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:reasoning-skill-competence-and-learning",
+  "family_label": "Reasoning skill, competence, and learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:diagnostic-skill-development",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:reasoning-skill-competence-and-learning",
+  "family_label": "Reasoning skill, competence, and learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:improved-diagnostic-competence",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:reasoning-skill-competence-and-learning",
+  "family_label": "Reasoning skill, competence, and learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:instruction-effects-on-reasoning",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:reasoning-skill-competence-and-learning",
+  "family_label": "Reasoning skill, competence, and learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:learning-and-schema-integration",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:reasoning-skill-competence-and-learning",
+  "family_label": "Reasoning skill, competence, and learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:structured-knowledge-and-reasoning",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:reasoning-skill-competence-and-learning",
+  "family_label": "Reasoning skill, competence, and learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:worked-example-learning-benefits",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:reasoning-skill-competence-and-learning",
+  "family_label": "Reasoning skill, competence, and learning",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:free-choice-reasoning-prompt",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:prompting-and-reasoning-cues",
+  "family_label": "Prompting and reasoning cues",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:hypothesis-prompting",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:prompting-and-reasoning-cues",
+  "family_label": "Prompting and reasoning cues",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:mnemonic-decision-prompt",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:prompting-and-reasoning-cues",
+  "family_label": "Prompting and reasoning cues",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:reasoning-clarification-prompts",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:prompting-and-reasoning-cues",
+  "family_label": "Prompting and reasoning cues",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:reasoning-focus-cues",
+  "entity_type": "Mechanism_Resource",
+  "family_id": "fam:mech:prompting-and-reasoning-cues",
+  "family_label": "Prompting and reasoning cues",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:medical-student-training-stage",
+  "entity_type": "Context",
+  "family_id": "fam:cont:learner-stage-and-expertise",
+  "family_label": "Learner stage and expertise",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:medical-students",
+  "entity_type": "Context",
+  "family_id": "fam:cont:learner-stage-and-expertise",
+  "family_label": "Learner stage and expertise",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:novice-learners",
+  "entity_type": "Context",
+  "family_id": "fam:cont:learner-stage-and-expertise",
+  "family_label": "Learner stage and expertise",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:novice-learners-in-specific-domains",
+  "entity_type": "Context",
+  "family_id": "fam:cont:learner-stage-and-expertise",
+  "family_label": "Learner stage and expertise",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:novice-undergraduate-learners",
+  "entity_type": "Context",
+  "family_id": "fam:cont:learner-stage-and-expertise",
+  "family_label": "Learner stage and expertise",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:undergraduate-medical-students",
+  "entity_type": "Context",
+  "family_id": "fam:cont:learner-stage-and-expertise",
+  "family_label": "Learner stage and expertise",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:expertise-comparison",
+  "entity_type": "Context",
+  "family_id": "fam:cont:learner-stage-and-expertise",
+  "family_label": "Learner stage and expertise",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:diagnostic-training-and-experience",
+  "entity_type": "Context",
+  "family_id": "fam:cont:learner-stage-and-expertise",
+  "family_label": "Learner stage and expertise",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:clinical-experience-limitations",
+  "entity_type": "Context",
+  "family_id": "fam:cont:learner-stage-and-expertise",
+  "family_label": "Learner stage and expertise",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:video-game-experienced-clinicians",
+  "entity_type": "Context",
+  "family_id": "fam:cont:learner-stage-and-expertise",
+  "family_label": "Learner stage and expertise",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:communication-and-handover-use",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:communication-and-simulation-outcomes",
+  "family_label": "Communication and simulation outcomes",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:simulation-and-preparation",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:communication-and-simulation-outcomes",
+  "family_label": "Communication and simulation outcomes",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:supervised-student-reasoning-consultation",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:guided-reasoning-consultation",
+  "family_label": "guided reasoning consultation",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:tripartite-clinical-decision-making-teaching",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:guided-reasoning-consultation",
+  "family_label": "guided reasoning consultation",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:am-i-hero-now-decision-tool",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:serious-games-and-digital-decision-aids",
+  "family_label": "Serious games and digital decision aids",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:medialis-serious-game",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:serious-games-and-digital-decision-aids",
+  "family_label": "Serious games and digital decision aids",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "inte:serious-game",
+  "entity_type": "Intervention",
+  "family_id": "fam:inte:serious-games-and-digital-decision-aids",
+  "family_label": "Serious games and digital decision aids",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:active-reasoning-and-self-explanation",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:reasoning-activation-and-self-explanation",
+  "family_label": "Reasoning activation and self-explanation",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:clinical-reasoning-activation",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:reasoning-activation-and-self-explanation",
+  "family_label": "Reasoning activation and self-explanation",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:self-explanation",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:reasoning-activation-and-self-explanation",
+  "family_label": "Reasoning activation and self-explanation",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:knowledge-elaboration",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:reasoning-activation-and-self-explanation",
+  "family_label": "Reasoning activation and self-explanation",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "mech:reasoning-insight",
+  "entity_type": "Mechanism_Response",
+  "family_id": "fam:mech:reasoning-activation-and-self-explanation",
+  "family_label": "Reasoning activation and self-explanation",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "cont:assessment-and-answer-format",
+  "entity_type": "Context",
+  "family_id": "fam:cont:assessment-and-format-effects",
+  "family_label": "Assessment and format effects",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:diagnostic-reasoning-confidence",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:confidence-engagement-and-uptake",
+  "family_label": "Confidence, engagement, and uptake",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ },
+ {
+  "canonical_id": "outc:learner-engagement-and-uptake",
+  "entity_type": "Outcome",
+  "family_id": "fam:outc:confidence-engagement-and-uptake",
+  "family_label": "Confidence, engagement, and uptake",
+  "run_id": "extract-fb045429",
+  "created_at": "2026-09-30T22:26:47.477607+07:00"
+ }
+]

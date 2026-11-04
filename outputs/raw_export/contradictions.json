@@ -1,0 +1,543 @@
+[
+ {
+  "id": 1,
+  "driver_concept": "fam:mech:contrastive-comparison-and-feature-analysis",
+  "positive_studies": [
+   "S003",
+   "S004",
+   "S005",
+   "S006",
+   "S016",
+   "S017",
+   "S019",
+   "S021",
+   "S027"
+  ],
+  "negative_studies": [
+   "S004",
+   "S016",
+   "S017",
+   "S019",
+   "S021",
+   "S024"
+  ],
+  "positive_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:knowledge-and-preparedness",
+   "fam:cont:learner-stage-and-expertise"
+  ],
+  "negative_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:knowledge-and-preparedness",
+   "fam:cont:learner-stage-and-expertise"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 2,
+  "driver_concept": "fam:inte:reasoning-instruction-and-strategy-coaching",
+  "positive_studies": [
+   "S003",
+   "S004",
+   "S005",
+   "S008",
+   "S016",
+   "S017",
+   "S019",
+   "S021",
+   "S028"
+  ],
+  "negative_studies": [
+   "S016",
+   "S017",
+   "S019",
+   "S021",
+   "S024"
+  ],
+  "positive_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:reasoning-process-and-strategy",
+   "fam:cont:support-scaffolding-and-information-load"
+  ],
+  "negative_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:knowledge-and-preparedness",
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:support-scaffolding-and-information-load"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 3,
+  "driver_concept": "fam:mech:feedback-and-assessment",
+  "positive_studies": [
+   "S004",
+   "S011",
+   "S018",
+   "S023",
+   "S025",
+   "S027"
+  ],
+  "negative_studies": [
+   "S004",
+   "S006",
+   "S018",
+   "S027"
+  ],
+  "positive_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:support-scaffolding-and-information-load"
+  ],
+  "negative_contexts": [
+   "fam:cont:assessment-and-format-effects",
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:knowledge-and-preparedness",
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:reasoning-process-and-strategy"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 4,
+  "driver_concept": "fam:mech:examples-and-modeling",
+  "positive_studies": [
+   "S005",
+   "S006",
+   "S007",
+   "S013",
+   "S021",
+   "S023",
+   "S026",
+   "S028"
+  ],
+  "negative_studies": [
+   "S025",
+   "S028"
+  ],
+  "positive_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:support-scaffolding-and-information-load"
+  ],
+  "negative_contexts": [
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:support-scaffolding-and-information-load"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 5,
+  "driver_concept": "fam:inte:case-based-and-worked-example-learning",
+  "positive_studies": [
+   "S007",
+   "S010",
+   "S018",
+   "S023",
+   "S025",
+   "S026",
+   "S027"
+  ],
+  "negative_studies": [
+   "S018",
+   "S025",
+   "S026"
+  ],
+  "positive_contexts": [
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:support-scaffolding-and-information-load"
+  ],
+  "negative_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:support-scaffolding-and-information-load"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 6,
+  "driver_concept": "fam:mech:self-explanation-and-pathway-review",
+  "positive_studies": [
+   "S013",
+   "S020",
+   "S025",
+   "S026",
+   "S028"
+  ],
+  "negative_studies": [
+   "S013",
+   "S018",
+   "S020"
+  ],
+  "positive_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:reasoning-process-and-strategy"
+  ],
+  "negative_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:knowledge-and-preparedness",
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:support-scaffolding-and-information-load"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 7,
+  "driver_concept": "fam:mech:case-practice-and-exposure",
+  "positive_studies": [
+   "S011",
+   "S014",
+   "S018",
+   "S022",
+   "S023"
+  ],
+  "negative_studies": [
+   "S011",
+   "S015"
+  ],
+  "positive_contexts": [
+   "fam:cont:learner-stage-and-expertise"
+  ],
+  "negative_contexts": [
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:support-scaffolding-and-information-load"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 8,
+  "driver_concept": "fam:mech:prompting-and-reasoning-cues",
+  "positive_studies": [
+   "S008",
+   "S010",
+   "S026",
+   "S028"
+  ],
+  "negative_studies": [
+   "S005",
+   "S015"
+  ],
+  "positive_contexts": [
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:support-scaffolding-and-information-load"
+  ],
+  "negative_contexts": [
+   "fam:cont:knowledge-and-preparedness",
+   "fam:cont:learner-stage-and-expertise"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 9,
+  "driver_concept": "fam:inte:self-explanation-diagnostic-case-solving",
+  "positive_studies": [
+   "S013",
+   "S020",
+   "S025",
+   "S026"
+  ],
+  "negative_studies": [
+   "S013",
+   "S020"
+  ],
+  "positive_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:learner-stage-and-expertise"
+  ],
+  "negative_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:knowledge-and-preparedness",
+   "fam:cont:support-scaffolding-and-information-load"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 10,
+  "driver_concept": "fam:inte:simulation-and-virtual-patient-environments",
+  "positive_studies": [
+   "S011",
+   "S014",
+   "S015"
+  ],
+  "negative_studies": [
+   "S011",
+   "S015"
+  ],
+  "positive_contexts": [
+   "fam:cont:knowledge-and-preparedness",
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:reasoning-process-and-strategy"
+  ],
+  "negative_contexts": [
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:support-scaffolding-and-information-load"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 11,
+  "driver_concept": "fam:inte:feedback-assessment-and-error-review",
+  "positive_studies": [
+   "S018",
+   "S023",
+   "S027"
+  ],
+  "negative_studies": [
+   "S018",
+   "S027"
+  ],
+  "positive_contexts": [
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:reasoning-process-and-strategy"
+  ],
+  "negative_contexts": [
+   "fam:cont:assessment-and-format-effects",
+   "fam:cont:knowledge-and-preparedness",
+   "fam:cont:learner-stage-and-expertise"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 12,
+  "driver_concept": "fam:inte:visual-and-image-based-training",
+  "positive_studies": [
+   "S004",
+   "S005",
+   "S021"
+  ],
+  "negative_studies": [
+   "S004"
+  ],
+  "positive_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:learner-stage-and-expertise"
+  ],
+  "negative_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:learner-stage-and-expertise"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 13,
+  "driver_concept": "fam:mech:bias-and-metacognition",
+  "positive_studies": [
+   "S006",
+   "S023",
+   "S028"
+  ],
+  "negative_studies": [
+   "S024"
+  ],
+  "positive_contexts": [
+   "fam:cont:knowledge-and-preparedness",
+   "fam:cont:reasoning-process-and-strategy",
+   "fam:cont:support-scaffolding-and-information-load"
+  ],
+  "negative_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:support-scaffolding-and-information-load"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 14,
+  "driver_concept": "fam:inte:clinical-exposure-and-apprenticeship",
+  "positive_studies": [
+   "S009"
+  ],
+  "negative_studies": [
+   "S015",
+   "S017",
+   "S024"
+  ],
+  "positive_contexts": [
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:reasoning-process-and-strategy"
+  ],
+  "negative_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:learner-stage-and-expertise"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 15,
+  "driver_concept": "fam:mech:prompted-diagnostic-reasoning",
+  "positive_studies": [
+   "S015"
+  ],
+  "negative_studies": [
+   "S016",
+   "S019",
+   "S022"
+  ],
+  "positive_contexts": [
+   "fam:cont:knowledge-and-preparedness"
+  ],
+  "negative_contexts": [
+   "fam:cont:assessment-and-format-effects",
+   "fam:cont:knowledge-and-preparedness",
+   "fam:cont:learner-stage-and-expertise"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 16,
+  "driver_concept": "fam:inte:control-and-setting-modifiers",
+  "positive_studies": [
+   "S009"
+  ],
+  "negative_studies": [
+   "S005",
+   "S019"
+  ],
+  "positive_contexts": [
+   "fam:cont:knowledge-and-preparedness"
+  ],
+  "negative_contexts": [
+   "fam:cont:assessment-and-format-effects",
+   "fam:cont:learner-stage-and-expertise"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 17,
+  "driver_concept": "fam:mech:simulation-and-case-based-practice",
+  "positive_studies": [
+   "S011",
+   "S015"
+  ],
+  "negative_studies": [
+   "S022"
+  ],
+  "positive_contexts": [
+   "fam:cont:knowledge-and-preparedness",
+   "fam:cont:learner-stage-and-expertise",
+   "fam:cont:reasoning-process-and-strategy"
+  ],
+  "negative_contexts": [
+   "fam:cont:learner-stage-and-expertise"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 18,
+  "driver_concept": "fam:inte:serious-games-and-digital-decision-aids",
+  "positive_studies": [
+   "S022"
+  ],
+  "negative_studies": [
+   "S015",
+   "S022"
+  ],
+  "positive_contexts": [
+   "fam:cont:learner-stage-and-expertise"
+  ],
+  "negative_contexts": [
+   "fam:cont:knowledge-and-preparedness",
+   "fam:cont:learner-stage-and-expertise"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 19,
+  "driver_concept": "fam:inte:worked-examples",
+  "positive_studies": [
+   "S006"
+  ],
+  "negative_studies": [
+   "S006"
+  ],
+  "positive_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:knowledge-and-preparedness"
+  ],
+  "negative_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:reasoning-process-and-strategy"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ },
+ {
+  "id": 20,
+  "driver_concept": "fam:mech:worked-example-support",
+  "positive_studies": [
+   "S006"
+  ],
+  "negative_studies": [
+   "S006"
+  ],
+  "positive_contexts": [
+   "fam:cont:knowledge-and-preparedness"
+  ],
+  "negative_contexts": [
+   "fam:cont:case-and-task-characteristics",
+   "fam:cont:reasoning-process-and-strategy"
+  ],
+  "resolution": null,
+  "resolved_by": null,
+  "run_id": "synth-2dfada15",
+  "created_at": "2026-09-30T22:26:47.544092+07:00"
+ }
+]
