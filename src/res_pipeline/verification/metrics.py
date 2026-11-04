@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from pathlib import Path
 
 from pydantic import BaseModel, Field
@@ -37,6 +38,64 @@ from res_pipeline.core.config import GOLD_DIR
 from res_pipeline.core.db import get_connection
 from res_pipeline.core.llm import call_structured
 from res_pipeline.verification.stats import clopper_pearson
+
+
+# A judge that answers `matched: true` and then explains a non-match in its own rationale
+# must not be counted. Two real defects, found 2026-09-30 and open until 2026-11-04, are
+# exactly this (both verified against the stored rationales in `outputs/RESULTS.html`):
+#
+#   E03  "students with HIGH clinical domain-specific knowledge"  ->  cont:knowledge-deficits
+#        "...aligns with high clinical domain-specific knowledge as THE OPPOSITE END of the
+#         same knowledge construct."
+#   E24  "rely on NON-analytical reasoning"  ->  mech:reasoning-strategy-shift
+#        "...which is THE OPPOSITE OF non-analytical reasoning, SO IT DOES NOT MATCH the
+#         gold construct."
+#
+# The cause is a hole in the prompt rather than a dishonest judge: the instruction forbade
+# "merely adjacent or broader" concepts and said nothing about polarity, so an antonym on the
+# same dimension read as construct identity. The prompts below now forbid it explicitly; this
+# guard is the deterministic backstop, because a prompt is a request and a guard is a rule.
+#
+# Checked against all 46 stored rationales: flags E03 and E24 and nothing else. Rejections are
+# returned in `refuted_matches` rather than dropped, so the record shows what was refused.
+_NON_MATCH_RE = re.compile(r"""
+      \b(?:does|do|did)\s+not\s+(?:match|correspond|denote|express|capture|refer)
+    | \bis\s+not\s+(?:a\s+match|the\s+same)
+    | \bno\s+match\b
+    | \bnot\s+the\s+same\s+construct
+    | \bcannot\s+be\s+matched
+""", re.I | re.X)
+
+_OPPOSITE_RE = re.compile(r"""
+      \bopposite\b
+    | \binverse\s+of\b
+    | \bconverse\s+of\b
+    | \bantonym
+    | \bcontrary\s+to\b
+    | \bnegation\s+of\b
+    | \breverse\s+(?:of|polarity)\b
+""", re.I | re.X)
+
+
+def _rationale_refutes(rationale: str) -> str:
+    """Why this ``matched: true`` must not be counted, or ``""`` if it stands."""
+    if _NON_MATCH_RE.search(rationale or ""):
+        return "rationale states a non-match"
+    if _OPPOSITE_RE.search(rationale or ""):
+        return "rationale asserts opposite polarity on the same dimension"
+    return ""
+
+
+# Wording shared by every match prompt. Both worked examples are the two defects above, so the
+# instruction names the failure it exists to prevent rather than describing it in the abstract.
+_POLARITY_RULE = (
+    "POLARITY IS PART OF THE CONSTRUCT. A concept at the OPPOSITE POLE of the same dimension "
+    "is NOT a match: 'high domain knowledge' does NOT match 'knowledge deficits', and "
+    "'non-analytical reasoning' does NOT match 'analytic reasoning'. Same dimension is not the "
+    "same construct. If the only way to call it a match is to treat an opposite as equivalent, "
+    "answer matched=false. Never answer matched=true and then explain a non-match in the "
+    "rationale. "
+)
 
 
 class EntityMatch(BaseModel):
@@ -240,7 +299,7 @@ def entity_coverage(run_id: str) -> dict:
                     "if the label wording differs (e.g. 'perceived information overload' matches "
                     "'cognitive load is increased'; 'virtual patient application' matches "
                     "'real-life scenarios including simulation'). Do NOT match merely adjacent or "
-                    "broader concepts. Provide the matched concept id or leave empty."
+                    "broader concepts. " + _POLARITY_RULE + "Provide the matched concept id or leave empty."
                 ),
                 user_prompt=(
                     "GOLD ENTITIES:\n"
@@ -258,6 +317,7 @@ def entity_coverage(run_id: str) -> dict:
     votes: dict[str, int] = {c: 0 for c in all_codes}
     concept_of: dict[str, str] = {}
     rationale_of: dict[str, str] = {}
+    refuted: list[dict] = []
     per_sample_recalls: list[float] = []
     total = len(all_codes)
     for _ in range(_JUDGE_SAMPLES):
@@ -268,6 +328,12 @@ def entity_coverage(run_id: str) -> dict:
         hits_this_sample: set[str] = set()
         for m in _one_pass():
             if not m.matched or m.e_code not in votes or m.e_code in hits_this_sample:
+                continue
+            refusal = _rationale_refutes(m.rationale)
+            if refusal:
+                refuted.append({"e_code": m.e_code, "concept": m.matched_concept,
+                                 "pass": "within-role", "reason": refusal,
+                                 "rationale": m.rationale})
                 continue
             hits_this_sample.add(m.e_code)
             votes[m.e_code] += 1
@@ -303,8 +369,8 @@ def entity_coverage(run_id: str) -> dict:
                 "ANY type, prefixed [Type]) expresses the SAME underlying construct — judged "
                 "on labels and the verbatim evidence quote. The realist role may differ; that "
                 "is expected and must NOT lower the bar. Require genuine construct identity, "
-                "not adjacency or broader/narrower concepts. Give the matched concept id or "
-                "leave empty."
+                "not adjacency or broader/narrower concepts. " + _POLARITY_RULE + "Give the "
+                "matched concept id or leave empty."
             ),
             user_prompt=(
                 "GOLD ENTITIES (still unmatched):\n"
@@ -317,6 +383,12 @@ def entity_coverage(run_id: str) -> dict:
         seen: set[str] = set()
         for m in recovery.matches:
             if not m.matched or m.e_code not in unmatched or m.e_code in seen:
+                continue
+            refusal = _rationale_refutes(m.rationale)
+            if refusal:
+                refuted.append({"e_code": m.e_code, "concept": m.matched_concept,
+                                 "pass": "cross-role recovery", "reason": refusal,
+                                 "rationale": m.rationale})
                 continue
             seen.add(m.e_code)
             recovery_votes[m.e_code] = recovery_votes.get(m.e_code, 0) + 1
@@ -353,6 +425,9 @@ def entity_coverage(run_id: str) -> dict:
                            "rationale": rationale_of.get(c, ""),
                            "cross_type": c in crosswalk_codes,
                            "type_agrees": _type_agree(c)} for c in all_codes},
+        # Votes refused by `_rationale_refutes`, kept so the record shows what was
+        # refused and why. A non-empty list is a finding, not an error.
+        "refuted_matches": refuted,
     }
 
 
@@ -643,6 +718,7 @@ def community_alignment(run_id: str) -> dict:
     votes: dict[str, int] = {}
     community_of: dict[str, str] = {}
     rationale_of: dict[str, str] = {}
+    refuted: list[dict] = []
     for _ in range(_JUDGE_SAMPLES):
         batch = call_structured(
             tier="extraction_verifier",
@@ -651,7 +727,8 @@ def community_alignment(run_id: str) -> dict:
                 "entities) capture the mechanisms a human review team articulated. For each GOLD "
                 "mechanism, decide whether any COMMUNITY expresses the SAME underlying mechanism "
                 "(semantic correspondence of the C->M->O role, not wording). Provide the matched "
-                "community id (e.g. COMM2) or leave empty. Do not match merely adjacent concepts."
+                "community id (e.g. COMM2) or leave empty. Do not match merely adjacent concepts. "
+                + _POLARITY_RULE
             ),
             user_prompt=(
                 "GOLD MECHANISMS:\n"
@@ -665,6 +742,12 @@ def community_alignment(run_id: str) -> dict:
             # Discard codes the judge invented and duplicates within one sample; both
             # previously inflated the vote and could push recall above 1.0.
             if not m.matched or m.e_code not in gold_mechs or m.e_code in seen:
+                continue
+            refusal = _rationale_refutes(m.rationale)
+            if refusal:
+                refuted.append({"e_code": m.e_code, "concept": m.matched_concept,
+                                 "pass": "community alignment", "reason": refusal,
+                                 "rationale": m.rationale})
                 continue
             seen.add(m.e_code)
             votes[m.e_code] = votes.get(m.e_code, 0) + 1
@@ -682,6 +765,7 @@ def community_alignment(run_id: str) -> dict:
         "samples": _JUDGE_SAMPLES,
         "matches": [{"e_code": c, "community": community_of.get(c, ""),
                      "rationale": rationale_of.get(c, "")} for c in aligned_codes],
+        "refuted_matches": refuted,
         "judge": "model-based majority-vote (human expert mapping required before publication)",
     }
 

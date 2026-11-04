@@ -116,3 +116,77 @@ def test_active_paths_marks_what_was_overridden(monkeypatch):
     shown = cfg.active_paths()
     assert "[overridden]" in shown["outputs"]
     assert "[overridden]" not in shown["config"]
+
+
+# --- the matcher guard (found 2026-09-30, fixed 2026-11-04) -------------------------
+#
+# These two rationales are VERBATIM from the stored verification in outputs/RESULTS.html,
+# where both are recorded as `matched: true`. E24 sits inside the published headline of
+# 34/46. They are the regression test: if either ever counts as a match again, the headline
+# is wrong again.
+
+E03_RATIONALE = (
+    "Matches the same construct of students' domain knowledge level; the extracted context "
+    "explicitly refers to learners with incomplete/underdeveloped knowledge, which aligns "
+    "with high clinical domain-specific knowledge as the opposite end of the same knowledge "
+    "construct."
+)
+E24_RATIONALE = (
+    "This concept covers reliance on analytic reasoning and similarity-based processes; the "
+    "evidence mentions novices relying on conscious, analytic reasoning, which is the "
+    "opposite of non-analytical reasoning, so it does not match the gold construct."
+)
+
+
+def test_guard_refuses_the_two_known_defects():
+    from res_pipeline.verification.metrics import _rationale_refutes
+
+    assert "opposite polarity" in _rationale_refutes(E03_RATIONALE)
+    # E24 states a non-match outright, which is the stronger of the two reasons.
+    assert "non-match" in _rationale_refutes(E24_RATIONALE)
+
+
+def test_guard_leaves_genuine_matches_alone():
+    from res_pipeline.verification.metrics import _rationale_refutes
+
+    genuine = [
+        # E02 — the correct half of the E02/E03 pair that over-merged onto one concept.
+        "The evidence explicitly says students had 'basic relevant knowledge' that was "
+        "'incomplete and error-prone,' which denotes low or insufficient clinical "
+        "domain-specific knowledge.",
+        # A cross-role match, which is expected and must not be penalised.
+        "This extracted mechanism captures student affect/self-confidence in reasoning, "
+        "including feeling cocooned and challenged; it is the closest same-construct match "
+        "for positive coping/self-efficacy.",
+        # "not" appearing for an unrelated reason must not trip the guard.
+        "The construct is the same even though the wording is not identical.",
+    ]
+    for rationale in genuine:
+        assert _rationale_refutes(rationale) == "", rationale
+
+
+def test_every_stored_rationale_except_those_two_survives_the_guard():
+    """The guard was calibrated on all 46 stored rationales and flags exactly two.
+
+    A guard that also refused honest matches would lower the headline for the wrong
+    reason, so the false-positive count is part of the contract, not an incidental.
+    """
+    import html
+    import re
+
+    from res_pipeline.core.config import OUTPUTS_DIR
+    from res_pipeline.verification.metrics import _rationale_refutes
+
+    results = OUTPUTS_DIR / "RESULTS.html"
+    if not results.exists():  # pragma: no cover - artefact absent on a fresh checkout
+        return
+    page = results.read_text(encoding="utf-8")
+    flagged = set()
+    for match in re.finditer(r'<td class="num">(E\d\d)</td>(.*?)</tr>', page, re.S):
+        cells = re.findall(r"<td[^>]*>(.*?)</td>", match.group(2), re.S)
+        if len(cells) < 4:
+            continue
+        rationale = html.unescape(re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", cells[3])))
+        if _rationale_refutes(rationale):
+            flagged.add(match.group(1))
+    assert flagged == {"E03", "E24"}, flagged

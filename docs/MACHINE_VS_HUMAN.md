@@ -77,6 +77,8 @@ uncertain and routed to a human, who included them. The design working as intend
 | **One concept may claim only one Richmond concept** | **28/46 = 60.9%** | see §5 — this is the figure comparable to a human coder |
 | Per-sample spread over 3 samples | 67.4% – 78.3% | the judge is not stable to ±5 pp |
 
+> **All three figures above are superseded by §5.1** (matcher fixed 2026-11-04): 39/46 role-crossing, **32/46** same-role, **26/46** one-to-one. Left in place because the published papers quote them.
+
 Not recovered: **E05** (negative coping / low self-efficacy), **E06** (mixed-knowledge group), and in
 the September 23 run also **E31/E32/E34** (the pressure/fear items). Traced to cause: the strings
 "self-efficacy" and "self-confidence" occur **zero times** across all 28 source papers, and
@@ -167,7 +169,7 @@ Two research assistants coded all 28 papers independently against the same 46-it
 | Coder A (human) | 30/46 (65%) | 192 |
 | Coder B (human) | 28/46 (61%) | 139 |
 | Both humans agreed | 28/46 (61%) | 130 agreed |
-| **The system** | **34/46 (74%)** | 547 mentions |
+| **The system** | **34/46 (74%)** → **32/46 (69.6%)** after §5.1 | 547 mentions |
 
 Positive specific agreement between the two humans: **0.785**. Role agreement is deliberately not
 reported — the reference sheet states each code's category, so two coders picking the same code are
@@ -198,6 +200,46 @@ Two further matcher defects found on 2026-09-30, both correctable in `verificati
 "…is the opposite of non-analytical reasoning, **so it does not match**" — both recorded as
 `matched: true`, and E24 is inside the headline 34. A rationale that states a non-match must not be
 allowed to set a match.
+
+### 5.1 Fixed 2026-11-04 — and the one-to-one figure was already one too high
+
+**The matcher is fixed.** `verification/metrics.py` now refuses a `matched: true` whose own rationale
+states a non-match or asserts opposite polarity, in all three judging passes (within-role,
+cross-role recovery — which previously had no guard of any kind — and community alignment).
+Refusals are returned in `refuted_matches` rather than dropped. The root cause was a hole in the
+prompt, not a dishonest judge: the instruction forbade "merely adjacent or broader" concepts and
+said **nothing about polarity**, so an antonym on the same dimension read as construct identity. All
+three prompts now forbid it, with these two cases as the worked examples. The guard was calibrated
+against all 46 stored rationales and flags **E03 and E24 and nothing else** — zero false positives
+(`tests/test_core_logic.py` holds both verbatim rationales as a regression test).
+
+**The effect was recounted over the stored verdicts, not re-judged.** Re-running the judge would mix
+the fix with judge variance, which this very section measures at 67.4%–78.3% across three samples;
+a deterministic recount isolates it.
+
+| | published | corrected | certainty |
+|---|---|---|---|
+| Role-crossing allowed | 41/46 | **39/46** | certain — both codes leave every tier |
+| Same realist role | 34/46 | **32/46** | certain |
+| **One concept may claim only one** | **28/46** | **26/46** | certain, and see below |
+| Relation recovery | — | drops | **bounded, not computed**: exactly 3 of 40 scored relations have E03 or E24 as an endpoint (R02, R06, R07 — R06 has both), so at most 3/40 = 7.5 pp. The exact figure needs a verification re-run |
+
+**Two separate errors each cost one concept, and only one of them was the matcher.**
+
+- **E24** → `mech:reasoning-strategy-shift`, which **no other gold code claims**. The guard removes
+  it, so the one-to-one figure loses one. This is the matcher defect.
+- **E03** → `cont:knowledge-deficits`, which **E02 also claims** — and the over-merge table above
+  **omits this pair**. So `34 − 10 + 4 = 28` should have been `27`: the published one-to-one figure
+  was already one too high, independently of the matcher. The guard removing E03 and the one-to-one
+  constraint collapsing the pair land on the same number, which is why the correction is −2 and not
+  −3.
+
+**What this does to the claim, stated plainly.** At **26/46** the system is no longer *equal* to
+Coder B (28/46) — it is **two concepts below Coder B and four below Coder A (30/46)**. Non-inferiority
+is still the right claim, but it now rests on **overlapping confidence intervals on a denominator of
+46, not on parity**, and must be written that way. The rule stands and is now stronger: **the word
+"exceeds" must not appear.** The qualitative asymmetry in §6 is untouched — 547 grounded mentions
+against 192 and 139, every one traceable — and that, not the count, is what the architecture buys.
 
 ---
 

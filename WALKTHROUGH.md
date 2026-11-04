@@ -1566,3 +1566,152 @@ Suite: **11 passed** (7 before, 4 added).
 - **Work in `~/Downloads/Realist-Evidence-Synthesis-V2`.** `~/Project_of_my_work/Realist-Evidence-Synthesis/Realist-Evidence-Synthesis-V2`
   is a stale non-git extraction of the 30 September zip (M35, 430 files) and is missing
   `MACHINE_VS_HUMAN.md` and `ANSWERS_TO_FIVE_QUESTIONS.md` entirely.
+
+## M40 — The pipeline audited against the professor's goal, and the matcher finally fixed (2026-11-03 → 11-04)
+
+Two sessions, one purpose: **before any new-topic work, establish whether this system is on target
+for what the professor actually asked for.** No task from the 2026-10-30 email was started — the RA
+was explicit about that (*"cứ còn về cái nhiệm vụ trong cái mail thì tôi chưa bảo bạn làm"*). What
+follows is the audit and the repairs it justified.
+
+### 1. The audit: three findings, in the order they matter
+
+**(a) No human has ever performed a HITL checkpoint.** Every checkpoint in the database is signed
+`delegate:claude-code(RA-authorized-2026-07-14)` or
+`expert:claude(delegated-reviewer-per-RA-2026-07-14)`; `config/initial_programme_theory.yaml` has
+`ratified_by: null` and `ratified_at: null`; and the only two screening rows labelled human read
+`human:restored-from-audit(hitl1-delegate-01)`, which is a restore artefact, not a person. The
+`/review` console (`POST /review/screen`, `/review/conflict`, `/review/sign`, each taking a
+`reviewer` field) is **built and has never been used**. So the project's defining claim — *"human
+judgment stays sovereign"* — is the one operation never exercised. This is the single largest gap
+between the system and the professor's stated goal, and it is not a code gap.
+
+**(b) The pipeline's documented blind spot is negative affect, and the new topic is emotion.** Five
+gold concepts are recovered at no tier; four concern fear, pressure or low self-efficacy (E05, E31,
+E32, E34). The cause is still open between ontology, prompt and corpus. `config/ontology.yaml`
+already defines `Mechanism_Response` as *"the cognitive **or emotional** reaction … panic,
+frustration … gratitude"*, so the ontology is not obviously the culprit. Carrying this into a review
+*about* emotional regulation would produce silently wrong results with **no gold standard to catch
+them**. Diagnosing it is a precondition of the new assignment, not housekeeping.
+
+**(c) Coverage is the wrong thing to optimise.** The unstructured baseline recovered **32/46**,
+inside the pipeline's own per-sample range of 31–37. What the architecture buys is not more
+concepts: it is anchored verbatim quotation, per-study attribution, typed relations, derived
+mechanisms and an adjudication record. Any improvement effort aimed at the coverage number is
+aimed at the one dimension where the expensive architecture does not pay.
+
+Lesser items recorded and not acted on: precision was never measured (only recall); citation
+faithfulness is 9.7% exact against 93.1% normalised; programme-theory correspondence is 0.82 or
+0.53 depending on judge family; Leiden resolution is roughly 3.5× too coarse; there is no
+literature search and no retrieval (M39 covers both).
+
+### 2. Both gold-standard coders were human — and the manuscript is what is wrong
+
+This took two reversals and the RA to settle, and the sequence is worth keeping because the reasoning
+that produced the *second* error was superficially sound.
+
+`MACHINE_VS_HUMAN.md` §5 records two human coders and positive specific agreement of **0.785**. The
+AERA draft says the opposite: *"a general-purpose model was then given the identical frame"* and
+*"This is not an inter-rater reliability figure, as only one pass was human."* I reversed
+`VERIFICATION_PROTOCOL.md` §3.1 and `CLAUDE.md` to follow the paper (commit `d698b44`), reasoning
+that **a document is unlikely to weaken its own result by mistake**. The RA settled it — *"cả 2 đều
+là người đấy"* — and it was reverted (`61e47b6`).
+
+**The ceiling exists; 0.785 is a genuine inter-rater reliability figure; the defect is in the
+manuscript**, which prints Coder B's exact figures (28/46, 139 elements) while attributing them to a
+model and withdrawing a claim it was entitled to make. **The RA has decided not to touch the
+manuscript** (2026-11-04) — so this is recorded here and in `VERIFICATION_PROTOCOL.md` §3.1 and must
+not be "fixed" by a later session editing the draft.
+
+The lesson, for the next session that is tempted by the same inference: **a document can understate
+by mistake as easily as overstate.** Prefer the record built from the data over the prose written
+about it.
+
+### 3. The record made self-consistent (Phase 0)
+
+Four things said something the project knew to be false:
+
+- **`CLAUDE.md` reading-list item 1** told the reader to *"regenerate with `res export-results`"* —
+  the command M39 §4 established can never be run again, because `hitl_feedback` is empty and a
+  re-export silently reports 0 human decisions over the only surviving record of 28. Now reads
+  **import-only; never regenerate**, and points at `scripts/import_snapshot.py` for the database.
+- **`CLAUDE.md` lines 61–62 were a duplicated line**, left by the `61e47b6` revert.
+- **`docs/PROJECT_CONTEXT.md` §6 was still the version written 2026-07-14.** It listed three
+  professor PDFs as unread and the Neo4j/LLM/ontology decisions as open — all settled in July, and
+  three of them *reversed* in September. A reader orienting from it would have concluded the project
+  had not started. Rewritten against the actual state, and it now says explicitly which July
+  decisions in `DECISION_LOG.md` were later reversed (LangChain/LangGraph/`graphrag` deferred, no
+  embeddings, no BYOG index), because that file records what was *decided*, not what is *there*.
+
+### 4. The matcher defect fixed, and a second error found underneath it (Phase 1)
+
+Open since 2026-09-30. The two stored rationales were pulled out of `outputs/RESULTS.html` before
+writing any code, and they are **not** generic negation — they are **polarity**:
+
+```
+E03  "students with HIGH clinical domain-specific knowledge"  ->  cont:knowledge-deficits
+     "...aligns with high clinical domain-specific knowledge as THE OPPOSITE END of the same
+      knowledge construct."
+E24  "rely on NON-analytical reasoning"  ->  mech:reasoning-strategy-shift
+     "...which is THE OPPOSITE OF non-analytical reasoning, SO IT DOES NOT MATCH the gold
+      construct."
+```
+
+**The root cause is a hole in the prompt, not a dishonest judge.** The instruction forbade matching
+"merely adjacent or broader" concepts and said **nothing about polarity**, so an antonym on the same
+dimension read as construct identity. Fixed on both layers, because a prompt is a request and a
+guard is a rule:
+
+- `_POLARITY_RULE` added to **all three** match prompts, using these two cases as the worked
+  examples.
+- `_rationale_refutes()` refuses such a vote in all three judging passes — within-role, cross-role
+  recovery, and community alignment. **The recovery pass previously had no guard of any kind.**
+  Refusals are returned in `refuted_matches`, not dropped.
+- Calibrated against **all 46 stored rationales: flags E03 and E24 and nothing else, zero false
+  positives.** `tests/test_core_logic.py` holds both verbatim rationales as a regression test plus
+  a false-positive test over the whole stored page. Suite **14 passed** (11 before, 3 added).
+
+**The effect was recounted over stored verdicts, not re-judged** — deliberately. Re-running the
+judge would mix the fix with judge variance, which this project measures at 67.4%–78.3% across three
+samples; a deterministic recount isolates the fix and costs no API credit. It also respects the
+standing rule against re-running the pipeline.
+
+| | published | corrected |
+|---|---|---|
+| Role-crossing allowed | 41/46 | **39/46** |
+| Same realist role | 34/46 | **32/46** |
+| **One concept may claim only one** | **28/46** | **26/46** |
+
+**Two independent errors, each costing one concept, and only one of them was the matcher:**
+
+- **E24** → `mech:reasoning-strategy-shift`, which **no other gold code claims**. The guard removes
+  it; the one-to-one figure loses one. This is the matcher defect.
+- **E03** → `cont:knowledge-deficits`, which **E02 also claims** — and §5's over-merge table
+  **omitted that pair**. So `34 − 10 + 4 = 28` should have been **27** regardless of the matcher.
+  The guard removing E03 and the one-to-one constraint collapsing the pair land on the same number,
+  which is why the correction is −2 rather than −3.
+
+**The claim changes, and it must be written differently.** At 26/46 the system is **two below Coder
+B (28/46) and four below Coder A (30/46)** — not equal, as §5 previously said. Non-inferiority is
+still the right claim but now rests on **overlapping confidence intervals on a denominator of 46,
+not on parity.** The qualitative asymmetry is untouched: 547 grounded mentions against 192 and 139,
+every one traceable, which is what the architecture actually buys.
+
+### What the next session must not assume
+
+- **The HITL gap is not a missing feature.** `src/res_pipeline/webui.py` and the three `/review`
+  endpoints exist and work. What is missing is a person having used them once. Do not "build HITL".
+- **Do not edit the AERA manuscript.** The RA decided on 2026-11-04 to leave it alone. The record in
+  `MACHINE_VS_HUMAN.md` §5 and `VERIFICATION_PROTOCOL.md` §3.1 is the correct one; the manuscript
+  disagreeing with it is a known, accepted state.
+- **Quote 32/46 and 26/46.** Not 34, not 38, not 41, not 28. `MACHINE_VS_HUMAN.md` §5.1 is the
+  authoritative arithmetic; the older tier tables are left in place, marked, because published
+  papers quote them.
+- **Relation recovery is the one number still owed.** Exactly 3 of 40 scored relations have E03 or
+  E24 as an endpoint (R02, R06, R07; R06 has both), so the drop is bounded at 7.5 pp — but the exact
+  figure **needs a verification re-run**, which was not performed. It was not estimated and must not
+  be quoted as if it had been.
+- **`outputs/RESULTS.html` was NOT updated** and still shows 41/46 with E03 and E24 as matches. It
+  is import-only and irreplaceable (M39 §4), so the corrected figures live in the documents, not in
+  it. Anyone reading the page alone will read the superseded numbers.
+- **The negative-affect diagnosis has not been started.** Audited and scoped only.

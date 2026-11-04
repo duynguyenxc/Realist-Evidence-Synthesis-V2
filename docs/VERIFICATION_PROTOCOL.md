@@ -125,10 +125,14 @@ Two things make this honest rather than decorative:
 **Report as:** 38/46 like-for-like (95% CI 68.6–92.2), 45/46 with role-crossing allowed, of which 7
 are role disagreements. Never the role-tolerant figure alone.
 
-> **Superseded — do not quote 38/46.** A recount for `MACHINE_VS_HUMAN.md` §5 put the figure at
-> **34/46**, and showed those 34 rest on 28 distinct concepts; under the one-to-one constraint the
-> human coders worked under it is **28/46**. The matcher defect recorded in §3.1 is still open, so
-> even 34 is an overcount. **28/46 is the only concept-recovery figure safe to send out today.**
+> **Superseded twice — do not quote 38/46 or 28/46.** A recount for `MACHINE_VS_HUMAN.md` §5 put
+> the figure at **34/46** resting on 28 distinct concepts, so **28/46** one-to-one. The matcher
+> defect was then **fixed on 2026-11-04**, and the recount that followed found a second, independent
+> error: §5's over-merge table omitted the pair `cont:knowledge-deficits` ← E02, E03, so 28 was
+> already one too high. **The figures to quote are now 32/46 same-role and 26/46 one-to-one**
+> (39/46 with role-crossing allowed). See `MACHINE_VS_HUMAN.md` §5.1 for the arithmetic and for
+> which parts are certain. Relation recovery also drops by at most 3 of 40 and that one **needs a
+> re-run, not a recount**.
 
 ### 2.4 Relation recovery — three tiers, and one of them cannot fail
 
@@ -264,13 +268,19 @@ one-to-one by construction. Under the same constraint the system scores **28/46 
 Coder B and to the both-agreed set, not above them.** `MACHINE_VS_HUMAN.md` §5 states the rule
 plainly: *the word "exceeds" should not appear.*
 
-**What is still open, and it inflates the headline.** Two matcher defects found 2026-09-30 are
-**unfixed** in `verification/metrics.py` (confirmed 2026-11-02: no guard exists and no commit has
-touched the file since). `E03` and `E24` are recorded as `matched: true` carrying rationales that
-*state a non-match* — "…**as the opposite**", "…**so it does not match**" — and **E24 is inside the
-headline 34**. A rationale that states a non-match must not be allowed to set a match. Until that
-is fixed, 34/46 is an overcount of unknown size and **no concept-recovery number should be sent
-out**; 28/46 one-to-one is the figure to quote, because it does not depend on the broken matcher.
+**Fixed 2026-11-04 — and it cost two concepts, not one.** The two matcher defects found
+2026-09-30 (`E03` and `E24` recorded as `matched: true` under rationales that *state a non-match* —
+"…**as the opposite**", "…**so it does not match**") are closed. `verification/metrics.py` now
+refuses such a vote in all three judging passes, the cross-role recovery pass included, which
+previously had no guard at all; the cause was a prompt that forbade "adjacent or broader" concepts
+and said nothing about **polarity**. The guard flags exactly these two of all 46 stored rationales.
+
+The recount then surfaced a **second, independent** error: `MACHINE_VS_HUMAN.md` §5's over-merge
+table omitted `cont:knowledge-deficits` ← E02, E03, so the published one-to-one figure was already
+one too high. **Quote 32/46 same-role and 26/46 one-to-one** (39/46 role-crossing). The system is
+therefore **two below Coder B, not equal to them** — non-inferiority now rests on overlapping
+confidence intervals rather than parity, and must be written that way. `MACHINE_VS_HUMAN.md` §5.1
+is the authoritative arithmetic.
 
 **Which statistic.** Not Cohen's κ. For span/CMOC extraction there is **no well-defined number of
 negative cases**, and Hripcsak & Rothschild (2005, *JAMIA* 12(3), 296–298) prove that in exactly this

@@ -46,11 +46,15 @@ Richmond's human outputs. **Method > platform; human judgment stays sovereign.**
 - `docs/` — project memory maintained by Claude (`PROJECT_CONTEXT.md`, `DECISION_LOG.md`).
 
 ## Read these first when asked "what is the output / how do we verify it?"
-1. **`outputs/RESULTS.html`** (regenerate with `res export-results`) — the whole review as one
+1. **`outputs/RESULTS.html`** — **import-only; never regenerate.** The whole review as one
    self-contained page: Richmond's conclusions beside ours, context by context; the verification
    matrix with exact confidence intervals and a *judged by* column; all 46 gold concepts one by
    one; and every CMOC, entity, relation and emergent mechanism, searchable. This is the artefact
    to send to the professor or open in an interview. No server, no database.
+   **`res export-results` must never be run again.** The 28 human decisions this page reports live
+   in `hitl_feedback`, which the markdown-based snapshot restore could not carry (M39 §4), so any
+   re-export silently reports **0** and overwrites the only surviving record of them. Rebuild the
+   *database* with `scripts/import_snapshot.py`; leave this file alone.
 2. **`docs/VERIFICATION_PROTOCOL.md`** — why those are the right metrics, with citations, and the
    honest list of what is still missing. **Human coding is done and the ceiling exists**: two human
    coders, all 28 papers, blind, 2026-09-25; **positive specific agreement 0.785** (RA-confirmed
@@ -59,10 +63,13 @@ Richmond's human outputs. **Method > platform; human judgment stays sovereign.**
    the record). The defensible claim is still **non-inferiority, not superiority** — under the
    one-to-one constraint the humans worked under, the system scores 28/46, equal to Coder B.
    `docs/MACHINE_VS_HUMAN.md` §5 is the authoritative record; the word *exceeds* must not appear.
-   `docs/MACHINE_VS_HUMAN.md` §5 is the authoritative record; the word *exceeds* must not appear.
-   **The live blocking gap is now a matcher defect**: `verification/metrics.py` lets a rationale
-   that states a non-match set `matched: true` (E03, E24 — and E24 is inside the headline 34),
-   unfixed since it was found on 2026-09-30. Until it is fixed, quote **28/46** and nothing looser.
+   **The matcher defect is fixed (2026-11-04)** — `verification/metrics.py` now refuses a
+   `matched: true` whose rationale states a non-match or asserts opposite polarity, in all three
+   judging passes. The recount cost two concepts and found a *second* error: §5's over-merge table
+   had omitted `cont:knowledge-deficits` ← E02, E03, so 28 was already one too high. **Quote
+   32/46 same-role and 26/46 one-to-one (39/46 role-crossing)** — `MACHINE_VS_HUMAN.md` §5.1 has
+   the arithmetic. The system is **two below Coder B, not equal**, so non-inferiority now rests on
+   overlapping CIs, not parity. **Relation recovery still needs a re-run** (≤3 of 40 affected).
 3. **`gold/RICHMOND_CONCLUSIONS.md`** — what Richmond actually concluded, grounded line by line.
 
 The benchmark is `gold/richmond_gold_v3.json` (corrected 2026-09-23; `RES_GOLD=v1` reproduces

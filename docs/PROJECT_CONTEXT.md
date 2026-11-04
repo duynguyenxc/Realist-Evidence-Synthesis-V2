@@ -145,41 +145,77 @@ Why the RA was dissatisfied / open gaps (from its own `documents/Current_Project
   claims from those are weak and must be flagged or excluded.
 - **Verdict:** valuable scaffolding and a good template to reuse, but not a usable gold standard
   as-is. Keep the structure; replace the AI adjudication with real human coding.
-
 ## 6. Current status & next steps
 
-**Done:** read the accepted abstract, the 8-step verification plan, 3/4 meeting transcripts
-(Jan 23, Feb 4, Feb 19), the full NotebookLM "agentic framework" professor doc, the old project's
-README/main/architecture-FAQ/gap-report, `gold_standard.json`, `studies_metadata.jsonl`, and the
-adjudication xlsx. Created V2 `CLAUDE.md` + this file.
+> **Last rewritten 2026-11-04.** The previous version of this section was written on 2026-07-14 and
+> was never updated, so it still listed documents as unread and decisions as open that were settled
+> in July and superseded in September. If you are orienting, read `CLAUDE.md` then `WALKTHROUGH.md`
+> (newest entry first); this section is the summary, not the log.
 
-**Key signal from the May 28 meeting (first half read):** the professor scrutinized the KG and
-asked directly whether the **relation TYPES are predefined** — Duy admitted they are NOT (GraphRAG
-auto-generates untyped entities/relations). The professor clearly wants **typed, named, directed
-relations shown on the graph** (consistent with the R01–R40 predicate set:
-PROVIDES/ENABLES/TRIGGERS/LEADS_TO/CONSTRAINS). This partly resolves the emergent-vs-predefined
-tension: favour a **defined relation typology** while still allowing emergent *entity* discovery
-(hybrid). Also: old runs only used ~5 of 28 papers due to token cost; Duy had shifted to a
-multi-LLM (OpenAI+Claude+Gemini) approach for stronger screening; API budget is a live concern.
+### Built, and run
 
-**Still to read before locking architecture:**
-- Second half of `transcript-meetings/GMT20260528-...vtt` (logistics-heavy; outcomes already
-  captured by the gap report which was written in response to this meeting).
-- The other 2 professor PDFs: `new-documents-from-professor/grok output -KG and GraphRag-sent-2.pdf`,
-  `Grok output plugin agent-sent-3.pdf`.
-- Deep-read `data/paper-Richmond-original.pdf` + `Human-Workflow-from-paper-Richmond.pdf` +
-  `in4-about-28-studies-paper.pdf` (to independently rebuild the gold standard rather than trust the old one).
-- **SOTA web research** (required by the RA before deciding tech): current GraphRAG variants,
-  realist-review automation prior art, KG ontology design for CMO/realist evidence, LLM
-  screening/extraction benchmarks, model-vs-cost trade-offs, Neo4j vs Postgres+pgvector.
+**Phases 0–7 of `ARCHITECTURE.md` §8 are built and the pipeline has run end to end twice** — M34
+(2026-09-24) and M35 (2026-09-24), the second differing from the first in ways M35 records. The
+current database holds **547 entity instances, 459 typed relations, 94 CMOCs and 8 conceptual
+entities**, restored on the present machine from `scripts/import_snapshot.py` (M37) and re-verified
+against those counts in M39.
 
-**Open decisions needing the RA / professor (see DECISION_LOG.md):**
-- LLM choice + budget (RA offered an OpenAI key; consider quality-vs-cost across screening/
-  extraction/synthesis; possibly tiered models).
-- "Microsoft Graph" (the M365 enterprise API) — the professor's docs name it as the retrieval/
-  provenance backbone, but for a research prototype verifying against 28 local PDFs it is likely
-  overkill/aspirational. Decide: real M365 integration vs a simpler local provenance store that
-  we *describe* as Microsoft-Graph-compatible.
-- Storage/graph DB: Neo4j vs Postgres(+pgvector) vs file-based (parquet like the old version).
-- Predefined E-code ontology vs emergent community-defined entities (see §5 tension).
-- Whether the per-paper CMOC gold standard gets real independent human coding (needed for §4 step 2).
+The deliverable artefact is **`outputs/RESULTS.html`** — one self-contained searchable page, no
+server. It is **import-only and must never be regenerated**; see `CLAUDE.md` reading-list item 1 for
+why, and M38/M39 for how that was established.
+
+### Verification
+
+Two human coders coded **all 28 papers**, blind, on **2026-09-25**; positive specific agreement
+between them is **0.785**, so the human–human ceiling exists (RA-confirmed 2026-11-02 — see
+`MACHINE_VS_HUMAN.md` §5, which is the authoritative record). The defensible claim is
+**non-inferiority, not superiority**: under the one-to-one constraint the humans worked under, the
+system recovers **28/46** concepts, equal to Coder B. **Quote 28/46 and nothing looser** until the
+`verification/metrics.py` matcher defect is fixed. `docs/VERIFICATION_PROTOCOL.md` carries the
+metric choices with citations and the honest list of what is missing.
+
+### Decisions that were later reversed — do not go looking for the reversed versions
+
+The July decisions in `DECISION_LOG.md` are the record of what was *decided*, not of what is
+*there*. Three were superseded, each with citations, in `docs/IMPROVEMENT_PLAN.md` §3:
+
+- **LangChain / LangGraph / Microsoft `graphrag` are deferred indefinitely** and none are imported.
+  Orchestration is plain Python; HITL is a Postgres-backed checkpoint queue, not `interrupt()`.
+- **Embedding clustering and community-summarisation-as-retrieval were dropped.** There are **no
+  embeddings**; normalisation is LLM clustering over alphabetical batches of 40.
+- **There is no BYOG index and no global/local search.** `ARCHITECTURE.md` §4 states it plainly: the
+  composer receives the whole evidence pack inline, which is context stuffing, not retrieval.
+
+Of the three "still-pending decisions" in `DECISION_LOG.md`: the **second human coder happened**
+(2026-09-25); **Neo4j was never set up** (the adapter exists, the database does not, and nothing
+depends on it); a **budget ceiling was never set**.
+
+### Open, and ordered
+
+1. **`verification/metrics.py` lets a rationale that states a non-match set `matched: true`** (E03,
+   E24; E24 is inside the headline 34). Found 2026-09-30, open since. Fixing it will *lower* the
+   headline, which is the correct direction.
+2. **No human has ever performed a HITL checkpoint.** Every one is signed
+   `delegate:claude-code(RA-authorized-2026-07-14)` or `expert:claude(delegated-reviewer-per-RA-2026-07-14)`,
+   and `initial_programme_theory.yaml` has `ratified_by: null`. The `/review` console is built and
+   unused. This is the project's defining claim and the one operation never exercised.
+3. **A negative-affect blind spot.** Five gold concepts are recovered at no tier, four of them about
+   fear, pressure or low self-efficacy. Cause is open between ontology, prompt and corpus. This
+   matters now rather than later because the new topic is emotion.
+4. **No literature search and no full-text acquisition.** Richmond's 28 papers were handed to the
+   pipeline. `docs/PROFESSOR_VISION_AND_GAPS.md` §2 has the full gap table.
+5. **`config/prompts/` is empty** — prompts are embedded in code, and the professor asks for them by
+   name.
+
+### The new direction
+
+Prof. Zheng's email of **2026-10-30** parks the learning platform and redirects this pipeline to
+**students' emotional awareness and emotional regulation during learning** (higher education, STEM
+focus), asking for six outputs and naming Pekrun 2006, Gross 1998, Brackett et al. 2012 and Durlak
+et al. 2011 as seeds. **§5 of that email delegates the human-in-the-loop role to the RA in
+writing** — authority the project did not previously have. The email is the specification; see M39
+for what has been done against it, which so far is only the preparation.
+
+A second review has somewhere to write: `RES_CONFIG_DIR`, `RES_DATA_DIR`, `RES_GOLD_DIR` and
+`RES_OUTPUTS_DIR` override the project paths, and `res status` prints which are overridden. **The
+Richmond corpus, `gold/` and `outputs/` must not be written to by a new topic.**
