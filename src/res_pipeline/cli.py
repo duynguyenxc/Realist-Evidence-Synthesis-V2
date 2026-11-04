@@ -510,6 +510,54 @@ def detect_communities_cmd(min_size: int = typer.Option(2, help="Minimum communi
     _print_run_cost(run_id)
 
 
+@app.command("theorise")
+def theorise(
+    max_proposals: int = typer.Option(8, help="Cap on proposals per run (uses paid API)."),
+    show: bool = typer.Option(False, "--show", help="List existing proposals; propose nothing."),
+) -> None:
+    """Gap 3: retroduction WITHOUT a quote — what the theory needs and the corpus never says.
+
+    `extract` can only find what a paper states. Richmond's reviewers reached negative
+    coping, low self-efficacy, fear and pressure (gold E05/E31/E32/E34) by inference from
+    theory; `emotion` and `self-efficacy` occur ZERO times in all 28 papers, so no
+    extractor could have found them. RAMESES II permits the move; this command performs it.
+
+    Three fences, because this is the one place the machine asserts what the text does not
+    support: proposals go to `theorised_entities`, NEVER to the evidence graph; each must
+    name words it claims are absent, which are checked against the corpus and the proposal
+    discarded if they are present; and every proposal stays `proposed` until a human
+    ratifies it on the review console.
+    """
+    import uuid as _uuid
+
+    from res_pipeline.core.db import get_connection
+
+    if show:
+        with get_connection() as conn:
+            rows = conn.execute("SELECT id, entity_type, label, status, theory_source "
+                                "FROM theorised_entities ORDER BY id").fetchall()
+        if not rows:
+            console.print("No theorised concepts proposed yet. Run without --show.", markup=False)
+            return
+        for r in rows:
+            console.print(f"  [{r['id']}] {r['status']:9} {r['entity_type']:20} {r['label']}",
+                          markup=False)
+        return
+
+    from res_pipeline.plugins.realist.theorised import propose_theorised
+
+    run_id = f"theorise-{_uuid.uuid4().hex[:8]}"
+    result = propose_theorised(run_id, max_proposals=max_proposals)
+    for label in result["proposed"]:
+        console.print(f"  proposed: {label}", markup=False)
+    for d in result["discarded"]:
+        console.print(f"  discarded: {d['label']} — {d['why']}", markup=False)
+    console.print(f"[green]{len(result['proposed'])} proposal(s) recorded[/green], "
+                  f"{len(result['discarded'])} discarded. "
+                  f"None counts as evidence until ratified at /review.", markup=False)
+    _print_run_cost(run_id)
+
+
 @app.command()
 def retroduce(
     max_iter: int = typer.Option(2, help="Max retroduction iterations."),

@@ -298,3 +298,83 @@ whose premises were false and whose effects the design could not have detected.
 **Not on the list, and deliberately:** embedding clustering, hierarchical summarisation for
 retrieval, LangGraph, LangChain, the `graphrag` package. Each was examined against the literature
 and against this repository's own artifacts, and none survived.
+
+---
+
+# 6. The 2026-11-04 plan — audited against the professor's specification
+
+Written after auditing the pipeline against Prof. Zheng's 2026-10-30 email rather than against
+our own earlier plans. §§1–5 above remain the governing analysis of *verification*; this section
+is about the *system*. Approved by the RA on 2026-11-04. **P0 and P1 are done** (WALKTHROUGH M40
+§7); P2 is not started.
+
+## 6.1 What the audit found, so the plan is not guesswork
+
+Three things were suspected and turned out to be false, which matters because each would have
+justified expensive work:
+
+| Suspicion | Measured | Verdict |
+|---|---|---|
+| The system may fabricate quotes | 546/547 trace to the source paper (99.8%) | **false** |
+| Provenance offsets are broken | 96.1% point at the right span, 0 point elsewhere | **false** |
+| The ontology or prompts are blind to negative affect | `emotion` and `self-efficacy` occur **0** times in all 28 papers; the extractor caught affect in 9/117 `Mechanism_Response` wherever it existed | **false — it is the corpus** |
+
+And the knowledge graph is structurally clean: over 459 relations, zero ontology violations of any
+kind; 94/94 CMOCs complete.
+
+So **coverage and extraction quality are not where the work is.** What is actually missing is
+named below.
+
+## 6.2 P0 — done 2026-11-04
+
+1. **The human checkpoints were performed** — HITL-0, 3 and 4; `hitl_feedback` 0 → 21 rows.
+   Signed `ai-ra:claude(...)` under RA-delegated authority, honestly labelled, awaiting the RA's
+   countersignature at `/review`. The endpoints' unconditional `human:` prefix — the mechanism
+   that made AI and human checkpoints indistinguishable once stored — is fixed.
+2. **Prompts extracted** to `config/prompts/`, proved byte-identical. 21 of 23 are now editable
+   from config without touching code, which is the precondition for retargeting the pipeline.
+3. **The affect finding recorded** in `MACHINE_VS_HUMAN.md` with the term counts, and the two
+   places that described it as an undiagnosed defect corrected.
+
+## 6.3 P1 — done 2026-11-04
+
+1. **Relation coverage computed exactly** — no re-run was needed, because `relation_coverage()`
+   is a pure function of the entity matches: strict **6/40 → 5/40**, anchored **29/40 → 28/40**.
+2. **Retroduction without a quote** (`res theorise`), fenced three ways: a separate table so
+   inference can never enter the evidence graph, a falsifiable absence claim checked against the
+   corpus, and mandatory human ratification. **Never run** — doing so against Richmond is a
+   research decision for the RA.
+3. **Community provenance repaired** — 183/183 members relinked, zero ambiguous.
+
+## 6.4 P2 — not started, and the largest build
+
+Ordered by what blocks what, not by size.
+
+| | Work | Why it is next |
+|---|---|---|
+| **2.1** | **A literature-search agent** (OpenAlex and Crossref; both free, neither needs a key) | The pipeline has **no search of any kind**. Email §3 asks for a broader literature search in as many words. Nothing else in P2 can start without it. |
+| **2.2** | **Full-text acquisition and a named deduplication step** | Inseparable from 2.1; `PROFESSOR_VISION_AND_GAPS.md` §2 has listed both as missing since before the new assignment. |
+| **2.3** | **Real retrieval in place of context stuffing** | `ARCHITECTURE.md` §4 is explicit: the composer receives the whole evidence pack inline. That holds at 28 papers and will not hold at the corpus 2.1 produces. |
+| **2.4** | **Retarget the domain config** — `protocol.yaml`, `initial_programme_theory.yaml`, and the eight personas plus `shared_expertise` in `agents.yaml`, all of which hardcode clinical reasoning | The **ontology needs no change**: the five entity types are domain-neutral, `Intervention` is already first-class, and `Mechanism_Response` is already defined as the "cognitive **or emotional** reaction … panic, frustration". |
+
+**Carried into 2.4 as configuration, not as repairs**, because both require re-running stages that
+must not be re-run on Richmond:
+
+- **Role-blocked clustering.** With community provenance restored it is visible that no Leiden
+  community is role-pure — one declared `Mechanism_Resource` holds 10 resources, 9 interventions,
+  6 responses, 4 contexts and 3 outcomes. Leiden ran over the whole graph with no role constraint,
+  so an "emergent mechanism" is a topic cluster. Block by realist role on the new run.
+- **Context edges.** 22 of 94 CMOCs have a Context with no relation at all, so the C of the CMO
+  exists in the table and not in the graph. Require at least one Context edge per CMOC at
+  extraction time.
+- **Normalisation granularity.** 79 of 183 canonical concepts (43%) are singletons while the
+  largest holds 27 mentions. Both tails are wrong at once; role-and-polarity blocking is the
+  hypothesis, and it is the same mechanism that produced the E02/E03 over-merge fixed on
+  2026-11-04.
+
+## 6.5 What this does not address
+
+**Precision is still unmeasured.** Every coverage figure in this repository is recall against
+Richmond's 46 concepts. Nothing establishes how many of our 547 extracted mentions are spurious,
+and the audit above does not change that: a quote being verbatim proves it was not invented, not
+that the concept built on it belongs in the review.

@@ -190,3 +190,61 @@ def test_every_stored_rationale_except_those_two_survives_the_guard():
         if _rationale_refutes(rationale):
             flagged.add(match.group(1))
     assert flagged == {"E03", "E24"}, flagged
+
+
+# --- retroduction without a quote (P1.2, 2026-11-04) --------------------------------
+#
+# The one place the pipeline is allowed to assert something the corpus does not say. The
+# tests below are about the fences around it, not the inference itself.
+
+
+def test_theorised_concepts_are_not_stored_as_evidence():
+    """`theorised_entities` must be a separate table from `entity_instances`.
+
+    The temptation is to add a nullable `verbatim_quote` and keep one table. That would
+    make every existing query — coverage, faithfulness, the exports, RESULTS.html —
+    silently count inference as evidence, which is the single failure this project
+    cannot absorb. The separation is the safety property, so it is asserted here.
+    """
+    from res_pipeline.core.db import SCHEMA_DDL
+
+    assert "CREATE TABLE IF NOT EXISTS theorised_entities" in SCHEMA_DDL
+    # entity_instances still refuses anything ungrounded.
+    entity_block = SCHEMA_DDL.split("CREATE TABLE IF NOT EXISTS entity_instances")[1]
+    entity_block = entity_block.split("CREATE TABLE")[0]
+    assert "verbatim_quote  TEXT NOT NULL" in entity_block
+    # And a theorised row is a proposal until a human says otherwise.
+    theorised = SCHEMA_DDL.split("CREATE TABLE IF NOT EXISTS theorised_entities")[1]
+    theorised = theorised.split("CREATE TABLE")[0]
+    assert "DEFAULT 'proposed'" in theorised
+    assert "ratified_by" in theorised
+
+
+def test_a_theorised_proposal_must_be_falsifiable(monkeypatch):
+    """A proposal claims certain words are absent; those words are checked.
+
+    Without this, retroduction degrades into restating what the papers already say, which
+    is extraction's job and would inflate coverage with nothing new.
+    """
+    from res_pipeline.plugins.realist import theorised
+
+    class _Conn:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def execute(self, *a, **k):
+            return self
+
+        def fetchall(self):
+            return [{"canonical_text": "Students improved their diagnostic reasoning."}]
+
+    monkeypatch.setattr(theorised, "get_connection", lambda: _Conn())
+
+    missing, present = theorised._absent(["emotion", "self-efficacy", "reasoning"])
+    assert "reasoning" in present, "a word that IS in the corpus must be caught"
+    assert set(missing) == {"emotion", "self-efficacy"}
+    # No checkable claim at all is not a free pass either.
+    assert theorised._absent([]) == ([], [])

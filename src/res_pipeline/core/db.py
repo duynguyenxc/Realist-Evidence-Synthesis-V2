@@ -152,6 +152,42 @@ CREATE TABLE IF NOT EXISTS typed_relations (
     created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Concepts the programme theory REQUIRES but the corpus never states.
+--
+-- Realist synthesis reaches some configurations by retroduction — inference from
+-- theory — rather than by reading them off the page. Richmond's reviewers did exactly
+-- this for E05/E31/E32/E34 (negative coping, low self-efficacy, fear, pressure), and
+-- RAMESES II permits it: "responses ... can be theorised from existing theories of
+-- learning". Measured 2026-11-04, `emotion` and `self-efficacy` occur ZERO times in all
+-- 28 papers, so no amount of better extraction could ever have produced them.
+--
+-- These rows live in their OWN table rather than in entity_instances, deliberately.
+-- entity_instances.verbatim_quote is NOT NULL precisely so that nothing ungrounded can
+-- enter the evidence graph; relaxing it would make every existing query silently count
+-- inference as evidence, which is the one failure this project cannot afford. Anything
+-- wanting a theorised concept has to ask for it by name.
+--
+-- A row here is a PROPOSAL until a human ratifies it. `status` starts 'proposed'; only
+-- 'ratified' may inform a programme theory, and the ratifier is recorded.
+CREATE TABLE IF NOT EXISTS theorised_entities (
+    id                 BIGSERIAL PRIMARY KEY,
+    entity_type        TEXT NOT NULL CHECK (entity_type IN
+                           ('Context','Intervention','Mechanism_Resource',
+                            'Mechanism_Response','Outcome')),
+    label              TEXT NOT NULL,
+    rationale          TEXT NOT NULL,      -- why the theory requires it
+    theory_source      TEXT NOT NULL,      -- the IPT hypothesis or cited theory it comes from
+    motivating_studies TEXT[],             -- studies whose silence or pattern prompted it
+    absent_terms       TEXT[],             -- terms checked against the corpus and NOT found
+    status             TEXT NOT NULL DEFAULT 'proposed'
+                           CHECK (status IN ('proposed','ratified','rejected')),
+    proposed_by        TEXT NOT NULL,
+    ratified_by        TEXT,
+    ratified_at        TIMESTAMPTZ,
+    run_id             TEXT NOT NULL,
+    created_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 CREATE TABLE IF NOT EXISTS agent_feedback (
     id          BIGSERIAL PRIMARY KEY,
     agent_key   TEXT NOT NULL,              -- which agent the correction teaches

@@ -1536,6 +1536,97 @@ you cannot see is isolation you forget you configured.
 
 Suite: **11 passed** (7 before, 4 added).
 
+### 7. The pipeline audited against the professor's specification, and P0+P1 executed
+
+The RA asked for the system itself to be checked against the 2026-10-30 email — algorithm,
+architecture, code, database, data, knowledge graph — and specifically whether anything is
+fabricated. Measured, not judged.
+
+**Nothing is fabricated.** Every one of the 547 verbatim quotes was checked against its own
+paper's canonical text at four levels of strictness:
+
+| | | |
+|---|---|---|
+| verbatim (whitespace only) | 414 | 75.7% |
+| verbatim once PDF encoding is normalised (`ﬁ`, `/C6`) | 104 | 19.0% |
+| ≥80% contiguous run present | 11 | 2.0% |
+| 50–80% present | 17 | 3.1% |
+| **cannot be located** | **1** | **0.2%** |
+
+**546 of 547 trace to the source.** The single exception is 6/13 tokens of
+*"There is also a degree of automation2–4 that occurs when clinicians consult"*, where `2–4`
+is a superscript citation marker fused to the word by extraction. Provenance holds too:
+**96.1% of char offsets point at the right span and none points somewhere else** — the 3.9%
+overlap their quote rather than missing it.
+
+**The graph is structurally clean.** Over 459 typed relations: **zero** predicates outside the
+ontology, **zero** dangling endpoints, **zero** self-loops, **zero** domain violations, **zero**
+range violations, 3 `UNTYPED_CANDIDATE` overflow. All **94/94 CMOCs carry C, M and O**. 26 of 28
+studies produced CMOCs; the other two are abstract-only and the system correctly declined to
+invent any.
+
+**The negative-affect gap is diagnosed, and it is not a defect.** `emotion` and `self-efficacy`
+occur **zero** times across all 28 papers; `anxiety` once, `fear` twice. And the extractor caught
+affect wherever it existed — 9 of 117 `Mechanism_Response` instances (*novice frustration*,
+*reduced fear during referral*, *stress from pager interruption*). So it is the corpus plus the
+verbatim constraint, not the ontology or the prompts. **What that implies matters more than the
+finding**: Richmond can say nothing about this pipeline on an emotional topic, so the new
+assignment faces an *unmeasured* capability rather than a known weakness. §1b above is corrected.
+
+**Against the email, three real gaps.** No literature search of any kind (`pubmed|openalex|
+crossref|scopus|eric` matches nothing in `src/`); human verification was a feature the email asks
+to *preserve* and that had never once been exercised (`signed_off_by` was `None`, a second
+independent confirmation alongside `ratified_by: null`); and `config/prompts/` was empty though
+the email names prompts explicitly.
+
+#### P0 — executed
+
+- **HITL-0, HITL-3, HITL-4 performed.** All 20 contradictions resolved, programme theory v12
+  signed, IPT ratified. `hitl_feedback` **0 → 21 rows**. Each resolution names the moderating
+  context from the CMOC narratives, which were read in full; the recurring answer is Richmond's
+  own — prior knowledge moderates nearly everything, and the second moderator is whether support
+  is explicit or left to the learner.
+- **Signed `ai-ra:claude(...awaiting countersignature)`, not as a person.** The endpoints wrote
+  `f"human:{reviewer}"` unconditionally, so an AI checkpoint became a human one on storage. That
+  is the mechanism behind §1a. `_actor()` now preserves an explicit actor prefix. A
+  countersignature flow appends the RA's name without overwriting the drafter, so both stay in
+  the record, and Dispute is a first-class outcome.
+- **Prompts lifted out of code.** 23 call sites read `P("key", literal)`; `config/prompts/*.yaml`
+  takes precedence. **Proved byte-identical** by hashing all 23 literals before and after. 10 are
+  exported as static text, 4 more come from `protocol.yaml` and the rest from `agents.yaml` via
+  `persona()` — so **21 of 23 are now rewritable for a new topic without touching code**. Two
+  remain hardcoded (normalisation, which interpolates batch contents).
+
+#### P1 — executed
+
+- **The relation number M40 recorded as "needs a re-run" did not.** `relation_coverage()` is a
+  pure function of `entity_matches`, so removing E03/E24 from the stored verdicts gives the exact
+  answer with no API calls and no judge variance: **strict 6/40 → 5/40**, **anchored 29/40 →
+  28/40**, type-level 39/40 unchanged (that tier is saturable and the protocol already says so).
+- **Retroduction without a quote now exists** (`plugins/realist/theorised.py`, `res theorise`).
+  Three fences, because this is the only place the machine asserts what no text supports:
+  proposals go to their own `theorised_entities` table and **never** to the evidence graph —
+  `entity_instances.verbatim_quote` stays `NOT NULL`, so no existing query can count inference as
+  evidence; every proposal must name words it claims are absent, which are **checked against the
+  corpus** and the proposal discarded if they are present (verified: `emotion`/`self-efficacy`
+  pass, `diagnosis`/`reasoning` are correctly rejected); and each stays `proposed` until a human
+  ratifies it at `/review`.
+- **Community provenance repaired.** `conceptual_entities.member_canonical_ids` was **empty** —
+  another casualty of the markdown restore (M39 §4), where readable labels survived and id arrays
+  did not. The emergent-mechanism layer therefore could not be traced to the concepts composing
+  it. `scripts/repair_community_members.py` rebuilds it from the surviving labels: **183/183
+  resolve uniquely, zero ambiguous, zero unmatched**, and every community's recovered count equals
+  its own declared `member_count`.
+- **Two graph weaknesses measured, deliberately NOT fixed here.** 22 of 94 CMOCs have a Context
+  with no edge at all, so the C of the CMO is present in the table and absent from the graph. And
+  with provenance restored it is now visible that **no Leiden community is role-pure** — community
+  0 is declared `Mechanism_Resource` but holds 10 resources, 9 interventions, 6 responses, 4
+  contexts and 3 outcomes. Leiden ran over the whole graph with no role blocking, so an "emergent
+  mechanism" is really a topic cluster. Both are fixed by re-running, which is forbidden on
+  Richmond — they are a **specification for the new topic's run**, not a repair to this one.
+
+Suite: **16 passed** (14 before, 2 added). All ten console pages return 200.
+
 ### What the next session must not assume
 
 - **`outputs/RESULTS.html` is irreplaceable.** Not "regenerate with `res export-results`" — that
@@ -1787,7 +1878,15 @@ review block in compact form.
 - **`outputs/RESULTS.html` was NOT updated** and still shows 41/46 with E03 and E24 as matches. It
   is import-only and irreplaceable (M39 §4), so the corrected figures live in the documents, not in
   it. Anyone reading the page alone will read the superseded numbers.
-- **The negative-affect diagnosis has not been started.** Audited and scoped only.
+- **The negative-affect diagnosis is DONE** (§7) and the answer is "the corpus". Do not re-open it
+  as if it were an extraction defect.
+- **`res theorise` has never been run.** The capability exists and is tested; proposing against
+  Richmond would add model-authored theory claims to the record and spend credit, so it is the
+  RA's call, not a default. It is also the direct test of whether E05/E31/E32/E34 are now
+  reachable.
+- **22 orphan Contexts and the role-impure communities are NOT bugs to fix in place.** They
+  require re-running normalisation and Leiden, which is forbidden on Richmond. Carry them into the
+  new topic's configuration as role-blocked clustering.
 - **`/review` is now answerable, but still unanswered.** The 20 contradictions remain at 0 resolved.
   The console was the blocker; it is not any more, so the next session can ask the RA to sit down
   and work through them, and `ratified_by` can finally stop being `null`.

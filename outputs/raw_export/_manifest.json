@@ -1,5 +1,5 @@
 {
- "exported_at": "2026-11-04T16:31:23",
+ "exported_at": "2026-11-04T16:35:38",
  "database": "realist_synthesis",
  "tables": [
   {
@@ -211,6 +211,25 @@
     "char_start",
     "char_end",
     "text"
+   ]
+  },
+  {
+   "table": "theorised_entities",
+   "rows": 0,
+   "columns": [
+    "id",
+    "entity_type",
+    "label",
+    "rationale",
+    "theory_source",
+    "motivating_studies",
+    "absent_terms",
+    "status",
+    "proposed_by",
+    "ratified_by",
+    "ratified_at",
+    "run_id",
+    "created_at"
    ]
   },
   {

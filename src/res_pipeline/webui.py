@@ -1097,6 +1097,7 @@ def review():
     <h3>Checkpoints 1 &amp; 3 — Screening and contradictions</h3>
     {_review_block(pend)}
     <h3>Checkpoint 4 — Programme theory sign-off</h3>{tsign}"""
+    body += _theorised_block()
     body += _countersign_block()
     return _page("/review", body)
 
@@ -1226,6 +1227,69 @@ def _countersign_block() -> str:
         'is appended; the AI&rsquo;s draft is never overwritten, so both stay in the record. '
         'Dispute anything you disagree with and it is flagged rather than quietly kept.'
         + rows)
+
+
+def _theorised_block() -> str:
+    """Proposals the machine made WITHOUT a quote, for a human to ratify or reject.
+
+    Deliberately styled apart from the evidence checkpoints above: these are the only
+    claims on this site that no study states, and a reviewer should never confuse the
+    two. Nothing here counts for anything until it is ratified.
+    """
+    with get_connection() as c:
+        rows = c.execute("SELECT id, entity_type, label, rationale, theory_source, "
+                         "absent_terms, status FROM theorised_entities "
+                         "WHERE status='proposed' ORDER BY id").fetchall()
+        done = c.execute("SELECT count(*) n FROM theorised_entities "
+                         "WHERE status<>'proposed'").fetchone()["n"]
+    if not rows:
+        return ""
+    cards = ""
+    for r in rows:
+        terms = ", ".join(r["absent_terms"] or [])
+        cards += (
+            f'<div class="revcard"><div class="revtop">'
+            f'<b>{_esc(r["label"])}</b>'
+            f'<span class="tag gap">{_esc(r["entity_type"])} &middot; no quote exists</span></div>'
+            f'<div class="revwhat">'
+            f'<div class="who m">Why the theory requires it</div>'
+            f'<div style="margin:.25rem 0;font-size:.86rem">{_esc(r["rationale"])}</div>'
+            f'<div class="who m" style="margin-top:.5rem">Follows from</div>'
+            f'<div class="muted" style="font-size:.84rem">{_esc(r["theory_source"])}</div>'
+            f'<div class="muted" style="font-size:.82rem;margin-top:.4rem">Checked and '
+            f'<b>absent</b> from all 28 papers: <i>{_esc(terms)}</i></div></div>'
+            f'<div class="revask"><div class="who h">Does the theory warrant this?</div>'
+            f'<form class="f" method="post" action="/review/theorised">'
+            f'<input type="hidden" name="eid" value="{r["id"]}">'
+            f'<input name="reviewer" placeholder="Your name" required style="max-width:140px">'
+            f'<button class="btn human sm" name="accept" value="yes">Ratify</button>'
+            f'<button class="btn ghost sm" name="accept" value="no">Reject</button>'
+            f'</form></div></div>')
+    return (
+        '<h2 style="margin-top:1.6rem">Claims with no quote behind them</h2>'
+        '<p class="muted" style="max-width:62rem;margin:.2rem 0 .8rem">Realist synthesis allows '
+        'a configuration to be reached by inference from theory when the studies are silent &mdash; '
+        'RAMESES II permits it and Richmond&rsquo;s reviewers used it for negative coping, low '
+        'self-efficacy, fear and pressure, none of which the 28 papers mention. <b>These are the '
+        'only claims on this site that no study states</b>, they are stored apart from the evidence '
+        'graph, and they count for nothing until you ratify them. '
+        f'{done} already decided.</p>' + cards)
+
+
+@app.post("/review/theorised")
+def r_theorised(eid: int = Form(), reviewer: str = Form(), accept: str = Form(default="yes")):
+    from res_pipeline.plugins.realist.theorised import ratify
+
+    rid = f"webui-{uuid.uuid4().hex[:6]}"
+    who = _actor(reviewer)
+    ratify(eid, who, accept=(accept == "yes"))
+    with get_connection() as c:
+        c.execute("INSERT INTO hitl_feedback (checkpoint,subject_ref,action,feedback,payload,run_id) "
+                  "VALUES ('HITL-2',%s,%s,%s,'{}',%s)",
+                  (f"theorised-{eid}", "approve" if accept == "yes" else "reject",
+                   f"{'ratified' if accept == 'yes' else 'rejected'} by {who}", rid))
+    log_audit_event(rid, who, "webui_ratify_theorised", subject_ref=f"theorised-{eid}")
+    return RedirectResponse("/review", 303)
 
 
 @app.post("/review/countersign")
