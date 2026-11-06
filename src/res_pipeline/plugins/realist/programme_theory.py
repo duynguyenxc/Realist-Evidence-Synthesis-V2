@@ -12,14 +12,18 @@ citations. Human sign-off (HITL-4) is recorded before the theory is marked final
 
 from __future__ import annotations
 
+import os
+
 import json
 
 from pydantic import BaseModel, Field
 
 from res_pipeline.core.agents import persona
+from res_pipeline.core.config import load_yaml_config
 from res_pipeline.core.db import get_connection, log_audit_event
 from res_pipeline.core.llm import call_structured
 from res_pipeline.core.prompts import P
+from res_pipeline.core.retrieval import select
 from res_pipeline.plugins.realist.ipt import ipt_prompt_block
 
 PROMPT_VERSION = "programme-theory-v2.0-ipt"
@@ -47,8 +51,21 @@ class ProgrammeTheory(BaseModel):
     )
 
 
+# Above this many CMOC statements the composer stops being given all of them and gets
+# the BM25-ranked top slice instead. 400 is chosen to sit well above Richmond's 94, so
+# the published run is byte-identical and no figure moves; retrieval engages only on the
+# larger corpus `res search` produces, which is the only place it is needed. Tune with
+# RES_EVIDENCE_CAP rather than by editing this.
+_STATEMENT_CAP = int(os.getenv("RES_EVIDENCE_CAP", "400"))
+
+
 def _evidence_pack() -> dict:
-    """Assemble the evidence the composer is allowed to use (and nothing else)."""
+    """Assemble the evidence the composer is allowed to use (and nothing else).
+
+    Everything aggregated — demi-regularities, contradictions, communities — is passed
+    whole, because those layers are already summaries of the corpus and are small by
+    construction. Only the per-study CMOC statements grow with the corpus, so only they
+    are retrieved against, and the pack records whether that happened."""
     with get_connection() as conn:
         motifs = conn.execute(
             "SELECT context_concept, driver_concept, outcome_concept, polarity, study_ids "
@@ -70,11 +87,17 @@ def _evidence_pack() -> dict:
             ).fetchall()
         except Exception:  # noqa: BLE001 — table absent until communities are detected
             communities = []
+    question = load_yaml_config("protocol").get("review_question", "")
+    chosen, report = select([dict(s) for s in statements], question,
+                            text_key="narrative_statement", cap=_STATEMENT_CAP)
     return {
         "conceptual_entities": [dict(c) for c in communities],
         "demi_regularities": [dict(m) for m in motifs],
         "contradictions": [dict(c) for c in conflicts],
-        "cmoc_statements": [dict(s) for s in statements],
+        "cmoc_statements": chosen,
+        # Carried so a synthesis built on a subset can SAY so. A realist review that
+        # silently dropped evidence would be unreportable.
+        "_retrieval": report,
     }
 
 

@@ -1,0 +1,102 @@
+# =============================================================================
+# Realist Synthesis Ontology (the scientific core of the pipeline)
+# -----------------------------------------------------------------------------
+# Grounded in:
+#   - Richmond et al. (2020), Medical Education 54(8):709-719 (the worked example)
+#   - RAMESES II reporting standards (Wong et al., BMC Medicine 2016): CMO elements
+#     MUST be explicitly and separately labelled
+#   - Professor's requirement (meeting 2026-05-28): relation types must be
+#     predefined, named, and directed — not emergent-only
+#   - Ontology-guided extraction with domain/range validation (see
+#     docs/research/SOTA_REPORT.md Q1/Q3)
+#
+# Design: HYBRID ontology.
+#   * Entity TYPES and relation PREDICATES are fixed (below).
+#   * Entity INSTANCES (labels/descriptions) are emergent from the literature and
+#     canonicalized by the Normalization Agent.
+#   * Mapping to Richmond E-codes (E01-E47) happens ONLY in the verification
+#     layer (gold/richmond_gold.json) — never inside extraction prompts, to keep
+#     the benchmark non-circular.
+# =============================================================================
+
+version: "1.0"
+
+entity_types:
+  Context:
+    definition: >
+      A pre-existing condition of the learner, group, teacher, or setting that is
+      separate from the intervention but affects how the intervention is received
+      (e.g., low domain-specific knowledge, high self-confidence, mixed-knowledge group).
+  Intervention:
+    definition: >
+      A teaching process, method, or resource-delivering activity for developing
+      knowledge, skills, or reasoning (e.g., expert think-aloud, simulation,
+      test-enhanced learning, feedback provision).
+  Mechanism_Resource:
+    definition: >
+      What the intervention offers/introduces into the context — the resource
+      component of a realist mechanism (e.g., explicit explanation of expert
+      reasoning, opportunity to make mistakes safely).
+  Mechanism_Response:
+    definition: >
+      The cognitive or emotional reaction of participants to the resource — the
+      response component of a realist mechanism (e.g., understanding, panic,
+      frustration, increased cognitive load, gratitude).
+  Outcome:
+    definition: >
+      The measured or theorised effect of the intervention-in-context (e.g.,
+      diagnostic accuracy, illness-script completeness, negative learning outcome).
+
+structural_node_types:
+  Study:
+    definition: "A primary study in the corpus (S001-S028), carrying bibliographic metadata."
+  CMOC:
+    definition: >
+      A Context-Mechanism-Outcome Configuration: one bundled realist claim within
+      a single study, linking instances of the five entity types above. The
+      analytic unit of realist synthesis per RAMESES II.
+
+# Domain/range constraints below were VALIDATED against all 40 gold relations
+# (R01-R40) derived from Richmond et al. (2020): the map admits every gold
+# relation and nothing structurally alien. Do not tighten without re-running
+# tests/test_ontology.py::test_gold_relations_satisfy_domain_range.
+relation_predicates:
+  PROVIDES:
+    domain: [Intervention]
+    range: [Mechanism_Resource, Mechanism_Response]
+    definition: >
+      The intervention supplies/offers this resource into the context (or directly
+      provides a cognitive response, e.g. understanding — cf. gold R01).
+  TRIGGERS:
+    domain: [Intervention, Mechanism_Resource]
+    range: [Mechanism_Response, Outcome]
+    definition: >
+      The resource (or intervention directly) evokes this cognitive/emotional
+      response, or directly shifts an outcome (cf. gold R37-R40, Richmond Fig. 3).
+  ENABLES:
+    domain: [Context]
+    range: [Mechanism_Response, Outcome]
+    definition: "The context makes this response/outcome possible or amplifies it."
+  LEADS_TO:
+    domain: [Mechanism_Response]
+    range: [Mechanism_Response, Outcome]
+    definition: "The response produces a further response or an outcome."
+  CONSTRAINS:
+    domain: [Context]
+    range: [Outcome]
+    definition: "The context limits or negatively conditions this outcome."
+
+# Overflow bucket: extraction candidates that do not fit any predicate above are
+# NOT silently dropped (fixed-typology miss-rate risk); they are stored as
+# UNTYPED_CANDIDATE and surfaced for human review at HITL-2.
+overflow_relation: UNTYPED_CANDIDATE
+
+provenance_required_fields:
+  - study_id
+  - text_unit_id
+  - char_start
+  - char_end
+  - verbatim_quote
+  - extractor_model
+  - prompt_version
+  - confidence

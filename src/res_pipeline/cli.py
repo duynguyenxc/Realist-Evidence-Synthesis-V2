@@ -28,6 +28,155 @@ def init_db() -> None:
     console.print("[green]Schema initialized.[/green]")
 
 
+@app.command("search")
+def search(
+    query: list[str] = typer.Argument(..., help="One or more queries; results are pooled."),
+    from_year: int = typer.Option(None, "--from-year", help="Earliest publication year."),
+    to_year: int = typer.Option(None, "--to-year", help="Latest publication year."),
+    limit: int = typer.Option(200, help="Max records PER query PER source."),
+    sources: str = typer.Option("openalex,crossref", help="Comma-separated: openalex, crossref."),
+    types: str = typer.Option("article", help="OpenAlex work types, or '' for all."),
+    out: str = typer.Option(None, help="Where to write the corpus "
+                                       "(default: <DATA_DIR>/studies_metadata.jsonl)."),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Search and report; write nothing."),
+) -> None:
+    """Find the literature. The stage this pipeline never had.
+
+    Searches OpenAlex and Crossref — free, keyless, open-catalogue, so the search is
+    reproducible by a reader — pools the queries, deduplicates by DOI and then by
+    normalised title, and writes `studies_metadata.jsonl` in the format the existing
+    registry already reads. Every query is logged to `search_log` with its parameters,
+    because RAMESES II requires the search to be reportable well enough to repeat.
+
+    WRITING IS DESTRUCTIVE AND GUARDED. The output file is the corpus definition; the
+    command refuses to overwrite Richmond's unless DATA_DIR has been pointed elsewhere
+    (RES_DATA_DIR in .env), because a new topic must never consume the benchmark corpus.
+
+        res search "emotion regulation higher education" "achievement emotions STEM" \\
+            --from-year 2005 --limit 300
+    """
+    from res_pipeline.core.config import assert_isolated
+    assert_isolated()
+
+    import json as _json
+    import uuid as _uuid
+    from pathlib import Path
+
+    from res_pipeline.core.config import DATA_DIR, PROJECT_ROOT
+    from res_pipeline.core.db import get_connection
+    from res_pipeline.core.literature import (
+        deduplicate, search_crossref, search_openalex, write_metadata_jsonl)
+
+    target = Path(out) if out else DATA_DIR / "studies_metadata.jsonl"
+    richmond = PROJECT_ROOT / "data" / "studies_metadata.jsonl"
+    if not dry_run and target.resolve() == richmond.resolve():
+        console.print(
+            "[red]Refusing to overwrite Richmond's corpus definition.[/red] "
+            "That file defines the benchmark every published figure rests on. Point a new "
+            "review elsewhere with RES_DATA_DIR in .env (see `res status`), or pass --out.",
+            markup=False)
+        raise typer.Exit(1)
+
+    run_id = f"search-{_uuid.uuid4().hex[:8]}"
+    wanted = [s.strip() for s in sources.split(",") if s.strip()]
+    type_tuple = tuple(t.strip() for t in types.split(",") if t.strip())
+    pooled = []
+    with get_connection() as conn:
+        for q in query:
+            for src in wanted:
+                fn = search_openalex if src == "openalex" else search_crossref
+                kwargs = {"from_year": from_year, "to_year": to_year, "limit": limit}
+                if src == "openalex":
+                    kwargs["types"] = type_tuple
+                hits = fn(q, **kwargs)
+                pooled.extend(hits)
+                conn.execute(
+                    "INSERT INTO search_log (query, source, filters, n_returned, run_id) "
+                    "VALUES (%s,%s,%s,%s,%s)",
+                    (q, src, _json.dumps({"from_year": from_year, "to_year": to_year,
+                                          "limit": limit, "types": list(type_tuple)}),
+                     len(hits), run_id))
+                console.print(f"  {src:9} {len(hits):>4}  {q}", markup=False)
+
+    kept, stats = deduplicate(pooled)
+    with get_connection() as conn:
+        conn.execute("UPDATE search_log SET n_after_dedup=%s WHERE run_id=%s",
+                     (len(kept), run_id))
+
+    console.print(f"\n  pooled {stats['input']} -> {stats['kept']} unique "
+                  f"(removed {stats['removed_by_doi']} by DOI, "
+                  f"{stats['removed_by_title']} by title)", markup=False)
+    with_abs = sum(1 for r in kept if r.abstract)
+    console.print(f"  with an abstract: {with_abs}/{len(kept)} "
+                  f"({with_abs / len(kept):.0%})" if kept else "  nothing found", markup=False)
+
+    if dry_run:
+        console.print("[yellow]--dry-run: nothing written.[/yellow]", markup=False)
+        for r in kept[:10]:
+            console.print(f"    {r.year}  {r.title[:84]}", markup=False)
+        return
+
+    n = write_metadata_jsonl(kept, target)
+    console.print(f"[green]{n} records[/green] -> {target}", markup=False)
+    console.print("Next: `res ingest` to acquire and normalise, then `res screen`.", markup=False)
+
+
+@app.command("acquire")
+def acquire(
+    metadata: str = typer.Option(None, help="studies_metadata.jsonl (default: <DATA_DIR>/...)."),
+    dest: str = typer.Option(None, help="Where PDFs go (default: <DATA_DIR>/fulltext)."),
+    limit: int = typer.Option(0, help="Fetch at most N (0 = all with an OA link)."),
+    confirm: bool = typer.Option(False, "--confirm",
+                                 help="Actually download. Without it this reports only."),
+) -> None:
+    """Fetch the open-access full texts for a searched corpus.
+
+    Only copies the catalogue itself links as open access — never a paywall bypass. How
+    many full texts were obtainable, and which were not, is reported rather than hidden:
+    for a realist review that ratio is a finding about the evidence base, not an
+    inconvenience.
+
+    Reports by default. `--confirm` is required to write files, because this pulls many
+    documents off the open web and that should be a decision each time.
+    """
+    import json as _json
+    from pathlib import Path
+
+    from res_pipeline.core.config import DATA_DIR
+    from res_pipeline.core.literature import Candidate, acquire_fulltext
+
+    meta_path = Path(metadata) if metadata else DATA_DIR / "studies_metadata.jsonl"
+    dest_dir = Path(dest) if dest else DATA_DIR / "fulltext"
+    if not meta_path.exists():
+        console.print(f"[red]No corpus at {meta_path}[/red] — run `res search` first.",
+                      markup=False)
+        raise typer.Exit(1)
+
+    records = []
+    with meta_path.open(encoding="utf-8") as fh:
+        for line in fh:
+            if not line.strip():
+                continue
+            d = _json.loads(line)
+            records.append(Candidate(
+                source=d.get("source", "?"), source_id=d.get("source_id", ""),
+                doi=d.get("doi"), title=d.get("title", ""), year=d.get("year"),
+                oa_pdf_url=d.get("oa_pdf_url") or d.get("url")))
+
+    result = acquire_fulltext(records, dest_dir, limit=limit,
+                              dry_run=not confirm, log=console.print)
+    console.print(f"  records {result['candidates']}, with an OA link "
+                  f"{result['with_oa_pdf']}", markup=False)
+    if not confirm:
+        console.print("[yellow]Reporting only.[/yellow] Re-run with --confirm to download "
+                      f"into {dest_dir}.", markup=False)
+        return
+    console.print(f"[green]fetched {result['fetched']}[/green], failed {result['failed']} "
+                  f"-> {dest_dir}", markup=False)
+    for e in result["errors"][:8]:
+        console.print(f"    {e['doi']}: {e['error']}", markup=False)
+
+
 @app.command()
 def ingest(
     source: str = typer.Option(
@@ -40,6 +189,9 @@ def ingest(
     not just the 28-study benchmark. Supported inputs: PDF (full text), a .txt sidecar next
     to a PDF (abstract-only), or a .jsonl metadata file (structured records).
     """
+    from res_pipeline.core.config import assert_isolated
+    assert_isolated()
+
     from pathlib import Path
 
     from res_pipeline.core.db import (
@@ -101,6 +253,9 @@ def screen(
     limit: int = typer.Option(None, help="Pilot mode: screen only the first N studies."),
 ) -> None:
     """Phase 2: title/abstract screening with dual-model vote (recall-first)."""
+    from res_pipeline.core.config import assert_isolated
+    assert_isolated()
+
     import uuid as _uuid
 
     from res_pipeline.core.registry import build_registry
@@ -184,6 +339,9 @@ def extract(
 
     Take a database backup before ``--refresh`` regardless.
     """
+    from res_pipeline.core.config import assert_isolated
+    assert_isolated()
+
     import uuid as _uuid
 
     from res_pipeline.core.db import get_connection
@@ -528,6 +686,9 @@ def theorise(
     discarded if they are present; and every proposal stays `proposed` until a human
     ratifies it on the review console.
     """
+    from res_pipeline.core.config import assert_isolated
+    assert_isolated()
+
     import uuid as _uuid
 
     from res_pipeline.core.db import get_connection
@@ -574,6 +735,9 @@ def retroduce(
     re-read the studies the Checker flagged or the verifier scored low, then re-synthesise —
     until the flagged set is empty or max_iter is reached.
     """
+    from res_pipeline.core.config import assert_isolated
+    assert_isolated()
+
     import uuid as _uuid
 
     from res_pipeline.plugins.realist.retroduction import run_retroduction
@@ -590,6 +754,9 @@ def retroduce(
 @app.command()
 def synthesize() -> None:
     """Phases 3b-5: normalization → demi-regularities/contradictions → programme theory."""
+    from res_pipeline.core.config import assert_isolated
+    assert_isolated()
+
     import uuid as _uuid
 
     from res_pipeline.graph.communities import detect_communities

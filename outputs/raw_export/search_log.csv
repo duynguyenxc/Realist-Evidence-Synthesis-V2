@@ -1,0 +1,5 @@
+id,query,source,filters,n_returned,n_after_dedup,run_id,searched_at
+1,emotional regulation higher education STEM,openalex,"{""limit"": 40, ""types"": [""article""], ""to_year"": null, ""from_year"": 2005}",40,158,search-64cf2970,2026-11-06T08:47:20.257468+07:00
+2,emotional regulation higher education STEM,crossref,"{""limit"": 40, ""types"": [""article""], ""to_year"": null, ""from_year"": 2005}",40,158,search-64cf2970,2026-11-06T08:47:20.257468+07:00
+3,achievement emotions undergraduate learning,openalex,"{""limit"": 40, ""types"": [""article""], ""to_year"": null, ""from_year"": 2005}",40,158,search-64cf2970,2026-11-06T08:47:20.257468+07:00
+4,achievement emotions undergraduate learning,crossref,"{""limit"": 40, ""types"": [""article""], ""to_year"": null, ""from_year"": 2005}",40,158,search-64cf2970,2026-11-06T08:47:20.257468+07:00

@@ -152,6 +152,25 @@ CREATE TABLE IF NOT EXISTS typed_relations (
     created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Every literature search issued, verbatim enough to repeat.
+--
+-- RAMESES II requires a realist review to report its search so that another team can
+-- run it again. Before 2026-11-06 there was no search stage at all, so there was
+-- nothing to report; Richmond's 28 papers were handed to the pipeline. Now each query
+-- records its exact parameters, the URL pattern used, when it ran, how many records
+-- came back and how many survived deduplication -- so the search section of the paper
+-- is generated from the record instead of reconstructed from memory.
+CREATE TABLE IF NOT EXISTS search_log (
+    id             BIGSERIAL PRIMARY KEY,
+    query          TEXT NOT NULL,
+    source         TEXT NOT NULL,            -- openalex | crossref
+    filters        JSONB NOT NULL DEFAULT '{}'::jsonb,
+    n_returned     INT NOT NULL,
+    n_after_dedup  INT,
+    run_id         TEXT NOT NULL,
+    searched_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- Concepts the programme theory REQUIRES but the corpus never states.
 --
 -- Realist synthesis reaches some configurations by retroduction — inference from

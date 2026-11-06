@@ -1,5 +1,5 @@
 {
- "exported_at": "2026-11-04T16:35:38",
+ "exported_at": "2026-11-06T08:54:02",
  "database": "realist_synthesis",
  "tables": [
   {
@@ -181,6 +181,20 @@
     "confidence",
     "run_id",
     "created_at"
+   ]
+  },
+  {
+   "table": "search_log",
+   "rows": 4,
+   "columns": [
+    "id",
+    "query",
+    "source",
+    "filters",
+    "n_returned",
+    "n_after_dedup",
+    "run_id",
+    "searched_at"
    ]
   },
   {

@@ -248,3 +248,68 @@ def test_a_theorised_proposal_must_be_falsifiable(monkeypatch):
     assert set(missing) == {"emotion", "self-efficacy"}
     # No checkable claim at all is not a free pass either.
     assert theorised._absent([]) == ([], [])
+
+
+# --- P2: search, retrieval, and the isolation guard (2026-11-06) --------------------
+
+
+def test_second_review_cannot_write_into_richmonds_database(monkeypatch):
+    """Isolated directories plus a shared database is the one silently fatal combination.
+
+    RES_*_DIR gives a new topic somewhere to put its corpus and outputs, but the
+    entities, relations and CMOCs live in Postgres. A run with RES_CONFIG_DIR set and
+    POSTGRES_DB left alone would write a different topic's extractions into the tables
+    every published Richmond figure was computed from — no error, no symptom, until
+    someone recounted.
+    """
+    cfg = _reload_config(monkeypatch, RES_CONFIG_DIR="config-emotion")
+    import pytest
+
+    with pytest.raises(cfg.IsolationError):
+        cfg.assert_isolated()
+    assert "NOT ISOLATED" in cfg.active_paths()["database"]
+
+    # With both overridden it is allowed, and with neither (Richmond) it is allowed.
+    cfg = _reload_config(monkeypatch, RES_CONFIG_DIR="config-emotion",
+                         POSTGRES_DB="realist_emotion")
+    cfg.assert_isolated()
+    cfg = _reload_config(monkeypatch)
+    cfg.assert_isolated()
+
+
+def test_retrieval_is_inert_below_the_cap():
+    """Richmond's evidence pack must be byte-identical, or published figures move."""
+    from res_pipeline.core.retrieval import select
+
+    items = [{"t": f"statement {i}"} for i in range(94)]
+    same, report = select(items, "any query", text_key="t", cap=400)
+    assert same == items
+    assert report["retrieved"] is False
+
+
+def test_retrieval_ranks_by_term_overlap_above_the_cap():
+    from res_pipeline.core.retrieval import select
+
+    items = [
+        {"t": "reflective writing improves emotional awareness in undergraduates"},
+        {"t": "spaced retrieval practice and long-term retention of facts"},
+        {"t": "worked examples reduce cognitive load for novice diagnosticians"},
+    ]
+    chosen, report = select(items, "emotional awareness", text_key="t", cap=1)
+    assert report["retrieved"] is True and report["dropped"] == 2
+    assert "emotional awareness" in chosen[0]["t"]
+
+
+def test_deduplication_prefers_the_first_source_and_keeps_the_fuller_record():
+    """Crossref often has the DOI where OpenAlex has the abstract; neither should be lost."""
+    from res_pipeline.core.literature import Candidate, deduplicate
+
+    a = Candidate(source="openalex", source_id="W1", doi="10.1/x", title="Emotion in STEM")
+    b = Candidate(source="crossref", source_id="10.1/X", doi="10.1/X",
+                  title="Emotion in STEM", abstract="An abstract.")
+    c = Candidate(source="crossref", source_id="z", doi=None,
+                  title="emotion  in   stem!!", abstract="Same paper, messy title.")
+    kept, stats = deduplicate([a, b, c])
+    assert len(kept) == 1 and kept[0].source == "openalex"
+    assert kept[0].abstract == "An abstract.", "the abstract must be carried across"
+    assert stats["removed_by_doi"] == 1 and stats["removed_by_title"] == 1

@@ -71,7 +71,12 @@ def active_paths() -> dict[str, str]:
         except ValueError:
             shown = str(path)
         out[name] = shown + ("" if path == default[name] else "   [overridden]")
-    out["database"] = os.getenv("POSTGRES_DB", "realist_synthesis")
+    db = os.getenv("POSTGRES_DB", "realist_synthesis")
+    # The directories can be isolated while the database is not, which is the one
+    # combination that silently mixes two reviews' evidence. Say so here, loudly.
+    unsafe = bool((os.getenv("RES_CONFIG_DIR") or "").strip()) and db == "realist_synthesis"
+    out["database"] = db + ("   [!! NOT ISOLATED — writes are blocked, set POSTGRES_DB]"
+                            if unsafe else "")
     return out
 
 
@@ -106,3 +111,33 @@ def load_yaml_config(name: str) -> dict:
     path = CONFIG_DIR / f"{name}.yaml"
     with path.open(encoding="utf-8") as fh:
         return yaml.safe_load(fh)
+
+
+class IsolationError(RuntimeError):
+    """A second review is configured to write into the first review's database."""
+
+
+def assert_isolated() -> None:
+    """Refuse to write a new review's data into Richmond's database.
+
+    The directory overrides added on 2026-11-02 gave a second review somewhere to put
+    its corpus, config and outputs. They do NOT isolate the database, and the database
+    is where the entities, relations and CMOCs actually live — so a run with
+    ``RES_CONFIG_DIR=config-emotion`` and no ``POSTGRES_DB`` would write a different
+    topic's extractions into the tables every published Richmond figure was computed
+    from, with no error and no obvious symptom until somebody recounted.
+
+    Called by the stages that write. Reading is unaffected, so `res status` and the
+    console still work and can explain the problem.
+    """
+    import os as _os
+
+    config_overridden = bool((_os.getenv("RES_CONFIG_DIR") or "").strip())
+    db = _os.getenv("POSTGRES_DB", "realist_synthesis")
+    if config_overridden and db == "realist_synthesis":
+        raise IsolationError(
+            f"CONFIG_DIR is overridden ({CONFIG_DIR.name}) but POSTGRES_DB is still "
+            f"'{db}' — Richmond's database. A second review must not write into it.\n"
+            f"  Set POSTGRES_DB in .env (e.g. POSTGRES_DB=realist_emotion) and create it:\n"
+            f"    createdb realist_emotion\n"
+            f"Reading is unaffected; only stages that write are blocked.")

@@ -1,0 +1,161 @@
+# =============================================================================
+# INITIAL PROGRAMME THEORY — emotional awareness and regulation during learning
+# -----------------------------------------------------------------------------
+# A realist review authors its IPT BEFORE the analysis, from established theory and
+# scoping, and the corpus then confirms, refines or rejects it. This seed is built
+# from the four references Prof. Zheng named on 2026-10-30, plus the public theory
+# they rest on. It encodes HYPOTHESES, never findings.
+#
+# CONTAMINATION BOUNDARY: unlike the Richmond seed there is no answer key to avoid
+# here — this review has no gold standard, which is itself the central methodological
+# problem (see `no_benchmark` below). Nothing in this file may be revised to match a
+# result obtained later without recording that in refinement_log.
+#
+# STATUS: draft seed. Requires human ratification at HITL-0 before a production run.
+# =============================================================================
+
+version: "0.1-seed"
+derived_from:
+  - "config-emotion/protocol.yaml"
+  - "the four references named in the 2026-10-30 assignment"
+ratified_by: null            # HITL-0 — must be a person for this review
+ratified_at: null
+
+seed_theories:
+  control_value_theory:
+    claim: >
+      Achievement emotions arise from two appraisals: how much CONTROL a learner
+      believes they have over an achievement activity or outcome, and how much VALUE
+      they place on it. Emotions are organised by valence, by activation, and by
+      whether they attach to the activity or to its outcome — giving enjoyment, hope,
+      pride and relief on one side and anger, anxiety, shame, hopelessness and boredom
+      on the other. The practical consequence for this review: an intervention changes
+      emotion mainly by changing an APPRAISAL, so the appraisal is where the mechanism
+      should be looked for.
+    ref: "Pekrun 2006, Educational Psychology Review 18, 315-341"
+  process_model_of_emotion_regulation:
+    claim: >
+      Regulation can act at five points in the unfolding of an emotion: selecting the
+      situation, modifying it, deploying attention, changing the cognition
+      (reappraisal), or modulating the response (e.g. suppression). Antecedent-focused
+      strategies such as reappraisal generally carry lower cognitive cost and better
+      downstream outcomes than response-focused suppression. The consequence: WHERE in
+      the sequence an intervention acts is a candidate explanation for why two
+      apparently similar interventions diverge.
+    ref: "Gross 1998, Review of General Psychology 2(3), 271-299"
+  emotional_literacy_instruction:
+    claim: >
+      Emotional skill can be taught explicitly and in sequence — recognising,
+      understanding, labelling, expressing and regulating feelings — and doing so is
+      associated with gains in both social-emotional competence and academic
+      performance. The consequence: a shared, precise FEELING VOCABULARY is itself a
+      candidate mechanism resource, not merely a delivery wrapper.
+    ref: "Brackett, Reyes, Rivers & Salovey 2012, Learning and Individual Differences 22(2), 218-224"
+  sel_programme_effectiveness:
+    claim: >
+      Across 213 school-based universal programmes and 270,034 students, social and
+      emotional learning produced an 11-percentile-point gain in achievement, and
+      effectiveness tracked four implementation features — Sequenced, Active, Focused
+      and Explicit (SAFE). The consequence: implementation quality is a CONTEXT
+      dimension in its own right, and a null result may be an implementation failure
+      rather than a theory failure. This is the main reason to code delivery fidelity.
+    ref: "Durlak, Weissberg, Dymnicki, Taylor & Schellinger 2011, Child Development 82(1), 405-432"
+  expertise_and_load_literature:
+    claim: >
+      Prior knowledge, self-efficacy and cognitive load moderate instructional effect
+      generally. Carried over from the Richmond seed because it is public theory and
+      independent of either topic; here it predicts that a regulation prompt costs
+      working memory and may therefore harm a learner who has none to spare.
+    ref: "Kalyuga et al. 2003; Bandura (self-efficacy)"
+
+cmo_skeleton: >
+  In a learner CONTEXT (C) — their appraisals of control and value, their existing
+  regulatory repertoire, the emotional climate of the course — an educational
+  intervention offers a MECHANISM-RESOURCE (M_resource) such as a feeling vocabulary,
+  a reappraisal prompt or a restored sense of control. The learner's emotional and
+  cognitive MECHANISM-RESPONSE (M_response) to that resource, conditioned by C,
+  produces an OUTCOME (O) in awareness, regulation, engagement or attainment.
+
+context_levels_to_investigate:
+  - level: individual_student
+    hypothesis: "Appraisal and regulatory repertoire most strongly moderate effect."
+  - level: course_and_instructor
+    hypothesis: "Assessment design and instructor emotional climate moderate effect."
+  - level: discipline_or_institution
+    hypothesis: >
+      STEM disciplinary culture — competitive grading, weed-out courses, norms against
+      expressing difficulty — may suppress intervention effects that work elsewhere.
+      This is the hypothesis the professor's STEM focus makes most worth testing.
+
+hypothesised_context_dimensions:
+  - id: control_appraisal
+    from_theory: "control-value theory (Pekrun 2006)"
+    to_test: "Does perceived control over the task change which intervention works?"
+  - id: value_appraisal
+    from_theory: "control-value theory (Pekrun 2006)"
+    to_test: "Does the learner's valuing of the subject moderate the effect?"
+  - id: existing_regulatory_repertoire
+    from_theory: "process model (Gross 1998)"
+    to_test: >
+      Do learners who already reappraise benefit less from being taught to, the way
+      expertise reversal operates for knowledge?
+  - id: emotional_climate_and_safety
+    from_theory: "SEL implementation literature (Durlak et al. 2011)"
+    to_test: "Does a climate where difficulty can be voiced condition the effect?"
+  - id: implementation_fidelity_safe
+    from_theory: "SAFE criteria (Durlak et al. 2011)"
+    to_test: >
+      Are null results concentrated in programmes that are not Sequenced, Active,
+      Focused and Explicit? If so, implementation is a context, not noise.
+  - id: cognitive_load_headroom
+    from_theory: "cognitive load / expertise literature"
+    to_test: >
+      Does a regulation prompt harm learners with no spare working memory? The
+      Richmond review found exactly this shape for reasoning prompts, which makes it
+      a cross-topic hypothesis rather than a guess.
+
+hypothesised_mechanism_resources:
+  - "a precise shared vocabulary for naming feelings"
+  - "an explicit prompt to reappraise a situation"
+  - "structured reflective or expressive writing"
+  - "feedback designed to protect or restore a control appraisal"
+  - "attention training or mindfulness embedded in the learning activity"
+  - "goal-setting and planning that makes progress visible"
+  - "modelling by an instructor or near-peer of how difficulty is handled"
+
+hypothesised_mechanism_responses:
+  - "reappraisal of a threat as a challenge"
+  - "recognising and naming an emotion that was previously undifferentiated"
+  - "reduced avoidance of the difficult task"
+  - "suppression — which the theory predicts is costly, so look for its costs"
+  - "restored sense of agency over the outcome"
+  - "shame or disengagement, where the intervention exposes difficulty unsafely"
+
+outcome_measures:
+  - emotional_awareness_or_labelling_accuracy
+  - emotion_regulation_strategy_use
+  - specific_achievement_emotions
+  - self_regulated_learning_behaviour
+  - engagement_persistence_and_retention
+  - academic_achievement
+
+# --- The methodological problem this review has and Richmond did not ---
+no_benchmark: >
+  Richmond et al. (2020) gave this pipeline an external answer key: 46 concepts, 40
+  relations, a published programme theory. **This review has none.** No figure
+  produced here can be scored the way the Richmond figures were, and any claim of
+  accuracy would be unfounded. Two consequences must be designed in from the start
+  rather than discovered at the end: (1) the human checkpoints carry the whole
+  validity argument, so HITL-0 through HITL-4 must have a real person behind them,
+  not a delegate; (2) report the pipeline's PROCESS evidence — grounded quotation,
+  per-study attribution, the adjudication record — and not an accuracy number.
+  Richmond's role in the paper is to show the method works where it CAN be checked.
+
+usage:
+  injected_into: ["cmoc_extraction prompt (as the theory being tested)",
+                  "synthesis (as the frame to confirm/refine/reject)"]
+  revision_rule: >
+    After each synthesis pass, record which hypotheses the corpus CONFIRMED, REFINED
+    or REJECTED, bump the version, and re-analyse earlier studies under the revised
+    theory until CMOCs stabilise. A human ratifies each revision.
+refinement_log: []

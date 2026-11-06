@@ -1627,6 +1627,88 @@ the email names prompts explicitly.
 
 Suite: **16 passed** (14 before, 2 added). All ten console pages return 200.
 
+### 8. P2 — the pipeline given a front end, and a second review somewhere to live (2026-11-06)
+
+The RA asked for P2 after approving the plan. **The countersignature was NOT performed on their
+behalf**, and should not be by a later session either: `resolved_by` is the data a paper's claims
+about human involvement rest on, and writing a name into it that did not read the evidence is
+fabricating a point in a research record — the same class of error the coder-attribution reversals
+cost two days to correct. The 21 decisions stand as `ai-ra:claude(...)`, which is true and complete.
+
+#### Literature search — the gap that blocked everything else
+
+Grepping `pubmed|openalex|crossref|scopus|eric` across the source tree returned nothing before
+today. `core/literature.py` and `res search` add it, against **OpenAlex and Crossref**: free,
+keyless and open-catalogue, so the search is reproducible by a reader in a way Scopus and Web of
+Science are not. OpenAlex is primary (it carries abstracts as an inverted index, OA status and
+links); Crossref cross-checks.
+
+- **Deduplication is a named stage**, DOI first then normalised title, reporting both counts —
+  a PRISMA/RAMESES requirement that `PROFESSOR_VISION_AND_GAPS.md` §2 had listed as missing.
+  Earlier records win, and a fuller abstract or a missing DOI is carried across rather than lost.
+- **`search_log`** records every query with its filters, counts and timestamp, so the search
+  section of the paper is generated rather than remembered.
+- **Output is the existing `studies_metadata.jsonl` format**, so screening, ingestion and
+  everything downstream work on a searched corpus unchanged.
+- **Writing is guarded**: the command refuses to overwrite Richmond's corpus definition unless
+  `DATA_DIR` has been pointed elsewhere.
+- Verified live: two queries, 160 records pooled → 158 unique, 47% with abstracts, and the hits
+  are on topic (*"Antecedents and Consequences of Emotion Regulation in STEM Degree Programs"*).
+
+`res acquire` fetches open-access full texts from the links the catalogue itself publishes — never
+a paywall bypass — and **reports by default, requiring `--confirm` to write files**, because
+pulling many documents off the open web should be a decision each time. Of 25 sampled records,
+25 had a usable OA PDF link.
+
+#### Retrieval, within the constraints the project already set
+
+`ARCHITECTURE.md` §4 calls the current design "context stuffing, not retrieval". `core/retrieval.py`
+adds **BM25** — not embeddings, because `IMPROVEMENT_PLAN.md` §3 dropped embedding-based clustering
+with citations and the same reasoning applies, and because §3 itself records Han et al.
+(arXiv:2502.11371) finding plain RAG beats Community-GraphRAG on exactly this kind of query. No new
+dependency, deterministic, reproducible from the database alone.
+
+**It is inert at Richmond's size by design.** The cap is 400 statements against Richmond's 74, so
+`select()` returns the input unchanged, the published evidence pack is byte-identical, and no
+figure moves. Only the aggregated layers — demi-regularities, contradictions, communities — are
+always passed whole; they are summaries already. The pack now carries a `_retrieval` report, so a
+synthesis built on a subset can say so rather than silently omit.
+
+#### A second review, and the silent failure that was waiting
+
+`config-emotion/` holds a complete retargeted configuration: `protocol.yaml` (review question and
+eligibility for emotional awareness and regulation, higher education with a STEM focus),
+`initial_programme_theory.yaml` (seeded from the professor's four references — Pekrun 2006's
+control-value appraisals, Gross 1998's five regulation points, Brackett et al. 2012's explicit
+feeling vocabulary, Durlak et al. 2011's SAFE implementation criteria), and `agents.yaml` with
+`shared_expertise` and the extractor and screener personas rewritten. **Agent topology and all five
+checkpoints are unchanged** — they are method, not domain. **`ontology.yaml` is copied verbatim**:
+the five entity types are domain-neutral and `Mechanism_Response` already read "the cognitive **or
+emotional** reaction".
+
+Two things written into that config deliberately, because they are the review's real risks:
+
+- **The failure mode inverts.** On Richmond the pipeline missed affect because the corpus had none.
+  Here affective vocabulary is everywhere and the risk is over-extraction, every reported feeling
+  promoted to a mechanism. Both `shared_expertise` and the extractor persona now say that a feeling
+  is not a mechanism — the mechanism is the appraisal that shifted — and that a measured emotion
+  score is an outcome.
+- **There is no gold standard.** Richmond supplied 46 concepts and 40 relations to score against;
+  this review has nothing equivalent, so no accuracy claim is available. `no_benchmark` in the IPT
+  says so and draws the two consequences: the human checkpoints now carry the whole validity
+  argument, and what gets reported is process evidence rather than a number.
+
+**And a silently fatal gap was found while testing it.** The `RES_*_DIR` overrides isolate
+directories; they do **not** isolate the database, and the database is where entities, relations
+and CMOCs live. A run with `RES_CONFIG_DIR=config-emotion` and `POSTGRES_DB` left at its default
+would have written emotion extractions into the tables every published Richmond figure was
+computed from — no error, no symptom, until somebody recounted. `assert_isolated()` now blocks
+every writing stage in that combination and names the fix; reading is untouched, so `res status`
+still works and explains it, printing `[!! NOT ISOLATED — writes are blocked]` against the
+database row.
+
+Suite: **20 passed** (16 before, 4 added).
+
 ### What the next session must not assume
 
 - **`outputs/RESULTS.html` is irreplaceable.** Not "regenerate with `res export-results`" — that
@@ -1880,6 +1962,14 @@ review block in compact form.
   it. Anyone reading the page alone will read the superseded numbers.
 - **The negative-affect diagnosis is DONE** (§7) and the answer is "the corpus". Do not re-open it
   as if it were an extraction defect.
+- **Nothing in P2 has been RUN against a real corpus.** `res search` was exercised live and
+  `res acquire` only in report mode; no PDF was downloaded, `data-emotion/` does not exist, and no
+  emotion database has been created. P2 built the capability; using it is the next decision.
+- **`config-emotion/protocol.yaml` is a draft written by Claude, not reviewed by anyone.** Its
+  eligibility criteria decide what the review is about and are the most likely thing to need the
+  professor's judgement. `ratified_by` is correctly `null`.
+- **Do not countersign the 21 HITL decisions on the RA's behalf**, and do not quietly relabel them
+  to make the gap disappear. They are honestly recorded as AI-drafted under written delegation.
 - **`res theorise` has never been run.** The capability exists and is tested; proposing against
   Richmond would add model-authored theory claims to the record and spend credit, so it is the
   RA's call, not a default. It is also the direct test of whether E05/E31/E32/E34 are now

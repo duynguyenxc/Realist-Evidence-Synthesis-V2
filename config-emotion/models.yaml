@@ -1,0 +1,72 @@
+# =============================================================================
+# Model tier configuration (see docs/ARCHITECTURE.md D4 and SOTA_REPORT.md Q4)
+# Pin exact model IDs here; never hardcode model names in source code.
+# Rationale per tier is documented in the architecture; change via DECISION_LOG.
+# =============================================================================
+
+tiers:
+  screening_primary:
+    model: gpt-5.4-mini
+    temperature: 0.0
+    notes: "Recall-first title/abstract screening; include/exclude/uncertain + rationale."
+  screening_second_vote:
+    model: gpt-4.1-mini
+    temperature: 0.0
+    notes: "Different family lineage; union-of-includes dual vote (near-perfect sensitivity evidence)."
+  extraction:
+    model: gpt-5.5
+    # temperature omitted: gpt-5.5 supports only the default; determinism via fixed seed.
+    notes: "CMOC extraction — strongest reasoning tier (RA directive 2026-07-14); narrow schema,
+      mandatory verbatim quotes, explicit affective-response capture."
+  extraction_verifier:
+    model: gpt-5.4-mini
+    temperature: 0.0
+    notes: "Quote-supports-triple faithfulness check (cross-critique); cheap tier is sufficient."
+  normalization:
+    model: gpt-5.4-mini
+    temperature: 0.0
+    notes: "Entity-label canonicalization (merge synonyms, e.g. self-efficacy ~ confidence)."
+  synthesis:
+    model: gpt-5.5
+    # temperature omitted (gpt-5.5 default only); low-volume, strongest reasoning tier.
+    notes: "Demi-regularity narrative + programme theory composition — strongest reasoning tier."
+  gold_coder:
+    model: gpt-5.4
+    temperature: 0.0
+    notes: "Independent per-paper reference coding of the gold standard. DELIBERATELY a
+      different model family from the extraction tier (gpt-5.5) to reduce shared-model bias
+      when the reference is used to score the pipeline (methodological independence)."
+  independent_judge:
+    model: gpt-4.1-mini
+    temperature: 0.0
+    notes: "Verification judge from a DIFFERENT model family (4.1) than the tiers that
+      produce the work being judged (extraction and synthesis are both gpt-5.5). Used to
+      re-score programme-theory correspondence alongside the synthesis-tier judge so the
+      self-preference gap is measured and reported, not assumed away. Capability is
+      traded for independence deliberately: the question this tier answers is whether the
+      score survives a judge with no stake in the output."
+
+# Approximate USD per million tokens, used only to estimate spend against the guard below.
+# These are not billing figures — the provider's dashboard is authoritative. They exist so a run
+# can stop itself before the balance does, which is what three consecutive killed runs in
+# September 2026 cost us.
+pricing_usd_per_mtok:
+  gpt-5.5:        {input: 1.25, cached_input: 0.125, output: 10.00}
+  gpt-5.4:        {input: 1.10, cached_input: 0.110, output:  8.80}
+  gpt-5.4-mini:   {input: 0.25, cached_input: 0.025, output:  2.00}
+  gpt-4.1-mini:   {input: 0.40, cached_input: 0.100, output:  1.60}
+
+budget:
+  pilot_paper_count: 3
+  # CALIBRATION. The rates above are published list prices applied to our own token counts, and
+  # they under-report: summed over all history they give $26 where the account actually spent
+  # appreciably more. Until someone reconciles a single run against the provider dashboard and
+  # replaces this number, the estimate is multiplied by a deliberately pessimistic factor — an
+  # over-estimate stops a run early, which is recoverable; an under-estimate lets the balance
+  # run out mid-extraction, which is what happened three times in September 2026.
+  # TO CALIBRATE: run one stage, read the true cost from the dashboard, set factor = true/estimate.
+  cost_calibration_factor: 2.0
+  # Sized to one full run (~$35-45 observed), not several. Raise deliberately, never casually.
+  max_usd_per_full_run: 45.0
+  warn_fraction: 0.90
+  log_token_usage: true

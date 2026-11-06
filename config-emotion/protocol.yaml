@@ -1,0 +1,103 @@
+# =============================================================================
+# Review protocol — students' emotional awareness and emotional regulation
+# during learning. Operationalised from Prof. Wei Zheng's assignment of
+# 2026-10-30 and the four references it names.
+#
+# This is the SECOND review this pipeline has run. It is deliberately a separate
+# config directory: point RES_CONFIG_DIR, RES_DATA_DIR and RES_OUTPUTS_DIR at the
+# emotion variants in .env so that nothing here can write over Richmond's corpus,
+# gold standard or published outputs (`res status` shows which are overridden).
+#
+# Scope changes belong in THIS file, never in a prompt.
+# =============================================================================
+
+version: "0.1-draft"
+status: >
+  DRAFT. Written by Claude as RA on 2026-11-06 from the professor's email; not yet
+  reviewed by a human, and no study has been screened against it. The eligibility
+  criteria below are the part most likely to need the professor's judgement, because
+  they decide what the review is about.
+
+review_question: >
+  What educational interventions improve students' emotional awareness and emotional
+  regulation during learning — and when, why, for whom, and in what circumstances are
+  they effective?
+
+initial_programme_theory_summary: >
+  Grounded in control-value theory (Pekrun 2006) and the process model of emotion
+  regulation (Gross 1998): academic emotions arise from a learner's appraisals of
+  control over, and value of, an achievement activity or outcome. An educational
+  intervention offers a resource into that appraisal context — a vocabulary for
+  naming feelings, a prompt to reappraise, a structure that restores a sense of
+  control. The learner's emotional and cognitive response to that resource,
+  conditioned by their existing regulatory repertoire and the climate they are
+  learning in, produces changes in awareness, regulation, engagement and attainment.
+
+eligibility:
+  population:
+    include: >
+      Students in higher education, with a PRIMARY focus on STEM disciplines
+      (engineering, computing, mathematics, the natural and health sciences).
+      Studies in other post-secondary settings are included where they carry
+      transferable mechanism evidence. School-age populations are included ONLY
+      where the study is a major synthesis or establishes a mechanism the higher
+      education literature draws on (Durlak et al. 2011 is the paradigm case).
+    exclude: >
+      Clinical or therapeutic populations where the aim is treating a diagnosed
+      affective disorder rather than supporting learning; workplace training with
+      no student population.
+  intervention:
+    include: >
+      An educational practice intended to change how students notice, understand,
+      label, express or regulate learning-related emotions — reflective or
+      expressive writing, emotion-labelling and feeling-vocabulary curricula,
+      appraisal or reappraisal prompts, mindfulness and attention training embedded
+      in teaching, feedback designed to protect or rebuild control appraisals,
+      goal-setting and learning plans, self-regulated-learning instruction, peer or
+      instructor climate interventions, and course redesign undertaken for
+      affective reasons.
+    exclude: >
+      Purely observational or correlational studies of emotion with no instructional
+      component; psychometric development of an emotion measure with no intervention;
+      pharmacological or clinical treatment.
+  focus:
+    include: >
+      Emotional awareness (noticing, understanding and labelling one's own learning
+      emotions) and emotional regulation (what the learner does about them), as they
+      bear on learning. Achievement emotions, emotional intelligence, self-regulated
+      learning, motivation and engagement are in scope where they are linked to an
+      awareness or regulation pathway rather than measured on their own.
+  outcomes:
+    include: >
+      Change in emotional awareness or emotion-regulation strategy use; change in
+      specific achievement emotions (enjoyment, hope, pride, anxiety, shame, anger,
+      boredom, hopelessness); self-regulated-learning behaviour; engagement and
+      persistence; academic achievement. Wellbeing and course satisfaction are
+      acceptable SECONDARY outcomes, never the sole outcome.
+  timeframe:
+    published_from: 1998
+    rationale: >
+      Gross (1998), which the professor names, is the field's organising reference
+      for emotion regulation; Pekrun (2006) follows. Starting earlier would mostly
+      return work predating both frameworks.
+  relevance_test: >
+    Title/abstract stage: does the study plausibly CONTRIBUTE TO THEORY BUILDING
+    about how an educational intervention changes students' emotional awareness or
+    regulation — i.e. does it offer any purchase on a mechanism — rather than merely
+    mentioning emotion? Full-text stage additionally assesses methodological rigour.
+
+# --- A warning this particular review needs, and Richmond's did not ---
+known_risk:
+  affective_vocabulary_is_the_object_of_study: >
+    In the Richmond corpus, `emotion` and `self-efficacy` occurred ZERO times across
+    all 28 papers (measured 2026-11-04), so that benchmark says NOTHING about how
+    this pipeline performs when affect is the subject. Here the vocabulary will be
+    everywhere, and the opposite risk applies: over-extraction, with every mention of
+    a feeling promoted to a mechanism. Expect to tighten, not loosen, the extractor —
+    and treat the first run as calibration rather than as a result.
+
+screening_policy:
+  posture: recall_first
+  labels: [include, exclude, uncertain]
+  uncertain_goes_to: HITL-1
+  dual_model_vote: true
