@@ -1953,10 +1953,11 @@ review block in compact form.
 - **Quote 32/46 and 26/46.** Not 34, not 38, not 41, not 28. `MACHINE_VS_HUMAN.md` §5.1 is the
   authoritative arithmetic; the older tier tables are left in place, marked, because published
   papers quote them.
-- **Relation recovery is the one number still owed.** Exactly 3 of 40 scored relations have E03 or
-  E24 as an endpoint (R02, R06, R07; R06 has both), so the drop is bounded at 7.5 pp — but the exact
-  figure **needs a verification re-run**, which was not performed. It was not estimated and must not
-  be quoted as if it had been.
+- ~~**Relation recovery is the one number still owed.**~~ **Settled in §7 the next day, and no
+  re-run was needed**: `relation_coverage()` is a pure function of the entity matches, so removing
+  E03/E24 from the stored verdicts gives it exactly — **strict 5/40, anchored 28/40** (from 6/40
+  and 29/40), type-level unchanged at 39/40. Struck rather than deleted because the reasoning that
+  made it look like a re-run — "the figure depends on the judge" — is the mistake worth remembering.
 - **`outputs/RESULTS.html` was NOT updated** and still shows 41/46 with E03 and E24 as matches. It
   is import-only and irreplaceable (M39 §4), so the corrected figures live in the documents, not in
   it. Anyone reading the page alone will read the superseded numbers.

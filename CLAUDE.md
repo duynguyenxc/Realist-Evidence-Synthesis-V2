@@ -69,7 +69,9 @@ Richmond's human outputs. **Method > platform; human judgment stays sovereign.**
    had omitted `cont:knowledge-deficits` ← E02, E03, so 28 was already one too high. **Quote
    32/46 same-role and 26/46 one-to-one (39/46 role-crossing)** — `MACHINE_VS_HUMAN.md` §5.1 has
    the arithmetic. The system is **two below Coder B, not equal**, so non-inferiority now rests on
-   overlapping CIs, not parity. **Relation recovery still needs a re-run** (≤3 of 40 affected).
+   overlapping CIs, not parity. **Relation recovery was computed exactly on 2026-11-06** — no re-run
+   was needed, because `relation_coverage()` is a pure function of the entity matches: **strict
+   5/40, anchored 28/40** (from 6/40 and 29/40), type-level unchanged at 39/40.
 3. **`gold/RICHMOND_CONCLUSIONS.md`** — what Richmond actually concluded, grounded line by line.
 
 The benchmark is `gold/richmond_gold_v3.json` (corrected 2026-09-23; `RES_GOLD=v1` reproduces
@@ -84,9 +86,22 @@ started). It has its own `CLAUDE.md` and `WALKTHROUGH.md`; read those, not this 
 about it. **No code is shared between the two projects, in either direction.** October 2026 was
 spent entirely on OpenMAIC, which is why this log jumps from 30 September to M38.
 
-## Status pointer
-**Architecture v1.0 adopted** (`docs/ARCHITECTURE.md`, grounded in `docs/research/SOTA_REPORT.md`).
-Build authority granted; next step is Phase 0 (repository scaffold + config + ontology file),
-then phases 1–7 per ARCHITECTURE §8. See `docs/PROJECT_CONTEXT.md` for full context and
-`WALKTHROUGH.md` for the milestone log — **append a WALKTHROUGH entry every session** (standing
-RA requirement). Credentials live in `.env` (OpenAI key, Postgres password; Neo4j not yet set up).
+## Status pointer (rewritten 2026-11-09 — the old one still said "next step is Phase 0")
+**Phases 0–7 are built and the pipeline has run end to end twice** (M34, M35). The database holds
+547 entity instances, 459 typed relations, 94 CMOCs, 8 conceptual entities. Verification is done
+and the matcher defect is fixed. **P0, P1 and P2 of the 2026-11-04 plan are complete**
+(`docs/IMPROVEMENT_PLAN.md` §6, WALKTHROUGH M40 §§7–8): the HITL checkpoints have been performed
+and signed `ai-ra:claude(...awaiting countersignature)`, prompts are extracted to
+`config/prompts/`, and the pipeline now has a literature search (`res search` — OpenAlex and
+Crossref), full-text acquisition (`res acquire`), BM25 retrieval, and retroduction without a quote
+(`res theorise`). `config-emotion/` is a complete draft configuration for the professor's new topic.
+
+**Three things are waiting on a person, not on code:** the 21 HITL decisions are uncountersigned,
+`config-emotion/protocol.yaml` is an unreviewed draft, and **nothing in P2 has been run against a
+real corpus** (no `data-emotion/`, no emotion database). **The AERA 2027 paper was accepted on
+2026-11-06** (Division D roundtable, Toronto, April 2027); reviewer comments sit unread on the All
+Academic portal, and the accepted paper carries the superseded 34/46 and 28/46 figures.
+
+See `docs/PROJECT_CONTEXT.md` §6 for full context and `WALKTHROUGH.md` for the milestone log —
+**append a WALKTHROUGH entry every session** (standing RA requirement). Credentials live in `.env`
+(OpenAI key, Postgres password; Neo4j adapter exists but no database was ever created).
