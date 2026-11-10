@@ -1,3 +1,29 @@
+> ## ⚠ The verification figures in this document were superseded on 2026-11-04
+>
+> A matcher defect found on 2026-09-30 was fixed: `verification/metrics.py` was accepting a
+> `matched: true` whose own rationale stated a non-match. Two concepts were affected — E03
+> (*high* domain knowledge, matched to `knowledge-deficits`) and E24 (*non*-analytical reasoning,
+> matched to analytic reasoning). The recount then found a **second, independent** error: the
+> over-merge table in `MACHINE_VS_HUMAN.md` §5 had omitted the pair `cont:knowledge-deficits` ←
+> E02, E03, so the one-to-one figure was already one too high before the matcher was touched.
+>
+> | | published here | corrected |
+> |---|---|---|
+> | Concepts, same realist role | 34/46 (73.9%) | **32/46 (69.6%)** |
+> | Concepts, role-crossing allowed | 41/46 (89.1%) | **39/46 (84.8%)** |
+> | Concepts, one-to-one (comparable to a human coder) | 28/46 | **26/46** |
+> | Relations, strict | 6/40 (15.0%) | **5/40 (12.5%)** |
+> | Relations, anchored | 29/40 (72.5%) | **28/40 (70.0%)** |
+> | Relations, causal pattern | 39/40 | 39/40 (unchanged) |
+>
+> **At 26/46 the system is two concepts below Coder B and four below Coder A — not equal to them,
+> as this document says.** Non-inferiority remains the defensible claim, but it now rests on
+> overlapping confidence intervals rather than on parity, and must be written that way.
+>
+> The text below is left exactly as it was written, because correcting a published figure in place
+> and saying nothing is how a record stops being trustworthy. **`docs/MACHINE_VS_HUMAN.md` §5.1 is
+> the authoritative arithmetic.**
+
 # Answers to your five questions
 
 *Duy Nguyen — 2026-09-23. Five questions from our last meeting, one short answer each.

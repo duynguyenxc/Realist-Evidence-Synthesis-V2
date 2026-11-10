@@ -86,6 +86,11 @@ started). It has its own `CLAUDE.md` and `WALKTHROUGH.md`; read those, not this 
 about it. **No code is shared between the two projects, in either direction.** October 2026 was
 spent entirely on OpenMAIC, which is why this log jumps from 30 September to M38.
 
+## Active work
+**`PLAN.md`** tracks Prof. Zheng's 2026-10-30 assignment through to delivery — a live checklist,
+not a record, so where it disagrees with the repository the repository wins. Read it before
+starting work; retire it when deliverable #6 is sent.
+
 ## Status pointer (rewritten 2026-11-09 — the old one still said "next step is Phase 0")
 **Phases 0–7 are built and the pipeline has run end to end twice** (M34, M35). The database holds
 547 entity instances, 459 typed relations, 94 CMOCs, 8 conceptual entities. Verification is done

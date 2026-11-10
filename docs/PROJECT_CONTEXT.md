@@ -192,13 +192,22 @@ depends on it); a **budget ceiling was never set**.
 
 ### Open, and ordered
 
-1. **`verification/metrics.py` lets a rationale that states a non-match set `matched: true`** (E03,
-   E24; E24 is inside the headline 34). Found 2026-09-30, open since. Fixing it will *lower* the
-   headline, which is the correct direction.
-2. **No human has ever performed a HITL checkpoint.** Every one is signed
-   `delegate:claude-code(RA-authorized-2026-07-14)` or `expert:claude(delegated-reviewer-per-RA-2026-07-14)`,
-   and `initial_programme_theory.yaml` has `ratified_by: null`. The `/review` console is built and
-   unused. This is the project's defining claim and the one operation never exercised.
+> **Items 1, 4 and 5 below were closed within 48 hours of this section being written, and item 2
+> was half-closed. Corrected 2026-11-10 rather than rewritten, because a list of open problems that
+> silently acquires solutions teaches a reader to distrust the next one.**
+
+1. ~~**`verification/metrics.py` lets a rationale that states a non-match set `matched: true`.**~~
+   **Fixed 2026-11-04.** The defect was polarity, not generic negation: E03 ("*high* domain
+   knowledge") and E24 ("*non*-analytical reasoning") were each matched to their own opposite. The
+   cause was a hole in the prompt, which forbade "adjacent or broader" concepts and said nothing
+   about antonyms. All three judging passes now refuse such a vote. The recount cost two concepts
+   and uncovered a second, independent error; see `MACHINE_VS_HUMAN.md` §5.1.
+2. **Still open in the part that matters.** The checkpoints have now been *performed* — all 20
+   contradictions resolved, the programme theory signed, `hitl_feedback` 0 → 21 rows — but they are
+   signed `ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)`, which is honest and
+   is **not** a human having exercised them. The professor's 2026-10-30 §4 asks us to *preserve*
+   human verification, and a feature never used cannot be preserved. A countersignature flow is
+   built at `/review`; roughly fifteen minutes of the RA's time closes this.
 3. **The negative-affect gap is diagnosed, and it is not a defect.** Five gold concepts are
    recovered at no tier, four about fear, pressure or low self-efficacy. Measured 2026-11-04:
    `emotion` and `self-efficacy` occur **zero times** in all 28 papers, and the extractor *did*
@@ -206,10 +215,19 @@ depends on it); a **budget ceiling was never set**.
    **corpus plus the verbatim constraint**, not the ontology or the prompts. What it exposes is a
    real gap — **retroduction without a quote**, which realist synthesis requires. And it means
    Richmond gives **no evidence either way** about the pipeline on an emotional topic.
-4. **No literature search and no full-text acquisition.** Richmond's 28 papers were handed to the
-   pipeline. `docs/PROFESSOR_VISION_AND_GAPS.md` §2 has the full gap table.
-5. **`config/prompts/` is empty** — prompts are embedded in code, and the professor asks for them by
-   name.
+4. ~~**No literature search and no full-text acquisition.**~~ **Built 2026-11-06.** `res search`
+   queries OpenAlex and Crossref — free, keyless and open-catalogue, so a reader can repeat the
+   search — deduplicates by DOI then normalised title as a named reportable stage, logs every query
+   to `search_log`, and emits the existing `studies_metadata.jsonl` format so screening and
+   ingestion need no change. `res acquire` fetches only the open-access copies the catalogue itself
+   links, and reports rather than downloads without `--confirm`. **Neither has been run against a
+   real corpus yet.**
+5. ~~**`config/prompts/` is empty.**~~ **Extracted 2026-11-04.** All 23 call sites read
+   `P("key", literal)` with `config/prompts/*.yaml` taking precedence, proved byte-identical by
+   hashing every literal before and after. 10 are exported as static text; 4 more are built from
+   `protocol.yaml` and the rest from `agents.yaml` via `persona()`, so **21 of 23 prompts can be
+   rewritten for a new topic without editing code**. `scripts/export_prompts.py --check` guards
+   against the YAML drifting from the literal it shadows.
 
 ### The new direction
 

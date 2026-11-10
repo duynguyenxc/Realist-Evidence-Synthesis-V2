@@ -191,7 +191,9 @@ surfaced at HITL-2), gold-standard circularity (mitigated by D6), scope creep vs
 > runs in September 2026, twice at the same study, each time re-paying for work already done until
 > `res extract --resume` was built. The guard is now set (§ `config/models.yaml`), with a
 > pre-flight balance check and a running tally that halts cleanly before the balance is gone.
-> Prompt versioning also did not happen as designed: `config/prompts/` is empty.
+> Prompt versioning also did not happen as designed — `config/prompts/` sat empty until
+> **2026-11-04**, when all 23 prompts were lifted into `P("key", literal)` with
+> `config/prompts/*.yaml` overriding, so the directory now holds what it was designed to.
 
 ## 8. Build order (long-term plan)
 

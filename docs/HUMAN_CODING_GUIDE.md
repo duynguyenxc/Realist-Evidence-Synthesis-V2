@@ -1,5 +1,17 @@
 # Human Coding Guide — how two coders produce the missing baseline
 
+
+> ## ✅ This task was completed on 2026-09-25 — the guide is kept as the method record
+>
+> Two coders independently coded all 28 papers against the 46-item frame. **Positive specific
+> agreement between them is 0.785**, so the human ceiling this guide was written to establish
+> now exists. `docs/MACHINE_VS_HUMAN.md` §5 is the authoritative record of the result.
+>
+> The 41/46 and 45/46 figures in Part 6 are **not** current coverage scores and were never
+> meant as such — they illustrate how far an LLM judge can swing on a byte-identical graph,
+> which is the argument for having human coders at all. That argument still holds. Current
+> coverage is **32/46** same-role (`MACHINE_VS_HUMAN.md` §5.1).
+
 > **Who this is for.** Two people (the RA and one other) who will each read the same papers and
 > code them **independently, without seeing the machine's output or each other's**. No prior
 > realist-review experience is assumed; everything needed is in this document.
