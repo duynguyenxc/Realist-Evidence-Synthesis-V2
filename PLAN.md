@@ -61,17 +61,17 @@ numbers and why they cannot be regenerated. That is a fact to disclose, not a de
 
 ---
 
-## 2. Phase B — deliverables #1, #2, #6
+## 2. Phase B — deliverables #1, #2, #6  ✅ DRAFTED 2026-11-13
 
-- [ ] **B1** (#1) One navigation document over: the repository, `outputs/raw_export/`
+- [x] **B1** (#1) One navigation document over: the repository, `outputs/raw_export/`
       (16 tables, 2,736 rows, unmediated), `config/prompts/`, `config/agents.yaml`,
       `config/ontology.yaml`, the verification reports, the AERA paper.
-- [ ] **B2** (#2) Answer the **seven questions** he asks in §2 — materials needed; research
+- [x] **B2** (#2) Answer the **seven questions** he asks in §2 — materials needed; research
       questions / inclusion criteria / definitions / frameworks; required inputs and their
       organisation; what is reusable vs needs modification; how to find and process the
       literature; how evidence is extracted, integrated and validated; how results are
       evaluated into a publishable study. Each answer anchored to real code, not aspiration.
-- [ ] **B3** (#6) Progress report: completed / limitations / next steps.
+- [x] **B3** (#6) Progress report: completed / limitations / next steps.
 - [ ] **B4** Draft the covering email for the RA to send, including the two items the professor
       does not yet know: the AERA acceptance of 2026-11-06 with **reviewer comments still
       unread**, and that the accepted paper carries the superseded 34/46 and 28/46.
@@ -128,6 +128,8 @@ He has not seen this system and does not know what it does. Hold me to these:
 | Date | Item | Note |
 |---|---|---|
 | 2026-11-10 | Plan opened | Audit found the staleness in §1; RA approved A and two-batch delivery |
+| 2026-11-13 | **Phase B drafted** | `handover/` — deliverables 1, 2, 6. Fact-checked against the database; the check caught a wrong prompt count (24, not 23) |
+| 2026-11-13 | **Budget decision** | RA: **no budget available — $0 work only**. Phases C and M are suspended; the $0 items in deliverable 2's plan (steps 1–4) are what proceeds |
 | 2026-11-10 | **Phase A complete** | Exit check passes: **0 unmarked superseded figures** outside the four excluded classes below |
 
 **What Phase A actually found, beyond stale numbers.** Two substantive errors were in the
