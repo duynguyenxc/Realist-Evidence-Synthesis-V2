@@ -112,7 +112,7 @@ He has not seen this system and does not know what it does. Hold me to these:
 
 ## 5. Open — needs the RA
 
-- [ ] **Cost ceiling for Phase C.** Proposed default unless overridden: **pilot ≤ $10**, report
+- [x] ~~Cost ceiling for Phase C~~ — Proposed default unless overridden: **pilot ≤ $10**, report
       the measured cost, then decide. Not yet answered.
 - [ ] **The 21 HITL decisions are uncountersigned** (`0/20` contradictions, programme theory
       signed `ai-ra:claude(...awaiting countersignature)`). Only the RA can do this, and the
@@ -128,6 +128,9 @@ He has not seen this system and does not know what it does. Hold me to these:
 | Date | Item | Note |
 |---|---|---|
 | 2026-11-10 | Plan opened | Audit found the staleness in §1; RA approved A and two-batch delivery |
+| 2026-11-13 | **Four $0 items done** | Computed comparison layer, motif null model, graph consistency checks, precision bound. Two changed what the project may claim |
+| 2026-11-13 | **Email re-checked item by item** | Four things the professor names explicitly were missing from `config-emotion/` and were added; all 8 topics and 9 examples now named verbatim |
+| 2026-11-13 | **Repository audited** | 39 modules, no dead code. Documents classified current / superseded-and-marked / historical / frozen. Two false stack claims retracted |
 | 2026-11-13 | **Phase B drafted** | `handover/` — deliverables 1, 2, 6. Fact-checked against the database; the check caught a wrong prompt count (24, not 23) |
 | 2026-11-13 | **Budget decision** | RA: **no budget available — $0 work only**. Phases C and M are suspended; the $0 items in deliverable 2's plan (steps 1–4) are what proceeds |
 | 2026-11-10 | **Phase A complete** | Exit check passes: **0 unmarked superseded figures** outside the four excluded classes below |
