@@ -184,6 +184,18 @@ nav a.on{color:var(--ink);border-bottom-color:var(--machine);font-weight:600}
 .rawchip{font-size:.78rem;padding:.3rem .55rem;border:1px solid var(--rule);border-radius:4px;
   text-decoration:none;color:var(--ink);background:var(--panel)}
 .rawchip.on{border-color:var(--machine);font-weight:600}
+.tgroup{margin:1.6rem 0 0}
+.tgroup-h{font-size:.95rem;font-weight:600;color:var(--ink)}
+.tgroup-s{font-size:.84rem;color:var(--muted);margin:.1rem 0 .6rem}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:.6rem}
+.tcard{display:block;padding:.65rem .75rem;border:1px solid var(--rule);border-radius:6px;
+  background:var(--panel);text-decoration:none;color:var(--ink)}
+.tcard:hover{border-color:var(--machine)}
+.tcard.on{border-color:var(--machine);border-width:2px}
+.tcard-h{font-size:.86rem;line-height:1.35}
+.tcard-w{font-size:.8rem;color:var(--muted);margin:.3rem 0 .45rem;line-height:1.45}
+.tcard-f{display:flex;justify-content:space-between;align-items:center;font-size:.75rem;
+  color:var(--muted);border-top:1px solid var(--rule);padding-top:.4rem}
 .rawscroll{overflow:auto;max-height:70vh;border:1px solid var(--rule)}
 .rawtable{border-collapse:collapse;font-size:.76rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .rawtable th{position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--rule);
@@ -1463,6 +1475,70 @@ def verify():
     return _page("/verify", body)
 
 
+# What each table IS, in plain language, grouped by the pipeline stage that fills it.
+#
+# The first version of this page listed table names and row counts and nothing else.
+# The RA, who commissioned the system, could not read it — "concept_families 183" tells
+# you nothing unless you already know the schema, and if you already knew the schema you
+# would be using psql. Unmediated access is worthless without meaning, so every table now
+# says what ONE ROW of it is. The data is still untouched; only the labelling is added.
+_TABLE_GROUPS = [
+    ("1 · What went in", "The 28 papers, before the system did anything to them.", [
+        ("studies", "One row = one paper in the review.",
+         "Title, authors, year, DOI. This is the corpus."),
+        ("canonical_texts", "One row = the full text of one paper.",
+         "Extracted from the PDF. Every quote elsewhere points at a character position in here."),
+        ("text_units", "One row = one chunk of a paper.",
+         "Papers are split into pieces small enough for the model to read carefully."),
+    ]),
+    ("2 · Deciding which papers belong", "Two models vote; a human settles ties.", [
+        ("screening_decisions", "One row = one vote on whether a paper belongs.",
+         "Two models vote independently. Disagreements go to a human at checkpoint 1."),
+        ("search_log", "One row = one literature search that was run.",
+         "Query, filters, how many came back. So the search can be repeated by a reader."),
+    ]),
+    ("3 · Reading each paper", "The heart of the system. This is where the evidence is.", [
+        ("cmocs", "One row = one realist claim found in one paper.",
+         "“In this context, this resource triggers this response, producing this outcome.”"),
+        ("entity_instances", "One row = one element of a claim, plus the exact sentence it came from.",
+         "A Context, an Intervention, a Mechanism or an Outcome — with the verbatim quote and the "
+         "character position. THIS IS THE ATOM OF THE WHOLE SYSTEM. Everything else is built on it."),
+        ("typed_relations", "One row = one causal arrow between two elements.",
+         "A provides B, B triggers C, C leads to D. Only five arrow types are allowed."),
+    ]),
+    ("4 · Putting the papers together", "Computed by algorithm, not asked of a model.", [
+        ("concept_families", "One row = one concept, filed under a broader family.",
+         "547 separate mentions collapse into 183 distinct concepts, then into families."),
+        ("conceptual_entities", "One row = a mechanism the system discovered by itself.",
+         "Found by clustering the graph (Leiden). Nobody told it these existed."),
+        ("demi_regularities", "One row = a pattern that recurred across two or more papers.",
+         "The same context + driver + outcome seen independently more than once."),
+        ("contradictions", "One row = the same intervention producing OPPOSITE outcomes.",
+         "The most valuable rows here. The machine cannot explain these — that is checkpoint 3, "
+         "where it needs a person."),
+        ("programme_theories", "One row = the review's final answer.",
+         "What works, for whom, under what circumstances. Version 12, signed but not yet "
+         "countersigned by a human."),
+    ]),
+    ("5 · What the humans did", "Every decision a reviewer made, with their name on it.", [
+        ("hitl_feedback", "One row = one decision made at a human checkpoint.",
+         "21 rows: the 20 contradictions plus the theory sign-off, all recorded as AI-drafted "
+         "under written delegation and awaiting the RA's countersignature."),
+        ("theorised_entities", "One row = a concept the theory needs that no paper states.",
+         "EMPTY — the capability exists but has never been run."),
+    ]),
+    ("6 · The system's own record", "Bookkeeping. Useful when a number has to be traced.", [
+        ("audit_log", "One row = one thing the system did, with a timestamp.",
+         "1,106 events. Any figure in any report can be traced back to the call that produced it."),
+        ("token_usage", "One row = the cost of one model call.",
+         "EMPTY — these rows were lost when the database was restored from a markdown export. "
+         "That is why there is no cost history."),
+        ("agent_feedback", "One row = a correction taught back to an agent.",
+         "EMPTY — designed but never used."),
+    ]),
+]
+
+
 # ── Raw data: the database with nothing written about it ─────────────────────
 #
 # Every other page on this site makes a choice about what to show. This one does not.
@@ -1482,26 +1558,59 @@ def raw(table: str = "", q: str = "", limit: int = 50, offset: int = 0):
         for t in tables:
             counts[t] = c.execute(f'SELECT count(*) n FROM "{t}"').fetchone()["n"]
 
-        chips = "".join(
-            f'<a href="/raw?table={t}" class="rawchip{" on" if t == table else ""}">'
-            f'{_esc(t)} <span class="muted">{counts[t]}</span></a>' for t in tables)
+        groups_html = ""
+        seen = set()
+        for gi, (gtitle, gsub, members) in enumerate(_TABLE_GROUPS, start=1):
+            cards = ""
+            for name, one_row, why in members:
+                if name not in counts:
+                    continue
+                seen.add(name)
+                n = counts[name]
+                empty = ' <span class="tag gap">empty</span>' if n == 0 else ""
+                on = " on" if name == table else ""
+                cards += (
+                    f'<a class="tcard{on}" href="/raw?table={name}">'
+                    f'<div class="tcard-h"><b>{_esc(one_row)}</b>{empty}</div>'
+                    f'<div class="tcard-w">{why}</div>'
+                    f'<div class="tcard-f"><code>{_esc(name)}</code>'
+                    f'<span>{n:,} row{"" if n == 1 else "s"}</span></div></a>')
+            if cards:
+                groups_html += (f'<div class="tgroup"><div class="tgroup-h">{_esc(gtitle)}</div>'
+                                f'<div class="tgroup-s">{_esc(gsub)}</div>'
+                                f'<div class="tgrid">{cards}</div></div>')
+        leftover = [t for t in tables if t not in seen]
+        if leftover:
+            cards = "".join(
+                f'<a class="tcard{" on" if t == table else ""}" href="/raw?table={t}">'
+                f'<div class="tcard-h"><b>{_esc(t)}</b></div>'
+                f'<div class="tcard-f"><code>{_esc(t)}</code><span>{counts[t]:,} rows</span>'
+                f'</div></a>' for t in leftover)
+            groups_html += ('<div class="tgroup"><div class="tgroup-h">Other</div>'
+                            '<div class="tgroup-s">Not yet described on this page.</div>'
+                            f'<div class="tgrid">{cards}</div></div>')
 
         body = (
             '<div class="eyebrow">Raw data &middot; the database, unedited</div>'
             '<h1>Every row the system actually holds</h1>'
-            '<p class="muted" style="max-width:62rem">Every other page here decides what is '
-            'worth showing you. This one does not. These are the tables as the pipeline left '
-            'them &mdash; the same rows every figure in the reports was computed from, including '
-            'the empty ones. <b>Nothing on this page is summarised, ranked or written about.</b> '
-            f'Download the whole thing with <code>python scripts/export_raw.py</code> '
-            f'(JSON + CSV per table).</p>'
-            f'<div class="rawchips">{chips}</div>')
+            '<p class="muted" style="max-width:64rem">Every other page here decides what is worth '
+            'showing you. This one does not &mdash; these are the database tables exactly as the '
+            'pipeline left them, including the empty ones. <b>Nothing is summarised or ranked.</b> '
+            'What <i>is</i> added is a plain description of each table, because a list of names and '
+            'row counts is access without meaning.</p>'
+            '<p class="muted" style="max-width:64rem"><b>Read a card as: “one row of this table is '
+            '…”.</b> The groups follow the order the pipeline fills them, so reading top to bottom '
+            'follows a paper from PDF to finished claim. Download everything with '
+            '<code>python scripts/export_raw.py</code> (JSON + CSV).</p>'
+            f'{groups_html}')
 
         if not table:
-            body += ('<div class="panel" style="margin-top:1rem"><span class="muted">'
-                     'Pick a table above. <b>hitl_feedback</b> and <b>token_usage</b> are empty '
-                     'and that is a real finding, not a loading error &mdash; the snapshot restore '
-                     'could not carry them (see WALKTHROUGH M39 &sect;4).</span></div>')
+            body += ('<div class="panel" style="margin-top:1.2rem"><span class="muted">'
+                     '<b>Where to start:</b> open <code>entity_instances</code> &mdash; one row is '
+                     'one piece of evidence with the sentence it came from, and everything else is '
+                     'built out of it. Then <code>contradictions</code>, which is where the machine '
+                     'runs out and needs a person. The empty tables are findings, not loading '
+                     'errors, and each card says why.</span></div>')
             return _page("/raw", body)
 
         if table not in tables:
