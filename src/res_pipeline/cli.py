@@ -795,6 +795,121 @@ def synthesize() -> None:
     _print_run_cost(run_id)
 
 
+@app.command("check-graph")
+def check_graph(out: str = typer.Option(None, help="Write the full result as JSON.")) -> None:
+    """Does the extracted graph contradict itself? Deterministic, no API cost.
+
+    The ontology already makes a *type* error impossible. This asks whether the graph,
+    well-typed throughout, nonetheless says incompatible things: a context both enabling
+    and constraining the same outcome, a relation spanning two configurations, a CMOC
+    missing one of C, M or O, or a cycle in a chain that should be acyclic.
+    """
+    import json as _json
+    from pathlib import Path
+
+    from res_pipeline.verification.graph_consistency import check
+
+    r = check()
+    console.print(f"  {r['entities']} entities · {r['relations']} relations · "
+                  f"{r['cmocs']} CMOCs", markup=False)
+    console.print("\n  Defects", markup=False)
+    for k, v in r["checks"].items():
+        console.print(f"    {k:46} {v}", markup=False)
+    console.print(f"    {'TOTAL':46} {r['defects_total']}", markup=False)
+    console.print("\n  Signals (not errors)", markup=False)
+    for k, v in r["signals"].items():
+        console.print(f"    {k:46} {v}", markup=False)
+    if out:
+        Path(out).write_text(_json.dumps(r, indent=1), encoding="utf-8")
+        console.print(f"\n  written: {out}", markup=False)
+
+
+@app.command("compare-theory")
+def compare_theory(out: str = typer.Option(None, help="Write the full result as JSON.")) -> None:
+    """Richmond's programme theory beside ours — computed from both, not written by anyone.
+
+    For each of Richmond's five programme-theory statements: was its context recovered,
+    what fraction of its expected interventions, mechanism-responses and outcomes was
+    recovered, and which of our sections carries it. The verdict follows a stated rule
+    applied to those fractions.
+    """
+    import json as _json
+    from pathlib import Path
+
+    from res_pipeline.verification.theory_comparison import compare
+
+    r = compare()
+    console.print(f"  gold {r['computed_from']['gold']} · run "
+                  f"{r['computed_from']['verification_run']} · "
+                  f"{r['computed_from']['system_sections']} system sections", markup=False)
+    console.print(f"  {' · '.join(f'{v} {k}' for k, v in sorted(r['tally'].items()))}\n",
+                  markup=False)
+    for st in r["statements"]:
+        console.print(f"  {st['statement']} [{st['richmond_context_code']}]  "
+                      f"{st['verdict'].upper()}", markup=False)
+        console.print(f"      {st['richmond_context'][:92]}", markup=False)
+        console.print(
+            f"      I {st['interventions']['recovered']}/{st['interventions']['expected']}"
+            f" · M {st['mechanism_responses']['recovered']}/{st['mechanism_responses']['expected']}"
+            f" · O {st['outcomes']['recovered']}/{st['outcomes']['expected']}", markup=False)
+    if out:
+        Path(out).write_text(_json.dumps(r, indent=1), encoding="utf-8")
+        console.print(f"\n  written: {out}", markup=False)
+
+
+@app.command("motif-test")
+def motif_test(
+    permutations: int = typer.Option(1000, help="Permutations per null model."),
+    seed: int = typer.Option(42, help="Fixed, so the result is reproducible."),
+    out: str = typer.Option(None, help="Write the full result as JSON."),
+) -> None:
+    """Are the demi-regularities real patterns, or what a graph this shape yields by chance?
+
+    `find_demi_regularities` calls a motif real when it appears in two or more studies.
+    Two is a threshold someone chose. This asks the question that threshold assumes:
+    how many motifs would clear it by chance, given only the concepts the corpus
+    contains? Degree-preserving permutation null (Milo et al., Science 2002), with
+    Benjamini-Hochberg correction because dozens of motifs are tested at once.
+
+    Two nulls are run. The global one redeals concepts across the whole corpus; the
+    within-study one holds each study's own vocabulary fixed and breaks only which
+    concepts are bundled into the same configuration, which is the stricter test.
+
+    No model call, no API cost, reproducible from the seed.
+    """
+    import json as _json
+    from pathlib import Path
+
+    from res_pipeline.verification.motif_significance import motif_null_test
+
+    both = {}
+    for within in (False, True):
+        r = motif_null_test(n_permutations=permutations, seed=seed, within_study=within)
+        both["within_study" if within else "global"] = r
+        label = "within-study (stricter)" if within else "global"
+        console.print(
+            f"  {label:24} observed {r['observed_motifs']} · by chance "
+            f"{r['null_motifs_mean']} (range {r['null_motifs_min']}-{r['null_motifs_max']})"
+            f" · surviving FDR q<0.05: [bold]{r['surviving_q05']}[/bold]", markup=True)
+
+    g = both["global"]
+    survivors = [m for m in g["motifs"] if m["survives_q05"]]
+    if survivors:
+        console.print("\n  Motifs surviving the lenient null:", markup=False)
+        for m in survivors:
+            console.print(f"    {m['studies_observed']} studies · q={m['q_value']} · "
+                          f"{m['polarity']}", markup=False)
+            console.print(f"       {m['context']}  ->  {m['driver']}  ->  {m['outcome']}",
+                          markup=False)
+    if g["observed_motifs"] <= g["null_motifs_mean"] + (g["null_motifs_max"] - g["null_motifs_mean"]) / 2:
+        console.print("\n  [yellow]The COUNT is inside the null range.[/yellow] Report the "
+                      "motifs that survive individually, never the total as a finding.",
+                      markup=True)
+    if out:
+        Path(out).write_text(_json.dumps(both, indent=1), encoding="utf-8")
+        console.print(f"\n  written: {out}", markup=False)
+
+
 @app.command()
 def verify() -> None:
     """Verification harness: compare system outputs against the Richmond gold standard."""

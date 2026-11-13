@@ -1,0 +1,134 @@
+{
+ "computed_from": {
+  "gold": "3.0",
+  "verification_run": "verify-edcbf790",
+  "system_sections": 9,
+  "matcher_corrections_applied": [
+   "E03",
+   "E24"
+  ]
+ },
+ "rule": "reproduced = context recovered AND >=50% of each of interventions, mechanism-responses and outcomes; 'chain without context' = the chain meets that bar but Richmond's context label was not recovered; partial = context recovered, chain only in part; corpus gap = neither",
+ "tally": {
+  "partial": 1,
+  "chain without context": 3,
+  "reproduced": 1
+ },
+ "statements": [
+  {
+   "statement": "PTS1",
+   "richmond_context_code": "E02",
+   "richmond_context": "Students with 'low knowledge', low clinical domain-specific knowledge, or inability to use knowledge in a reasoning situation",
+   "richmond_source": "Results 3.2.1 p.714; Figure 3 p.715",
+   "richmond_n_studies": 22,
+   "context_recovered": true,
+   "context_matched_to": "cont:knowledge-deficits",
+   "interventions": {
+    "recovered": 5,
+    "expected": 10
+   },
+   "mechanism_responses": {
+    "recovered": 2,
+    "expected": 9
+   },
+   "outcomes": {
+    "recovered": 2,
+    "expected": 2
+   },
+   "verdict": "partial",
+   "our_sections_carrying_it": []
+  },
+  {
+   "statement": "PTS2",
+   "richmond_context_code": "E03",
+   "richmond_context": "Students with high clinical domain-specific knowledge",
+   "richmond_source": "Results 3.2.2 p.714; Figure 2 rows 2-3",
+   "richmond_n_studies": 7,
+   "context_recovered": false,
+   "context_matched_to": null,
+   "interventions": {
+    "recovered": 2,
+    "expected": 2
+   },
+   "mechanism_responses": {
+    "recovered": 2,
+    "expected": 3
+   },
+   "outcomes": {
+    "recovered": 3,
+    "expected": 3
+   },
+   "verdict": "chain without context",
+   "our_sections_carrying_it": []
+  },
+  {
+   "statement": "PTS3",
+   "richmond_context_code": "E04",
+   "richmond_context": "Positive coping strategies or appropriate self-confidence/self-efficacy",
+   "richmond_source": "Results 3.2.3 p.714; Figure 2 row 4",
+   "richmond_n_studies": 5,
+   "context_recovered": true,
+   "context_matched_to": "mech:clinical-reasoning-confidence-and-affect",
+   "interventions": {
+    "recovered": 3,
+    "expected": 3
+   },
+   "mechanism_responses": {
+    "recovered": 2,
+    "expected": 3
+   },
+   "outcomes": {
+    "recovered": 4,
+    "expected": 4
+   },
+   "verdict": "reproduced",
+   "our_sections_carrying_it": []
+  },
+  {
+   "statement": "PTS4",
+   "richmond_context_code": "E05",
+   "richmond_context": "Negative coping strategies or lacking self-confidence/self-efficacy",
+   "richmond_source": "Results 3.2.4 p.716; Figure 2 row 5",
+   "richmond_n_studies": 4,
+   "context_recovered": false,
+   "context_matched_to": "cont:decision-making-preparedness",
+   "interventions": {
+    "recovered": 1,
+    "expected": 1
+   },
+   "mechanism_responses": {
+    "recovered": 2,
+    "expected": 4
+   },
+   "outcomes": {
+    "recovered": 3,
+    "expected": 3
+   },
+   "verdict": "chain without context",
+   "our_sections_carrying_it": []
+  },
+  {
+   "statement": "PTS5",
+   "richmond_context_code": "E06",
+   "richmond_context": "Students with different levels of knowledge within a group",
+   "richmond_source": "Results 3.2.5 p.716; Figure 2 rows 6-7",
+   "richmond_n_studies": 9,
+   "context_recovered": false,
+   "context_matched_to": "cont:expertise-comparison",
+   "interventions": {
+    "recovered": 3,
+    "expected": 3
+   },
+   "mechanism_responses": {
+    "recovered": 4,
+    "expected": 4
+   },
+   "outcomes": {
+    "recovered": 5,
+    "expected": 5
+   },
+   "verdict": "chain without context",
+   "our_sections_carrying_it": []
+  }
+ ]
+}

@@ -313,3 +313,66 @@ def test_deduplication_prefers_the_first_source_and_keeps_the_fuller_record():
     assert len(kept) == 1 and kept[0].source == "openalex"
     assert kept[0].abstract == "An abstract.", "the abstract must be carried across"
     assert stats["removed_by_doi"] == 1 and stats["removed_by_title"] == 1
+
+
+# --- the inference layer gained three tests of itself (2026-11-13) ------------------
+
+
+def test_null_model_preserves_every_marginal_except_co_occurrence():
+    """The shuffle must destroy ONLY the hypothesis, or the test proves nothing.
+
+    If it also changed how many concepts a CMOC has, or how often a concept is used, the
+    null would be easier to beat and every motif would look significant.
+    """
+    import random
+    from collections import Counter
+
+    from res_pipeline.verification.motif_significance import _shuffled
+
+    rows = [
+        {"cmoc_id": "c1", "study_id": "S1", "polarity": "positive",
+         "contexts": ["a", "b"], "drivers": ["d1"], "outcomes": ["o1"]},
+        {"cmoc_id": "c2", "study_id": "S2", "polarity": "negative",
+         "contexts": ["b"], "drivers": ["d1", "d2"], "outcomes": ["o1", "o2"]},
+    ]
+    out = _shuffled(rows, random.Random(1))
+    for before, after in zip(rows, out):
+        assert after["study_id"] == before["study_id"]
+        assert after["polarity"] == before["polarity"]
+        for role in ("contexts", "drivers", "outcomes"):
+            assert len(after[role]) == len(before[role]), role
+            assert len(set(after[role])) == len(after[role]), "no concept twice in one role"
+    for role in ("contexts", "drivers", "outcomes"):
+        assert (Counter(c for r in rows for c in r[role])
+                == Counter(c for r in out for c in r[role])), role
+
+
+def test_graph_consistency_separates_defects_from_design_contrasts():
+    """A two-arm experiment is evidence, not an error, and must not be counted as one.
+
+    The first version of this check called "same driver, both polarities, one study" a
+    defect. All 29 hits were two-arm designs — S004 instructs one group and tells the
+    other to use whatever comes naturally — and that contrast is the study's finding.
+    """
+    from res_pipeline.verification import graph_consistency as gc
+
+    src = gc.__doc__ or ""
+    assert "reclassified" in src.lower()
+    import inspect
+
+    body = inspect.getsource(gc.check)
+    assert '"signals"' in body and '"defects_total"' in body
+    assert "same_driver_both_polarities_within_one_study" not in body.split('"checks"')[1].split("}")[0]
+
+
+def test_theory_comparison_verdict_is_derived_not_typed():
+    """The comparison must come from the data. It used to be four hand-typed verdicts."""
+    import inspect
+
+    from res_pipeline.verification import theory_comparison as tc
+
+    body = inspect.getsource(tc.compare)
+    # the verdict is computed from recovered/expected fractions
+    assert "chain_ok" in body and "half(" in body
+    # and the two concepts the matcher fix refused are excluded by name, not silently
+    assert tc.REFUSED_BY_MATCHER_FIX == {"E03", "E24"}

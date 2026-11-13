@@ -1,0 +1,265 @@
+{
+ "entities": 547,
+ "relations": 459,
+ "cmocs": 94,
+ "checks": {
+  "context_both_enables_and_constrains": 0,
+  "relation_spans_two_cmocs": 0,
+  "cmoc_not_a_configuration": 0,
+  "causal_cycle": 1
+ },
+ "signals": {
+  "within_study_experimental_contrasts": 29
+ },
+ "defects_total": 1,
+ "findings": {
+  "causal_cycle": [
+   {
+    "cycle": [
+     "mech:active-reasoning-and-self-explanation",
+     "mech:knowledge-elaboration",
+     "mech:self-explanation",
+     "mech:active-reasoning-and-self-explanation"
+    ]
+   }
+  ],
+  "same_driver_both_polarities_within_one_study": [
+   {
+    "study_id": "S004",
+    "concept": "inte:ecg-presentation-manipulation",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S004",
+    "concept": "mech:contrastive-diagnostic-scaffolding",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S004",
+    "concept": "mech:diagnostic-suggestion-feedback",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S006",
+    "concept": "inte:worked-examples",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S006",
+    "concept": "mech:worked-examples",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S013",
+    "concept": "inte:self-explanation-diagnostic-case-solving",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S013",
+    "concept": "mech:self-explanation-prompts",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S016",
+    "concept": "inte:structured-case-based-reasoning",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S016",
+    "concept": "mech:contrastive-diagnostic-scaffolding",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S017",
+    "concept": "inte:schema-based-instruction",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S017",
+    "concept": "mech:contrastive-diagnostic-scaffolding",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S018",
+    "concept": "inte:reduced-feedback-similar-case-reasoning",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S018",
+    "concept": "inte:similar-case-series",
+    "polarities": [
+     "mixed",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S018",
+    "concept": "mech:multiple-similar-cases",
+    "polarities": [
+     "mixed",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S018",
+    "concept": "mech:official-diagnosis-feedback",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S019",
+    "concept": "inte:reasoning-instruction",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S019",
+    "concept": "mech:contrastive-diagnostic-scaffolding",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S020",
+    "concept": "inte:self-explanation-diagnostic-case-solving",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S020",
+    "concept": "mech:self-explanation-prompts",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S021",
+    "concept": "inte:analytic-training",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S021",
+    "concept": "mech:contrastive-diagnostic-scaffolding",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S021",
+    "concept": "mech:feature-comparison-support",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S022",
+    "concept": "inte:medialis-serious-game",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S022",
+    "concept": "inte:serious-game",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S025",
+    "concept": "inte:expert-examples",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S026",
+    "concept": "inte:resident-se-examples",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S027",
+    "concept": "inte:formative-assessment",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S027",
+    "concept": "mech:assessment-and-feedback-structure",
+    "polarities": [
+     "mixed",
+     "negative",
+     "positive"
+    ]
+   },
+   {
+    "study_id": "S028",
+    "concept": "mech:reasoning-process-modeling",
+    "polarities": [
+     "negative",
+     "positive"
+    ]
+   }
+  ],
+  "context_both_enables_and_constrains": [],
+  "relation_spans_two_cmocs": [],
+  "cmoc_not_a_configuration": []
+ }
+}

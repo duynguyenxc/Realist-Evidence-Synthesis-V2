@@ -1437,28 +1437,57 @@ def verify():
     r = _latest_report()
     if not r:
         return _page("/verify", '<h2 class="title serif">Comparison</h2><p class="lead">Run <b>Verify</b> from the Control room first.</p>')
-    groups = [
-        ("Low-knowledge novices", "match",
-         [("e", "Explain the expert's reasoning; teach pattern + checking together"), ("x", "Observing without explanation → panic, poor learning")],
-         [("e", "Explicit reasoning instruction &amp; schemas help novices"), ("x", "Unsupported / passive formats ineffective")]),
-        ("High-knowledge learners", "match",
-         [("e", "Real / simulated cases → fast intuitive reasoning"), ("x", "Novice-style directive teaching → little benefit (expertise reversal)")],
-         [("e", "Structured comparison helps competent learners"), ("x", "Over-directive support adds little — <b>same expertise-reversal, found independently</b>")]),
-        ("Mixed groups (feedback)", "part",
-         [("e", "Timely accurate feedback → learning"), ("x", "Absent / wrong feedback → confusion")],
-         [("e", "Feedback-and-correction is a positive pattern across studies")]),
-        ("Coping / self-confidence", "gap",
-         [("e", "Good copers gain from simulation"), ("x", "Poor copers → fear / stress → negative learning")],
-         [("n", "Not reconstructed — \"self-efficacy\" appears 0× in the corpus. The system declined to invent it.")]),
-    ]
+    # Computed from gold/ and the database — see verification/theory_comparison.py. This
+    # block used to be four hand-typed comparisons with hand-assigned verdicts, which
+    # could not change when the system changed and could not be checked by anyone.
+    from res_pipeline.verification.theory_comparison import compare as _compare
+    try:
+        cmp_data = _compare()
+    except Exception as exc:  # noqa: BLE001 - show the reason rather than an empty page
+        return _page("/verify", f'<h2 class="title serif">Comparison</h2>'
+                                f'<p class="lead">Cannot compute: {_esc(str(exc))}</p>')
+
+    _VERDICT_TAG = {"reproduced": ("match", "reproduced"),
+                    "chain without context": ("part", "chain, no context label"),
+                    "partial": ("part", "partial"),
+                    "chain only, partial": ("part", "chain only, partial"),
+                    "corpus gap": ("gap", "corpus gap")}
     cmp_html = ""
-    tagname = {"match": "match", "part": "partial", "gap": "corpus gap"}
-    for name, verdict, hu, ma in groups:
-        hl = "".join(f'<div class="li {c}">{t}</div>' for c, t in hu)
-        ml = "".join((f'<div class="li {c}">{t}</div>' if c in ("e", "x") else f'<div class="muted">{t}</div>') for c, t in ma)
-        cmp_html += (f'<div class="cmp"><div class="ch"><span>{name}</span><span class="tag {verdict}">{tagname[verdict]}</span></div>'
-                     f'<div class="cc"><div class="col"><div class="who h">Richmond · human</div>{hl}</div>'
-                     f'<div class="col"><div class="who m">System · machine</div>{ml}</div></div></div>')
+    for st in cmp_data["statements"]:
+        cls, label = _VERDICT_TAG.get(st["verdict"], ("gap", st["verdict"]))
+        parts = ""
+        for name, key in (("interventions", "interventions"),
+                          ("mechanism responses", "mechanism_responses"),
+                          ("outcomes", "outcomes")):
+            got, exp = st[key]["recovered"], st[key]["expected"]
+            pct = (got / exp * 100) if exp else 0
+            parts += (f'<div class="li {"e" if pct >= 50 else "x"}">{name}: '
+                      f'<b>{got}/{exp}</b></div>')
+        ctx = (f'recovered as <code>{_esc(st["context_matched_to"] or "")}</code>'
+               if st["context_recovered"] else
+               '<b>context label not recovered</b>')
+        cmp_html += (
+            f'<div class="cmp"><div class="ch">'
+            f'<span>{_esc(st["statement"])} · {_esc(st["richmond_context_code"])}</span>'
+            f'<span class="tag {cls}">{label}</span></div>'
+            f'<div class="cc">'
+            f'<div class="col"><div class="who h">Richmond · human</div>'
+            f'<div class="li e">{_esc(st["richmond_context"])}</div>'
+            f'<div class="muted" style="font-size:.8rem;margin-top:.3rem">'
+            f'{_esc(st["richmond_source"] or "")} · {st["richmond_n_studies"]} studies</div></div>'
+            f'<div class="col"><div class="who m">System · machine</div>'
+            f'<div class="muted" style="font-size:.84rem;margin-bottom:.3rem">{ctx}</div>'
+            f'{parts}</div></div></div>')
+
+    tally = " · ".join(f"{v} {k}" for k, v in sorted(cmp_data["tally"].items()))
+    cmp_note = (
+        f'<p class="muted" style="max-width:62rem;font-size:.86rem">'
+        f'<b>Computed, not written.</b> Each row below is derived from Richmond\'s five '
+        f'programme-theory statements in the benchmark and this system\'s own entity '
+        f'matching — no verdict here was typed by a person. Result: {_esc(tally)}. '
+        f'The rule: {_esc(cmp_data["rule"])}. '
+        f'Source run <code>{_esc(cmp_data["computed_from"]["verification_run"])}</code>; '
+        f'E03 and E24 are refused by the matcher fix of 2026-11-04.</p>')
     integrity = """
     <div class="panel"><div class="eyebrow">Did the machine copy Richmond's answers?</div>
       <div class="li e"><b>Code:</b> the pipeline reads only the 28 papers; Richmond's answer key is used only to score, afterwards. The extraction prompt contains 0 of Richmond's codes.</div>
@@ -1470,7 +1499,7 @@ def verify():
     <p class="lead">How closely the machine's output matches the human review — the scorecard, then
     conclusions side by side, then the integrity check. Full numbers in <code>outputs/MASTER_VERIFICATION_REPORT.md</code>.</p>
     <div class="panel"><div class="eyebrow">Scorecard</div>{_scorebars()}</div>
-    <h3>Conclusions, side by side</h3>{cmp_html}
+    <h3>Conclusions, side by side</h3>{cmp_note}{cmp_html}
     <h3>Integrity</h3>{integrity}"""
     return _page("/verify", body)
 
