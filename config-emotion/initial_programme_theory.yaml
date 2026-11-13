@@ -107,6 +107,19 @@ hypothesised_context_dimensions:
     to_test: >
       Are null results concentrated in programmes that are not Sequenced, Active,
       Focused and Explicit? If so, implementation is a context, not noise.
+  - id: prior_experience_with_the_subject
+    from_theory: "control-value theory (Pekrun 2006); expertise literature"
+    to_test: >
+      Does a learner's prior experience of the subject — including prior failure in it —
+      change which intervention works? Named in the assignment as a context to capture,
+      and distinct from present control appraisal: a history of difficulty can depress
+      control appraisal independently of current competence.
+  - id: emotional_challenge_in_the_situation
+    from_theory: "control-value theory (Pekrun 2006); SEL implementation (Durlak et al. 2011)"
+    to_test: >
+      Which emotional demands does the learning situation itself impose — high-stakes
+      assessment, public performance, competitive grading, repeated failure — and do
+      interventions work differently under each? Named in the assignment.
   - id: cognitive_load_headroom
     from_theory: "cognitive load / expertise literature"
     to_test: >

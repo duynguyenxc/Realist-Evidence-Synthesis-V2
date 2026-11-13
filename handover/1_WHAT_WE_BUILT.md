@@ -3,9 +3,29 @@
 **Duy Nguyen — 13 November 2026.** Deliverable 1 of the 2026-10-30 assignment.
 
 This answers your first request: organise and provide everything developed for the Richmond
-benchmark. It assumes no familiarity with the system. Section 1 explains what the thing does,
-section 2 says where each item you listed lives, and section 3 states plainly what it cannot do
-yet — including two errors we found in our own earlier reports and corrected last week.
+benchmark. It assumes no familiarity with the system.
+
+---
+
+## 0. Where we are right now
+
+**Stage: the Richmond benchmark is complete and verified; the new topic is configured but has not
+been run.** In the terms of your assignment, your section 1 and 2 are done — this document and the
+next are those — and sections 3 to 6 need a corpus run, which needs API budget the project does
+not have.
+
+| | |
+|---|---|
+| Richmond benchmark | **Complete.** Ran end to end twice; 28 papers, 94 configurations, 547 quoted elements, verified against your benchmark |
+| The five review checkpoints | **Performed, awaiting a human countersignature.** All 20 contradictions resolved and the programme theory signed, recorded as AI-performed under your section 5 delegation |
+| New topic configuration | **Drafted, not reviewed.** `config-emotion/` holds the review protocol, the initial programme theory built from your four references, and rewritten agent personas |
+| New topic corpus | **Not started.** The search tool works and was trialled; no corpus has been collected |
+| Conference paper | **Accepted to AERA 2027** on 6 November. Reviewer comments not yet read |
+
+**What changed in the two weeks since your email**, all of it preparation rather than new-topic
+work: the pipeline gained a literature search it never had; the prompts were lifted out of the
+source code into configuration; and three tests of the system's own reasoning were built, which
+changed what we are entitled to claim. Those are in the progress report.
 
 ---
 
@@ -16,7 +36,11 @@ analysis is the Context–Mechanism–Outcome Configuration: *in this context, t
 this response, producing this outcome*. Building those by hand across dozens of papers takes a
 team months, and afterwards the reasoning is hard to audit because it lives in reviewers' notes.
 
-The pipeline does the mechanical part of that work and keeps a record of the reasoning. Six stages:
+The pipeline does the mechanical part of that work and keeps a record of the reasoning. Six
+stages, with the five points at which it stops and asks a person:
+
+![The pipeline and its five human checkpoints](pipeline.svg)
+
 
 | Stage | What it does | On Richmond's 28 papers |
 |---|---|---|
@@ -95,6 +119,27 @@ Accepted to **AERA 2027** on 6 November (Division D, roundtable "AI as a Methodo
 Toronto, 14–18 April). **The reviewer comments on the All Academic portal have not been read yet** —
 they may bear on everything below, and they are the first thing I will read once you can access them.
 
+### A note on documents that are out of date
+
+The repository has been worked on for ten months and some documents describe a version of the
+system that no longer exists. Rather than delete them, which would destroy the record of how the
+project reached its current state, each has been marked. Audited 13 November, file by file:
+
+| | |
+|---|---|
+| **Current and reliable** | `README.md`, `docs/SYSTEM_AND_ALGORITHMS.md` (with a dated note listing what came after it), `docs/MACHINE_VS_HUMAN.md`, `docs/VERIFICATION_PROTOCOL.md`, `docs/PROJECT_CONTEXT.md`, this handover |
+| **Superseded, marked in place** | `docs/FOR_THE_PROFESSOR.md`, `docs/ANSWERS_TO_FIVE_QUESTIONS.md`, `HANDOFF_FOR_NEW_MACHINE.md`, `outputs/Preliminary_Results_v2.html` — each carries a banner naming the figures that changed |
+| **Historical by design** | `WALKTHROUGH.md` and `docs/DECISION_LOG.md` are append-only logs; `outputs/runs/` holds per-run records. A figure in a run record was true for that run, and editing it would falsify the record |
+| **Frozen** | `outputs/RESULTS.html` cannot be regenerated — the human-decision counts it reports were lost in a database restore and no re-export can reproduce them. It therefore still shows the September figures, and the report package says so |
+
+**Two claims we had to retract.** An earlier `README.md` named LangChain, LangGraph, Microsoft
+GraphRAG and Neo4j as the stack. None is imported anywhere, the first three are not even
+dependencies, and no Neo4j database was ever created. The current README retracts this explicitly
+rather than quietly dropping it. Separately, the earlier README said four adjudication
+checkpoints; there are five.
+
+A dead-code check of all 39 source modules found none unreachable.
+
 ### The instructions given to AI, and the decisions that followed
 | | |
 |---|---|
@@ -140,25 +185,34 @@ old figures and this error.** The deadline for programme changes is 5 March 2027
 
 ### Limitations that remain
 
-1. **Precision has never been measured.** Every figure above is recall — how much of Richmond we
-   recovered. Nothing establishes how many of our 547 extractions are spurious. This is half of
-   "is it as good as a human", and it is missing.
-2. **No human has yet countersigned the review checkpoints.** All 20 contradictions are resolved
-   and the programme theory is signed, but recorded as AI-performed under your §5 delegation and
-   awaiting Duy's countersignature. Your assignment asks us to *preserve* human verification; a
-   feature never exercised cannot be preserved, and closing this is the next thing I will do.
-3. **The side-by-side comparison with your conclusions is currently hand-written prose**, not
-   computed. Both sides exist as structured data — your 5 programme-theory statements in the gold
-   standard, our 9 sections in the database — but nothing yet aligns them automatically. A
-   comparison that cannot be recomputed cannot be checked, and fixing this is the top item on the
-   current plan.
-4. **Everything rests on one benchmark.** One benchmark cannot distinguish "performs realist
-   synthesis" from "fits Richmond".
-5. **A single model vendor.** All extraction runs on one provider. Whether a different model family
-   would reach the same configurations is untested, and it is the first question a methods reviewer
-   will ask.
-6. **The verification figures were last computed on 25 September** and predate the scoring fix.
-   Re-running costs API credit, which the project does not currently have.
+The progress report has these in full, with what was done about each. In short:
+
+**Closed since 2 November, by doing the work rather than reporting it:** the comparison with your
+conclusions is now computed rather than hand-written; the recurring patterns have been tested
+against chance; the graph has been checked for internal contradictions; and what can be measured
+about precision without budget has been measured.
+
+**Two of those changed what we may claim**, and you should see them before anything else in this
+package:
+
+1. **The 32 recurring patterns do not survive a significance test.** A permutation null model
+   gives 32.3 expected by chance against 32 observed, and no individual pattern survives
+   correction for multiple testing. They must be reported as candidates for human adjudication,
+   not as findings.
+2. **The system reconstructs your causal chains but under-recovers your context labels.** Three of
+   your five programme-theory statements come back with the chain almost wholly recovered and the
+   context label missed — including one with 3/3 interventions, 4/4 mechanism-responses and 5/5
+   outcomes. The hand-written comparison had called that a corpus gap. It is not; it is a specific
+   weakness in how the system names populations.
+
+**Still open and needing budget:** the screening has never been tested on papers it should reject;
+only one model vendor has been used; the verification run dates from September; everything rests
+on one benchmark; and there is no cost history to estimate from.
+
+**Still open and not ours to close:** no human has countersigned the review checkpoints. They are
+performed and the reasoning is recorded, but signed `ai-ra:claude` rather than with a name,
+because entering a person's name against a decision they have not read would put a false record
+in the research log. Fifteen minutes of Duy's time closes it.
 
 ---
 

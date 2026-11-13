@@ -49,8 +49,10 @@ eligibility:
   intervention:
     include: >
       An educational practice intended to change how students notice, understand,
-      label, express or regulate learning-related emotions — reflective or
-      expressive writing, emotion-labelling and feeling-vocabulary curricula,
+      label, express or regulate learning-related emotions. The five the assignment
+      names by example are all in scope and listed first: reflective writing;
+      emotional awareness prompts; feedback; learning plans; and self-regulation
+      activities. Also in scope: expressive writing, emotion-labelling and feeling-vocabulary curricula,
       appraisal or reappraisal prompts, mindfulness and attention training embedded
       in teaching, feedback designed to protect or rebuild control appraisals,
       goal-setting and learning plans, self-regulated-learning instruction, peer or
@@ -60,13 +62,22 @@ eligibility:
       Purely observational or correlational studies of emotion with no instructional
       component; psychometric development of an emotion measure with no intervention;
       pharmacological or clinical treatment.
+  # The four context dimensions the assignment names by example, kept verbatim so the
+  # extractor is told to look for each and none is dropped.
+  contexts_to_capture:
+    - student characteristics
+    - learning situations
+    - prior experiences
+    - emotional challenges
   focus:
     include: >
       Emotional awareness (noticing, understanding and labelling one's own learning
       emotions) and emotional regulation (what the learner does about them), as they
       bear on learning. Achievement emotions, emotional intelligence, self-regulated
-      learning, motivation and engagement are in scope where they are linked to an
-      awareness or regulation pathway rather than measured on their own.
+      learning (SRL), motivation, engagement and academic outcomes are in scope where
+      they are linked to an awareness or regulation pathway rather than measured on
+      their own. Those are the eight topics the assignment lists, named here so none
+      is lost to paraphrase.
   outcomes:
     include: >
       Change in emotional awareness or emotion-regulation strategy use; change in

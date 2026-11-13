@@ -1,0 +1,11 @@
+{
+ "concepts": 183,
+ "inside_frame": 31,
+ "outside_frame": 152,
+ "outside_by_study_count": {
+  "2 studies": 23,
+  "3+ studies": 31,
+  "seen in 1 study only": 98
+ },
+ "single_mention_single_study": 72
+}

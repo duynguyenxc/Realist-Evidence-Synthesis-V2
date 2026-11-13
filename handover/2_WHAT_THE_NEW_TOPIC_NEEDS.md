@@ -48,6 +48,14 @@ practice intended to change how students notice, understand, label or regulate l
 emotions; excluding purely correlational studies with no intervention, and clinical treatment of
 diagnosed disorders.
 
+**A check against your email, and four things it caught.** The draft was written from your
+assignment, then checked back against it item by item on 13 November. Four things you name
+explicitly were missing and have been added: **emotional awareness prompts** and **self-regulation
+activities** as intervention types, and **prior experiences** and **emotional challenges** as
+context dimensions. All eight topics you list in section 3 and all nine examples you give in
+section 4 are now named in the configuration verbatim, so none is lost to paraphrase when the
+extractor reads them.
+
 **The definition that will cause the most argument, and should be settled by you:** whether a
 study that measures emotion as an *outcome* of an ordinary teaching intervention is in scope, or
 only studies that intervene on emotion *deliberately*. The draft takes the narrower reading. The
@@ -159,6 +167,60 @@ studies do different jobs and should be written that way.
 counterfactual of pasting them into a chat window — recovered 32 of 46 concepts, inside our
 pipeline's own range. **On concept coverage the pipeline is not better**, and we do not claim it
 is. The difference is everything in the paragraph above, none of which the single call produces.
+
+---
+
+---
+
+## 8. What the literature says about doing this with AI, and where it leaves us
+
+Searched 13 November. Two findings matter more than the rest, and both are favourable.
+
+**No peer-reviewed evaluation of LLM-based CMOC extraction against human realist reviewers
+appears to exist.** The LLM-and-systematic-review literature has grown quickly, but it is almost
+entirely PRISMA-shaped: screening and data extraction for effect-size reviews. A 2025 *JAMIA*
+LLM-assisted review of the field found the most-covered stages were searching (34.9%) and data
+extraction (31.4%); realist synthesis does not appear as a category. A methodological case study
+has used AI tools to *search* for a realist review, but for extraction and synthesis the manual
+baseline is still [Gilmore et al. (2019)](https://journals.sagepub.com/doi/10.1177/1609406919859754),
+which describes how CMOCs are extracted by hand. **That makes the Richmond study's position
+unusually clear: it is not a better version of something already benchmarked; it is the first
+benchmark of its kind that we can find.**
+
+**No dedicated systematic review of emotion-regulation interventions in STEM higher education,
+framed by achievement emotions, appears to exist either.** The adjacent work is real but differently
+scoped: a 2025 *Educational Psychology Review* meta-analysis of regulation *strategies* and
+achievement in secondary and university students; Pekrun-linked work on regulating achievement
+emotions, including the RAEQ instrument; a 2022 study of 174 STEM degree students finding
+cognitive reappraisal associated with better exam performance; and a
+[PNAS field experiment](https://www.pnas.org/doi/10.1073/pnas.1808589116) in which a reappraisal
+intervention improved science exam scores and pass rates for lower-income students. **So the
+review has a genuine gap to fill, and the evidence base to fill it exists.**
+
+One validation worth noting: our trial search independently surfaced the 2022 STEM study the
+literature search above also found. The tool is looking in the right place.
+
+### Three things this changes in how we should work
+
+**Report to an AI-assisted standard, not only to RAMESES.** Reporting guidance for AI-assisted
+reviews now exists in draft: [PRISMA-LLM](https://arxiv.org/abs/2609.11559) (September 2026),
+built from an analysis of 888 review-automation papers, plus ARISMA and L-PRISMA, and PRISMA 2026
+is reported to add structured handling of AI-assisted screening. None is settled, so we should not
+claim conformance — but PRISMA-LLM's central distinction is one we should adopt now, because it
+is the distinction a reviewer will apply: **separate disclosing what the AI did from evaluating
+what difference it made.** Its own finding is the warning: among papers reporting only positive
+LLM evaluations, 52% nonetheless disclosed an unmet reliability requirement. A review that
+reports only what worked is the common failure, not the exception.
+
+**Do not build what exists.** For screening specifically, ASReview (open source, active learning,
+Utrecht) and Rayyan (free tier) are mature. Our contribution is CMOC extraction, span grounding
+and realist synthesis — stages those tools do not attempt. If screening ever becomes the
+bottleneck, adopting one is cheaper than improving ours, and we should say so rather than
+re-implement.
+
+**Expect the extraction claim to be challenged on precision.** Where the field has evaluated LLM
+extraction it has done so against human extraction on both precision and recall. We measure only
+recall. This is the gap most likely to be raised, on either topic.
 
 ---
 

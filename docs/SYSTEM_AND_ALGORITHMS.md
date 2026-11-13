@@ -10,6 +10,25 @@
 > reviewer opening the repository and finding a different system than the one described.
 >
 > Written 2026-09-23. Supersedes the technology claims in `ARCHITECTURE.md` (see §7).
+>
+> **Still accurate, and incomplete as of 2026-11-13.** Everything below was true when written and
+> nothing in it has been contradicted since. Four things were added after it:
+>
+> * **A literature search stage** (`res search`, `res acquire`) — OpenAlex and Crossref, with
+>   deduplication and a query log. When this was written the corpus was supplied by hand, and §2
+>   says so correctly for that date.
+> * **BM25 retrieval** (`core/retrieval.py`) for the synthesis evidence pack, inert below 400
+>   statements so Richmond's run is unchanged. §4's "context stuffing, not retrieval" still
+>   describes what happens at Richmond's size.
+> * **Retroduction without a quote** (`res theorise`) — proposals that no paper states, kept in a
+>   separate table that cannot enter the evidence graph.
+> * **Three tests of the inference layer** (2026-11-13): a permutation null model for the
+>   demi-regularities, internal consistency checks over the graph, and a computed comparison
+>   against Richmond's programme theory. Their results change what this system may claim, and
+>   `handover/6_PROGRESS_REPORT.md` carries them.
+>
+> Prompts have also moved out of the source files into `config/prompts/`, so §3's note on where
+> prompt text lives is now one directory out of date.
 
 ---
 
