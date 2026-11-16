@@ -91,7 +91,7 @@ spent entirely on OpenMAIC, which is why this log jumps from 30 September to M38
 not a record, so where it disagrees with the repository the repository wins. Read it before
 starting work; retire it when deliverable #6 is sent.
 
-## Status pointer (rewritten 2026-11-09 — the old one still said "next step is Phase 0")
+## Status pointer (updated 2026-11-13 — M41 withdrew two claims this file used to make)
 **Phases 0–7 are built and the pipeline has run end to end twice** (M34, M35). The database holds
 547 entity instances, 459 typed relations, 94 CMOCs, 8 conceptual entities. Verification is done
 and the matcher defect is fixed. **P0, P1 and P2 of the 2026-11-04 plan are complete**
@@ -100,6 +100,25 @@ and signed `ai-ra:claude(...awaiting countersignature)`, prompts are extracted t
 `config/prompts/`, and the pipeline now has a literature search (`res search` — OpenAlex and
 Crossref), full-text acquisition (`res acquire`), BM25 retrieval, and retroduction without a quote
 (`res theorise`). `config-emotion/` is a complete draft configuration for the professor's new topic.
+
+**Two claims were withdrawn on 2026-11-13** (M41 §3; the three modules are `res motif-test`,
+`res check-graph`, `res compare-theory`, all $0, outputs committed under `outputs/analysis/`).
+**Never report "32 demi-regularities" as a result** — a degree-preserving permutation null expects
+**32.3** by chance against 32 observed (27.6 under the stricter within-study shuffle) and **no motif
+survives FDR q<0.05**; they are candidates for adjudication. And the Richmond comparison is now
+**computed, not hand-written**: three of the five programme-theory statements **recover the full
+causal chain and fail to name the population** (PTS2, PTS4, PTS5 — PTS5 returns 3/3 interventions,
+4/4 mechanism-responses, 5/5 outcomes, and the old page had called it a corpus gap). That weakness
+is the same defect as M40's 22 orphan Contexts and needs normalisation re-run, which is forbidden on
+Richmond — carry it into the new topic, do not repair it here. Graph consistency: **1 defect** (a
+3-concept cycle) over 547/459/94; the 29 "both polarities in one study" hits are **two-arm designs,
+not errors**. Precision is **bounded, not measured**: 31 of our 183 concepts have a Richmond
+counterpart, 152 do not, 72 of those are a single mention in a single study — never write
+"precision = 31/183".
+
+**The RA suspended all paid work on 2026-11-13 — there is no budget.** Ask before planning anything
+that spends credit. `handover/` holds deliverables 1, 2 and 6 as drafts in Claude's voice: **unread,
+uncorrected and unsent**, and the RA sends them, not Claude.
 
 **Three things are waiting on a person, not on code:** the 21 HITL decisions are uncountersigned,
 `config-emotion/protocol.yaml` is an unreviewed draft, and **nothing in P2 has been run against a

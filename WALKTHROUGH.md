@@ -1984,3 +1984,236 @@ review block in compact form.
 - **`outputs/raw_export/` is generated and safe to regenerate** — the opposite of `RESULTS.html`.
   Re-run `python scripts/export_raw.py` whenever the database changes; it never writes outside its
   own directory.
+
+## M41 — The record made consistent, the inference layer finally tested, and two claims withdrawn (2026-11-09 → 11-13)
+
+Five sessions. The purpose was to get the first two deliverables of the 2026-10-30 assignment into
+a state fit to send, and the work split cleanly in two: **make the written record stop contradicting
+itself**, then **test the parts of the pipeline that had never been tested**. The second half is
+what matters, because it withdrew two things the project had been claiming.
+
+Commits: `602b47f` (11-09), `f1eef75` (11-10), `2f6496e`, `334eed2`, `e77ba54`, `2485274`, `038acec`
+(all 11-13). **No API call was made in any of them.** The RA stated on 11-13 that there is **no
+budget** — *"ngân sách dự án chưa có"* — so every piece of work below is $0 by construction, and
+Phases C and M of `PLAN.md` are suspended rather than abandoned.
+
+### 1. Phase A — 24 artifacts predating the 11-04 correction, and two real errors under them
+
+The verification figures changed on 2026-11-04 and the professor has never seen this system. If the
+report he opens says 73.9% and the documentation says 69.6%, he has no way to tell which to trust —
+**including when the number he is reading is the correct one.** So nothing was sent until the record
+agreed with itself. Stale figures were the expected finding; two substantive errors were not.
+
+**(a) `0_REPORT.html` was understating our own evidence.** It stated: *"There is still only one human
+coder... the 0.785 above is human against an independent LLM pass."* Both halves are false. Two
+people coded all 28 papers on 2026-09-25, so 0.785 is a genuine inter-rater reliability figure and
+the human ceiling the report calls missing **does exist**. This is the *same error as the AERA
+manuscript*, in a different document, found independently — which is the useful part: it means the
+mistake was not a slip in one draft but a belief that had propagated. M40 §2 recorded the lesson as
+"a document can understate by mistake as easily as overstate"; here it did so twice.
+
+**(b) `README.md` advertised a stack that does not exist.** LangChain, LangGraph, Microsoft
+`graphrag` and Neo4j were named as the architecture. **None is imported anywhere**, the first three
+are not even dependencies, and no Neo4j database was ever created. For a methods paper this is the
+worst class of false claim, and the repository is the first thing a reviewer clones. The README now
+**retracts it in writing** rather than quietly dropping it, and also corrects "four adjudication
+checkpoints" to five.
+
+`0_REPORT.html` carries the corrected figures in place with the previously published value beside
+each; four unmarked professor-facing documents got supersession banners. **Exit check: zero unmarked
+superseded figures.** Four classes are excluded *by rule*, each named in `PLAN.md` so the exclusion
+is a decision and not an oversight: append-only history, the two irreproducible `RESULTS` pages,
+per-run records whose figures were true for that run, and a gitignored backup directory.
+
+`602b47f` additionally struck M40's closing claim that relation recovery still needed a re-run. It
+did not — `relation_coverage()` is a pure function of the entity matches, so the figures were
+computed on 11-06 with no API call: **strict 5/40, anchored 28/40**, type-level unchanged at 39/40.
+
+### 2. `/raw` was built, and the RA could not read it
+
+`2f6496e`. The raw-output console shipped in P2 was unreadable in practice — *"tôi đọc tôi chả hiểu
+gì... rốt cuộc cái `/raw` là cái quái gì"*. The tables were correct and meaningless: a reader could
+see every row and still not know what a row **was**. Rebuilt around `_TABLE_GROUPS` — six groups in
+pipeline order, each table stating **"One row = ..."** in plain English.
+
+The RA's correction went further than the interface, and it was right: *"ko phải để bạn sửa mỗi cái
+giao diện mà bạn cũng phải sửa lại cái hệ thống của mình luôn"* — if the output cannot be understood
+without an AI narrating it, the problem is upstream of the page. That instruction is what produced
+§3.
+
+### 3. Three computations the pipeline had never performed on itself
+
+`e77ba54`, 473 lines across three modules, three CLI commands (`motif-test`, `check-graph`,
+`compare-theory`), outputs committed under `outputs/analysis/`. None calls a model.
+
+**(a) `motif_significance.py` — the demi-regularity count does not survive a test against chance.**
+32 demi-regularities had been reported on the rule *"a pattern counts if it appears in two or more
+studies"* — a threshold someone chose and nobody tested. Degree-preserving permutation null
+(Milo et al., *Science* 298:824–827, 2002), Benjamini–Hochberg correction, 1,000 permutations, two
+variants:
+
+| Null | Observed | Expected by chance | Survive q<0.05 |
+|---|---|---|---|
+| Global shuffle | 32 | **32.3** (22–44) | **0** |
+| Within-study shuffle (stricter: each paper's own vocabulary held fixed) | 32 | 27.6 (18–37) | **0** |
+
+**The count is not a finding and must stop being reported as one.** Demi-regularities are candidates
+for human adjudication, which is what realist synthesis says they are; what cannot be said is that
+32 of them is evidence of anything.
+
+**(b) `graph_consistency.py` — the graph is coherent, with one defect.** The ontology makes a *type*
+error impossible but nothing checked whether a well-typed graph asserts **incompatible** things.
+Over 547 entities, 459 relations and 94 configurations: a context both enabling and constraining the
+same outcome — none. A relation spanning two configurations — none. A configuration missing C, M or
+O — none. **One cycle**, three concepts (`active-reasoning-and-self-explanation` →
+`knowledge-elaboration` → `self-explanation` → …), which means normalisation left three near-
+synonyms separate.
+
+**(c) `theory_comparison.py` — the comparison with Richmond is now computed, and it corrected the
+prose immediately.** What the console displayed had been **22 lines of hand-typed verdicts in
+`webui.py`**, reading neither the benchmark nor the system's output. It could not change when the
+system changed and nobody could check it — the defining property of a claim that *cannot be wrong*
+because it computes nothing. It is now derived from Richmond's five programme-theory statements and
+our own entity matches, under a stated rule, with `REFUSED_BY_MATCHER_FIX = {"E03", "E24"}` honoured.
+
+| Richmond statement | Computed verdict |
+|---|---|
+| PTS1 · low knowledge | partial |
+| PTS2 · high knowledge | chain recovered, context label not |
+| PTS3 · positive coping | **reproduced** |
+| PTS4 · negative coping | chain recovered, context label not |
+| PTS5 · mixed-knowledge groups | chain recovered, context label not |
+
+The hand-written page had called **PTS5 a corpus gap**. Computed, its chain returns **3/3
+interventions, 4/4 mechanism-responses, 5/5 outcomes** — every causal element recovered, only the
+context *label* missed. **Three of five statements show that same shape.** The finding is therefore
+specific and actionable: **the system reconstructs the mechanism and fails to name the population it
+applies to.** It also agrees with the 22 orphan Contexts found in M40 §8, which is the first time two
+independent analyses in this project have converged on the same weakness.
+
+A fourth verdict value, `"chain without context"`, had to be added: the original rule was too crude
+and would have labelled PTS5 a gap despite full chain recovery, reproducing the error it was built
+to catch.
+
+### 4. The shuffle bug — caught by a test written before the bug was known
+
+The first `motif-test` run reported **two surviving motifs**. They were an artifact of a bug in my
+own permutation:
+
+```python
+pool, taken, held = pools[role], [], []
+while len(taken) < k and pool:
+    v = pool.pop()
+    (taken if v not in taken else held).append(v)
+pool.extend(held)          # the fix: duplicates RETURNED, never consumed
+rng.shuffle(pool)
+```
+
+Without the set-aside-and-return, duplicates drawn from the pool were **consumed and discarded**,
+starving later configurations and shrinking the very marginals the null exists to hold fixed. That
+makes the null **weaker than the data**, which manufactures significance. After the fix: zero
+survivors under either null.
+
+The regression test was written before the bug was found and caught it on the first run. The lesson
+is narrow and worth keeping: **a null model that produces a pleasing result is the single most
+suspect computation in a project like this**, because a bug in a null almost always biases toward
+significance, never away.
+
+### 5. One intended check reclassified rather than kept
+
+"The same driver asserted both positive and negative within one study" was written as a defect
+detector. It is not one. **All 29 hits are two-arm experimental designs** — S004 instructs one group
+to reason in a combined manner and tells the other to use whatever strategy comes naturally, and the
+contrast between the arms **is the study's finding**. Counting it as an error would have discarded
+the best mechanism evidence in the corpus. It now reports under `"signals"`, not `"checks"`, and the
+docstring says why.
+
+Worth noting as a near-miss: this check was two lines from being reported to the professor as 29
+data-quality defects.
+
+### 6. The repository audited file by file, and precision bounded without spending anything
+
+`334eed2`, `2485274`. Ten months of work had left documents describing a system that no longer
+exists. Every document is now classified **current / superseded-and-marked / historical by design /
+frozen**, with the reason, in `handover/1_WHAT_WE_BUILT.md`. A dead-code check over **all 39 modules
+found none unreachable** — the repository is cluttered in its *documentation*, not in its code.
+
+**Precision, as far as it can be measured at $0:** of our 183 concepts, **31 have a counterpart in
+Richmond's 46 and 152 do not**; of those 152, **98 appear in a single study** and **72 are a single
+mention in a single study**. This is explicitly *not* a precision figure — Richmond's 46 are what
+*they* chose to report, so a concept outside that frame is not thereby wrong — but it **bounds the
+question and says where to sample** when there is budget to adjudicate. Those 72 are the sample
+frame. Recorded in `outputs/analysis/concept_frame_coverage.json`.
+
+The fact-check of the deliverables caught one of my own errors before it was sent: the prompt count
+was stated as 23 and is **24** — `res theorise` added one the previous week. Now written as "21 of
+24 config-editable".
+
+### 7. The 2026-10-30 email re-read item by item — four omissions in `config-emotion/`
+
+Done at the RA's instruction, and it was justified. The professor names things explicitly that the
+draft configuration had lost to paraphrase:
+
+- **emotional awareness prompts** and **self-regulation activities** — missing as intervention types
+- **prior experiences** and **emotional challenges** — missing as context dimensions
+
+Patched into `config-emotion/protocol.yaml` and `initial_programme_theory.yaml`. **All eight topics
+and all nine examples he lists are now named verbatim**, so none can be lost to paraphrase again.
+The YAML patches had to be re-anchored twice because the anchors assumed capitalisation the file did
+not use ("Achievement emotions").
+
+### 8. The literature search behind deliverable 2 — two findings that place the work
+
+- **No peer-reviewed evaluation of LLM-based CMOC extraction against human realist reviewers appears
+  to exist.** The Richmond benchmark is therefore not a better version of something already done; it
+  is the first of its kind, which is a stronger and more defensible position than the paper had been
+  taking.
+- **No dedicated systematic review of emotion-regulation interventions in STEM higher education
+  framed by achievement emotions appears to exist either**, so the professor's new topic has a real
+  gap rather than a crowded one.
+- **PRISMA-LLM** (arXiv 2609.11559) adopted: it separates *disclosing what the AI did* from
+  *evaluating what difference it made*, and reports that 52% of positive-only LLM evaluations
+  disclosed an unmet reliability requirement. Deliverable 2 now follows that split.
+- Said plainly in the deliverable: **ASReview and Rayyan are mature at screening and we should not
+  rebuild them.**
+
+### 9. The progress report restructured on the RA's principle
+
+The RA's instruction was that a limitation Claude can close is not a limitation — *"nếu những hạn chế
+đấy mà chính bạn là Claude có thể giải quyết được thì hãy giải quyết"* — because the professor's
+first question is *"đã hỏi Claude chưa"*. So `handover/6_PROGRESS_REPORT.md` splits them three ways:
+
+| | |
+|---|---|
+| **Closed** (done, not reported) | 4 items; 2 of them changed what the project may claim |
+| **Blocked by budget** | 5 items, each with its dollar figure ($3 / $8 / …) |
+| **Not ours to close** | **1** — the countersignature |
+
+### What the next session must not assume
+
+- **Do not report "32 demi-regularities" as a result.** Under both nulls the count is
+  indistinguishable from chance and **no individual motif survives FDR**. They are candidates for
+  adjudication. `outputs/analysis/motif_significance.json` holds the per-motif figures.
+- **Do not re-run `res motif-test` expecting different numbers.** It is deterministic given the
+  database and the seed, costs nothing, and the committed JSON is current.
+- **The Richmond comparison is computed now, not written.** Do not "correct" the verdicts by editing
+  prose; change the rule in `theory_comparison.py` and re-run, or the project is back to a claim
+  that cannot be wrong.
+- **The context-label weakness is the one real lead.** Three of five programme-theory statements
+  recover the full chain and miss the population. It is the same defect as M40's 22 orphan Contexts.
+  Fixing it requires re-running normalisation, which is **forbidden on Richmond** — so it is a change
+  to carry into the new topic's configuration, not a repair to attempt here.
+- **The 29 polarity splits are NOT defects.** They are two-arm designs and the contrast is the
+  finding. Do not "fix" them, and do not report them as data-quality problems.
+- **The one graph defect is a 3-concept cycle**, and it also needs normalisation to fix, so it is
+  likewise deferred rather than open.
+- **The 31/152/98/72 figures are a bound, not precision.** Never write "precision = 31/183".
+- **Prompt count is 24**, 21 config-editable.
+- **The handover documents have not been read by the RA and have not been sent.** `handover/` is a
+  draft in Claude's voice; the RA must correct it, decide the delivery channel, and **press send
+  themselves** — *"bạn bấm gửi"* was never granted for this.
+- **Still waiting on a person, unchanged from M40:** the 21 HITL decisions are uncountersigned,
+  `config-emotion/protocol.yaml` is an unreviewed draft, nothing in P2 has run against a real
+  corpus, and the AERA reviewer comments are unread on the All Academic portal.
+- **No budget.** Do not plan work that spends credit without asking first; the RA suspended Phases C
+  and M on 11-13.
