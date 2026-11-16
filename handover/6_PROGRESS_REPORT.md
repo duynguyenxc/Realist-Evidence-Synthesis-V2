@@ -1,10 +1,12 @@
 # Progress report
 
-**Duy Nguyen — 13 November 2026.** Deliverable 6 of the 2026-10-30 assignment.
+**Duy Nguyen — 16 November 2026.** Deliverable 6 of the 2026-10-30 assignment.
 
-Covering 30 October to 13 November. Short version: deliverables 1, 2 and 6 are complete and
-attached. Deliverables 3, 4 and 5 require running the pipeline on a new corpus, which needs API
-budget the project does not currently have. The two weeks were spent making the existing system
+Covering 30 October to 16 November. Short version: deliverables 1, 2 and 6 are complete and
+attached, and **the literature search for the new topic has now been run** — 1,863 candidate
+records, at no cost, which is the first half of deliverable 3. Deliverables 4 and 5, and the
+second half of 3, need screening and extraction, which is where the pipeline begins to spend
+API credit, and the project has no budget. The three weeks were spent making the existing system
 and its record fit to hand over, and that turned out to be necessary rather than tidying.
 
 ---
@@ -26,6 +28,37 @@ prepare"*. That review is deliverables 1 and 2. It found more than expected, rec
   only in a separate table that cannot enter the evidence graph, only when it names words it
   claims are absent and those words are checked against the corpus, and only as a proposal until a
   human ratifies it.
+
+### The literature search has been run, and it found four defects first
+On 16 November we established that three pipeline stages — search, full-text acquisition and
+ingestion — call no model and therefore cost nothing. Deliverable 3 had been filed as
+budget-blocked in its entirety; half of it was not.
+
+Before running anything we checked the search code against the live catalogues, and that check
+is the reason this paragraph reports a usable pool rather than a plausible-looking one:
+
+| What we found | Why it mattered |
+|---|---|
+| The query was matched against **full text**, not title and abstract | The same query matches 2,843 works in title and abstract and **124,175** with full text. The pipeline keeps only the top 200, so the sample was being drawn from a pool that is 44× larger and mostly incidental mentions |
+| OpenAlex work type `review` was **excluded by default** | 274 of the 1,863 records are reviews — including **Durlak et al. 2011, which you named by DOI** (11,017 citations). OpenAlex types it `review`, so the old default would have discarded it silently |
+| Crossref **lost relevance ranking** under our paging code | Before the fix the cross-check returned 501 records published 1999–2002 with **zero** abstracts; after it, 529 records with a median year of 2023 and 40% abstracts |
+| The open-access PDF link was **dropped** when writing the corpus | `res acquire` fell back to the DOI landing page, so it would have reported **100%** of records as having an obtainable full text. The true figure is **68%** — and that ratio is a finding about the evidence base, which this command's own documentation says it exists to report |
+
+Three of the four now have regression tests. A fifth was fixed on the way: a single failed query
+used to discard an entire multi-query run, so the command now records each failure and refuses to
+write a corpus file that is missing protocol queries while looking complete.
+
+**The search strategy was written into the protocol before the search ran**, with the ten boolean
+queries, the coverage dates, the date last searched, and a statement that this is a purposive
+relevance-ranked sample rather than an exhaustive retrieval — which is the realist convention and
+not an excuse. `outputs-emotion/SEARCH_REPORT.md` is **generated** from the query log and the pool,
+not typed, for the same reason the comparison with your conclusions is now computed.
+
+The protocol also recorded, in advance, which of your four references the search **must** find and
+which it **should not**: Brackett 2012 and Durlak 2011 are intervention studies and had to appear;
+Pekrun 2006 and Gross 1998 are theory papers with no intervention and no sample, so their absence
+would be correct rather than a failure. All four came out as predicted. We note this because a
+mechanical check would have called the search broken on the two theory papers.
 
 ### The prompts were lifted out of the code
 You asked for the prompts by name. All 24 were buried across ten source files. Ten are now plain text in
@@ -134,6 +167,13 @@ to adjudicate one.
    Richmond". This needs a second published review and a full run.
 9. **No cost history.** The usage records were lost in a database restore, so a new run's cost can
    be measured but not estimated. This is why the plan has a pilot step.
+10. **OpenAlex stopped being free to query without an account on 13 February 2026.** Anonymous
+    requests now share a $0.10 daily budget per network address, and the catalogue paused ours
+    once in the middle of a ten-query run. The search above completed anonymously and cost about
+    two cents of that shared allowance. A key is free but requires an account in your or Duy's
+    name, so we have not created one: **if you would like the searches to run without
+    interruption, say so and we will set one up.** This also qualifies a claim in the manuscript —
+    that a reader can repeat our search without credentials is no longer strictly true.
 
 ### Open, and not something we can solve for you
 
@@ -164,8 +204,10 @@ to adjudicate one.
 5. Re-run verification so every figure reflects the corrected scoring (~$3).
 6. The rejection test — does the screening discriminate, or is it merely permissive (~$3).
 7. A second model family on a sample — are these findings one vendor's opinion (~$8).
-8. The literature search and a 10–15 paper pilot for the new topic, reporting measured cost
-   before going further.
+8. ~~The literature search~~ — **done on 16 November, at no cost.** What remains is the
+   10–15 paper pilot: screening and extraction on a sample, reporting measured cost before going
+   further. 1,222 of the 1,863 records have both an abstract to screen and an open-access PDF to
+   extract from, so the pilot can be drawn without buying anything but model calls.
 
 **Requiring your decision:**
 

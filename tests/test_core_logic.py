@@ -376,3 +376,97 @@ def test_theory_comparison_verdict_is_derived_not_typed():
     assert "chain_ok" in body and "half(" in body
     # and the two concepts the matcher fix refused are excluded by name, not silently
     assert tc.REFUSED_BY_MATCHER_FIX == {"E03", "E24"}
+
+
+def test_crossref_cursor_paging_keeps_relevance_ranking():
+    """Crossref drops relevance ranking under `cursor` unless sort is explicit.
+
+    Measured 2026-11-16: `query=emotion regulation intervention university students`
+    with `cursor=*` and no sort returned 100 records published 1999-2002, while the same
+    query without a cursor returned a 2024 trial of that exact intervention first. The
+    pipeline retrieves only the top N, so an unsorted deep page silently turns the search
+    into "the oldest records that loosely match". Nothing in the response says so, which
+    is why this is a test and not a comment.
+    """
+    import urllib.parse
+
+    from res_pipeline.core import literature
+
+    sent: list[str] = []
+
+    def fake_get(url, *, retries=5):
+        sent.append(url)
+        return {"message": {"items": [], "next-cursor": None}}
+
+    original = literature._get
+    literature._get = fake_get
+    try:
+        literature.search_crossref("anything", limit=10)
+    finally:
+        literature._get = original
+
+    assert sent, "no request was issued"
+    params = urllib.parse.parse_qs(urllib.parse.urlparse(sent[0]).query)
+    assert params.get("sort") == ["score"], params
+    assert params.get("order") == ["desc"], params
+
+
+def test_openalex_matches_title_and_abstract_by_default_and_rejects_commas():
+    """Full-text matching inflates the pool ~44x, so it must be opt-in, not the default.
+
+    Measured 2026-11-16: one blocked boolean query matched 2,843 works in title and
+    abstract and 124,175 with full text included. Only the top N are ever retrieved, so
+    the default decides what the sample is drawn from. A comma must raise, because
+    OpenAlex splits the filter string on commas and would search for something else
+    without saying so.
+    """
+    import urllib.parse
+
+    import pytest
+
+    from res_pipeline.core import literature
+
+    sent: list[str] = []
+
+    def fake_get(url, *, retries=5):
+        sent.append(url)
+        return {"results": [], "meta": {"next_cursor": None}}
+
+    original = literature._get
+    literature._get = fake_get
+    try:
+        literature.search_openalex('("a" OR "b") AND (c)', limit=5)
+        params = urllib.parse.parse_qs(urllib.parse.urlparse(sent[0]).query)
+        assert "search" not in params, "default must not use the full-text search param"
+        assert any(f.startswith("title_and_abstract.search:") for f in params["filter"][0].split(",")), params
+
+        sent.clear()
+        literature.search_openalex("x OR y", limit=5, title_abstract_only=False)
+        params = urllib.parse.parse_qs(urllib.parse.urlparse(sent[0]).query)
+        assert params.get("search") == ["x OR y"], params
+
+        with pytest.raises(ValueError, match="comma"):
+            literature.search_openalex("a, b", limit=5)
+    finally:
+        literature._get = original
+
+
+def test_metadata_keeps_the_open_access_link_acquire_needs():
+    """`to_metadata` dropped `oa_pdf_url`, which is the only thing `res acquire` can use.
+
+    With it missing, the CLI fell back to `url` — the DOI landing page — so a searched
+    corpus reported 100% of records as having an open-access full text, and `res acquire`
+    would have issued one request per record against pages that are not PDFs. The ratio
+    of obtainable full texts is something a realist review reports as a finding about its
+    evidence base, so this was a wrong number, not a missing convenience.
+    """
+    from res_pipeline.core.literature import Candidate
+
+    linked = Candidate(source="openalex", source_id="W1", doi="10.1/x", title="t",
+                       open_access=True, oa_pdf_url="https://example.org/a.pdf").to_metadata()
+    assert linked["oa_pdf_url"] == "https://example.org/a.pdf"
+    assert linked["open_access"] is True
+
+    paywalled = Candidate(source="openalex", source_id="W2", doi="10.1/y", title="t",
+                          open_access=False, url="https://doi.org/10.1/y").to_metadata()
+    assert paywalled["oa_pdf_url"] is None, "a landing page must not pass as an OA PDF"

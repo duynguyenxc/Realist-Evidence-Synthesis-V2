@@ -28,6 +28,28 @@ def init_db() -> None:
     console.print("[green]Schema initialized.[/green]")
 
 
+def _stamp_outcome(run_id: str, outcome: str, target: str | None) -> None:
+    """Record, in `search_log`, what became of a run's queries.
+
+    Without this the table cannot answer the one question it exists to answer. A run
+    whose write was refused leaves the same rows as the run that produced the corpus —
+    same source, same counts, same dedup figure — so "which queries is the paper
+    reporting?" has no answer in the record, only in somebody's memory. RAMESES II item 8
+    asks for a search reportable well enough to repeat; a log that cannot distinguish an
+    abandoned attempt from the search of record is not that.
+    """
+    import json as _json
+
+    from res_pipeline.core.db import get_connection
+
+    patch = {"outcome": outcome}
+    if target:
+        patch["written_to"] = target
+    with get_connection() as conn:
+        conn.execute("UPDATE search_log SET filters = filters || %s::jsonb WHERE run_id=%s",
+                     (_json.dumps(patch), run_id))
+
+
 @app.command("search")
 def search(
     query: list[str] = typer.Argument(..., help="One or more queries; results are pooled."),
@@ -35,25 +57,47 @@ def search(
     to_year: int = typer.Option(None, "--to-year", help="Latest publication year."),
     limit: int = typer.Option(200, help="Max records PER query PER source."),
     sources: str = typer.Option("openalex,crossref", help="Comma-separated: openalex, crossref."),
-    types: str = typer.Option("article", help="OpenAlex work types, or '' for all."),
+    types: str = typer.Option("article,review", help="OpenAlex work types, or '' for all. "
+                                                     "'review' is separate from 'article' and "
+                                                     "holds the prior reviews a realist "
+                                                     "synthesis needs, so it is on by default."),
+    fulltext: bool = typer.Option(False, "--fulltext",
+                                  help="Match the query in full text too, not just title and "
+                                       "abstract. Inflates the candidate pool ~44x; the top-N "
+                                       "retrieved is then drawn mostly from incidental "
+                                       "mentions. Off by default, deliberately."),
     out: str = typer.Option(None, help="Where to write the corpus "
                                        "(default: <DATA_DIR>/studies_metadata.jsonl)."),
     dry_run: bool = typer.Option(False, "--dry-run", help="Search and report; write nothing."),
+    allow_partial: bool = typer.Option(False, "--allow-partial",
+                                       help="Write the corpus even if some queries failed. "
+                                            "Off by default: a partial corpus that looks "
+                                            "complete is worse than none."),
 ) -> None:
     """Find the literature. The stage this pipeline never had.
 
-    Searches OpenAlex and Crossref — free, keyless, open-catalogue, so the search is
-    reproducible by a reader — pools the queries, deduplicates by DOI and then by
-    normalised title, and writes `studies_metadata.jsonl` in the format the existing
-    registry already reads. Every query is logged to `search_log` with its parameters,
+    Searches OpenAlex and Crossref — open-catalogue rather than licensed, so the search
+    is repeatable by a reader without a subscription — pools the queries, deduplicates by
+    DOI and then by normalised title, and writes `studies_metadata.jsonl` in the format
+    the existing registry already reads. OpenAlex has required a key since 2026-02-13 and
+    bills per request; anonymous use shares $0.10/day per network IP and a search costs
+    $0.001, which is enough for a run of this size. "Keyless" was true when this command
+    was written and is not any more. Every query is logged to `search_log` with its parameters,
     because RAMESES II requires the search to be reportable well enough to repeat.
 
     WRITING IS DESTRUCTIVE AND GUARDED. The output file is the corpus definition; the
     command refuses to overwrite Richmond's unless DATA_DIR has been pointed elsewhere
     (RES_DATA_DIR in .env), because a new topic must never consume the benchmark corpus.
 
-        res search "emotion regulation higher education" "achievement emotions STEM" \\
-            --from-year 2005 --limit 300
+    Queries are matched in TITLE AND ABSTRACT by default (``--fulltext`` to widen) and
+    may use OpenAlex boolean syntax: uppercase ``AND``/``OR``/``NOT``, parentheses, and
+    double-quoted phrases. A query must not contain a comma; OpenAlex splits filters on
+    it, so the command raises rather than silently searching for something else.
+
+        res search \\
+          '("emotion regulation" OR "emotional regulation") AND ("higher education" OR
+            "university students") AND (intervention OR program OR training)' \\
+          --from-year 1998 --limit 200 --sources openalex
     """
     from res_pipeline.core.config import assert_isolated
     assert_isolated()
@@ -65,7 +109,8 @@ def search(
     from res_pipeline.core.config import DATA_DIR, PROJECT_ROOT
     from res_pipeline.core.db import get_connection
     from res_pipeline.core.literature import (
-        deduplicate, search_crossref, search_openalex, write_metadata_jsonl)
+        SearchUnavailable, deduplicate, search_crossref, search_openalex,
+        write_metadata_jsonl)
 
     target = Path(out) if out else DATA_DIR / "studies_metadata.jsonl"
     richmond = PROJECT_ROOT / "data" / "studies_metadata.jsonl"
@@ -77,10 +122,15 @@ def search(
             markup=False)
         raise typer.Exit(1)
 
-    run_id = f"search-{_uuid.uuid4().hex[:8]}"
+    # A dry run still issues real queries, so it is still logged -- the search_log is
+    # the audit record RAMESES II asks for and a query that was sent happened. But a
+    # calibration run must be distinguishable from the search of record, or the paper
+    # cannot tell which rows it should report.
+    run_id = f"{'dryrun' if dry_run else 'search'}-{_uuid.uuid4().hex[:8]}"
     wanted = [s.strip() for s in sources.split(",") if s.strip()]
     type_tuple = tuple(t.strip() for t in types.split(",") if t.strip())
     pooled = []
+    failed: list[tuple[str, str, str]] = []
     with get_connection() as conn:
         for q in query:
             for src in wanted:
@@ -88,14 +138,32 @@ def search(
                 kwargs = {"from_year": from_year, "to_year": to_year, "limit": limit}
                 if src == "openalex":
                     kwargs["types"] = type_tuple
-                hits = fn(q, **kwargs)
+                    kwargs["title_abstract_only"] = not fulltext
+                # A ten-query protocol search must not lose nine good queries to one
+                # catalogue outage. Each failure is recorded, reported, and — unless
+                # --allow-partial says otherwise — blocks the write, because a corpus
+                # definition quietly missing three of ten protocol queries looks
+                # complete and is not.
+                try:
+                    hits = fn(q, **kwargs)
+                except SearchUnavailable as exc:
+                    failed.append((q, src, str(exc).splitlines()[-1].strip()))
+                    console.print(f"  {src:9} [red]FAILED[/red]  {q[:60]}", markup=False)
+                    continue
                 pooled.extend(hits)
                 conn.execute(
                     "INSERT INTO search_log (query, source, filters, n_returned, run_id) "
                     "VALUES (%s,%s,%s,%s,%s)",
-                    (q, src, _json.dumps({"from_year": from_year, "to_year": to_year,
-                                          "limit": limit, "types": list(type_tuple)}),
-                     len(hits), run_id))
+                    (q, src, _json.dumps({
+                        "from_year": from_year, "to_year": to_year, "limit": limit,
+                        "types": list(type_tuple) if src == "openalex" else None,
+                        # RAMESES item 8 asks for a search reportable well enough to
+                        # repeat. Two identical queries matched in different fields are
+                        # different searches, so the field is part of the record.
+                        "matched_in": ("title_and_abstract" if src == "openalex" and not fulltext
+                                       else "title_abstract_fulltext" if src == "openalex"
+                                       else "crossref_bibliographic"),
+                    }), len(hits), run_id))
                 console.print(f"  {src:9} {len(hits):>4}  {q}", markup=False)
 
     kept, stats = deduplicate(pooled)
@@ -111,12 +179,32 @@ def search(
                   f"({with_abs / len(kept):.0%})" if kept else "  nothing found", markup=False)
 
     if dry_run:
-        console.print("[yellow]--dry-run: nothing written.[/yellow]", markup=False)
+        console.print(f"[yellow]--dry-run: no corpus file written.[/yellow] The queries\nthemselves are logged to search_log as {run_id}, because they were really issued.",
+                      markup=False)
         for r in kept[:10]:
             console.print(f"    {r.year}  {r.title[:84]}", markup=False)
+        _stamp_outcome(run_id, "dry_run", None)
         return
 
+    if failed:
+        console.print(f"\n[red]{len(failed)} of {len(query) * len(wanted)} queries "
+                      f"failed.[/red]", markup=False)
+        for q, src, why in failed:
+            console.print(f"    {src}: {q[:70]}\n      {why}", markup=False)
+        if not allow_partial:
+            console.print(
+                "\n[red]Not writing the corpus definition.[/red] It would be missing these "
+                "queries while looking complete, and every count downstream would be wrong "
+                "in a way nothing detects. Retry when the catalogue recovers, or pass "
+                "--allow-partial to write what was retrieved and accept that the protocol's "
+                "search was only partly executed.", markup=False)
+            _stamp_outcome(run_id, "refused_partial", None)
+            raise typer.Exit(2)
+        console.print("[yellow]--allow-partial: writing an incomplete search.[/yellow]",
+                      markup=False)
+
     n = write_metadata_jsonl(kept, target)
+    _stamp_outcome(run_id, "partial_written" if failed else "written", str(target))
     console.print(f"[green]{n} records[/green] -> {target}", markup=False)
     console.print("Next: `res ingest` to acquire and normalise, then `res screen`.", markup=False)
 
@@ -161,7 +249,11 @@ def acquire(
             records.append(Candidate(
                 source=d.get("source", "?"), source_id=d.get("source_id", ""),
                 doi=d.get("doi"), title=d.get("title", ""), year=d.get("year"),
-                oa_pdf_url=d.get("oa_pdf_url") or d.get("url")))
+                # NOT `or d.get("url")`. `url` is the DOI landing page; treating it as a
+                # PDF link made every record look obtainable, sent a request per record to
+                # a page that is not a PDF, and turned the one number this command exists
+                # to report into the record count.
+                oa_pdf_url=d.get("oa_pdf_url")))
 
     result = acquire_fulltext(records, dest_dir, limit=limit,
                               dry_run=not confirm, log=console.print)

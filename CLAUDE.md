@@ -91,7 +91,7 @@ spent entirely on OpenMAIC, which is why this log jumps from 30 September to M38
 not a record, so where it disagrees with the repository the repository wins. Read it before
 starting work; retire it when deliverable #6 is sent.
 
-## Status pointer (updated 2026-11-13 — M41 withdrew two claims this file used to make)
+## Status pointer (updated 2026-11-16 — the new topic now has a literature pool)
 **Phases 0–7 are built and the pipeline has run end to end twice** (M34, M35). The database holds
 547 entity instances, 459 typed relations, 94 CMOCs, 8 conceptual entities. Verification is done
 and the matcher defect is fixed. **P0, P1 and P2 of the 2026-11-04 plan are complete**
@@ -115,6 +115,22 @@ Richmond — carry it into the new topic, do not repair it here. Graph consisten
 not errors**. Precision is **bounded, not measured**: 31 of our 183 concepts have a Richmond
 counterpart, 152 do not, 72 of those are a single mention in a single study — never write
 "precision = 31/183".
+
+**The new topic has a candidate pool as of 2026-11-16** (M42). `realist_emotion` database,
+`data-emotion/` (gitignored) and `outputs-emotion/` exist; the emotion review runs under **exported**
+env vars — `RES_CONFIG_DIR=config-emotion RES_DATA_DIR=data-emotion RES_OUTPUTS_DIR=outputs-emotion
+POSTGRES_DB=realist_emotion` — never written into `.env`, which is shared with Richmond.
+**1,863 candidate records** (89% abstract, 68% free full text, 274 reviews), from ten blocked
+boolean queries recorded in `config-emotion/protocol.yaml` §`search_strategy` and executed only by
+`scripts/run_protocol_search.py`. `outputs-emotion/SEARCH_REPORT.md` is **generated** by
+`scripts/search_report.py`, never written by hand. **It is a pool, not a corpus** — nothing has
+been screened, and `res screen` is the first stage that spends credit. **Search, acquire and ingest
+call no model**; deliverable #3 had been wrongly filed as entirely budget-blocked. Three traps:
+`RES_GOLD_DIR` still points at Richmond's `gold/`, so **never run `res verify` on the emotion
+review**; **any Crossref result from before 2026-11-16 is void** (cursor paging silently dropped
+relevance ranking); and **"OpenAlex is free and keyless" expired 2026-02-13** — it bills $0.001 a
+search against a $0.10/day budget shared per network IP, so the manuscript's credential-free
+reproducibility claim needs qualifying.
 
 **The RA suspended all paid work on 2026-11-13 — there is no budget.** Ask before planning anything
 that spends credit. `handover/` holds deliverables 1, 2 and 6 as drafts in Claude's voice: **unread,

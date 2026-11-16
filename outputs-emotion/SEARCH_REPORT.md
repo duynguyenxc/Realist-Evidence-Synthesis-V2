@@ -1,0 +1,95 @@
+# Search report — What educational interventions improve students' emotional awareness and emotional regulation during learning — and when, why, for whom, and in what circumstances are they effective?
+
+Generated 2026-11-16 10:04 UTC by `scripts/search_report.py` from `search_log` and the corpus file. Every figure here is computed; none is typed. Re-run the script after any further search round.
+
+Protocol: `config-emotion/protocol.yaml` version **0.2-draft**
+
+## What this is, and what it is not
+
+**1863 candidate records.** Not 1863 included studies, and not a corpus. No eligibility criterion in the protocol has been applied to any record in it: screening is the first stage that calls a model, and it has not been run. Every count below describes a pool awaiting screening.
+
+The search is **purposive and relevance-ranked, not exhaustive** — the realist convention (RAMESES II item 8; Pawson, Greenhalgh, Harvey & Walshe 2004). Each query retrieves its top-ranked results rather than every match, so this is a theory-driven sample of the literature, and the protocol states that in those words.
+
+## Databases
+
+| Database | Role | Coverage searched | Date last searched | Matched in |
+|---|---|---|---|---|
+| OpenAlex | primary | 1998-01-01 to 2026-12-31 | 2026-11-16 | title_and_abstract |
+| Crossref | cross-check only | 1998-01-01 to 2026-12-31 | 2026-11-16 | bibliographic |
+
+## Queries of record
+
+**10 queries produced the pool** (`studies_metadata.jsonl`). Each is logged with its parameters, its result count and the field it was matched in.
+
+| # | Source | Returned | Query |
+|---|---|---|---|
+| 1 | openalex | 200 | `("emotion regulation" OR "emotional regulation" OR "emotion regulation strategies" OR "self-regulation of emotion") AND ("higher education" OR "uni…` |
+| 2 | openalex | 200 | `("emotional awareness" OR "emotion awareness" OR "emotion labelling" OR "emotion labeling" OR "emotional literacy" OR "feeling words") AND (student…` |
+| 3 | openalex | 200 | `("achievement emotions" OR "academic emotions" OR "control-value theory" OR "learning-related emotions") AND (students OR learners) AND (interventi…` |
+| 4 | openalex | 200 | `("emotion regulation" OR "emotional awareness" OR "achievement emotions" OR "academic emotions" OR "test anxiety" OR "math anxiety" OR "statistics …` |
+| 5 | openalex | 188 | `("self-regulated learning" OR "self-regulation of learning" OR metacognition) AND ("emotion regulation" OR "emotional regulation" OR "achievement e…` |
+| 6 | openalex | 200 | `("reflective writing" OR "expressive writing" OR "reflective journal" OR journaling OR "learning journal" OR "reflective practice") AND (emotion OR…` |
+| 7 | openalex | 200 | `(feedback OR "feedback literacy" OR assessment) AND ("emotional response" OR "emotion regulation" OR appraisal OR reappraisal OR "control appraisal…` |
+| 8 | openalex | 200 | `(mindfulness OR "cognitive reappraisal" OR reappraisal OR "emotion coaching") AND (classroom OR course OR learning OR academic) AND ("higher educat…` |
+| 9 | openalex | 200 | `("systematic review" OR "meta-analysis" OR "scoping review" OR "realist review" OR "realist synthesis" OR "narrative review") AND ("emotion regulat…` |
+| 10 | openalex | 200 | `("social and emotional learning" OR "social-emotional learning" OR "emotional intelligence") AND (intervention OR program OR curriculum) AND ("meta…` |
+
+**3 further queries wrote a separate file** (`crossref_crosscheck.jsonl`) and did NOT contribute to the pool above:
+
+| # | Source | Returned | Query |
+|---|---|---|---|
+| 1 | crossref | 200 | `emotion regulation intervention university students` |
+| 2 | crossref | 200 | `emotional awareness intervention higher education` |
+| 3 | crossref | 200 | `achievement emotions intervention students` |
+
+**17 further queries are in the log and are NOT part of this report.** They are stamped with why, so the record can distinguish an abandoned attempt from the search of record:
+
+| Source | Outcome | Queries |
+|---|---|---|
+| crossref | `superseded` | 3 |
+| openalex | `refused_partial` | 4 |
+| openalex | `superseded` | 10 |
+
+## Deduplication
+
+- Records returned by the 10 queries that produced the pool: **1988**
+- Unique records after deduplication by DOI then normalised title: **1863**
+- Removed as duplicates: **125**
+
+## What is in the pool
+
+| | n | share |
+|---|---|---|
+| Records | 1863 | 100% |
+| With an abstract (screenable as-is) | 1654 | 89% |
+| With a DOI | 1657 | 89% |
+| With an open-access PDF link (acquirable free) | 1266 | 68% |
+| With **both** an abstract and a PDF | 1222 | 66% |
+
+Work types: **article** 1589, **review** 274.
+
+Publication years 1998–2026, median 2023. By five-year band: 1995–1999: 3, 2000–2004: 21, 2005–2009: 45, 2010–2014: 135, 2015–2019: 301, 2020–2024: 667, 2025–2029: 691.
+
+## Validity check
+
+A search that cannot retrieve the references the review was handed is broken. The protocol states the expected result for each one **before** the search was run, and distinguishes a reference that must appear from one that should not.
+
+| Reference | Expected | Found | Verdict |
+|---|---|---|---|
+| Brackett et al. 2012 (intervention study) | must appear | yes | as predicted |
+| Durlak et al. 2011 (meta-analysis of interventions) | must appear | yes | as predicted |
+| Pekrun 2006 (theory paper; no intervention, no sample) | should not appear | no | as predicted |
+| Gross 1998 (theory paper; no intervention, no sample) | should not appear | no | as predicted |
+
+## What a second catalogue adds
+
+The Crossref cross-check ran 3 queries and returned **529** unique records, of which **61** are already in the pool and **468** are not (177 of those have an abstract).
+
+**This is not a measure of catalogue coverage.** The cross-check used different, simpler queries, because Crossref supports no boolean syntax and no field restriction. The figure therefore mixes what Crossref indexes that OpenAlex does not with what three phrase queries find that ten boolean ones do not, and it must not be reported as the former.
+
+## Not done, and why
+
+- Screening has not been run. `res screen` is the first stage that calls a model, and the project has no API budget as of 2026-11-13. The pool below is therefore a CANDIDATE POOL, not an included corpus, and no eligibility decision in this protocol has been applied to a single record.
+- Iteration has not happened. The posture above promises a search revised as the programme theory sharpens; that requires at least one screening and extraction cycle to sharpen it. This is round one of what should be several.
+- Citation-chasing and grey literature are not covered. Both are standard in realist reviews and both need either full texts or hand searching.
+

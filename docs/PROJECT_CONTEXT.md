@@ -216,10 +216,13 @@ depends on it); a **budget ceiling was never set**.
    real gap — **retroduction without a quote**, which realist synthesis requires. And it means
    Richmond gives **no evidence either way** about the pipeline on an emotional topic.
 4. ~~**No literature search and no full-text acquisition.**~~ **Built 2026-11-06.** `res search`
-   queries OpenAlex and Crossref — free, keyless and open-catalogue, so a reader can repeat the
-   search — deduplicates by DOI then normalised title as a named reportable stage, logs every query
-   to `search_log`, and emits the existing `studies_metadata.jsonl` format so screening and
-   ingestion need no change. `res acquire` fetches only the open-access copies the catalogue itself
+   queries OpenAlex and Crossref — open-catalogue rather than licensed, so a reader can repeat the
+   search without a subscription — deduplicates by DOI then normalised title as a named reportable
+   stage, logs every query to `search_log`, and emits the existing `studies_metadata.jsonl` format
+   so screening and ingestion need no change. **"Keyless" expired on 2026-02-13**: OpenAlex now
+   requires a key and bills per request ($0.001 a search), with anonymous use sharing $0.10/day per
+   network IP. Small runs still fit anonymously, which is how the 2026-11-16 search was run, but the
+   manuscript must not claim credential-free reproducibility. `res acquire` fetches only the open-access copies the catalogue itself
    links, and reports rather than downloads without `--confirm`. **Neither has been run against a
    real corpus yet.**
 5. ~~**`config/prompts/` is empty.**~~ **Extracted 2026-11-04.** All 23 call sites read

@@ -22,6 +22,24 @@ section of the paper can be generated from the record rather than remembered.
 ``OPENALEX_MAILTO`` in ``.env`` to opt in; without it the search still works, just in the
 slower pool. It is never inferred from the environment, because an email address in a
 third-party URL should be a decision, not a default.
+
+**OpenAlex stopped being keyless on 2026-02-13** (verified against the live API on
+2026-11-16, which answers every anonymous request with a notice saying so). Anonymous
+requests now share **one $0.10/day budget per network IP address**; a free key raises it
+to $1/day for its holder. A search request costs **$0.001**, so a run of this module's
+size — a dozen or two queries — fits inside the anonymous budget, and that is how it is
+run here. Set ``OPENALEX_API_KEY`` in ``.env`` if a key is ever obtained; nothing else
+changes. Two consequences worth carrying into the manuscript: the claim that this search
+is reproducible *without credentials* is no longer strictly true, and a run can fail
+midway if somebody else on the same network has spent the shared budget.
+
+**Where the query is matched matters more than the query.** OpenAlex ``search`` covers
+title, abstract AND full text, which sounds generous and is not: the same boolean query
+that matches 2,843 works in title-and-abstract matches **124,175** when full text is
+included (measured 2026-11-16), and since only the top-N by relevance are retrieved, the
+extra 121,332 are what the top-N is drawn from. ``title_abstract_only`` — the default for
+the ``search`` command — restricts matching to ``title_and_abstract.search``. Boolean
+``AND``/``OR``/``NOT`` (uppercase) and quoted phrases work in both modes.
 """
 
 from __future__ import annotations
@@ -31,6 +49,7 @@ import os
 import re
 import time
 import unicodedata
+import urllib.error
 import urllib.parse
 import urllib.request
 from dataclasses import asdict, dataclass, field
@@ -81,6 +100,17 @@ class Candidate:
             "doi_source": self.source if self.doi else None,
             "title_source": self.source,
             "abstract_source": self.source if self.abstract else None,
+            # Open-access status and the PDF link the catalogue gives are the ONLY thing
+            # `res acquire` can work from, and this method used to drop both: the search
+            # retrieved them, the corpus file discarded them, and acquire fell back to the
+            # DOI landing page, so it reported every record as having an open-access full
+            # text. That ratio is something a realist review reports as a finding about
+            # its evidence base, so getting it wrong is not a cosmetic loss.
+            "open_access": self.open_access,
+            "oa_pdf_url": self.oa_pdf_url,
+            # Retrieved anyway, and a realist review with no budget needs some defensible
+            # way to order a purposive sample. Kept rather than thrown away.
+            "cited_by": self.cited_by,
             # A catalogue record with a DOI, a year and an abstract is about as good as
             # metadata gets before the PDF is read; one missing all three is a stub.
             "confidence": round(
@@ -89,22 +119,60 @@ class Candidate:
         }
 
 
-def _get(url: str, *, retries: int = 3) -> dict:
-    """One GET with backoff. Both APIs rate-limit rather than ban, so waiting works."""
+class SearchUnavailable(RuntimeError):
+    """A catalogue declined to serve this request, after retrying.
+
+    Separate from a programming error on purpose: a realist search runs a dozen
+    queries and one catalogue hiccup must not be indistinguishable from a malformed
+    query, because the first is retried and the second is fixed.
+    """
+
+
+def _get(url: str, *, retries: int = 5) -> dict:
+    """One GET with backoff.
+
+    Backoff is 3s, 6s, 12s, 24s rather than 1s, 2s, 4s. Measured on 2026-11-16:
+    OpenAlex answers anonymous search with HTTP 503 and "Anonymous search is paused
+    while the search cluster recovers from heavy load" during busy periods, and that
+    outlasts a 7-second retry budget. A free API key is documented as the fix; waiting
+    also works, and waiting needs no credentials.
+    """
     last: Exception | None = None
+    detail = ""
     for attempt in range(retries):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-            with urllib.request.urlopen(req, timeout=40) as resp:
+            with urllib.request.urlopen(req, timeout=60) as resp:
                 return json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            last = exc
+            try:  # the body carries the catalogue's own explanation; keep it
+                body = json.loads(exc.read().decode("utf-8"))
+                detail = str(body.get("message") or body.get("error") or "")[:300]
+            except Exception:  # noqa: BLE001 - diagnostics only
+                detail = ""
+            if exc.code not in (429, 500, 502, 503, 504):
+                break  # a 400 is a bad query; retrying it just wastes the budget
+            # OpenAlex says how long to wait ("Please retry in 34s"). Obeying the
+            # catalogue beats guessing at it, and it is the difference between a
+            # ten-query search completing and failing half way.
+            told = re.search(r"retry in (\d+)\s*s", detail)
+            time.sleep(min(90, int(told.group(1)) + 2) if told else 3 * 2 ** attempt)
         except Exception as exc:  # noqa: BLE001 - network, retried below
             last = exc
-            time.sleep(2 ** attempt)
-    raise RuntimeError(f"search request failed after {retries} tries: {url} ({last})")
+            time.sleep(3 * 2 ** attempt)
+    raise SearchUnavailable(
+        f"search request failed after {retries} tries: {url}\n  {last}"
+        + (f"\n  catalogue said: {detail}" if detail else ""))
 
 
 def _mailto() -> str:
     return (os.getenv("OPENALEX_MAILTO") or "").strip()
+
+
+def _api_key() -> str:
+    """An OpenAlex key, if one was obtained. Absent is a supported state, not an error."""
+    return (os.getenv("OPENALEX_API_KEY") or "").strip()
 
 
 def _inverted_to_text(index: dict | None) -> str | None:
@@ -120,8 +188,15 @@ def _inverted_to_text(index: dict | None) -> str | None:
 
 
 def search_openalex(query: str, *, from_year: int | None = None, to_year: int | None = None,
-                    limit: int = 200, types: tuple[str, ...] = ()) -> list[Candidate]:
-    """Search OpenAlex, paging until ``limit`` or the results run out."""
+                    limit: int = 200, types: tuple[str, ...] = (),
+                    title_abstract_only: bool = True) -> list[Candidate]:
+    """Search OpenAlex, paging until ``limit`` or the results run out.
+
+    ``title_abstract_only`` sends the query as the ``title_and_abstract.search`` filter
+    instead of the ``search`` parameter. See the module docstring for why that is the
+    default: full-text matching inflates the candidate set roughly 44-fold on a typical
+    blocked boolean query, and only the top-N by relevance are ever retrieved.
+    """
     out: list[Candidate] = []
     cursor = "*"
     per_page = min(200, max(1, limit))
@@ -133,14 +208,28 @@ def search_openalex(query: str, *, from_year: int | None = None, to_year: int | 
     if types:
         filters.append("type:" + "|".join(types))
     while len(out) < limit:
-        params = {"search": query, "per-page": per_page, "cursor": cursor,
+        params = {"per-page": per_page, "cursor": cursor,
                   "select": "id,doi,display_name,publication_year,primary_location,type,"
                             "open_access,best_oa_location,authorships,cited_by_count,"
                             "abstract_inverted_index"}
+        # A comma separates filters, so a query containing one would be split in half and
+        # silently change meaning. Boolean queries use OR, not commas; refuse rather than
+        # guess, because the damage is a corpus that looks fine and answers a different
+        # question.
+        if title_abstract_only:
+            if "," in query:
+                raise ValueError(
+                    "title_and_abstract.search cannot carry a comma (OpenAlex splits "
+                    f"filters on it). Rewrite the query with OR: {query!r}")
+            filters.append(f"title_and_abstract.search:{query}")
+        else:
+            params["search"] = query
         if filters:
             params["filter"] = ",".join(filters)
         if _mailto():
             params["mailto"] = _mailto()
+        if _api_key():
+            params["api_key"] = _api_key()
         data = _get(f"{_OPENALEX}?{urllib.parse.urlencode(params)}")
         results = data.get("results") or []
         if not results:
@@ -180,7 +269,14 @@ def search_crossref(query: str, *, from_year: int | None = None, to_year: int | 
     cursor = "*"
     rows = min(100, max(1, limit))
     while len(out) < limit:
-        params = {"query": query, "rows": rows, "cursor": cursor}
+        # `sort`/`order` are NOT optional here. Measured 2026-11-16: with `cursor` and no
+        # sort, Crossref returns an arbitrary index-ordered slice -- the first 100 hits for
+        # "emotion regulation intervention university students" came back 1999-2002, and
+        # the top result without a cursor (relevance-ordered) was a 2024 trial of exactly
+        # that intervention. Taking the top N of an unsorted deep page is not a search,
+        # and nothing in the response says the ranking was dropped.
+        params = {"query": query, "rows": rows, "cursor": cursor,
+                  "sort": "score", "order": "desc"}
         filters = []
         if from_year:
             filters.append(f"from-pub-date:{from_year}-01-01")

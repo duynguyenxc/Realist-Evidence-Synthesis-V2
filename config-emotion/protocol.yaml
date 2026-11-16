@@ -11,12 +11,14 @@
 # Scope changes belong in THIS file, never in a prompt.
 # =============================================================================
 
-version: "0.1-draft"
+version: "0.2-draft"
 status: >
   DRAFT. Written by Claude as RA on 2026-11-06 from the professor's email; not yet
   reviewed by a human, and no study has been screened against it. The eligibility
   criteria below are the part most likely to need the professor's judgement, because
-  they decide what the review is about.
+  they decide what the review is about. The search strategy was added on 2026-11-16
+  and executed the same day; screening has NOT been run, because it is the first
+  stage that spends API credit and the project has no budget.
 
 review_question: >
   What educational interventions improve students' emotional awareness and emotional
@@ -112,3 +114,152 @@ screening_policy:
   labels: [include, exclude, uncertain]
   uncertain_goes_to: HITL-1
   dual_model_vote: true
+
+# =============================================================================
+# Search strategy — written 2026-11-16, BEFORE the search was run, so that the
+# queries are a protocol decision on the record rather than shell history.
+#
+# RAMESES II item 8 requires a realist review to report how iterative searching
+# was done, and for each database: its name, the search terms, the dates of
+# coverage and the date last searched. All four are below; every individual
+# query is additionally written to the `search_log` table with its parameters,
+# its result count and the field it was matched in.
+# =============================================================================
+search_strategy:
+  posture: >
+    PURPOSIVE AND ITERATIVE, NOT EXHAUSTIVE. This is the realist convention
+    (Pawson, Greenhalgh, Harvey & Walshe 2004; RAMESES II item 8): the search is
+    steered by the programme theory and revised as the theory sharpens, rather
+    than fixed once and run to completeness. It is stated here because the
+    mechanics below make it unavoidable, and a reader must not mistake what
+    follows for an exhaustive boolean retrieval.
+  what_the_mechanics_actually_do: >
+    OpenAlex returns results ranked by relevance and this pipeline retrieves the
+    top N per query. Query 1 below matches 2843 works in title-and-abstract, so a
+    limit of 200 retrieves the top 7% of that query's matches, not all of them.
+    The honest description of this search is therefore a RELEVANCE-RANKED
+    PURPOSIVE SAMPLE across 10 theory-derived queries, pooled and deduplicated.
+    Raising the limit widens the sample at no extra cost in API credit but a
+    direct cost in screening credit, which is the binding constraint.
+  field_matched: title_and_abstract
+  field_matched_rationale: >
+    The same query matched against full text as well returns 124175 works instead
+    of 2843 — a 44-fold inflation measured on 2026-11-16 — and since only the top
+    N are retrieved, the sample would be drawn largely from papers that mention
+    emotion regulation in passing. Full-text matching is available
+    (`res search --fulltext`) and was deliberately not used.
+  databases:
+    - name: OpenAlex
+      role: primary
+      coverage_searched: 1998-01-01 to 2026-12-31
+      date_last_searched: 2026-11-16
+      access: >
+        Open catalogue, no subscription. Requires a key since 2026-02-13 and bills
+        per request; this run used anonymous access, which shares a $0.10/day
+        budget per network IP and costs $0.001 a search, so 10 queries cost $0.01.
+      work_types: [article, review]
+      work_types_rationale: >
+        OpenAlex types `review` separately from `article`. The pipeline's old
+        default of `article` alone would have silently excluded the prior
+        systematic, meta-analytic and realist reviews the assignment asks for in
+        section 3. Preprints are excluded at this stage: they are not peer
+        reviewed, and a realist review that draws mechanism evidence from them
+        should do so as a named decision, not as a side effect of a default.
+        Measured consequence of this one line: the pool contains 274 review
+        articles (15%), and one of them is Durlak et al. 2011 — a reference the
+        assignment names by DOI, with 11017 citations — which OpenAlex types as
+        `review` and the old default would therefore have discarded without a word.
+    - name: Crossref
+      role: cross-check only
+      coverage_searched: 1998-01-01 to 2026-12-31
+      date_last_searched: 2026-11-16
+      access: Open, free, no key.
+      why_not_primary: >
+        Crossref's query parameter is bibliographic relevance with no boolean
+        support and no field restriction: the phrase "emotion regulation higher
+        education" matches 5.7 million records. Pooling its top N into the corpus
+        of record would import noise that costs money to screen out. It is run
+        separately into its own file and reported as "what a second catalogue
+        adds", which is a measurable answer to a question a reviewer will ask.
+        Measured on the 2026-11-16 run: 529 unique records, 40% with an abstract
+        against 89% for OpenAlex, and the types include datasets and reference
+        entries that OpenAlex's type filter excludes.
+      bug_found_while_running_this: >
+        Crossref returns an arbitrary index-ordered slice under cursor paging unless
+        `sort` is given explicitly, and nothing in the response says the ranking was
+        dropped. Before the fix the cross-check returned 501 records published
+        1999-2002 with ZERO abstracts; after it, 529 records with a median year of
+        2023 and 40% abstracts. Any Crossref figure produced before 2026-11-16 by
+        this pipeline is void.
+  query_design: >
+    Three blocks conjoined, which is the pattern published higher-education
+    reviews of this construct use: CONSTRUCT (emotion awareness / regulation and
+    its near neighbours) AND POPULATION (higher education, with a STEM variant)
+    AND INTERVENTION (an instructional practice). Queries 9 and 10 depart from the
+    pattern on purpose, to find prior reviews and the major school-age syntheses
+    the eligibility criteria admit as mechanism evidence.
+  queries:
+    - id: Q01
+      purpose: Core — regulation x higher education x intervention.
+      q: '("emotion regulation" OR "emotional regulation" OR "emotion regulation strategies" OR "self-regulation of emotion") AND ("higher education" OR "university students" OR "college students" OR undergraduate OR postsecondary) AND (intervention OR program OR training OR instruction OR curriculum OR course)'
+    - id: Q02
+      purpose: Awareness, labelling and emotional literacy — the first half of the review question, which the regulation vocabulary does not reach.
+      q: '("emotional awareness" OR "emotion awareness" OR "emotion labelling" OR "emotion labeling" OR "emotional literacy" OR "feeling words") AND (students OR learners) AND (intervention OR program OR training OR teaching OR curriculum)'
+    - id: Q03
+      purpose: The Pekrun frame by name, including studies that use it without saying "emotion regulation".
+      q: '("achievement emotions" OR "academic emotions" OR "control-value theory" OR "learning-related emotions") AND (students OR learners) AND (intervention OR program OR instruction OR teaching OR "course design")'
+    - id: Q04
+      purpose: The STEM focus the assignment asks for first, including the discipline-specific anxieties that carry most of the STEM intervention literature.
+      q: '("emotion regulation" OR "emotional awareness" OR "achievement emotions" OR "academic emotions" OR "test anxiety" OR "math anxiety" OR "statistics anxiety") AND (STEM OR engineering OR mathematics OR "computer science" OR physics OR chemistry OR "medical students" OR nursing) AND (intervention OR program OR instruction OR course OR training)'
+    - id: Q05
+      purpose: Reflective and expressive writing — named in the assignment as an intervention type.
+      q: '("reflective writing" OR "expressive writing" OR "reflective journal" OR journaling OR "learning journal" OR "reflective practice") AND (emotion OR emotional OR affect OR anxiety OR "emotion regulation") AND ("higher education" OR "university students" OR "college students" OR undergraduate)'
+    - id: Q06
+      purpose: Self-regulated learning x emotion — one of the eight topics listed, and the likeliest bridge to the learning-outcome end of the theory.
+      q: '("self-regulated learning" OR "self-regulation of learning" OR metacognition) AND ("emotion regulation" OR "emotional regulation" OR "achievement emotions" OR "academic emotions" OR emotions) AND ("higher education" OR "university students" OR "college students")'
+    - id: Q07
+      purpose: Feedback — named in the assignment, and the intervention most likely to act through control appraisals.
+      q: '(feedback OR "feedback literacy" OR assessment) AND ("emotional response" OR "emotion regulation" OR appraisal OR reappraisal OR "control appraisals" OR anxiety) AND ("higher education" OR "university students" OR undergraduate) AND (intervention OR design OR experiment)'
+    - id: Q08
+      purpose: Reappraisal and mindfulness delivered inside teaching rather than as therapy — the eligibility criteria exclude clinical treatment but not instruction.
+      q: '(mindfulness OR "cognitive reappraisal" OR reappraisal OR "emotion coaching") AND (classroom OR course OR learning OR academic) AND ("higher education" OR "university students" OR "college students") AND (intervention OR program OR training)'
+    - id: Q09
+      purpose: Prior reviews, which the assignment asks for explicitly and which a realist review reads for theory rather than for effect sizes.
+      q: '("systematic review" OR "meta-analysis" OR "scoping review" OR "realist review" OR "realist synthesis" OR "narrative review") AND ("emotion regulation" OR "emotional awareness" OR "achievement emotions" OR "emotional intelligence" OR "social and emotional learning") AND (students OR education OR learning)'
+    - id: Q10
+      purpose: The major school-age syntheses the eligibility criteria admit, Durlak et al. 2011 being the paradigm case the professor names.
+      q: '("social and emotional learning" OR "social-emotional learning" OR "emotional intelligence") AND (intervention OR program OR curriculum) AND ("meta-analysis" OR "systematic review" OR randomized OR randomised)'
+  crossref_crosscheck_queries:
+    - 'emotion regulation intervention university students'
+    - 'emotional awareness intervention higher education'
+    - 'achievement emotions intervention students'
+  limit_per_query_per_source: 200
+  validity_check: >
+    A search strategy that cannot retrieve the references the professor named is
+    broken. Brackett et al. 2012 and Durlak et al. 2011 are intervention studies
+    and MUST appear in the pool. Pekrun 2006 and Gross 1998 are theory papers with
+    no intervention and no student sample, so an intervention-blocked query SHOULD
+    NOT be expected to return them; their absence is correct behaviour and not a
+    defect. They enter the review as the initial programme theory, not as included
+    studies.
+  # Stated BEFORE the search ran, as [doi, name, must_appear]. `scripts/search_report.py`
+  # evaluates it against the pool and prints "as predicted" or "UNEXPECTED" per row, so the
+  # prediction cannot quietly be rewritten after seeing the result.
+  validity_check_references:
+    - ['10.1016/j.lindif.2010.10.002', 'Brackett et al. 2012 (intervention study)', true]
+    - ['10.1111/j.1467-8624.2010.01564.x', 'Durlak et al. 2011 (meta-analysis of interventions)', true]
+    - ['10.1007/s10648-006-9029-9', 'Pekrun 2006 (theory paper; no intervention, no sample)', false]
+    - ['10.1037/1089-2680.2.3.271', 'Gross 1998 (theory paper; no intervention, no sample)', false]
+  not_done_and_why:
+    - >
+      Screening has not been run. `res screen` is the first stage that calls a
+      model, and the project has no API budget as of 2026-11-13. The pool below is
+      therefore a CANDIDATE POOL, not an included corpus, and no eligibility
+      decision in this protocol has been applied to a single record.
+    - >
+      Iteration has not happened. The posture above promises a search revised as
+      the programme theory sharpens; that requires at least one screening and
+      extraction cycle to sharpen it. This is round one of what should be several.
+    - >
+      Citation-chasing and grey literature are not covered. Both are standard in
+      realist reviews and both need either full texts or hand searching.

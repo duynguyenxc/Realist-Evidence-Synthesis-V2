@@ -1,6 +1,6 @@
 # What we built, and where everything is
 
-**Duy Nguyen — 13 November 2026.** Deliverable 1 of the 2026-10-30 assignment.
+**Duy Nguyen — 16 November 2026.** Deliverable 1 of the 2026-10-30 assignment.
 
 This answers your first request: organise and provide everything developed for the Richmond
 benchmark. It assumes no familiarity with the system.
@@ -9,23 +9,26 @@ benchmark. It assumes no familiarity with the system.
 
 ## 0. Where we are right now
 
-**Stage: the Richmond benchmark is complete and verified; the new topic is configured but has not
-been run.** In the terms of your assignment, your section 1 and 2 are done — this document and the
-next are those — and sections 3 to 6 need a corpus run, which needs API budget the project does
-not have.
+**Stage: the Richmond benchmark is complete and verified; the new topic now has a literature pool
+and is waiting on screening, which is where cost begins.** In the terms of your assignment,
+sections 1 and 2 are done — this document and the next are those — the search in section 3 ran on
+16 November at no cost, and sections 4 to 6 need screening and extraction, which need API budget
+the project does not have.
 
 | | |
 |---|---|
 | Richmond benchmark | **Complete.** Ran end to end twice; 28 papers, 94 configurations, 547 quoted elements, verified against your benchmark |
 | The five review checkpoints | **Performed, awaiting a human countersignature.** All 20 contradictions resolved and the programme theory signed, recorded as AI-performed under your section 5 delegation |
 | New topic configuration | **Drafted, not reviewed.** `config-emotion/` holds the review protocol, the initial programme theory built from your four references, and rewritten agent personas |
-| New topic corpus | **Not started.** The search tool works and was trialled; no corpus has been collected |
+| New topic corpus | **Candidate pool collected, 16 November.** 1,863 records, 89% with an abstract, 68% with a free full text. Nothing screened — no eligibility criterion has been applied to any record |
 | Conference paper | **Accepted to AERA 2027** on 6 November. Reviewer comments not yet read |
 
-**What changed in the two weeks since your email**, all of it preparation rather than new-topic
-work: the pipeline gained a literature search it never had; the prompts were lifted out of the
-source code into configuration; and three tests of the system's own reasoning were built, which
-changed what we are entitled to claim. Those are in the progress report.
+**What changed in the three weeks since your email:** the pipeline gained a literature search it
+never had and has now run it; the prompts were lifted out of the source code into configuration;
+three tests of the system's own reasoning were built, which changed what we are entitled to claim;
+and checking the search code against the live catalogues before using it found four defects, one of
+which would have silently discarded a reference you named by DOI. Those are in the progress
+report.
 
 ---
 

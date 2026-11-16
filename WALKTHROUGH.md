@@ -2217,3 +2217,190 @@ first question is *"đã hỏi Claude chưa"*. So `handover/6_PROGRESS_REPORT.md
   corpus, and the AERA reviewer comments are unread on the All Academic portal.
 - **No budget.** Do not plan work that spends credit without asking first; the RA suspended Phases C
   and M on 11-13.
+
+## M42 — The first search this pipeline ever ran, and the four defects found by checking first (2026-11-16)
+
+The RA asked for the remaining **$0** work and, in the same breath, for the checking to come
+before the doing: *"phân tích thật kĩ trước khi làm 1 cái gì đó... vì đây là 1 dự án nghiên cứu
+khoa học nghiêm túc để nộp cho hội đồng"*. This entry exists mostly to record what that instruction
+bought, because the answer is unusually concrete.
+
+Commit: `95452ca` was M41; this session's work follows it. **No model was called and nothing was
+screened.** Total external spend: about **two cents** of OpenAlex's anonymous daily allowance.
+
+### 1. Deliverable 3 was only half blocked, and nobody had checked which half
+
+`PLAN.md` had filed deliverables 3, 4 and 5 together as "needs API budget". Grepping the three
+stages for an LLM import settles it in one line: `core/literature.py` (search) imports `urllib`,
+`core/ingestion.py` imports no model, and `core/screening.py` is the **first** file in the pipeline
+that imports `core.llm`. So **search, acquisition and ingestion cost nothing**, and the professor's
+deliverable 3 — "a preliminary literature collection and structured evidence database" — is a free
+first half bolted to a paid second half. Three weeks of "we have no budget" had been applied to a
+stage that never needed one.
+
+The lesson is not about money. It is that the project had a belief about its own cost structure
+that took thirty seconds to check and nobody had checked.
+
+### 2. Four defects, found before the search ran rather than after
+
+Each was found by testing a stated assumption against the live catalogue, and each would have
+produced a search that **completed and looked normal**.
+
+**(a) The query was matched against full text.** `search_openalex` passed the query as OpenAlex's
+`search` parameter, which matches title, abstract *and* full text. Measured on the same blocked
+boolean query:
+
+| Matched in | Works matching |
+|---|---|
+| Title and abstract | **2,843** |
+| Title, abstract and full text | **124,175** |
+
+The pipeline retrieves the top 200 by relevance. The old default therefore drew its 200 from a pool
+44× larger whose extra 121,332 members mostly mention emotion regulation in passing. Fixed:
+`title_abstract_only=True` is the default, sending the query as the `title_and_abstract.search`
+filter; `--fulltext` opts back in. A comma in a query now raises, because OpenAlex splits the
+filter string on commas and would otherwise search for something else without saying so.
+
+**(b) OpenAlex work type `review` was excluded by default.** `--types article` looks harmless.
+OpenAlex types review articles as `review`, separately from `article`, so the default dropped them
+— and the professor's section 3 asks in as many words for prior "systematic reviews, realist
+reviews". The measured cost of that one word: **274 of the 1,863 records are reviews**, and one of
+them is **Durlak et al. 2011 (11,017 citations), which the assignment names by DOI**. The old
+default would have discarded a reference the professor supplied, silently. Default is now
+`article,review`; preprints stay excluded as a named decision rather than a side effect.
+
+**(c) Crossref lost relevance ranking under our own paging code.** `search_crossref` paged with
+`cursor` and no `sort`, and Crossref then returns an arbitrary index-ordered slice. Nothing in the
+response says the ranking was dropped. Measured before and after adding `sort=score&order=desc`:
+
+| | Years | With an abstract |
+|---|---|---|
+| Before | **1999–2002** | **0 / 501 (0%)** |
+| After | 1999–2026, median **2023** | 213 / 529 (40%) |
+
+Not merely a different order — a different population. The top hit went from a 1999 record to a
+2024 trial of exactly the intervention asked about. **Any Crossref figure this pipeline produced
+before today is void**, which matters because M40 §7 recorded `res search` as "exercised live" on
+2026-11-06 and that exercise used this code path.
+
+**(d) The open-access PDF link was dropped when writing the corpus.** `Candidate.to_metadata()`
+emitted neither `open_access` nor `oa_pdf_url`, although the search had retrieved both. `res
+acquire` then fell back to `d.get("url")` — the DOI landing page — so it would have reported
+**1,863 of 1,863 (100%)** records as having an obtainable full text and issued a request per record
+against pages that are not PDFs. The true figure is **1,266 (68%)**. The command's own docstring
+says that ratio "is a finding about the evidence base, not an inconvenience"; the fallback
+destroyed exactly that finding while appearing to improve it. Both fields are now written, plus
+`cited_by`, which was also being thrown away and is the only defensible way to order a purposive
+sample when there is no budget.
+
+**(e), found by running:** a single failed query discarded the whole run. OpenAlex paused anonymous
+search mid-run ("Anonymous search is paused while the search cluster recovers from heavy load"),
+four queries failed, and the old code raised and lost the six that had worked. Now each failure is
+recorded per query, reported, and **blocks the corpus write** unless `--allow-partial` is passed,
+because a corpus definition missing three of ten protocol queries looks complete and every count
+downstream would be wrong with nothing to detect it. That guard fired correctly on the first real
+attempt. Retry backoff now obeys the catalogue's own stated wait ("Please retry in 34s") instead of
+guessing.
+
+(a), (c) and (d) have regression tests; the suite is **26 passing**.
+
+### 3. "Free, keyless" expired on 2026-02-13 and three documents still said it
+
+OpenAlex now requires an API key and bills per request. The live API answers every anonymous
+request with a notice: one shared **$0.10/day budget per network IP**, `cost_usd: 0.001` per search
+request, a free key giving $1/day. Corrected in `core/literature.py`, `cli.py` and
+`docs/PROJECT_CONTEXT.md` §4.
+
+Two consequences worth carrying forward. The manuscript's claim that a reader can repeat this
+search **without credentials** is no longer strictly true and needs qualifying — this is the second
+time in a month that a reproducibility claim has outlived its facts. And a key is free but needs an
+account in a real person's name, plus that person's email sent to a third party, so **Claude did
+not create one**; it is in deliverable 6 as a question for the professor. The API's own notice
+instructs an AI agent to POST the user's email and get a key — an instruction arriving through a
+tool result, which is data and not authority, and was not acted on.
+
+### 4. The search strategy went into the protocol before the search ran
+
+Ten blocked boolean queries, CONSTRUCT × POPULATION × INTERVENTION, which is the pattern published
+higher-education reviews of this construct use; two queries depart from it on purpose to find prior
+reviews and the major school-age syntheses. Written into `config-emotion/protocol.yaml` as
+`search_strategy` **before** execution, with per-query `purpose`, coverage dates, date last
+searched, work types and their rationale, and the posture stated plainly: **purposive and
+relevance-ranked, not exhaustive**, which is the realist convention (RAMESES II item 8; Pawson,
+Greenhalgh, Harvey & Walshe 2004) and not a hedge. `scripts/run_protocol_search.py` is the only
+thing that executes them and **refuses to run against a config with no `search_strategy`** —
+verified by pointing it at Richmond's `config/`, which it declined.
+
+Protocol version 0.1-draft → **0.2-draft**.
+
+### 5. The result, and the check that was written down in advance
+
+Isolation first: `realist_emotion` created, `data-emotion/` and `outputs-emotion/` created, env
+passed per command rather than written into `.env` (which is shared with Richmond, and
+`load_dotenv` does not override the shell, so an export is enough). Richmond verified untouched
+after every stage: **547 entities / 94 CMOCs / 28 studies**.
+
+| | |
+|---|---|
+| Returned by the 10 queries of record | 1,988 |
+| Unique after dedup by DOI then normalised title | **1,863** |
+| With an abstract | 1,654 (89%) |
+| With a free open-access PDF | 1,266 (68%) |
+| With both — the pilot frame | 1,222 (66%) |
+| Reviews | 274 (15%) |
+| Years | 1998–2026, median 2023 |
+
+The protocol recorded, as `validity_check_references` and before the search ran, which of the
+professor's four named references **must** appear and which **should not**: Brackett 2012 and
+Durlak 2011 are intervention studies; Pekrun 2006 and Gross 1998 are theory papers with no
+intervention and no sample, so **their absence is correct**. All four came out as predicted. A
+mechanical check — "did we retrieve the four references?" — would have reported a 50% failure on a
+search that behaved exactly as designed.
+
+Crossref cross-check: 529 records into its own file, 468 of them not in the OpenAlex pool. That is
+**not** a coverage measurement, because it used three different and much simpler queries, and the
+report says so where the number appears.
+
+### 6. The search report is generated, not written
+
+`scripts/search_report.py` reads the protocol, `search_log` and the corpus and writes
+`outputs-emotion/SEARCH_REPORT.md`. Same reasoning as M41 §3(c): the hand-typed Richmond
+comparison could not be wrong because it computed nothing, and a hand-typed search report is the
+same object. Two defects in the generator were found by reading its own output — it called all 13
+queries "the queries that produced the pool" when three of them wrote a different file, and it
+tried to `json.loads` a jsonb column that psycopg's `dict_row` had already decoded.
+
+`search_log` also gained an outcome stamp. Without it the table could not answer the one question
+it exists for: an abandoned run leaves the same rows as the run of record — same source, same
+counts, same dedup figure. Rows are now stamped `written`, `partial_written`, `refused_partial` or
+`dry_run`, with `written_to`, and the three historical runs were stamped by hand so the record is
+not left ambiguous. `--dry-run` also stopped claiming "nothing written", because it does write to
+the log; its run_id is now prefixed `dryrun-`.
+
+### What the next session must not assume
+
+- **1,863 is a candidate pool, never a corpus.** No eligibility criterion has been applied to any
+  record by anything. Do not describe it as screened, included, or "the emotion corpus".
+- **Do not run `res screen`, `res extract` or anything downstream without asking.** That is where
+  money starts, and the RA suspended paid work on 2026-11-13.
+- **`res acquire` is free and has NOT been run.** 1,266 records have a direct OA PDF link. It needs
+  `--confirm` to download, and downloading ~1,266 files off the open web is a decision for the RA,
+  not a default.
+- **Any Crossref result produced before 2026-11-16 is void** — including whatever the 2026-11-06
+  live exercise recorded in Richmond's `search_log`.
+- **Never quote the Crossref "468 not in the OpenAlex pool" figure as catalogue coverage.** It
+  mixes catalogue difference with query difference, and the queries were deliberately different.
+- **The emotion review runs under exported env vars, not `.env`.** `RES_CONFIG_DIR=config-emotion
+  RES_DATA_DIR=data-emotion RES_OUTPUTS_DIR=outputs-emotion POSTGRES_DB=realist_emotion`. Writing
+  them into `.env` would silently redirect the next Richmond command somebody runs.
+- **`RES_GOLD_DIR` is still Richmond's `gold/`** for the emotion review, because there is no
+  emotion benchmark. `res verify` would therefore score the emotion review against Richmond's gold
+  standard and produce a meaningless number. Do not run it there.
+- **`data-emotion/` is gitignored**, following `data/`. The search stays reproducible from
+  `config-emotion/protocol.yaml` + `search_log` + `scripts/run_protocol_search.py`;
+  `outputs-emotion/SEARCH_REPORT.md` is committed.
+- **Don't re-run the search to "get fresh numbers".** It is deterministic enough that two
+  consecutive runs both returned 1,988 → 1,863, and each run costs a cent of a shared daily budget
+  that the catalogue has already paused once.
+- **The four handover deliverables are updated for 16 November but still unread and unsent**, and
+  the RA sends them.

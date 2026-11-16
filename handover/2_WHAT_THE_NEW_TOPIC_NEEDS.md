@@ -1,6 +1,6 @@
 # Applying the pipeline to emotional awareness and regulation
 
-**Duy Nguyen — 13 November 2026.** Deliverable 2 of the 2026-10-30 assignment.
+**Duy Nguyen — 16 November 2026.** Deliverable 2 of the 2026-10-30 assignment.
 
 Your section 2 asked seven questions and a step-by-step plan. Each answer below is tied to code
 that exists, not to what the system might do. Where the honest answer is "we cannot yet", it says so.
@@ -103,18 +103,46 @@ be calibration rather than result.**
 
 ## 5. How to find, retrieve and organise the publications
 
-Built on 6 November and tested, though not yet run for real:
+Built on 6 November, **run for the first time on 16 November**:
 
-- **Search** — OpenAlex and Crossref. Both free, neither needs a key, and both are open catalogues,
-  so a reader of the paper can repeat our search. Scopus and Web of Science cannot offer that
+- **Search** — OpenAlex and Crossref, both open catalogues, so a reader of the paper can repeat our
+  search without a subscription; Scopus and Web of Science cannot offer that. OpenAlex has
+  required a key since 13 February 2026 and bills per request — anonymous use shares $0.10 a day
+  per network address, which our ten-query run fits inside at about two cents
 - **Deduplication** — by DOI, then by normalised title, reporting both counts, as PRISMA requires
 - **Search logging** — every query recorded with its filters and result counts, so the search
   section of the paper is generated from the record rather than reconstructed
 - **Full text** — only open-access copies the catalogue itself links. How many full texts were
   obtainable, and how many were not, is a finding about the evidence base and will be reported
 
-Trial run, 6 November: two queries, 160 records pooled, **158 unique**, 47% with abstracts, and the
-results were on topic.
+**The real run, 16 November.** Ten blocked boolean queries — construct × population ×
+intervention, which is the pattern published higher-education reviews of this construct use — plus
+three Crossref phrase queries as a cross-check into a separate file:
+
+| | |
+|---|---|
+| Candidate records after deduplication | **1,863** |
+| With an abstract (screenable as they stand) | 1,654 (89%) |
+| With a free open-access PDF | 1,266 (68%) |
+| With **both** — the pilot can be drawn from here | 1,222 (66%) |
+| Review articles, which you asked for by name in §3 | 274 |
+| Publication years | 1998–2026, median 2023 |
+
+`outputs-emotion/SEARCH_REPORT.md` reports this in full and is **generated** from the query log,
+not written. The ten queries, the coverage dates and the date last searched are in
+`config-emotion/protocol.yaml`, so the search section of the paper comes from the protocol rather
+than from anyone's memory.
+
+**What this is not.** 1,863 is a candidate pool, not a corpus: no eligibility criterion has been
+applied to any record, because screening is the first stage that spends credit. And the search is
+**purposive and relevance-ranked, not exhaustive** — each query returns its top-ranked matches
+rather than all of them (query 1 alone matches 2,843 works in title and abstract). That is the
+realist convention rather than a shortcut, and the protocol says so in those words.
+
+Checking the search code against the live catalogues before running it turned up four defects,
+including one that would have silently discarded Durlak et al. 2011 — a reference you named by
+DOI — because OpenAlex types it `review` and the pipeline's default kept only `article`.
+Deliverable 6 lists all four.
 
 ---
 
@@ -234,12 +262,17 @@ Ordered so the cheapest and most informative steps come first. Steps 1–4 cost 
 | 2 | Countersign the Richmond review checkpoints, closing the gap in §3 of deliverable 1 | ~15 min, Duy |
 | 3 | Make the Richmond comparison computed rather than hand-written | — |
 | 4 | Test whether the recurring patterns are more than chance (null-model significance) | — |
-| 5 | Create the separate database and run the literature search | Small API cost |
+| 5 | ~~Create the separate database and run the literature search~~ **done 16 Nov** | Cost **$0**, not "small API cost" as we first wrote |
 | 6 | **Pilot of 10–15 papers**, reporting the measured cost before going further | API budget |
 | 7 | Full extraction, synthesis, knowledge graph | API budget |
 | 8 | Preliminary synthesis and progress report | — |
 
 **On budget.** The Richmond run was configured with a $45 ceiling for 28 papers. We have no cost
 history to extrapolate from — the usage records were lost when the database was restored — so step
-6 exists to measure rather than estimate. Until a budget is available, steps 1–4 are what we can
-do, and they are the steps that most improve the eventual result.
+6 exists to measure rather than estimate. Steps 1–5 are done or need only your judgement; the
+remaining budget question is screening and extraction.
+
+**One correction to our own plan.** We had filed the whole of deliverable 3 as needing budget.
+Three stages — search, full-text acquisition and ingestion — call no model, so step 5 cost nothing
+and 1,266 full texts can also be downloaded for nothing. We had not checked which stages actually
+spend credit before saying they all did.

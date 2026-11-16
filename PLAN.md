@@ -82,10 +82,17 @@ numbers and why they cannot be regenerated. That is a fact to disclose, not a de
 
 - [ ] **C1** RA reviews `config-emotion/protocol.yaml`. Its eligibility criteria decide what the
       review is *about*; `ratified_by` is correctly `null`.
-- [ ] **C2** `createdb realist_emotion`; set `RES_CONFIG_DIR`, `RES_DATA_DIR`,
-      `RES_OUTPUTS_DIR`, `POSTGRES_DB` in `.env`. Until then `assert_isolated()` blocks every
-      writing stage — by design, so a new topic cannot overwrite Richmond.
-- [ ] **C3** (#3) `res search` → corpus + structured evidence database. Metadata only, cheap.
+- [x] **C2** ✅ **2026-11-16.** `realist_emotion` created, `data-emotion/` and
+      `outputs-emotion/` created. The env is passed per command rather than written into
+      `.env`, because `.env` is shared with Richmond and `load_dotenv` does not override the
+      shell — so an exported variable isolates this review without leaving a trap set for the
+      next session that runs a Richmond command.
+- [x] **C3** (#3, first half) ✅ **2026-11-16.** Search run: **1,863 candidate records**, 89%
+      with an abstract, 68% with a free open-access PDF. `outputs-emotion/SEARCH_REPORT.md` is
+      generated from `search_log`, not written. The protocol's pre-registered validity check
+      passed on all four of the professor's named references. **The second half of #3 — a
+      "structured evidence database" — needs screening, which costs money.** Four defects were
+      found and fixed in the search code on the way; see WALKTHROUGH M42.
 - [ ] **C4** **Pilot of 10–15 papers first, and report the measured cost**, because
       `token_usage` is empty (lost in the M39 restore) so there is no cost history to estimate
       from. `max_usd_per_full_run` is configured at $45 for 28 papers.
@@ -134,6 +141,10 @@ He has not seen this system and does not know what it does. Hold me to these:
 | 2026-11-13 | **Phase B drafted** | `handover/` — deliverables 1, 2, 6. Fact-checked against the database; the check caught a wrong prompt count (24, not 23) |
 | 2026-11-13 | **Budget decision** | RA: **no budget available — $0 work only**. Phases C and M are suspended; the $0 items in deliverable 2's plan (steps 1–4) are what proceeds |
 | 2026-11-10 | **Phase A complete** | Exit check passes: **0 unmarked superseded figures** outside the four excluded classes below |
+| 2026-11-16 | **Every remaining $0 stage identified** | `res search`, `res acquire` and `res ingest` call no model. Money starts at `res screen`. Deliverable #3 was wrongly filed as fully budget-blocked |
+| 2026-11-16 | **Search run — 1,863 records** | OpenAlex 10 boolean queries + Crossref cross-check, isolated database, report generated from the log. Pre-registered validity check passed 4/4 |
+| 2026-11-16 | **Four search defects found and fixed** | Full-text matching inflating the pool 44×; Crossref losing relevance ranking under cursor paging; `oa_pdf_url` dropped from the corpus format; one failed query discarding the whole run. Three now have regression tests |
+| 2026-11-16 | **"Free, keyless" retracted** | OpenAlex has required a key since 2026-02-13 and bills per request. The reproducibility claim in the manuscript needs the qualification |
 
 **What Phase A actually found, beyond stale numbers.** Two substantive errors were in the
 professor-facing report, not just outdated figures:

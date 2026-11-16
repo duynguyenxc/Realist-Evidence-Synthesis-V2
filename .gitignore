@@ -6,8 +6,14 @@
 
 # Third-party COPYRIGHTED source PDFs & PRIVATE materials — must never be published
 data/
+data-emotion/
 documents/
 transcript-meetings/
+# `data-emotion/` follows `data/`: it holds a searched corpus definition and will hold
+# downloaded full texts. The search stays reproducible without it, because the queries
+# live in `config-emotion/protocol.yaml`, the per-query record lives in the `search_log`
+# table, and `scripts/run_protocol_search.py` regenerates the pool from the protocol.
+# `outputs-emotion/SEARCH_REPORT.md` is a curated top-level report and IS committed.
 
 # Per-run regenerable artifacts (curated top-level reports in outputs/ are kept)
 outputs/runs/
