@@ -2607,9 +2607,11 @@ my own that was wrong.
 
 ### 1. `res acquire` — the collection made real
 
-Run with `--confirm` for the first time. **1,266 open-access PDFs** of the 1,863 candidates,
-fetched from the links the catalogue itself publishes, `%PDF` magic checked on every one, failures
-recorded rather than hidden. Into `data-emotion/fulltext/`, which is gitignored. This is what
+Run with `--confirm` for the first time. **Corrected: 434 full texts obtained, not 1,266.** The
+1,266 figure was written here while the job was still running and is the number of records with an
+open-access *link*; it was wrong when written. What was fetched came from the links the catalogue
+itself publishes, `%PDF` magic checked on every one, failures recorded rather than hidden — and 832
+of those links did not yield a file. M45 §1 has the diagnosis. Into `data-emotion/fulltext/`, which is gitignored. This is what
 turns the professor's "preliminary literature **collection**" from a list of rows into files.
 
 ### 2. The 79 single-mention concepts, adjudicated one at a time
@@ -2737,6 +2739,107 @@ Suite: **30 passing**.
   is preventive and the declared merges are inert by design.
 - **The inverted-name check reports; it does not fix.** `outc:lower-accuracy-with-explicit-instruction`
   still carries its misleading id in the database, deliberately.
-- **`data-emotion/fulltext/` now holds 1,266 PDFs and is gitignored.** They are third-party
+- **`data-emotion/fulltext/` holds 434 PDFs (not 1,266 — see M45 §1) and is gitignored.** They are third-party
   copyrighted material: do not commit them, and do not redistribute them.
 - **Still nothing screened, still no CMOCs on the new topic, still no countersignature.**
+
+---
+
+## M45 — 2026-11-17 (continued). The download finished, and the number it was reported as was wrong
+
+**Session state:** `res acquire --confirm` had been launched in M44 and was still running when
+M44's entry was written. The entry recorded **1,266 PDFs**. That was the number of records with an
+open-access *link*, written as though it were the number of files — a projection stated as a
+result, which is the exact failure mode this project has a standing rule against. It is corrected
+in place above, with the superseded value kept beside the corrected one.
+
+### 1. What was actually obtained: 434, not 1,266
+
+The job exited 0. On disk: **434 PDFs, 331 MB**, every one verified to begin with the `%PDF` magic
+bytes, so nothing HTML was saved as a PDF. **832 of the 1,266 open-access links did not yield a
+file.**
+
+The flow, with the distinction that had been collapsing:
+
+| | Records | Share of pool |
+|---|---|---|
+| Candidate records | 1,863 | 100% |
+| Catalogue publishes an OA PDF location | 1,266 | 68% |
+| **PDF downloaded and verified** | **434** | **23%** |
+| OA link that could not be fetched | 832 | 45% |
+
+**Why, diagnosed rather than assumed.** One failed URL per publisher host, requested twice — once
+with the pipeline's own User-Agent, once with a browser's:
+
+| Host | Ours vs browser | Reading |
+|---|---|---|
+| `doi.org` (280 links) | 403 both | a DOI resolver, not a direct PDF location |
+| `www.mdpi.com` (58) | 403 both | CDN bot block |
+| `www.tandfonline.com` (27) | 403 both | CDN bot block |
+| `onlinelibrary.wiley.com` (23) | 403 both | CDN bot block |
+| `pmc.ncbi.nlm.nih.gov` (22) | 403 both | CDN bot block |
+| `link.springer.com` (19) | 200, not a PDF | landing page; the `%PDF` guard correctly refused it |
+| `www.frontiersin.org` (24) | **PDF both** | the first-pass failure was transient |
+
+Three things follow, and the first one clears our own code:
+
+- **The User-Agent is not the cause.** Every host that refused the pipeline refused the browser
+  string identically. So we are not being penalised for identifying ourselves honestly — and there
+  is no case for making the fetcher impersonate a browser. That would mean circumventing a
+  publisher's stated bot policy to raise a count in a methods paper, and this project will not do
+  it. **Do not "fix" the acquisition rate by changing the User-Agent.**
+- **The `%PDF` guard is working.** Springer returns HTTP 200 with a landing page; the guard refused
+  it rather than writing HTML to a `.pdf` file. The 832 contains no silent corruption.
+- **Some failures are transient.** Frontiers links that failed in the first pass return a PDF on a
+  later request. Re-running `res acquire --confirm` skips what is already on disk and is therefore
+  a genuine retry pass; a second pass was started at the end of this session and the count will
+  rise. `ACQUISITION_REPORT.md` regenerates, so the figure follows the disk.
+
+### 2. What this constrains, and what it does not
+
+**It does not constrain screening.** Screening reads titles and abstracts, which the pool has for
+89% of records. The $5.44 screening estimate is unaffected.
+
+**It constrains extraction**, which needs the full text of every *included* study. Whatever
+screening selects has to be checked against what we can read; the rest is a library request. This
+is now a known step rather than a surprise waiting at the extraction stage.
+
+**It qualifies the manuscript's reproducibility claim, twice.** OpenAlex ceased to be free and
+keyless on 2026-02-13, and roughly two thirds of nominally open-access full texts cannot be fetched
+by an unattended process. A reader with our protocol, our queries and no institutional access does
+not arrive at our corpus. Both belong in the limitations section, not a footnote.
+
+### 3. What was built and corrected
+
+- **`scripts/acquisition_report.py` → `outputs-emotion/ACQUISITION_REPORT.md`** (new, $0). The
+  flow table, the per-host diagnosis with the User-Agent finding recorded as a dated measurement,
+  where the unfetchable links point, and what it constrains. Generated, so it cannot drift from the
+  disk.
+- **Every document that reported the link share as a full-text share is corrected**:
+  `handover/README.md`, `0_REQUIREMENTS_MATRIX.md` (two places), `1_WHAT_WE_BUILT.md`,
+  `2_WHAT_THE_NEW_TOPIC_NEEDS.md` (two places), `CLAUDE.md`, `PLAN.md`, and M44 above. The phrase
+  "68% with a free full text" is wrong wherever it appears; the correct form is "68% with an
+  open-access PDF **link**".
+- **`scripts/search_report.py`** now prints the link row as a link and states in the generated
+  report that a link is not a file, pointing at the acquisition report for the real number.
+- **30 tests pass.**
+
+### 4. Two free improvements identified and deliberately not made
+
+- **An Unpaywall lookup** would turn a `doi.org` resolver into a direct PDF location, which is the
+  single largest failure group (280 of 832). Its API requires a contact email in every request —
+  that is the RA's personal data and the RA's decision, not a default for a script to set.
+- **An explicit retry pass with backoff**, rather than relying on someone re-running the command.
+
+### 5. What the next session must not assume
+
+- **Do not quote 1,266 as a count of full texts.** It is the count of links. The number of files is
+  whatever `ACQUISITION_REPORT.md` says, and it is generated from the disk.
+- **Do not raise the acquisition rate by changing the User-Agent.** It was tested; it is not the
+  cause, and impersonating a browser is not an acceptable method in this paper.
+- **A second acquire pass was running when this entry was written.** Unlike M44, this entry does
+  not state its result. Re-run `scripts/acquisition_report.py` to get the current figure.
+- Everything still waiting on a person is still waiting: the 21 HITL countersignatures,
+  `config-emotion/protocol.yaml` as an unreviewed draft, the four questions in the requirements
+  matrix, the AERA reviewer comments, and the report email — drafted in chat this session, for the
+  RA to send.

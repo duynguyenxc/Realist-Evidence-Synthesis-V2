@@ -19,7 +19,7 @@ the project does not have.
 | Richmond benchmark | **Complete.** Ran end to end twice; 28 papers, 94 configurations, 547 quoted elements, verified against your benchmark |
 | The five review checkpoints | **Performed, awaiting a human countersignature.** All 20 contradictions resolved and the programme theory signed, recorded as AI-performed under your section 5 delegation |
 | New topic configuration | **Drafted, not reviewed.** `config-emotion/` holds the review protocol, the initial programme theory built from your four references, and rewritten agent personas |
-| New topic corpus | **Candidate pool collected and described.** 1,863 records, 89% with an abstract, 68% with a free full text, plus a separate 445-record theory pool. Nothing screened — no eligibility criterion has been applied to any record |
+| New topic corpus | **Candidate pool collected and described.** 1,863 records, 89% with an abstract, 68% with an open-access PDF link and **434 full texts obtained**, plus a separate 445-record theory pool. Nothing screened — no eligibility criterion has been applied to any record |
 | What the pool is about | **Coded against Pekrun's and Gross's categories, without a model.** `outputs-emotion/EVIDENCE_MAP.md`. Three findings in it change what the review should be, and are Questions 1–3 in the requirements matrix |
 | Conference paper | **Accepted to AERA 2027** on 6 November. Reviewer comments not yet read |
 

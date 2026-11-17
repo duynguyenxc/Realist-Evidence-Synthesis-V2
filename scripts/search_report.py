@@ -203,7 +203,12 @@ def main() -> int:
     w(f"| Records | {n} | 100% |")
     w(f"| With an abstract (screenable as-is) | {abstracts} | {_pct(abstracts, n)} |")
     w(f"| With a DOI | {dois} | {_pct(dois, n)} |")
-    w(f"| With an open-access PDF link (acquirable free) | {len(oa_pdf)} | {_pct(len(oa_pdf), n)} |")
+    w(f"| With an open-access PDF **link** | {len(oa_pdf)} | {_pct(len(oa_pdf), n)} |")
+    w("")
+    w("A link is not a file. Roughly two thirds of those links cannot be fetched by an "
+      "unattended process — publisher CDNs refuse scripted requests, and many \"PDF "
+      "locations\" are DOI resolvers pointing at a landing page. What was actually "
+      "obtained is reported in `ACQUISITION_REPORT.md`, and it is the smaller number.")
     w(f"| With **both** an abstract and a PDF | {len(ready)} | {_pct(len(ready), n)} |")
     w("")
     w("Work types: " + ", ".join(f"**{k}** {v}" for k, v in types.most_common()) + ".")

@@ -20,11 +20,13 @@ rather than written by hand, so they cannot drift from what the pipeline actuall
 | [`outputs-emotion/SEARCH_REPORT.md`](../outputs-emotion/SEARCH_REPORT.md) | The search, reported well enough to repeat: queries, coverage dates, deduplication, and a validity check registered before the search ran |
 | [`outputs-emotion/EVIDENCE_MAP.md`](../outputs-emotion/EVIDENCE_MAP.md) | What the 1,863 records are *about*, coded against Pekrun's and Gross's categories. **Not** what works |
 | [`outputs-emotion/COST_MODEL.md`](../outputs-emotion/COST_MODEL.md) | What each remaining stage would cost, from the real prompts and prices |
+| [`outputs-emotion/ACQUISITION_REPORT.md`](../outputs-emotion/ACQUISITION_REPORT.md) | How many full texts we actually hold, why the rest could not be fetched, and what that constrains |
 
 ## Where things stand
 
 The literature search for the new topic has been run, and it cost nothing: **1,863
-candidate records**, 89% with an abstract, 68% with a free open-access PDF. That is the
+candidate records**, 89% with an abstract, 68% with an open-access PDF link — of which 434
+full texts were actually downloadable, for the reasons in `ACQUISITION_REPORT.md`. That is the
 first half of your third output. We had reported all of outputs 3, 4 and 5 as needing
 budget, and that was partly wrong — three of the pipeline's stages call no model at all.
 

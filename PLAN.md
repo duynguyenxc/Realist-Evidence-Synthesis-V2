@@ -88,7 +88,8 @@ numbers and why they cannot be regenerated. That is a fact to disclose, not a de
       shell — so an exported variable isolates this review without leaving a trap set for the
       next session that runs a Richmond command.
 - [x] **C3** (#3, first half) ✅ **2026-11-16.** Search run: **1,863 candidate records**, 89%
-      with an abstract, 68% with a free open-access PDF. `outputs-emotion/SEARCH_REPORT.md` is
+      with an abstract, 68% with an open-access PDF link (434 full texts obtained).
+      `outputs-emotion/SEARCH_REPORT.md` is
       generated from `search_log`, not written. The protocol's pre-registered validity check
       passed on all four of the professor's named references. **The second half of #3 — a
       "structured evidence database" — needs screening, which costs money.** Four defects were

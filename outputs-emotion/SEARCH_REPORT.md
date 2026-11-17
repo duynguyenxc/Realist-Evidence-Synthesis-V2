@@ -71,7 +71,9 @@ The search is **purposive and relevance-ranked, not exhaustive** — the realist
 | Records | 1863 | 100% |
 | With an abstract (screenable as-is) | 1654 | 89% |
 | With a DOI | 1657 | 89% |
-| With an open-access PDF link (acquirable free) | 1266 | 68% |
+| With an open-access PDF **link** | 1266 | 68% |
+
+A link is not a file. Roughly two thirds of those links cannot be fetched by an unattended process — publisher CDNs refuse scripted requests, and many "PDF locations" are DOI resolvers pointing at a landing page. What was actually obtained is reported in `ACQUISITION_REPORT.md`, and it is the smaller number.
 | With **both** an abstract and a PDF | 1222 | 66% |
 
 Work types: **article** 1589, **review** 274.
