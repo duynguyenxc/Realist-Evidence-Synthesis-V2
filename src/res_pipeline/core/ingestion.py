@@ -52,6 +52,15 @@ def _extract_pdf_text(pdf_path: Path) -> tuple[str, int]:
     # Normalize whitespace conservatively: join pages with form-feed markers kept
     # OUT of the canonical text (offsets must be stable and quote-friendly).
     text = "\n\n".join(pages)
+    # Strip NUL and the other C0 control characters a PDF text layer can carry.
+    #
+    # PostgreSQL rejects 0x00 in a text field outright ("PostgreSQL text fields cannot
+    # contain NUL (0x00) bytes"), which killed the first ingest of the emotion corpus
+    # after several hundred papers. The Richmond benchmark never hit it: its 28 PDFs are
+    # publisher-clean, while a corpus pulled off the open web is not. Removing these
+    # cannot shift a quote offset, because every character removed is unprintable and
+    # none is part of any span a reviewer would ever cite.
+    text = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", text)
     text = re.sub(r"[ \t]+", " ", text)
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip(), len(pages)

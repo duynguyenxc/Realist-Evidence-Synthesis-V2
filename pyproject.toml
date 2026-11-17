@@ -25,6 +25,12 @@ dependencies = [
     # 2026-09-30 against the sha256 values in the July audit trail: 6.8-6.15 reproduce the
     # canonical text exactly; 6.19 shifts 16 of 28 studies by 1-23 chars and 4.2 by up to 525.
     "pypdf>=6.8,<6.16",          # corpus ingest
+    # pypdf needs this to open AES-encrypted PDFs, and without it raises
+    # DependencyError rather than skipping the file. The Richmond benchmark has none;
+    # the 572-paper emotion corpus pulled off the open web stopped an entire ingest run
+    # on one, 166 documents in. A corpus assembled from publishers will contain these,
+    # so it is a hard dependency rather than an extra.
+    "cryptography>=3.1",         # AES-encrypted PDFs in web-sourced corpora
     "networkx>=3.3",             # concept graph construction
     "graspologic>=3.4",          # Leiden community detection (NOT optional)
     "scipy>=1.11",               # Clopper-Pearson intervals

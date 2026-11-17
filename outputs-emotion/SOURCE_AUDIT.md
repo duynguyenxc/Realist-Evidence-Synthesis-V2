@@ -49,10 +49,11 @@ These are defects in UWSS rather than in any catalogue, found while running the 
 
 | Defect | What it meant |
 |---|---|
-| A command that raises still exits 0 | `discover-semanticscholar` died on a `TypeError` and the shell saw success; the same happened again when the catalogue returned 429. A caller scripting these commands in sequence — which is what a pipeline is — cannot tell a completed stage from a crashed one. |
 | `fetch --limit N` governed only the download | The Unpaywall and link-resolution stages were hardcoded to 200, so `--limit 1500` resolved 200, enriched 200, and then reported the download count. The ceiling was invisible because the number printed came from the last stage. |
 | Re-running `fetch` did not make progress | The enrichment query selected every row with a DOI and stopped after N *updates*, with no marker for rows already asked about — so every run re-asked Unpaywall about the same first 200 DOIs. Running it ten times enriched 200 records and sent ~1,800 pointless requests to a free service. Now marked, including definitive negatives, so repeat runs are cumulative. |
 | Landing-page resolution ran before Unpaywall, by default | It opens the publisher pages that CDNs refuse, three retries at a 20-second timeout each, to look for links Unpaywall supplies in one request. Now opt-in. |
+
+> **One claim was withdrawn from this list.** It had read "a command that raises still exits 0", on the evidence that `discover-semanticscholar` died on a `TypeError` and the shell reported success. Checked directly, UWSS returns a correct non-zero exit code; the zero was from the `tail` at the end of **my own** pipeline, which is what the shell reports unless `pipefail` is set. The defect was in how the command was called, not in the command. It is left here rather than deleted because a page about failures that look like successes should say when its own author produced one.
 
 ## Why this belongs in the paper
 

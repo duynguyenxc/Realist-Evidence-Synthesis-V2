@@ -698,3 +698,55 @@ def test_every_human_action_button_states_its_own_text_colour():
     assert "color:" in rule.group(1), (
         "`.btn.human` must restate `color`; `.human` sets it to the button's own "
         "background colour later in the stylesheet")
+
+
+def test_pdf_text_cannot_carry_bytes_postgres_refuses(tmp_path):
+    """A NUL byte in a PDF text layer aborted the whole ingest, hundreds of papers in.
+
+    PostgreSQL rejects 0x00 in a text column. The Richmond benchmark never exposed this
+    because its 28 PDFs are publisher-clean; a corpus pulled off the open web is not, and
+    the first ingest of the 572 emotion full texts died on one. Worse, the command still
+    exited 0, so a caller scripting the pipeline would have seen success.
+
+    Stripping C0 controls cannot move a quote offset: every character removed is
+    unprintable and none can be part of a span a reviewer would cite.
+    """
+    import re
+
+    from res_pipeline.core import ingestion
+
+    dirty = "Self-explanation\x00 improves\x0b reasoning\x1f under\x7f load."
+    cleaned = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", dirty)
+    assert "\x00" not in cleaned
+    assert cleaned == "Self-explanation improves reasoning under load."
+
+    # and the real extractor applies it
+    src = __import__("inspect").getsource(ingestion._extract_pdf_text)
+    assert r"\x00-\x08" in src, "the extractor must strip control characters"
+
+
+def test_one_unreadable_document_cannot_end_an_ingest_run():
+    """Two separate runs of the 572-paper corpus died on a single bad file.
+
+    The first hit a NUL byte PostgreSQL refuses; the second an AES-encrypted PDF needing
+    a `pypdf` extra that was not installed, 166 documents in. Each discarded every
+    document after it and left a database that looked complete from a row count — 572
+    study rows, of which only 162 had any text.
+
+    A 28-paper benchmark of publisher-clean PDFs never exposes this. A corpus pulled off
+    the open web always will, so the loop has to survive a document and report how many
+    it could not read: that ratio is a property of the evidence base a realist review
+    states, not an operational detail.
+    """
+    import inspect
+
+    from res_pipeline import cli
+
+    src = inspect.getsource(cli.ingest)
+    assert "failures" in src, "ingest must collect failures rather than raise"
+    assert "study_failed" in src, "an unreadable document must reach the audit log"
+    assert "could not be read" in src, "the count must be reported to the operator"
+    # and the dependency that caused the second failure is now declared
+    import pathlib
+    pyproject = (pathlib.Path(__file__).resolve().parents[1] / "pyproject.toml").read_text()
+    assert "cryptography>=3.1" in pyproject, "AES-encrypted PDFs need this to open"

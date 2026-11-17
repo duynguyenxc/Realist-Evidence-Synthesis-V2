@@ -83,11 +83,6 @@ SOURCES = [
 
 # Failures of the harness rather than of a catalogue — found while running the audit.
 HARNESS = [
-    ("A command that raises still exits 0",
-     "`discover-semanticscholar` died on a `TypeError` and the shell saw success; the "
-     "same happened again when the catalogue returned 429. A caller scripting these "
-     "commands in sequence — which is what a pipeline is — cannot tell a completed "
-     "stage from a crashed one."),
     ("`fetch --limit N` governed only the download",
      "The Unpaywall and link-resolution stages were hardcoded to 200, so `--limit 1500` "
      "resolved 200, enriched 200, and then reported the download count. The ceiling was "
@@ -216,6 +211,15 @@ def main() -> int:
     w("|---|---|")
     for title, detail in HARNESS:
         w(f"| {title} | {detail} |")
+    w("")
+    w("> **One claim was withdrawn from this list.** It had read \"a command that "
+      "raises still exits 0\", on the evidence that `discover-semanticscholar` died on "
+      "a `TypeError` and the shell reported success. Checked directly, UWSS returns a "
+      "correct non-zero exit code; the zero was from the `tail` at the end of **my own** "
+      "pipeline, which is what the shell reports unless `pipefail` is set. The defect "
+      "was in how the command was called, not in the command. It is left here rather "
+      "than deleted because a page about failures that look like successes should say "
+      "when its own author produced one.")
     w("")
     w("## Why this belongs in the paper")
     w("")

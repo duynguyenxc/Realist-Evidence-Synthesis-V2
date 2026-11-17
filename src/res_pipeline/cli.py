@@ -320,9 +320,29 @@ def ingest(
     table.add_column("Units", justify="right")
     table.add_column("Chars", justify="right")
 
+    # One unreadable document must not end the run.
+    #
+    # The 28-paper benchmark never exposed this: its PDFs are publisher-clean and
+    # ingest either worked or there was nothing to salvage. A 572-paper corpus pulled
+    # off the open web is different, and two files killed two separate runs of it — one
+    # carrying a NUL byte PostgreSQL refuses, one AES-encrypted and needing a `pypdf`
+    # extra that was not installed. Each failure discarded every document after it and
+    # left a half-ingested database that looked, from a row count, like a full one.
+    #
+    # Failures are now collected and reported as a figure, because "how much of the
+    # corpus could not be read" is a property of the evidence base that a realist
+    # review states, not an operational detail.
+    failures: list[tuple[str, str]] = []
     for study in studies:
-        ingested = ingest_study(study)
-        store_ingested_study(ingested)
+        try:
+            ingested = ingest_study(study)
+            store_ingested_study(ingested)
+        except Exception as exc:  # noqa: BLE001 - third-party documents
+            failures.append((study.study_id, f"{type(exc).__name__}: {exc}"[:200]))
+            log_audit_event(run_id, "ingestion", "study_failed",
+                            subject_ref=study.study_id,
+                            detail={"error": f"{type(exc).__name__}: {exc}"[:400]})
+            continue
         log_audit_event(
             run_id, "ingestion", "study_ingested", subject_ref=study.study_id,
             detail={
@@ -338,7 +358,15 @@ def ingest(
         )
 
     console.print(table)
-    console.print(f"[green]Ingested {len(studies)} studies.[/green]")
+    ok = len(studies) - len(failures)
+    console.print(f"[green]Ingested {ok} of {len(studies)} studies.[/green]", markup=False)
+    if failures:
+        console.print(f"[yellow]{len(failures)} could not be read:[/yellow]", markup=False)
+        for sid, err in failures[:10]:
+            console.print(f"    {sid}: {err}", markup=False)
+        if len(failures) > 10:
+            console.print(f"    ...and {len(failures) - 10} more "
+                          f"(all in audit_log, action='study_failed')", markup=False)
 
 
 @app.command()
