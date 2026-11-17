@@ -2607,7 +2607,7 @@ my own that was wrong.
 
 ### 1. `res acquire` — the collection made real
 
-Run with `--confirm` for the first time. **Corrected: 434 full texts obtained, not 1,266.** The
+Run with `--confirm` for the first time. **Corrected: 572 full texts obtained, not 1,266.** The
 1,266 figure was written here while the job was still running and is the number of records with an
 open-access *link*; it was wrong when written. What was fetched came from the links the catalogue
 itself publishes, `%PDF` magic checked on every one, failures recorded rather than hidden — and 832
@@ -2739,7 +2739,7 @@ Suite: **30 passing**.
   is preventive and the declared merges are inert by design.
 - **The inverted-name check reports; it does not fix.** `outc:lower-accuracy-with-explicit-instruction`
   still carries its misleading id in the database, deliberately.
-- **`data-emotion/fulltext/` holds 434 PDFs (not 1,266 — see M45 §1) and is gitignored.** They are third-party
+- **`data-emotion/fulltext/` holds 572 PDFs (not 1,266 — see M45 §1) and is gitignored.** They are third-party
   copyrighted material: do not commit them, and do not redistribute them.
 - **Still nothing screened, still no CMOCs on the new topic, still no countersignature.**
 
@@ -2755,9 +2755,9 @@ in place above, with the superseded value kept beside the corrected one.
 
 ### 1. What was actually obtained: 434, not 1,266
 
-The job exited 0. On disk: **434 PDFs, 331 MB**, every one verified to begin with the `%PDF` magic
-bytes, so nothing HTML was saved as a PDF. **832 of the 1,266 open-access links did not yield a
-file.**
+The job exited 0. The first pass obtained **434 PDFs**; two further passes brought it to **572,
+475 MB**, every one verified to begin with the `%PDF` magic bytes, so nothing HTML was saved as a
+PDF. **694 of the 1,266 open-access links yield no file at all.** §6 has the convergence.
 
 The flow, with the distinction that had been collapsing:
 
@@ -2765,8 +2765,8 @@ The flow, with the distinction that had been collapsing:
 |---|---|---|
 | Candidate records | 1,863 | 100% |
 | Catalogue publishes an OA PDF location | 1,266 | 68% |
-| **PDF downloaded and verified** | **434** | **23%** |
-| OA link that could not be fetched | 832 | 45% |
+| **PDF downloaded and verified** | **572** | **31%** |
+| OA link that could not be fetched | 694 | 37% |
 
 **Why, diagnosed rather than assumed.** One failed URL per publisher host, requested twice — once
 with the pipeline's own User-Agent, once with a browser's:
@@ -2837,9 +2837,41 @@ not arrive at our corpus. Both belong in the limitations section, not a footnote
   whatever `ACQUISITION_REPORT.md` says, and it is generated from the disk.
 - **Do not raise the acquisition rate by changing the User-Agent.** It was tested; it is not the
   cause, and impersonating a browser is not an acceptable method in this paper.
-- **A second acquire pass was running when this entry was written.** Unlike M44, this entry does
-  not state its result. Re-run `scripts/acquisition_report.py` to get the current figure.
+- **The figure is 572 and it converged** (§6). Do not re-run `res acquire` hoping for more; run
+  `scripts/acquisition_report.py` to read the current figure off the disk.
 - Everything still waiting on a person is still waiting: the 21 HITL countersignatures,
   `config-emotion/protocol.yaml` as an unreviewed draft, the four questions in the requirements
   matrix, the AERA reviewer comments, and the report email — drafted in chat this session, for the
   RA to send.
+
+### 6. The retry, and where it converged
+
+Three passes were run, each skipping what was already on disk:
+
+| Pass | Files | Gained |
+|---|---|---|
+| 1 | 434 | — |
+| 2 | 569 | +135 |
+| 3 | 572 | +3 |
+
+**Converged at 572**, 475 MB, 572/572 verified `%PDF`. Do not keep re-running it; the remaining
+694 links are structural failures, not transient ones.
+
+That +135 is the finding, not the 572. **A quarter of the corpus was arriving by an accident of how
+many times the operator happened to re-run a command.** For a pipeline whose paper claims
+reproducibility, a corpus size that depends on operator habit is a defect in the claim, so the
+retry now lives in `acquire_fulltext` rather than in anyone's habits:
+
+- **Retried with backoff:** timeouts, connection errors, 429, 5xx. Bounded at `attempts=3`,
+  exposed as `res acquire --attempts N`.
+- **Not retried, deliberately:** **403**, because the §1 diagnosis established it is a publisher
+  CDN refusing scripted requests and answering a browser's User-Agent identically — a policy, not
+  a fault, and retrying it would be both useless and impolite. And a **200 carrying a landing
+  page**, because that link will never be a file.
+- `tests/test_core_logic.py` locks all three behaviours with a fake `urlopen`: the 503 link is
+  attempted three times, the 403 link once, the landing-page link once, and only the real PDF is
+  written. **31 tests pass.**
+
+The one improvement still unmade is the Unpaywall lookup for the 280 `doi.org` resolvers — the
+largest single failure group. Its API requires a contact email in every request; that is the RA's
+personal data and the RA's decision, not a default for a script to set.

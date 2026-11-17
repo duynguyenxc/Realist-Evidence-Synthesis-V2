@@ -120,7 +120,7 @@ counterpart, 152 do not, 72 of those are a single mention in a single study — 
 `data-emotion/` (gitignored) and `outputs-emotion/` exist; the emotion review runs under **exported**
 env vars — `RES_CONFIG_DIR=config-emotion RES_DATA_DIR=data-emotion RES_OUTPUTS_DIR=outputs-emotion
 POSTGRES_DB=realist_emotion` — never written into `.env`, which is shared with Richmond.
-**1,863 candidate records** (89% abstract, 68% an OA PDF *link* — only **434 full texts actually
+**1,863 candidate records** (89% abstract, 68% an OA PDF *link* — only **572 full texts actually
 download**, see `outputs-emotion/ACQUISITION_REPORT.md`; 274 reviews), from ten blocked
 boolean queries recorded in `config-emotion/protocol.yaml` §`search_strategy` and executed only by
 `scripts/run_protocol_search.py`. `outputs-emotion/SEARCH_REPORT.md` is **generated** by

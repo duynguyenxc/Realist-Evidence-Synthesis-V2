@@ -123,7 +123,7 @@ three Crossref phrase queries as a cross-check into a separate file:
 | Candidate records after deduplication | **1,863** |
 | With an abstract (screenable as they stand) | 1,654 (89%) |
 | With an open-access PDF link | 1,266 (68%) |
-| **Full text actually obtained** | **434 (23%)** |
+| **Full text actually obtained** | **572 (31%)** |
 | With **both** — the pilot can be drawn from here | 1,222 (66%) |
 | Review articles, which you asked for by name in §3 | 274 |
 | Publication years | 1998–2026, median 2023 |
@@ -274,5 +274,5 @@ remaining budget question is screening and extraction.
 
 **One correction to our own plan.** We had filed the whole of deliverable 3 as needing budget.
 Three stages — search, full-text acquisition and ingestion — call no model, so step 5 cost nothing
-and the full texts can also be downloaded for nothing, though only 434 of the 1,266 links yield a file. We had not checked which stages actually
+and the full texts can also be downloaded for nothing, though only 572 of the 1,266 links yield a file. We had not checked which stages actually
 spend credit before saying they all did.
