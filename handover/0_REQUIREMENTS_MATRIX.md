@@ -1,15 +1,13 @@
 # Your assignment, clause by clause
 
-**Duy Nguyen.** A traceability matrix for your email of 30 October 2026.
+Read this first if you want to know what is done. Every row below is something you asked
+for, in the order you asked it, with a status and the file that backs it up. Nothing is
+marked done without something you can open and check.
 
-Read this first if you want to know what is done. Every row is a clause of your email, in
-your order, with a status and the file that substantiates it. Nothing is marked done
-without something to open.
-
-**Status vocabulary.** *Done* — finished, with the artifact named. *Partly done* — the part
-that could be done without spending has been, and the row says what is left and why.
-*Blocked* — the obstacle is named, with its price where it has one. *Yours* — it needs your
-judgement, not our work.
+A word on the four statuses I use. **Done** means finished, with the file named. **Partly
+done** means the part we could do without spending has been done, and the row says what is
+left and why. **Blocked** means the obstacle is named, with its price where it has one.
+**Yours** means it needs your judgement rather than our work.
 
 ---
 
@@ -46,7 +44,7 @@ like to have. All in [`2_WHAT_THE_NEW_TOPIC_NEEDS.md`](2_WHAT_THE_NEW_TOPIC_NEED
 | Your words | Status | Where / what we found |
 |---|---|---|
 | The four recommended references, "to establish the initial theoretical and methodological foundations" | **Done** | `config-emotion/initial_programme_theory.yaml` is built from Pekrun 2006 and Gross 1998; Brackett 2012 and Durlak 2011 are both **in the pool** |
-| "ask our AI pipeline to conduct a broader literature search" | **Done, 16 November, at no cost** | **1,863 candidate records**, 89% with an abstract, 68% with a free full text. [`SEARCH_REPORT.md`](../outputs-emotion/SEARCH_REPORT.md) |
+| "ask our AI pipeline to conduct a broader literature search" | **Done, at no cost** | **1,863 candidate records**, 89% with an abstract, 68% with a free full text. [`SEARCH_REPORT.md`](../outputs-emotion/SEARCH_REPORT.md) |
 | "identifying additional relevant systematic reviews, realist reviews, experimental studies, and educational intervention studies" | **Done** | 274 review articles; 388 experimental or quasi-experimental; 317 qualitative. [`EVIDENCE_MAP.md`](../outputs-emotion/EVIDENCE_MAP.md) |
 | "focus on higher education, particularly STEM education" | **Done — and it raises a question for you** | 1,088 records are higher education. But engineering, computing and the natural sciences together account for **51**. Mathematics (mostly maths anxiety) accounts for 108. **See Question 1 below.** |
 | "emotional awareness, emotional regulation, achievement emotions, emotional intelligence, self-regulated learning, motivation, engagement, and academic outcomes" | **Done** | All eight are named verbatim in `config-emotion/protocol.yaml` and all eight are counted in the evidence map |
@@ -104,7 +102,7 @@ studies and are not mixed into the corpus.
 
 The review is done, the preparation is done, **the literature search is done**. The pilot
 study is not, and that is the honest gap: it is the first step that spends money, and the
-project has had no budget since 13 November. [`COST_MODEL.md`](../outputs-emotion/COST_MODEL.md)
+project has no budget at present. [`COST_MODEL.md`](../outputs-emotion/COST_MODEL.md)
 prices it from the actual prompts rather than guessing — a three-paper pilot is about $5,
 and it would replace every estimate in that file with a measurement.
 

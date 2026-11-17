@@ -1,9 +1,8 @@
 # Applying the pipeline to emotional awareness and regulation
 
-**Duy Nguyen.** Deliverable 2 of the 2026-10-30 assignment.
-
-Your section 2 asked seven questions and a step-by-step plan. Each answer below is tied to code
-that exists, not to what the system might do. Where the honest answer is "we cannot yet", it says so.
+You asked seven questions and a step-by-step plan. Each answer below is tied to code that
+already exists rather than to what the system might one day do, and where the honest answer
+is "we cannot yet", it says so.
 
 A draft configuration for this topic has already been written — `config-emotion/` in the
 repository — so the answers point at real files you can read and correct.
@@ -18,7 +17,7 @@ repository — so the answers point at real files you can read and correct.
 |---|---|
 | Review question and eligibility criteria | Drafted — `config-emotion/protocol.yaml`. **Needs your review**: these criteria decide what the review is *about* |
 | Initial programme theory | Drafted — `config-emotion/initial_programme_theory.yaml`, built from the four references you named |
-| A corpus | The pipeline can now build it. A trial search on 6 November pooled 160 records and kept 158 after deduplication |
+| A corpus | The pipeline can now build it. An early trial search pooled 160 records and kept 158 after deduplication |
 | Domain expertise in prompts | Drafted — `config-emotion/agents.yaml` |
 
 **What needs to be arranged rather than written:** a separate database, so a new topic cannot
@@ -49,7 +48,7 @@ emotions; excluding purely correlational studies with no intervention, and clini
 diagnosed disorders.
 
 **A check against your email, and four things it caught.** The draft was written from your
-assignment, then checked back against it item by item on 13 November. Four things you name
+assignment, then checked back against it item by item. Four things you name
 explicitly were missing and have been added: **emotional awareness prompts** and **self-regulation
 activities** as intervention types, and **prior experiences** and **emotional challenges** as
 context dimensions. All eight topics you list in section 3 and all nine examples you give in
@@ -103,7 +102,7 @@ be calibration rather than result.**
 
 ## 5. How to find, retrieve and organise the publications
 
-Built on 6 November, **run for the first time on 16 November**:
+Built earlier this month and **run for the first time now**:
 
 - **Search** — OpenAlex and Crossref, both open catalogues, so a reader of the paper can repeat our
   search without a subscription; Scopus and Web of Science cannot offer that. OpenAlex has
@@ -115,7 +114,7 @@ Built on 6 November, **run for the first time on 16 November**:
 - **Full text** — only open-access copies the catalogue itself links. How many full texts were
   obtainable, and how many were not, is a finding about the evidence base and will be reported
 
-**The real run, 16 November.** Ten blocked boolean queries — construct × population ×
+**The real run.** Ten blocked boolean queries — construct × population ×
 intervention, which is the pattern published higher-education reviews of this construct use — plus
 three Crossref phrase queries as a cross-check into a separate file:
 
@@ -202,7 +201,7 @@ is. The difference is everything in the paragraph above, none of which the singl
 
 ## 8. What the literature says about doing this with AI, and where it leaves us
 
-Searched 13 November. Two findings matter more than the rest, and both are favourable.
+Two findings matter more than the rest, and both are favourable.
 
 **No peer-reviewed evaluation of LLM-based CMOC extraction against human realist reviewers
 appears to exist.** The LLM-and-systematic-review literature has grown quickly, but it is almost
@@ -262,7 +261,7 @@ Ordered so the cheapest and most informative steps come first. Steps 1–4 cost 
 | 2 | Countersign the Richmond review checkpoints, closing the gap in §3 of deliverable 1 | ~15 min, Duy |
 | 3 | Make the Richmond comparison computed rather than hand-written | — |
 | 4 | Test whether the recurring patterns are more than chance (null-model significance) | — |
-| 5 | ~~Create the separate database and run the literature search~~ **done 16 Nov** | Cost **$0**, not "small API cost" as we first wrote |
+| 5 | ~~Create the separate database and run the literature search~~ **done** | Cost **$0**, not "small API cost" as we first wrote |
 | 6 | **Pilot of 10–15 papers**, reporting the measured cost before going further | API budget |
 | 7 | Full extraction, synthesis, knowledge graph | API budget |
 | 8 | Preliminary synthesis and progress report | — |

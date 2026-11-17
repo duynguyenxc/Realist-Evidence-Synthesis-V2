@@ -97,7 +97,7 @@ The Crossref cross-check ran 3 queries and returned **529** unique records, of w
 
 ## Not done, and why
 
-- Screening has not been run. `res screen` is the first stage that calls a model, and the project has no API budget as of 2026-11-13. The pool below is therefore a CANDIDATE POOL, not an included corpus, and no eligibility decision in this protocol has been applied to a single record.
+- Screening has not been run. `res screen` is the first stage that calls a model, and the project has no API budget at present. The pool below is therefore a CANDIDATE POOL, not an included corpus, and no eligibility decision in this protocol has been applied to a single record.
 - Iteration has not happened. The posture above promises a search revised as the programme theory sharpens; that requires at least one screening and extraction cycle to sharpen it. This is round one of what should be several.
 - Citation-chasing and grey literature are not covered. Both are standard in realist reviews and both need either full texts or hand searching.
 

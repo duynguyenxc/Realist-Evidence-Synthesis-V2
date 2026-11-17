@@ -72,10 +72,19 @@ def test_relation_demotion_preserves_untyped_candidate():
 # record, which M38 found had already been silently overwritten once.
 # ---------------------------------------------------------------------------
 def _reload_config(monkeypatch, **env):
-    """Re-import config under a patched environment; paths resolve at import."""
+    """Re-import config under a patched environment; paths resolve at import.
+
+    Every variable the config reads is cleared first, POSTGRES_DB included. It used not
+    to be, and the isolation test below then passed or failed depending on the developer's
+    shell: anyone who had exported ``POSTGRES_DB=realist_emotion`` to work on the second
+    review saw a red suite, because the combination the test asserts is fatal — config
+    overridden, database not — could no longer occur. A test whose result depends on who
+    is running it is worse than no test, since the next person debugs the wrong thing.
+    """
     import importlib
 
-    for key in ("RES_CONFIG_DIR", "RES_DATA_DIR", "RES_GOLD_DIR", "RES_OUTPUTS_DIR"):
+    for key in ("RES_CONFIG_DIR", "RES_DATA_DIR", "RES_GOLD_DIR", "RES_OUTPUTS_DIR",
+                "POSTGRES_DB"):
         monkeypatch.delenv(key, raising=False)
     for key, value in env.items():
         monkeypatch.setenv(key, value)

@@ -1,9 +1,8 @@
 # What we built, and where everything is
 
-**Duy Nguyen.** Deliverable 1 of the 2026-10-30 assignment.
-
-This answers your first request: organise and provide everything developed for the Richmond
-benchmark. It assumes no familiarity with the system.
+This answers your first request — organise and provide everything we developed for the
+Richmond benchmark. It assumes no familiarity with the system, so if a section tells you
+something you already know, skip it.
 
 ---
 
@@ -12,7 +11,7 @@ benchmark. It assumes no familiarity with the system.
 **Stage: the Richmond benchmark is complete and verified; the new topic now has a literature pool
 and is waiting on screening, which is where cost begins.** In the terms of your assignment,
 sections 1 and 2 are done — this document and the next are those — the search in section 3 ran on
-16 November at no cost, and sections 4 to 6 need screening and extraction, which need API budget
+at no cost, and sections 4 to 6 need screening and extraction, which need API budget
 the project does not have.
 
 | | |
@@ -20,8 +19,8 @@ the project does not have.
 | Richmond benchmark | **Complete.** Ran end to end twice; 28 papers, 94 configurations, 547 quoted elements, verified against your benchmark |
 | The five review checkpoints | **Performed, awaiting a human countersignature.** All 20 contradictions resolved and the programme theory signed, recorded as AI-performed under your section 5 delegation |
 | New topic configuration | **Drafted, not reviewed.** `config-emotion/` holds the review protocol, the initial programme theory built from your four references, and rewritten agent personas |
-| New topic corpus | **Candidate pool collected, 16 November; described, 17 November.** 1,863 records, 89% with an abstract, 68% with a free full text, plus a separate 445-record theory pool. Nothing screened — no eligibility criterion has been applied to any record |
-| What the pool is about | **Coded 17 November against Pekrun's and Gross's categories, without a model.** `outputs-emotion/EVIDENCE_MAP.md`. Three findings in it change what the review should be, and are Questions 1–3 in the requirements matrix |
+| New topic corpus | **Candidate pool collected and described.** 1,863 records, 89% with an abstract, 68% with a free full text, plus a separate 445-record theory pool. Nothing screened — no eligibility criterion has been applied to any record |
+| What the pool is about | **Coded against Pekrun's and Gross's categories, without a model.** `outputs-emotion/EVIDENCE_MAP.md`. Three findings in it change what the review should be, and are Questions 1–3 in the requirements matrix |
 | Conference paper | **Accepted to AERA 2027** on 6 November. Reviewer comments not yet read |
 
 **What changed in the three weeks since your email:** the pipeline gained a literature search it
@@ -68,7 +67,7 @@ verbatim_quote  "The other 24 had basic relevant knowledge that was, however,
                  incomplete and error-prone."
 ```
 
-Checked on 11 November against the source texts: **546 of 547 quotes (99.8%) occur in the paper
+Checked against the source texts: **546 of 547 quotes (99.8%) occur in the paper
 they are attributed to** — 414 exactly, 104 more once PDF extraction artefacts (ligatures,
 hyphenation) are normalised, 28 as partial matches. One cannot be located and is recorded as such.
 
@@ -89,13 +88,13 @@ Everything is in one repository: **https://github.com/duynguyenxc/Realist-Eviden
 |---|---|
 | `src/res_pipeline/` | The pipeline. `core/` is infrastructure, `plugins/realist/` is the realist method, `verification/` is the scoring harness — deliberately separate, so scoring cannot influence the pipeline |
 | `docs/ARCHITECTURE.md` | The design decisions and why each was made |
-| `README.md` | Start here. Rewritten 10 November; the previous version described a stack we never built, which is corrected in §3 below |
+| `README.md` | Start here. Rewritten; the previous version described a stack we never built, which is corrected in §3 below |
 
 ### Agents, prompts, schemas, configurations
 | | |
 |---|---|
 | `config/agents.yaml` | The 8 agents and the 5 human checkpoints |
-| `config/prompts/` | **The prompts.** Until 4 November all 24 were buried in ten source files. Ten are now plain text in YAML here; another eleven are built from `protocol.yaml` and `agents.yaml`, so **21 of 24 can be rewritten for a new topic without editing code**. Three are assembled at run time from the batch being processed and remain in code |
+| `config/prompts/` | **The prompts.** Until recently all 24 were buried in ten source files. Ten are now plain text in YAML here; another eleven are built from `protocol.yaml` and `agents.yaml`, so **21 of 24 can be rewritten for a new topic without editing code**. Three are assembled at run time from the batch being processed and remain in code |
 | `config/ontology.yaml` | The 5 entity types and 5 relation predicates — the grammar the extractor must obey |
 | `config/protocol.yaml` | Review question and eligibility criteria |
 | `config/initial_programme_theory.yaml` | The theory the review sets out to test |
@@ -116,7 +115,7 @@ Everything is in one repository: **https://github.com/duynguyenxc/Realist-Eviden
 | `gold/richmond_gold_v3.json` | Your benchmark: Richmond's 46 concepts, 40 relations, 5 programme-theory statements, encoded for scoring |
 | `docs/VERIFICATION_PROTOCOL.md` | Why each statistic was chosen, with citations, and what is still missing |
 | `docs/MACHINE_VS_HUMAN.md` | **The central comparison** — the system against the two human coders |
-| `outputs/SEND_TO_PROFESSOR/` | The report package, corrected 10 November |
+| `outputs/SEND_TO_PROFESSOR/` | The report package, with the corrected figures |
 
 ### The conference paper
 Accepted to **AERA 2027** on 6 November (Division D, roundtable "AI as a Methodological Tool",
@@ -127,7 +126,7 @@ they may bear on everything below, and they are the first thing I will read once
 
 The repository has been worked on for ten months and some documents describe a version of the
 system that no longer exists. Rather than delete them, which would destroy the record of how the
-project reached its current state, each has been marked. Audited 13 November, file by file:
+project reached its current state, each has been marked. Audited file by file:
 
 | | |
 |---|---|
@@ -191,7 +190,7 @@ old figures and this error.** The deadline for programme changes is 5 March 2027
 
 The progress report has these in full, with what was done about each. In short:
 
-**Closed since 2 November, by doing the work rather than reporting it:** the comparison with your
+**Closed by doing the work rather than reporting it:** the comparison with your
 conclusions is now computed rather than hand-written; the recurring patterns have been tested
 against chance; the graph has been checked for internal contradictions; and what can be measured
 about precision without budget has been measured.
@@ -226,7 +225,7 @@ For a new topic it needs four things, and only the fourth is substantial:
 
 1. **A review question and eligibility criteria** — `protocol.yaml`.
 2. **An initial programme theory** — the hypotheses to test, from established theory.
-3. **A corpus.** Since 6 November the pipeline can build this itself: `res search` queries OpenAlex
+3. **A corpus.** The pipeline can now build this itself: `res search` queries OpenAlex
    and Crossref, deduplicates, and writes the corpus definition. Previously papers were supplied by
    hand.
 4. **Domain expertise in the prompts** — the agent personas currently describe clinical reasoning

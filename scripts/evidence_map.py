@@ -189,7 +189,7 @@ def main() -> int:
             w(f"| {label}{star} | {c} | {_pct(c, n)} | {carried} |")
         w("")
         if any(spec.get("named_by_professor") for _l, _p, spec in cats.values()):
-            w("★ = named by example in the assignment of 2026-10-30.")
+            w("★ = named by example in your email.")
             w("")
 
     # --- the cross-tabulations that matter --------------------------------------

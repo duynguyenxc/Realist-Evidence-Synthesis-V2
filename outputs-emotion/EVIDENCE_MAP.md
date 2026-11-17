@@ -32,7 +32,7 @@ Coverage caveat: **1654 of 1863 records (89%) have an abstract.** The rest are m
 | Emotional awareness prompts ★ | 6 | 0% | `emotional awareness training` 3, `mood meter` 1, `emotion labeling` 1 |
 | Emotion-vocabulary and feeling-words curricula | 5 | 0% | `feeling words` 2, `ruler approach` 2, `emotional literacy curriculum` 1 |
 
-★ = named by example in the assignment of 2026-10-30.
+★ = named by example in your email.
 
 ## Mechanism families
 
@@ -98,7 +98,7 @@ Coverage caveat: **1654 of 1863 records (89%) have an abstract.** The rest are m
 | Student characteristics ★ | 72 | 4% | `gender difference` 39, `international student` 8, `at-risk student` 4 |
 | Prior experiences ★ | 11 | 1% | `previous experience` 3, `prior knowledge` 3, `prior experience` 2 |
 
-★ = named by example in the assignment of 2026-10-30.
+★ = named by example in your email.
 
 ## Disciplines
 

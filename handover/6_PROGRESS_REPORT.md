@@ -1,8 +1,6 @@
 # Progress report
 
-**Duy Nguyen.** Deliverable 6 of the 2026-10-30 assignment.
-
-Covering the period since your email. Short version: deliverables 1, 2 and 6 are complete and
+Short version: deliverables 1, 2 and 6 are complete and
 attached, and **the literature search for the new topic has now been run** — 1,863 candidate
 records, at no cost, which is the first half of deliverable 3. Deliverables 4 and 5, and the
 second half of 3, need screening and extraction, which is where the pipeline begins to spend
@@ -18,7 +16,7 @@ You asked us to *"begin by reviewing the existing pipeline with AI and determini
 prepare"*. That review is deliverables 1 and 2. It found more than expected, recorded below.
 
 ### The pipeline gained three capabilities it did not have
-- **Literature search.** Before 6 November the pipeline had no search of any kind — Richmond's 28
+- **Literature search.** Until recently the pipeline had no search of any kind — Richmond's 28
   papers had been supplied by hand. It now searches OpenAlex and Crossref, deduplicates by DOI and
   title as a reportable stage, and logs every query so the search can be repeated by a reader.
 - **Full-text acquisition**, restricted to open-access copies the catalogue itself links.
@@ -30,7 +28,7 @@ prepare"*. That review is deliverables 1 and 2. It found more than expected, rec
   human ratifies it.
 
 ### The literature search has been run, and it found four defects first
-On 16 November we established that three pipeline stages — search, full-text acquisition and
+We established that three pipeline stages — search, full-text acquisition and
 ingestion — call no model and therefore cost nothing. Deliverable 3 had been filed as
 budget-blocked in its entirety; half of it was not.
 
@@ -61,7 +59,7 @@ would be correct rather than a failure. All four came out as predicted. We note 
 mechanical check would have called the search broken on the two theory papers.
 
 ### Three findings about the literature, from reading the pool without a model
-On 17 November we coded every record's title and abstract against a dictionary built from the
+We coded every record's title and abstract against a dictionary built from the
 frameworks your references point to — Gross's five emotion-regulation families as integrated for
 achievement settings by Harley, Pekrun, Taxer & Gross (2019), and Pekrun's control-value taxonomy
 of achievement emotions — plus your own lists of interventions and context dimensions, verbatim.
@@ -207,7 +205,7 @@ to adjudicate one.
    report would need a re-run (~$3).
 8. **One benchmark.** Richmond alone cannot separate "performs realist synthesis" from "fits
    Richmond". This needs a second published review and a full run.
-9. ~~**No cost history.**~~ **Closed 17 November.** The claim was that a run's cost "can be
+9. ~~**No cost history.**~~ **Closed.** The claim was that a run's cost "can be
    measured but not estimated". The first half is true — `token_usage` was emptied by a database
    restore — but a projection needs the prompt, the text and the prices, and all three are in the
    repository. [`outputs-emotion/COST_MODEL.md`](../outputs-emotion/COST_MODEL.md) now prices
@@ -252,7 +250,7 @@ to adjudicate one.
 5. Re-run verification so every figure reflects the corrected scoring (~$3).
 6. The rejection test — does the screening discriminate, or is it merely permissive (~$3).
 7. A second model family on a sample — are these findings one vendor's opinion (~$8).
-8. ~~The literature search~~ — **done on 16 November, at no cost.** What remains is the
+8. ~~The literature search~~ — **done, at no cost.** What remains is the
    10–15 paper pilot: screening and extraction on a sample, reporting measured cost before going
    further. 1,222 of the 1,863 records have both an abstract to screen and an open-access PDF to
    extract from, so the pilot can be drawn without buying anything but model calls.

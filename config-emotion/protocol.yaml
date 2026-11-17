@@ -289,7 +289,7 @@ search_strategy:
   not_done_and_why:
     - >
       Screening has not been run. `res screen` is the first stage that calls a
-      model, and the project has no API budget as of 2026-11-13. The pool below is
+      model, and the project has no API budget at present. The pool below is
       therefore a CANDIDATE POOL, not an included corpus, and no eligibility
       decision in this protocol has been applied to a single record.
     - >
