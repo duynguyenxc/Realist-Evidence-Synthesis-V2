@@ -653,3 +653,48 @@ def test_acquire_retries_only_what_can_plausibly_succeed(tmp_path, monkeypatch):
     written = sorted(p.name for p in tmp_path.glob("*.pdf"))
     assert written == ["10.1_flaky.pdf"], "only the real PDF may be written"
     assert (tmp_path / "10.1_flaky.pdf").read_bytes().startswith(b"%PDF")
+
+
+def test_a_typed_name_is_recorded_as_a_human_and_does_not_recurse():
+    """`_actor` called itself with the same argument, so every countersignature 500'd.
+
+    Found on 2026-11-17 when the RA tried to countersign the 21 AI-performed decisions
+    and every Confirm returned an error. The docstring says a bare name "keeps the
+    `human:` prefix"; the code said `else _actor(reviewer)`, which recurses on an
+    unchanged argument until the stack ends. So the countersignature route had never
+    once succeeded — the checkpoints were not unsigned because nobody had sat down to
+    sign them, they were unsigned because signing was impossible.
+
+    The prefix is what the whole audit trail rests on: it is how the database tells an
+    AI-performed checkpoint from a human one, which this project has already had to
+    settle twice by hand. A bare name must become `human:<name>`, and a string that
+    already names its actor class must pass through untouched.
+    """
+    from res_pipeline.webui import _actor
+
+    assert _actor("Duy Nguyen") == "human:Duy Nguyen"
+    assert _actor("  Duy Nguyen  ") == "human:Duy Nguyen"
+    assert _actor("ai-ra:claude(delegated)") == "ai-ra:claude(delegated)"
+    assert _actor("expert:claude(x)") == "expert:claude(x)"
+    assert _actor("") == "human:"
+
+
+def test_every_human_action_button_states_its_own_text_colour():
+    """`.btn.human` set a background and left `color` to `.human`, which sets the same hue.
+
+    `.btn` gives every button `color:var(--paper)`. `.btn.human` then overrode only the
+    background — but `.human`, defined later at equal specificity, sets
+    `color:var(--human)`, the very colour `.btn.human` had just painted behind it. Every
+    button a person is meant to press (Include, Save resolution, Sign off, Confirm,
+    Countersign, Ratify) rendered as a blank orange rectangle, which is how the RA found
+    it: "a button with no text on it".
+    """
+    import re
+
+    from res_pipeline import webui
+
+    rule = re.search(r"\.btn\.human\{([^}]*)\}", webui._STYLE)
+    assert rule, "`.btn.human` rule not found"
+    assert "color:" in rule.group(1), (
+        "`.btn.human` must restate `color`; `.human` sets it to the button's own "
+        "background colour later in the stylesheet")

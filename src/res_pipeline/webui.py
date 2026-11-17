@@ -227,7 +227,7 @@ h3{font-family:'Iowan Old Style',Georgia,serif;font-weight:600;font-size:1.15rem
   border:1px solid var(--machine);background:var(--machine);color:var(--paper)}
 .btn:hover{filter:brightness(1.06)}
 .btn.ghost{background:transparent;color:var(--machine)}
-.btn.human{background:var(--human);border-color:var(--human)}
+.btn.human{background:var(--human);border-color:var(--human);color:var(--paper)}  /* the colour MUST be restated: `.human` below also sets `color`, at equal specificity and later in the file, so without this the label is drawn in the button's own background colour and every human action button goes blank. */
 .btn:disabled{opacity:.4;cursor:not-allowed;filter:none}
 .btn.sm{padding:.35rem .7rem;font-size:.8rem}
 .cost{font-size:.72rem;color:var(--warn);font-weight:700;margin-left:.4rem}
@@ -1132,7 +1132,7 @@ def _actor(reviewer: str) -> str:
     form, so it keeps the ``human:`` prefix.
     """
     reviewer = (reviewer or "").strip()
-    return reviewer if _ACTOR_PREFIX.match(reviewer) else _actor(reviewer)
+    return reviewer if _ACTOR_PREFIX.match(reviewer) else f"human:{reviewer}"
 
 
 @app.post("/review/screen")
