@@ -479,3 +479,112 @@ def test_metadata_keeps_the_open_access_link_acquire_needs():
     paywalled = Candidate(source="openalex", source_id="W2", doi="10.1/y", title="t",
                           open_access=False, url="https://doi.org/10.1/y").to_metadata()
     assert paywalled["oa_pdf_url"] is None, "a landing page must not pass as an OA PDF"
+
+
+def test_normalisation_folds_cross_batch_synonyms_but_never_across_polarity():
+    """Batching left synonyms apart; the fix must not take polarity with it.
+
+    `_batched_cluster` clusters labels 40 at a time and unions clusters across
+    batches only when their canonical labels match exactly, so two synonyms named
+    slightly differently in different batches survived as two one-instance concepts.
+    Measured consequences in the Richmond run: its single causal cycle (three
+    near-synonyms of self-explanation) and five of the thirteen defects found by
+    adjudicating the 79 single-mention concepts.
+
+    The dangerous fix is a plain subset rule, because "prior knowledge" is a subset
+    of "low prior knowledge" and merging those two destroys the distinction the
+    review is built on — the same error the verification matcher made until
+    2026-11-04 when it accepted "high clinical knowledge" for "knowledge deficits".
+    So the guard is tested here alongside the merge.
+    """
+    from res_pipeline.plugins.realist.normalization import _reconcile_clusters
+
+    # subset merge, with no declared entry involved
+    out = _reconcile_clusters(
+        [("reasoning strategy instruction", ["a"]), ("strategy instruction", ["b"])],
+        entity_type="Intervention")
+    assert len(out) == 1, out
+    assert set(out[0][1]) == {"a", "b"}, "members must be carried across, not dropped"
+
+    # polarity and degree differences block the merge however much they overlap
+    for pair in (("low prior knowledge", "prior knowledge"),
+                 ("improved diagnostic accuracy", "diagnostic accuracy"),
+                 ("unfamiliar clinical cases", "clinical cases"),
+                 ("novice learners", "learners")):
+        out = _reconcile_clusters([(pair[0], ["x"]), (pair[1], ["y"])],
+                                  entity_type="Context")
+        assert len(out) == 2, f"{pair} must NOT merge, got {out}"
+
+
+def test_declared_merges_can_join_labels_sharing_no_words():
+    """The mechanical rule cannot see that two unrelated strings are one concept.
+
+    "undergraduate medical students" and "novice learners" share no content word,
+    so no subset rule reaches them, and in the Richmond run they became two
+    Context concepts for the same population — one of them matched to the gold
+    standard's E01 and the other not. `config/concept_merges.yaml` is where a
+    person declares that, with a reason, and this test holds the mechanism that
+    reads it.
+    """
+    from res_pipeline.core.config import load_yaml_config
+    from res_pipeline.plugins.realist.normalization import _reconcile_clusters
+
+    cfg = load_yaml_config("concept_merges")
+    assert cfg["merges"], "the declared-merge file must not be empty of structure"
+    assert cfg["polarity_and_degree_guards"], "the guard list is what makes rule 2 safe"
+
+    out = _reconcile_clusters(
+        [("novice learners", ["a"]), ("undergraduate medical students", ["b"])],
+        entity_type="Context")
+    assert len(out) == 1 and out[0][0] == "novice learners", out
+    assert set(out[0][1]) == {"a", "b"}
+
+
+def test_polarity_guard_survives_a_missing_config(monkeypatch):
+    """A missing optional config must not switch a safety check off.
+
+    The first version of `_reconcile_clusters` read its polarity guards only from
+    `concept_merges.yaml`. A second review whose config directory lacked that file
+    would therefore have run the subset rule with an empty guard set and merged
+    "prior knowledge" into "low prior knowledge" — the config's absence silently
+    removing the protection rather than the declarations. The guard list now has a
+    floor in code that config can only extend.
+    """
+    from res_pipeline.plugins.realist import normalization as nz
+
+    monkeypatch.setattr(nz, "_merge_config", lambda: {})
+    out = nz._reconcile_clusters(
+        [("low prior knowledge", ["x"]), ("prior knowledge", ["y"])], entity_type="Context")
+    assert len(out) == 2, f"guard must hold with no config at all, got {out}"
+
+    # and the subset rule is still alive in that state
+    out = nz._reconcile_clusters(
+        [("reasoning strategy instruction", ["a"]), ("strategy instruction", ["b"])],
+        entity_type="Intervention")
+    assert len(out) == 1, out
+
+
+def test_a_canonical_name_that_contradicts_its_members_is_flagged():
+    """Nothing checked that the name the clustering agent chooses agrees with its members.
+
+    Richmond's run contains an outcome whose instance label is "lower accuracy THAN
+    explicit combined instruction" — correct, and supported by its quote — renamed by
+    normalisation to "lower accuracy WITH explicit instruction", which asserts the
+    opposite of what S005 found. Reading the source paper is what exposed it: S005
+    instructed one arm and left the other to reason spontaneously, and the instructed arm
+    did better. The name cannot be repaired automatically without guessing which side is
+    right, so it must at least be reported.
+    """
+    from res_pipeline.plugins.realist.normalization import (
+        _GUARDS_FLOOR, _warn_on_inverted_names)
+
+    flagged = _warn_on_inverted_names(
+        [("lower accuracy with explicit instruction",
+          ["lower accuracy than explicit combined instruction"])],
+        _GUARDS_FLOOR)
+    assert flagged, "an inverted canonical name must be flagged"
+
+    # and a name that merely generalises its members is not flagged
+    assert not _warn_on_inverted_names(
+        [("immediate feedback", ["spaced immediate feedback", "immediate feedback on answers"])],
+        _GUARDS_FLOOR)

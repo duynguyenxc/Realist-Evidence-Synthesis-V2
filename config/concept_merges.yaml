@@ -1,0 +1,120 @@
+# =============================================================================
+# Researcher-declared concept merges, applied after the normalisation agent has
+# clustered labels and before canonical ids are assigned.
+#
+# WHY THIS FILE EXISTS
+# `_batched_cluster` in plugins/realist/normalization.py clusters labels in
+# batches of 40 and then unions clusters across batches ONLY when their canonical
+# labels match exactly. Two synonymous labels that land in different batches and
+# are given slightly different canonical names therefore stay apart, and nothing
+# downstream notices: they become two nodes in the cross-study graph, each with a
+# single supporting instance, and the pair looks like two rare concepts rather
+# than one ordinary one.
+#
+# That is not a hypothesis. It is the measured cause of two findings in the
+# Richmond run: the one causal cycle in `graph_consistency.json`
+#   mech:active-reasoning-and-self-explanation -> mech:knowledge-elaboration
+#   -> mech:self-explanation -> ...
+# which is three near-synonyms left separate; and five of the thirteen defects
+# found when the 79 single-mention concepts were adjudicated one by one
+# (`outputs/analysis/singles_adjudication.json`, verdict `over_split`).
+#
+# A deterministic subset rule in normalization.py now catches the clearest cases
+# automatically. It cannot catch synonyms that share no words -- "undergraduate
+# medical students" and "novice learners" -- and it deliberately refuses to merge
+# labels that differ in polarity or degree, because "prior knowledge" and "low
+# prior knowledge" are different concepts and merging them would destroy exactly
+# the distinction a realist review is built on. Those cases belong here, declared
+# by a person.
+#
+# HOW TO USE IT
+# Each entry names the canonical label to KEEP and the labels to fold into it.
+# Matching is on the normalised label (lowercase, punctuation to spaces), so case
+# and hyphenation do not matter. A declared merge is an analytic decision under
+# RAMESES II transparency: give the reason.
+#
+# RICHMOND'S ENTRIES ARE RECORDED BUT INERT. The Richmond run must never be
+# re-run (CLAUDE.md, WALKTHROUGH M39 §4), so nothing here changes its published
+# figures. They are written down so the defect is on the record and so that any
+# future corpus does not reproduce it.
+# =============================================================================
+
+version: "1.0"
+
+merges:
+  # ---- Richmond: recorded, inert. Will not be applied; the run is frozen. ----
+  - keep: active reasoning and self-explanation
+    fold: [self-explanation, knowledge elaboration]
+    entity_type: Mechanism_Resource
+    corpus: richmond
+    reason: >
+      These three are one mechanism. Left separate, they formed the only causal
+      cycle in the Richmond graph. The subset rule now catches
+      "self-explanation" automatically; "knowledge elaboration" shares no word
+      with either and needs declaring.
+  - keep: novice learners
+    fold: [undergraduate medical students]
+    entity_type: Context
+    corpus: richmond
+    reason: >
+      The second is a description of the first, not a different population.
+      Richmond's gold entity E01 maps onto "novice learners", so the split put a
+      matched concept and an unmatched one side by side for the same students.
+  - keep: self-directed virtual patient cases
+    fold: [self-directed virtual patient access, self-directed case access]
+    entity_type: Intervention
+    corpus: richmond
+    reason: >
+      Three concepts carved out of one sentence in S011. The first two are the
+      same type and the same quote, which is a duplicate rather than a judgement
+      call; the third is the resource reading of it and would be defensible on
+      its own, but not alongside both.
+  - keep: immediate feedback
+    fold: [immediate feedback on reasoning, item-level feedback access]
+    entity_type: Mechanism_Resource
+    corpus: richmond
+    reason: >
+      One resource at three granularities, two of them from the same study
+      (S027). Feedback timing and feedback granularity may well turn out to be
+      distinct mechanisms, but that is a finding to establish deliberately, not
+      an artifact of which batch a label landed in.
+
+# Words that block an automatic subset merge. If one label carries one of these
+# and the other does not, the labels are NOT merged however much they overlap,
+# because the difference between them is the whole point. This list is the same
+# lesson as the matcher defect of 2026-11-04, where a scoring pass accepted
+# "high clinical knowledge" as a match for "knowledge deficits".
+polarity_and_degree_guards:
+  - high
+  - low
+  - higher
+  - lower
+  - increased
+  - decreased
+  - reduced
+  - improved
+  - poorer
+  - poor
+  - better
+  - worse
+  - greater
+  - less
+  - fewer
+  - more
+  - novice
+  - expert
+  - experienced
+  - inexperienced
+  - positive
+  - negative
+  - absent
+  - present
+  - with
+  - without
+  - no
+  - non
+  - un
+  - familiar
+  - unfamiliar
+  - correct
+  - incorrect

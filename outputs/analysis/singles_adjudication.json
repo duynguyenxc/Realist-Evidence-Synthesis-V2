@@ -1,0 +1,643 @@
+{
+ "cont:clinical-case-summaries": {
+  "verdict": "local",
+  "reason": "A 300-word case-summary format specific to S020's materials.",
+  "type": "Context",
+  "label": "clinical case summaries",
+  "study": "S020",
+  "quote": "Case summaries, approximately 300 words, included the chief complaint, patient’s background, medical history, physical examination and the results of laboratory tests."
+ },
+ "cont:curriculum-and-assessment-content": {
+  "verdict": "local",
+  "reason": "Arterial hypertension's place in one semester's curriculum and MCQ.",
+  "type": "Context",
+  "label": "arterial hypertension in curriculum and assessment",
+  "study": "S006",
+  "quote": "Arterial hypertension is part of the curriculum during this semester and is also part of a regular multiple-choice question (MCQ) test."
+ },
+ "cont:decision-making-preparedness": {
+  "verdict": "general",
+  "reason": "Students feeling unprepared to decide as FY1s is a transferable context.",
+  "type": "Context",
+  "label": "students feeling unprepared for FY1 decision making",
+  "study": "S015",
+  "quote": "Despite extended shadowing programmes, students feel unprepared for clinical decision making as FY1s, and lack effective decision making strategies."
+ },
+ "cont:dermatology-diagnosis": {
+  "verdict": "local",
+  "reason": "A single clinical domain, taken from the paper's title.",
+  "type": "Context",
+  "label": "dermatological diagnosis domain",
+  "study": "S001",
+  "quote": "Coordination of Analytic and Similarity-Based Processing Strategies and Expertise in Dermatological Diagnosis"
+ },
+ "cont:diagnostic-back-tracing": {
+  "verdict": "role",
+  "reason": "A reasoning process typed as a Context. It is what the learner DOES, so it belongs under mechanism.",
+  "type": "Context",
+  "label": "data abnormality cascade for back-tracing",
+  "study": "S009",
+  "quote": "trace back through a cascade of data abnormalities, using logic to connect them to underlying mechanisms of disease"
+ },
+ "cont:diagnostic-error-records": {
+  "verdict": "local",
+  "reason": "Records of errors discovered after treatment, specific to S023's case library.",
+  "type": "Context",
+  "label": "discovered diagnostic errors in records",
+  "study": "S023",
+  "quote": "Diagnostic error, discovered after the end of the patient ’s treatment, would make for suitable cases to teach the consequences of diagnostic error"
+ },
+ "cont:heart-failure-cases": {
+  "verdict": "local",
+  "reason": "One familiar topic in one study; the general idea, case familiarity, is captured separately.",
+  "type": "Context",
+  "label": "familiar heart failure cases",
+  "study": "S020",
+  "quote": "Heart failure was identiﬁed as a familiar topic and jaundice as a less familiar topic."
+ },
+ "cont:laboratory-career-interest": {
+  "verdict": "not_theory",
+  "reason": "Rhetorical framing: 'few dreamed of becoming laboratorians'. Quote-supported, but not a context any programme acts on.",
+  "type": "Context",
+  "label": "few initial laboratorian aspirations",
+  "study": "S009",
+  "quote": "it is likely that few dreamed of becoming laborator- ians while growing up."
+ },
+ "cont:students-challenged-by-patient-information-navigation": {
+  "verdict": "general",
+  "reason": "Difficulty navigating information during a consultation is a transferable context.",
+  "type": "Context",
+  "label": "students challenged by patient-information navigation",
+  "study": "S028",
+  "quote": "medical students are armed with knowledge helpful to patient diagnosis. but they can find it challenging to know how to navigate the information during a patient interaction."
+ },
+ "cont:systolic-murmur-diagnosis-task": {
+  "verdict": "local",
+  "reason": "One diagnostic task in one study.",
+  "type": "Context",
+  "label": "unknown systolic murmur diagnostic task",
+  "study": "S017",
+  "quote": "However, when students face a patient with an unknown systolic murmur, they must integrate all of this information to arrive at a diagnosis"
+ },
+ "cont:uncommon-diagnosis-cases": {
+  "verdict": "local",
+  "reason": "'False positive' cases built to test oversearching, specific to S024's design.",
+  "type": "Context",
+  "label": "false-positive cases with no second diagnosis",
+  "study": "S024",
+  "quote": "Two ‘‘false positive’’ search satisficing cases, for which there is no correct second diagnosis, were also included to determine if students were ‘‘oversearching’’ for a secondary diagnosis."
+ },
+ "cont:undergraduate-medical-students": {
+  "verdict": "over_split",
+  "reason": "Generic learner description that should have merged into cont:novice-learners, which Richmond's E01 already maps onto.",
+  "type": "Context",
+  "label": "undergraduate medical students learning diagnostic reasoning",
+  "study": "S023",
+  "quote": "The foremost aim of the Casebook Virtual Patient application is to help to teach clinical diagnostic reasoning and decision-making skills to undergraduate students of medicine"
+ },
+ "cont:video-game-experienced-clinicians": {
+  "verdict": "general",
+  "reason": "Prior experience with a medium is one of the four context dimensions the new assignment names.",
+  "type": "Context",
+  "label": "video-game-experienced surgical clinicians",
+  "study": "S022",
+  "quote": "The majority of surgical residents and surgeons have experience with video games and are therefore likely to embrace using a video game in surgical training."
+ },
+ "inte:am-i-hero-now-decision-tool": {
+  "verdict": "local",
+  "reason": "A named instrument from one study.",
+  "type": "Intervention",
+  "label": "AM I HERO NOW decision tool instruction",
+  "study": "S015",
+  "quote": "a decision making tool (AM I HERO NOW) was introduced to students, to be used when faced with making a decision"
+ },
+ "inte:cardiac-physical-diagnosis-teaching": {
+  "verdict": "local",
+  "reason": "The comparator arm's existing teaching in one study.",
+  "type": "Intervention",
+  "label": "traditional cardiac physical diagnosis teaching",
+  "study": "S017",
+  "quote": "traditional teaching of cardiac physical diagnosis involves diagnosis-speciﬁc lists of features, structured around steps in the cardiac physical examination."
+ },
+ "inte:case-based-reasoning-seminar": {
+  "verdict": "general",
+  "reason": "Case-based reasoning seminars recur across this literature.",
+  "type": "Intervention",
+  "label": "case-based clinical reasoning seminar intervention",
+  "study": "S010",
+  "quote": "This case-based clinical reasoning seminar intervention, designed to bring students insight into cognitive features of their reasoning, improved aspects of diagnostic competence."
+ },
+ "inte:clinical-reasoning-reflection-teaching": {
+  "verdict": "general",
+  "reason": "Teaching that prompts reflection on one's own reasoning.",
+  "type": "Intervention",
+  "label": "teaching clinical reasoning for clinician reflection",
+  "study": "S028",
+  "quote": "Teaching clinical reasoning encourages personal reflection and refinement of the clinician’s own clinical reasoning skills to improve patient outcomes."
+ },
+ "inte:computer-assisted-key-feature-seminar": {
+  "verdict": "local",
+  "reason": "The specific e-seminar format of S027.",
+  "type": "Intervention",
+  "label": "computer-assisted key-feature e-seminars",
+  "study": "S027",
+  "quote": "Students in both groups attended weekly computer-assisted learning sessions (‘e-seminars’; maximum duration: 45 minutes) during which they were presented with four patient case histories"
+ },
+ "inte:contrastive-learning": {
+  "verdict": "general",
+  "reason": "An established instructional technique, not study-local.",
+  "type": "Intervention",
+  "label": "contrastive learning instruction",
+  "study": "S005",
+  "quote": "The remaining participants were explicitly instructed to draw comparisons between the diagnostic category being learned and another confusable diagnostic category (contrastive learning)."
+ },
+ "inte:decision-tree-virtual-patient-cases": {
+  "verdict": "local",
+  "reason": "One study's decision-tree VP implementation.",
+  "type": "Intervention",
+  "label": "tailored decision-tree VP cases",
+  "study": "S011",
+  "quote": "VP cases can be tailored using decision-making software to give students experience of primary care specific clinical reasoning skills."
+ },
+ "inte:diagnostic-error-case-viewing": {
+  "verdict": "general",
+  "reason": "Deliberately exposing learners to error cases is a transferable practice.",
+  "type": "Intervention",
+  "label": "viewing diagnostic-error cases",
+  "study": "S023",
+  "quote": "we recommend that cases that are known to have involved diagnostic error should also be viewed by students"
+ },
+ "inte:evpaeds-intervention": {
+  "verdict": "local",
+  "reason": "A named product.",
+  "type": "Intervention",
+  "label": "evPaeds clinical reasoning intervention",
+  "study": "S014",
+  "quote": "evPaeds has proven popular with students to practise and develop clinical reasoning, individually or in small group sessions."
+ },
+ "inte:expertise-practice": {
+  "verdict": "not_theory",
+  "reason": "'Expertise developed over years of diligent study' is a background condition, not something a programme introduces.",
+  "type": "Intervention",
+  "label": "diligent study and practice developing expertise",
+  "study": "S009",
+  "quote": "with expertise developed over years of diligent study and practice, become increasingly adept at learning to trace back"
+ },
+ "inte:fy1-shadowing-programme": {
+  "verdict": "general",
+  "reason": "Shadowing a postholder is a recognisable intervention type.",
+  "type": "Intervention",
+  "label": "FY1 shadowing programme",
+  "study": "S015",
+  "quote": "Students had little, if any, experience of making a number of decisions that they will be expected to make when they start work, despite the introduction of a prolonged FY1 shadowing programme."
+ },
+ "inte:integrated-cases-section-course": {
+  "verdict": "local",
+  "reason": "A named course at one institution.",
+  "type": "Intervention",
+  "label": "Integrated Cases Section course",
+  "study": "S007",
+  "quote": "Integrated Cases Section: A Course Designed to Promote Clinical Reasoning in Year 2 Medical Students"
+ },
+ "inte:multiple-case-learning-task": {
+  "verdict": "general",
+  "reason": "The unguided condition. Comparator conditions are legitimate realist entities.",
+  "type": "Intervention",
+  "label": "unguided multiple-case learning task",
+  "study": "S018",
+  "quote": "No suggestions were given as to how the students could approach their learning tasks."
+ },
+ "inte:particular-courses-or-instructors": {
+  "verdict": "not_theory",
+  "reason": "Too vague to act on; the quote is about interest being piqued, not about a practice.",
+  "type": "Intervention",
+  "label": "particular courses or instructors",
+  "study": "S009",
+  "quote": "interest in clinical pathology is piqued by particular courses or instructors or when we discover the compelling power"
+ },
+ "inte:reasoning-process-instruction": {
+  "verdict": "general",
+  "reason": "Instruction aimed at the reasoning process itself.",
+  "type": "Intervention",
+  "label": "reasoning-process instruction",
+  "study": "S001",
+  "quote": "The relative reliance on analytic and similarity-based processes is amenable to instruction and dependent on expertise.",
+  "in_richmond_body": "Richmond, Context 2: \"When an expert's reasoning processes or thoughts are explicitly revealed and discussed (Mresource) with students with sufficient domain-specific knowledge (C), this promotes understanding\""
+ },
+ "inte:self-directed-virtual-patient-access": {
+  "verdict": "over_split",
+  "reason": "Same study, same quote and the same type as inte:self-directed-virtual-patient-cases. A genuine duplicate.",
+  "type": "Intervention",
+  "label": "optional self-directed VP access",
+  "study": "S011",
+  "quote": "The VP cases are principally intended for self-directed learning, but could also be used as a teaching tool in a small group or lecture setting."
+ },
+ "inte:self-directed-virtual-patient-cases": {
+  "verdict": "local",
+  "reason": "One study's VP case library.",
+  "type": "Intervention",
+  "label": "self-directed VP cases",
+  "study": "S011",
+  "quote": "The VP cases are principally intended for self-directed learning, but could also be used as a teaching tool in a small group or lecture setting."
+ },
+ "inte:simulated-referral-task": {
+  "verdict": "local",
+  "reason": "The SBAR telephone referral task of S015.",
+  "type": "Intervention",
+  "label": "simulated referral task with SBAR support",
+  "study": "S015",
+  "quote": "During the simulator session, the SBAR tool was written down next to the phones. Making it readily available increased the use of SBAR."
+ },
+ "inte:simulated-ward-environment": {
+  "verdict": "general",
+  "reason": "Simulated clinical environments recur widely.",
+  "type": "Intervention",
+  "label": "simulated ward environment",
+  "study": "S015",
+  "quote": "As a part of this intervention, students were introduced to a simulated ward environment"
+ },
+ "inte:supervised-student-reasoning-consultation": {
+  "verdict": "general",
+  "reason": "Staged consultations with the learner reasoning under supervision.",
+  "type": "Intervention",
+  "label": "performance consultation with supervised student reasoning",
+  "study": "S028",
+  "quote": "in the third consultation, the student follows the model outlined in the first and second consultations (Figure 1)"
+ },
+ "inte:tacit-pick-up-approach": {
+  "verdict": "role",
+  "reason": "The quote REJECTS this approach: 'clinical reasoning should not be considered as something tacit'. Extracting it as an intervention inverts the source.",
+  "type": "Intervention",
+  "label": "tacit pick-up approach to clinical reasoning",
+  "study": "S028",
+  "quote": "clinical reasoning should not be considered as something tacit that students simply ‘pick up as they go along’"
+ },
+ "inte:test-enhanced-case-presentation": {
+  "verdict": "general",
+  "reason": "Test-enhanced learning is an established family.",
+  "type": "Intervention",
+  "label": "test-enhanced case presentation",
+  "study": "S027",
+  "quote": "The intervention condition used the same content but augmented case presentation with a sequence of key feature questions.",
+  "in_richmond_body": "Richmond, Discussion: \"Retrieval practice, interleaving and spaced practice are examples of learning strategies, which induce 'desirable difficulties' amongst learners\""
+ },
+ "inte:time-compressed-virtual-patient-scenarios": {
+  "verdict": "local",
+  "reason": "A design feature of one VP system.",
+  "type": "Intervention",
+  "label": "time-compressed VP case scenarios",
+  "study": "S011",
+  "quote": "VP cases can be used to compress time, allowing students to observe strategies such as ‘ test of time ’o r ‘ test of treatment ’"
+ },
+ "inte:tripartite-clinical-decision-making-teaching": {
+  "verdict": "local",
+  "reason": "The three-part package assembled for S015.",
+  "type": "Intervention",
+  "label": "tripartite clinical decision making teaching",
+  "study": "S015",
+  "quote": "A teaching intervention was developed, consisting of a clinical decision making tool, a tutorial and scenarios within a simulated ward environment."
+ },
+ "inte:video-enriched-virtual-patient-cases": {
+  "verdict": "local",
+  "reason": "One study's VP format.",
+  "type": "Intervention",
+  "label": "video-enriched virtual patient cases",
+  "study": "S011",
+  "quote": "The aim of our video enriched VP cases is to simulate GP consultations revolving around these core presentations, giving students the opportunity to be active participants"
+ },
+ "inte:worked-example-learning-session": {
+  "verdict": "general",
+  "reason": "Worked examples are a named instructional family.",
+  "type": "Intervention",
+  "label": "worked-example learning session",
+  "study": "S006",
+  "quote": "After a short introduction, students completed the MCQ test measuring prior knowledge, which was followed by the learning session, in which the students worked through the worked examples."
+ },
+ "mech:biliary-decision-practice": {
+  "verdict": "local",
+  "reason": "Practice on one clinical domain's cases.",
+  "type": "Mechanism_Resource",
+  "label": "practice with realistic biliary decision cases",
+  "study": "S022",
+  "quote": "Cases consisted of an image, information describing a clinical problem, and possible solutions (Fig. 1)."
+ },
+ "mech:clinical-reasoning-practice": {
+  "verdict": "general",
+  "reason": "Individual or small-group practice as the active ingredient.",
+  "type": "Mechanism_Resource",
+  "label": "individual or small-group clinical reasoning practice",
+  "study": "S014",
+  "quote": "to practise and develop clinical reasoning, individually or in small group sessions."
+ },
+ "mech:ecg-exemplar-exposure": {
+  "verdict": "local",
+  "reason": "Exposure to the particular ECGs used in S005's training phase.",
+  "type": "Mechanism_Resource",
+  "label": "prior exposure to specific ECG exemplars during training",
+  "study": "S005",
+  "quote": "8 were novel and 7 had been seen during training but were distinct from the ECGs seen during the immediate test phase."
+ },
+ "mech:errorful-peer-examples": {
+  "verdict": "general",
+  "reason": "Examples containing errors are a studied mechanism in their own right.",
+  "type": "Mechanism_Resource",
+  "label": "peer examples with errors and irrelevant details",
+  "study": "S025",
+  "quote": "We used examples from peers (third-year medical students), whose SE included irrelevant details and even uncorrected errors."
+ },
+ "mech:first-impression-similarity-prompt": {
+  "verdict": "general",
+  "reason": "Prompting a similarity-based first impression.",
+  "type": "Mechanism_Resource",
+  "label": "first-impression similarity prompt",
+  "study": "S021",
+  "quote": "participants undertook test 2, for which they were asked to provide their first impression of each image based on their similarity to images seen during training and practice."
+ },
+ "mech:free-choice-reasoning-prompt": {
+  "verdict": "general",
+  "reason": "The 'whatever strategy comes naturally' prompt — the control resource in a two-arm design.",
+  "type": "Mechanism_Resource",
+  "label": "free-choice reasoning prompt",
+  "study": "S005",
+  "quote": "Assign a diagnosis to each ECG using whatever strategy comes naturally to you. Feel free to use the feature list, but approach each case using whatever strategy seems most appropriate"
+ },
+ "mech:immediate-feedback": {
+  "verdict": "general",
+  "reason": "Immediate feedback on answers.",
+  "type": "Mechanism_Resource",
+  "label": "spaced immediate feedback",
+  "study": "S027",
+  "quote": "Testing was spaced across weeks and students were given immediate educational feedback on their answers.",
+  "in_richmond_body": "Richmond, Discussion: \"...also refinement after receiving feedback from teachers following performance on tasks\" and \"spaced practice are examples of learning strategies\""
+ },
+ "mech:immediate-reasoning-feedback": {
+  "verdict": "over_split",
+  "reason": "Feedback on reasoning, from a different study but the same resource as mech:immediate-feedback. Normalisation should have merged them.",
+  "type": "Mechanism_Resource",
+  "label": "immediate feedback on reasoning",
+  "study": "S025",
+  "quote": "SE examples presumably provide some form of immediate feedback to students, which may explain why they improved already in the training phase."
+ },
+ "mech:item-level-feedback": {
+  "verdict": "over_split",
+  "reason": "Same study as mech:immediate-feedback (S027) and the same resource at a different granularity.",
+  "type": "Mechanism_Resource",
+  "label": "item-level feedback access",
+  "study": "S027",
+  "quote": "Detailed feedback was created for each item; students were able to access this feedback by clicking on a speciﬁc button."
+ },
+ "mech:labelled-exposure": {
+  "verdict": "general",
+  "reason": "Exposure with minimal labels and no feature instruction.",
+  "type": "Mechanism_Resource",
+  "label": "non-feature-driven labelled exposure",
+  "study": "S021",
+  "quote": "no feature-driven training was provided, and the only image annotation used during training was restricted to the labels “normal” and “abnormal”"
+ },
+ "mech:laboratory-data-insight": {
+  "verdict": "not_theory",
+  "reason": "'When we discover the compelling power of laboratory data' is the author's rhetoric, not a learner response the programme produces.",
+  "type": "Mechanism_Response",
+  "label": "discovered diagnostic power of laboratory data",
+  "study": "S009",
+  "quote": "when we discover the compelling power of laboratory data to uncover and clarify hidden disease."
+ },
+ "mech:mastery-practice": {
+  "verdict": "general",
+  "reason": "Repetition to mastery and automaticity.",
+  "type": "Mechanism_Resource",
+  "label": "repeated practice to mastery",
+  "study": "S022",
+  "quote": "They assist in learning at different paces and allow practice to the point of mastery and automaticity. Repetition is a precondition for long-term potentiation."
+ },
+ "mech:metacognitive-bias-identification": {
+  "verdict": "general",
+  "reason": "Cognitive forcing strategies — a named mechanism family.",
+  "type": "Mechanism_Resource",
+  "label": "metacognitive bias-identification techniques",
+  "study": "S024",
+  "quote": "Specifically, these programs claimed that metacognitive techniques (termed cognitive forcing strategies [CFS]) can identify specific biases, promote self-monitoring, and develop approaches to minimize biasing of diagnoses."
+ },
+ "mech:mixed-case-practice": {
+  "verdict": "general",
+  "reason": "Having to prioritise across multiple simultaneous tasks.",
+  "type": "Mechanism_Resource",
+  "label": "multiple tasks and acutely unwell patients",
+  "study": "S015",
+  "quote": "During their simulation session, the students were faced with multiple tasks and acutely unwell patients, and therefore had to prioritise."
+ },
+ "mech:mnemonic-decision-prompt": {
+  "verdict": "general",
+  "reason": "A memorable mnemonic as the prompting resource.",
+  "type": "Mechanism_Resource",
+  "label": "memorable mnemonic decision prompt",
+  "study": "S015",
+  "quote": "The tool was designed to be a memorable mnemonic, incorporating multiple aspects of clinical decision making, with the aim of prompting students to avoid certain recognised cognitive dispositions to respond, such as premature closure."
+ },
+ "mech:normal-abnormal-image-pairs": {
+  "verdict": "local",
+  "reason": "The specific paired-image stimulus of S021.",
+  "type": "Mechanism_Resource",
+  "label": "nonannotated normal/abnormal image pairs",
+  "study": "S021",
+  "quote": "The remaining 25 participants were simply shown 20 nonannotated paired images of normal and abnormal cervical cells (the “nonanalytic” group)."
+ },
+ "mech:presentation-control-and-repetition": {
+  "verdict": "general",
+  "reason": "Learner control over pacing and repetition.",
+  "type": "Mechanism_Resource",
+  "label": "autonomous repetition or skipping of clips",
+  "study": "S011",
+  "quote": "Participants also have the autonomy to repeat video clips or skip them according to their preferences."
+ },
+ "mech:real-case-practice": {
+  "verdict": "general",
+  "reason": "Practice on real rather than constructed cases.",
+  "type": "Mechanism_Resource",
+  "label": "practice with real patient EHR cases",
+  "study": "S023",
+  "quote": "Because the cases consist of data and patient records from real-life medical situations that genuinely occurred, the cases should more closely mimic real-life scenarios",
+  "in_richmond_body": "Richmond, Discussion: \"This research identified that exposure to real patients in practice or simulated environments was necessary for making 'safe mistakes'\""
+ },
+ "mech:reasoning-focus-cues": {
+  "verdict": "general",
+  "reason": "Cues that direct attention to the cognitive features of one's reasoning.",
+  "type": "Mechanism_Resource",
+  "label": "cognitive features of reasoning focus",
+  "study": "S010",
+  "quote": "This case-based clinical reasoning seminar intervention, designed to bring students insight into cognitive features of their reasoning, improved aspects of diagnostic competence."
+ },
+ "mech:reasoning-pathway-review": {
+  "verdict": "general",
+  "reason": "The chance to review one's own reasoning pathway — here for the clinician teaching it.",
+  "type": "Mechanism_Resource",
+  "label": "opportunity to review reasoning pathways",
+  "study": "S028",
+  "quote": "teaching clinical reasoning also provides an excellent opportunity for clinicians to consider and review their own clinical reasoning pathways."
+ },
+ "mech:reduced-incorrect-feature-identification": {
+  "verdict": "general",
+  "reason": "A learner response: fewer incorrect features identified. Correctly typed as a response, not an outcome.",
+  "type": "Mechanism_Response",
+  "label": "reduced incorrect feature identification",
+  "study": "S017",
+  "quote": "For untaught diagnoses, schema-instructed students identiﬁed fewer overall features, fewer correct features not in the schema and fewer incorrect features (Table 2)."
+ },
+ "mech:schema-grouping": {
+  "verdict": "general",
+  "reason": "Grouping diagnoses by shared clinical features.",
+  "type": "Mechanism_Resource",
+  "label": "schema grouping by clinical variables",
+  "study": "S017",
+  "quote": "The schema framework (Fig. 2) grouped diagnoses according to clinical features based on murmur location and timing"
+ },
+ "mech:self-directed-case-access": {
+  "verdict": "over_split",
+  "reason": "Third concept carved from the same S011 sentence as the two self-directed VP interventions.",
+  "type": "Mechanism_Resource",
+  "label": "self-directed access to cases",
+  "study": "S011",
+  "quote": "The VP cases are principally intended for self-directed learning, but could also be used as a teaching tool in a small group or lecture setting."
+ },
+ "mech:self-explanation-examples": {
+  "verdict": "general",
+  "reason": "Raw self-explanation examples as a resource.",
+  "type": "Mechanism_Resource",
+  "label": "natural raw self-explanation examples",
+  "study": "S025",
+  "quote": "In contrast, in our study, we used natural ‘‘raw’’ examples of SE, as they might occur in clinical setting.",
+  "in_richmond_body": null,
+  "richmond_check_note": "A word-level overlap check flagged this, but no sentence in Richmond's body discusses self-explanation examples; the individual words occur separately. Recorded as a false positive of that check rather than quietly dropped."
+ },
+ "mech:shadowing-with-learner-follows": {
+  "verdict": "local",
+  "reason": "Quoted from one student's interview about their own placement.",
+  "type": "Mechanism_Resource",
+  "label": "shadowing where FY1 decides and student follows",
+  "study": "S015",
+  "quote": "SA2 – On Preparation for Practice I have my FY1 and she makes all the decisions and I just follow her around"
+ },
+ "mech:simulation-scenarios": {
+  "verdict": "general",
+  "reason": "Tutorial plus simulated scenarios. Shares a sentence with the intervention it belongs to, which the ontology intends.",
+  "type": "Mechanism_Resource",
+  "label": "tool tutorial and simulated ward scenarios",
+  "study": "S015",
+  "quote": "A teaching intervention was developed, consisting of a clinical decision making tool, a tutorial and scenarios within a simulated ward environment."
+ },
+ "mech:single-best-diagnosis-request": {
+  "verdict": "general",
+  "reason": "Asking for one most probable diagnosis — the control resource.",
+  "type": "Mechanism_Resource",
+  "label": "request for one most probable diagnosis",
+  "study": "S019",
+  "quote": "Students in the control group were simply asked to provide one most probable diagnosis on an answer sheet that lacked the table provided to the test group."
+ },
+ "mech:structured-referral-prompt": {
+  "verdict": "general",
+  "reason": "A visible structured handover prompt. Shares a sentence with its intervention by design.",
+  "type": "Mechanism_Resource",
+  "label": "visible structured SBAR referral prompt",
+  "study": "S015",
+  "quote": "During the simulator session, the SBAR tool was written down next to the phones. Making it readily available increased the use of SBAR."
+ },
+ "mech:timed-case-challenge-with-feedback": {
+  "verdict": "local",
+  "reason": "The 10-second game mechanic of S022.",
+  "type": "Mechanism_Resource",
+  "label": "fixed timed case challenge with feedback",
+  "study": "S022",
+  "quote": "The player had a maximum of 10 s to solve each case. After each attempt, players received feedback focused on their solution."
+ },
+ "mech:unprompted-recordings": {
+  "verdict": "local",
+  "reason": "The particular recordings used in S026.",
+  "type": "Mechanism_Resource",
+  "label": "unprompted resident SE recordings",
+  "study": "S026",
+  "quote": "All participants in Groups 1 and 2 were exposed to the same recordings of residents’ SEs."
+ },
+ "mech:voluntary-engagement-game-design": {
+  "verdict": "general",
+  "reason": "Design for voluntary engagement.",
+  "type": "Mechanism_Resource",
+  "label": "game design for voluntary engagement",
+  "study": "S022",
+  "quote": "A well-designed serious game combines psychological factors, design, and technology to engage learners in voluntary training."
+ },
+ "outc:analytic-response-time": {
+  "verdict": "general",
+  "reason": "Response latency as an outcome.",
+  "type": "Outcome",
+  "label": "longer analytic response times after training",
+  "study": "S021",
+  "quote": "In the analytic training group, the median time for participants to respond “normal” or “abnormal” to each image increased from 2.53 seconds to 2.89 seconds between tests 1 and 2"
+ },
+ "outc:case-familiarity-effects": {
+  "verdict": "role",
+  "reason": "A moderation finding — 'only demonstrated with unfamiliar cases' — typed as an Outcome. It is a context condition on an outcome, which is precisely what a CMOC's C slot is for.",
+  "type": "Outcome",
+  "label": "benefit only demonstrated for unfamiliar cases",
+  "study": "S020",
+  "quote": "However, this positive effect was only demonstrated with unfamiliar clinical cases."
+ },
+ "outc:diagnostic-reasoning-confidence": {
+  "verdict": "general",
+  "reason": "Self-reported confidence.",
+  "type": "Outcome",
+  "label": "increased diagnostic reasoning confidence",
+  "study": "S007",
+  "quote": "Students reported increased confidence in their diagnostic reasoning ability during the course and after completion of 2 clerkships.",
+  "in_richmond_body": "Richmond, Results: \"Key student level factors influencing the effectiveness of interventions included an individual's self-confidence, self-efficacy and pre-existing level of knowledge\""
+ },
+ "outc:improved-performance-beyond-no-instructions": {
+  "verdict": "general",
+  "reason": "Performance above a no-instruction baseline.",
+  "type": "Outcome",
+  "label": "improved performance beyond no instructions",
+  "study": "S005",
+  "quote": "instructions to utilise a combined reasoning strategy can improve performance above and beyond what can be expected in the absence of such instructions."
+ },
+ "outc:lay-descriptions-resembled-standard-features": {
+  "verdict": "local",
+  "reason": "A specific qualitative observation about S021's written descriptions.",
+  "type": "Outcome",
+  "label": "lay descriptions resembled standard features",
+  "study": "S021",
+  "quote": "Although written in layman’s terms, the morphologic descriptions are surprisingly similar to the standard list of features provided by the trainer to the analytic training group."
+ },
+ "outc:lower-accuracy-with-explicit-instruction": {
+  "verdict": "role",
+  "reason": "Checked against S005's full text, which separates a 'combined reasoning condition' (instructed) from a 'spontaneous reasoning condition' (no instruction). The EXTRACTION is right: the instance label reads 'lower accuracy THAN explicit combined instruction', which is what the quote supports. The CANONICAL NAME is wrong -- normalisation renamed the concept 'lower accuracy WITH explicit instruction', which asserts the opposite. The defect is in the naming step, not the extractor, and it is only visible by reading the source paper.",
+  "type": "Outcome",
+  "label": "lower accuracy than explicit combined instruction",
+  "study": "S005",
+  "quote": "Those in the combined reasoning condition signiﬁcantly outperformed those in the spontaneous reasoning condition",
+  "stage_at_fault": "normalisation_naming",
+  "source_checked": "S005 canonical text: 'half the participants were instructed to trust any sense of familiarity ... (i.e. the combined reasoning condition), whereas the other half were given no instructions regarding how best to approach the diagnosis of test cases (i.e. the spontaneous reasoning condition).'"
+ },
+ "outc:lower-diagnostic-accuracy-relative-to-analytic-reasoning": {
+  "verdict": "general",
+  "reason": "The control group's lower accuracy, consistent with the quote.",
+  "type": "Outcome",
+  "label": "lower diagnostic accuracy relative to analytic reasoning",
+  "study": "S019",
+  "quote": "Mean diagnostic accuracy scores were significantly higher in the analytic reasoning group than in the control group (3.40 /C6 0.66 versus 3.05 /C6 0.98; 95% CI of difference, 0.08–0.62; p ¼ 0.016)."
+ },
+ "outc:mcq-performance": {
+  "verdict": "local",
+  "reason": "One topic's MCQ score difference.",
+  "type": "Outcome",
+  "label": "arterial-hypertension MCQ advantage",
+  "study": "S006",
+  "quote": "However, on the arterial hypertension questions, experimental group students achieved 5.59 of 7 points (SD = 0.95), whereas control group students achieved only 5.07 points (SD = 1.14)."
+ },
+ "outc:poorer-diagnostic-performance": {
+  "verdict": "general",
+  "reason": "Worse immediate performance under reflection — a real and theoretically interesting outcome.",
+  "type": "Outcome",
+  "label": "poorer immediate diagnostic performance",
+  "study": "S016",
+  "quote": "On the test that immediately followed the learning phase, however, students in the reﬂection condition performed worse than students who generated an immediate single diagnosis"
+ }
+}

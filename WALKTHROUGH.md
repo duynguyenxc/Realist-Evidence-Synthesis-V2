@@ -2595,3 +2595,148 @@ removing from its own record.
 - **The cost figures are projections, except extraction.** One 3-paper pilot replaces them
   all with a measurement, and `config/models.yaml` says how: run a stage, read the
   dashboard, set `cost_calibration_factor = true/estimate`.
+
+## M44 — The 79 adjudicated against the source papers, and the naming step caught inverting a finding (2026-11-17, continued)
+
+The RA asked for the three items that had been deferred as "not urgent", then — mid-session —
+granted something that changed the quality of the second one: *"nhớ đọc tài liệu Richmond paper
+gốc của Richmond ở trong repo nhé, và 28 paper của Richmond cũng ở trong repo luôn đấy."* Up to
+that point the adjudication rested on stored quotes alone. Reading the primary sources corrected
+one verdict, reattributed the blame for it to a different pipeline stage, and killed a figure of
+my own that was wrong.
+
+### 1. `res acquire` — the collection made real
+
+Run with `--confirm` for the first time. **1,266 open-access PDFs** of the 1,863 candidates,
+fetched from the links the catalogue itself publishes, `%PDF` magic checked on every one, failures
+recorded rather than hidden. Into `data-emotion/fulltext/`, which is gitignored. This is what
+turns the professor's "preliminary literature **collection**" from a list of rows into files.
+
+### 2. The 79 single-mention concepts, adjudicated one at a time
+
+**The count was wrong, and the correction is instructive.** It has been reported as **72**. That
+used the pre-correction set of 31 matched concepts; with the 24 distinct concepts that survive the
+2026-11-04 matcher fix, it is **79**. Thirty-one gold entities do not give thirty-one concepts,
+because several map onto the same one — the over-merge `MACHINE_VS_HUMAN.md` §5 already records.
+
+All 79 were judged against their own verbatim quotes, five categories, verdict and reason stored
+per concept in `outputs/analysis/singles_adjudication.json`:
+
+| Verdict | Concepts |
+|---|---|
+| `general` — usable concept outside Richmond's frame | **40** |
+| `local` — correct, quote-supported, but names something only one study has | **26** |
+| `over_split` — should have merged with another concept | **5** |
+| `role` — wrong type, or a name contradicting its own evidence | **4** |
+| `not_theory` — quote-supported but not an element of any programme theory | **4** |
+
+**66 of 79 (84%) are correct extractions; 13 (16%) are defects** — in the hardest subset of the
+output, chosen because single-instance concepts are where extraction noise would collect.
+
+The `local` row is why precision as a single number was always the wrong target. A concept naming
+one study's stimulus set is extracted correctly, supported by its quote, and can do no analytic
+work. "Hit" overstates it and "error" understates it; it needs its own row.
+
+**Who judged: Claude, not a human and not the pipeline.** Stated wherever the figures appear. The
+extractor is a model of the same family, and this project has already measured judges disagreeing
+by 0.31 on identical inputs. It is a triage that says where a person should look.
+
+### 3. Reading Richmond's own paper moved the frame question
+
+`data/paper-Richmond-original.pdf`, 12 pages, text extracted with `pypdf`. Two things in it matter.
+
+**Richmond narrowed their own frame, and say so:** *"The selected studies identified key contexts
+for clinical reasoning interventions at the individual level, with contexts at the teacher or the
+wider organisation level rarely discussed. Therefore, the results presented below predominantly
+focus on individual student level contexts."* So "outside the frame" is partly an editorial
+decision of theirs, not a verdict on us.
+
+**And their discussion contains concepts the gold standard does not.** Verified by locating actual
+sentences: exposure to real patients in practice or simulated environments "necessary for making
+'safe mistakes'"; retrieval practice, interleaving and spaced practice; feedback from teachers
+following performance; self-confidence and self-efficacy as key student-level factors; and an
+expert's reasoning "explicitly revealed and discussed". **Five of the 79 are discussed in
+Richmond's analysis while absent from the coded benchmark.**
+
+**My first attempt at that figure was wrong, and the way it was wrong is worth keeping.** A
+word-level overlap check returned **19 of 79**. Nineteen was contaminated: the matches came from
+Richmond's **reference list**, which carries the titles of all 28 included papers, so a concept
+named after one study's intervention matched its own citation. `evPaeds`, `dermatological
+diagnosis` and `Integrated Cases Section` all resolved to reference entries at character 36,315
+and beyond. Restricting to the body text gave **12**; checking each of the six load-bearing ones
+against a real sentence gave **5**, with `mech:self-explanation-examples` failing — its words occur
+separately in Richmond's prose and nothing there discusses self-explanation examples. It is stored
+as a recorded false positive rather than dropped. **19 → 12 → 5.** An automated overlap count would
+have published the first number.
+
+### 4. The source papers reattributed a defect — from the extractor to the naming step
+
+My verdict on `outc:lower-accuracy-with-explicit-instruction` was that the label inverted its own
+quote. Reading S005's canonical text showed something more precise and more useful:
+
+| | |
+|---|---|
+| S005's design | *"half the participants were instructed to trust any sense of familiarity… (the combined reasoning condition), whereas the other half were given no instructions… (the spontaneous reasoning condition)"* |
+| Stored instance label | `lower accuracy **than** explicit combined instruction` — **correct** |
+| Canonical id normalisation produced | `lower-accuracy-**with**-explicit-instruction` — **asserts the opposite** |
+
+**The extraction was right. The naming was wrong.** The clustering agent is allowed to name each
+canonical concept and nothing checked the name against its members, so a renaming could invert a
+study's finding silently. Only the source paper distinguishes these two diagnoses, and they point
+at different stages for repair.
+
+### 5. The normalisation cycle: cause found, recurrence prevented, Richmond untouched
+
+The one defect in `graph_consistency.json` — the cycle
+`mech:active-reasoning-and-self-explanation → mech:knowledge-elaboration → mech:self-explanation`
+— has the same cause as the five `over_split` verdicts. `_batched_cluster` clusters labels **40 at
+a time** and unions clusters across batches **only when their canonical labels match exactly**, so
+synonyms landing in different batches and named slightly differently survive as two one-instance
+concepts, and nothing downstream notices.
+
+Three things were added, in `normalization.py` and `config/concept_merges.yaml`:
+
+- **A declared-merge table** a person writes with a reason, which can join labels sharing no words
+  — "undergraduate medical students" and "novice learners", which no mechanical rule reaches.
+- **A guarded subset rule**: fold A into B when A's content words are a proper subset of B's.
+  **The guard is the point.** If one label carries a polarity or degree word the other lacks, the
+  merge is refused however much they overlap, because "prior knowledge" and "low prior knowledge"
+  are different concepts. This is the same error, one stage earlier, as the verification matcher
+  that accepted "high clinical knowledge" for "knowledge deficits" until 2026-11-04.
+- **An inverted-name check** that flags a canonical name disagreeing in direction with its members,
+  from §4. It reports rather than repairs, because choosing a side would be guessing.
+
+**Richmond is not corrected and must not be.** Re-running normalisation renumbers the graph every
+published figure rests on. The fix prevents recurrence; Richmond's merges are declared in the
+config and marked inert, so the defect is on the record without the record being rewritten.
+
+Two bugs of my own, caught while building this:
+
+- **The guard list was read only from config.** A review whose config directory had no
+  `concept_merges.yaml` would have run the subset rule with an **empty guard set** and merged
+  "prior knowledge" into "low prior knowledge" — the file's absence silently removing the
+  protection instead of the declarations. There is now a floor in code that config can only
+  extend, and a test that passes with no config at all.
+- **The inverted-name check used the stopword-stripped tokens.** In the case it exists for, the
+  inversion is carried *by* a stopword: `than` against `with`. Stripping stopwords deleted the only
+  evidence of the contradiction. It now compares raw normalised words against a set of relational
+  words, and the test that caught this is in the suite.
+
+Suite: **30 passing**.
+
+### What the next session must not assume
+
+- **The 16% defect rate is a triage, not a measurement**, and it is from the hardest subset. Do not
+  quote it as the system's precision, and do not quote it without saying Claude judged it.
+- **The adjudication set is 79, not 72.** Anything still saying 72 predates the matcher fix.
+- **"Outside Richmond's frame" means outside the coded gold standard**, not outside Richmond's
+  paper. Five of the 79 are in the paper's discussion. Never conflate the two again.
+- **Never run a word-level overlap check against a paper without excluding its reference list.**
+  It will match the included studies' own titles and report three to four times too many.
+- **Richmond's graph is NOT repaired.** The cycle is still there and still the one defect. The fix
+  is preventive and the declared merges are inert by design.
+- **The inverted-name check reports; it does not fix.** `outc:lower-accuracy-with-explicit-instruction`
+  still carries its misleading id in the database, deliberately.
+- **`data-emotion/fulltext/` now holds 1,266 PDFs and is gitignored.** They are third-party
+  copyrighted material: do not commit them, and do not redistribute them.
+- **Still nothing screened, still no CMOCs on the new topic, still no countersignature.**

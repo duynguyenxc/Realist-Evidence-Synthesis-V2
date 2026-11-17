@@ -50,6 +50,162 @@ def _norm_key(text: str) -> str:
 
 _BATCH = 40  # labels per LLM clustering call — keeps each response small and bounded
 
+_STOPWORDS = frozenset("a an and the of to for with in on at by or as into".split())
+
+# Words that set the DIRECTION of a claim. They are mostly stopwords, which is exactly
+# why `_tokens` must not be used when comparing a canonical name against its members.
+_RELATIONAL = frozenset("""
+than with without versus vs compared comparison relative above below over under
+against instead rather despite than's beyond
+""".split())
+
+
+def _tokens(label: str) -> frozenset[str]:
+    return frozenset(_norm_key(label).split()) - _STOPWORDS
+
+
+# The guard list lives in code as well as in config, and this is deliberate. A
+# missing optional config must never stop a run -- but it must also never silently
+# DISABLE a safety check. Reading the guards from config alone meant that a second
+# review whose config directory had no `concept_merges.yaml` would run the subset
+# rule with an empty guard set, and quietly merge "prior knowledge" into "low prior
+# knowledge". A config file can only ADD to this floor, never remove from it.
+_GUARDS_FLOOR = frozenset("""
+high low higher lower increased decreased reduced improved poorer poor better worse
+greater less fewer more novice expert experienced inexperienced positive negative
+absent present with without no non un familiar unfamiliar correct incorrect
+""".split())
+
+
+def _merge_config() -> dict:
+    """Researcher-declared merges and the words that block an automatic one.
+
+    Absent or unreadable is a supported state: the deterministic rule still runs,
+    nothing is declared, and the guard floor above still applies.
+    """
+    try:
+        from res_pipeline.core.config import load_yaml_config
+
+        return load_yaml_config("concept_merges") or {}
+    except Exception:  # noqa: BLE001 - optional config
+        return {}
+
+
+def _reconcile_clusters(clusters: list[tuple[str, list[str]]], entity_type: str | None,
+                        log=None) -> list[tuple[str, list[str]]]:
+    """Fold clusters that batching left apart, deterministically and with a guard.
+
+    WHY. ``_batched_cluster`` unions clusters across batches only when their
+    canonical labels match EXACTLY. Two synonymous labels that land in different
+    batches and are named slightly differently therefore survive as two concepts,
+    each with one instance — and the cross-study graph then shows two rare
+    concepts where there is one ordinary one. Measured consequences in the
+    Richmond run: its single causal cycle (three near-synonyms of self-explanation)
+    and five of the thirteen defects found by adjudicating the 79 single-mention
+    concepts one by one.
+
+    TWO RULES, IN THIS ORDER.
+
+    1. Declared merges from ``config/concept_merges.yaml``, which a person wrote
+       and gave a reason for. These can join labels that share no words, which no
+       mechanical rule can do.
+
+    2. A subset rule: fold A into B when A's content words are a proper subset of
+       B's. "self explanation" folds into "active reasoning and self explanation".
+
+    THE GUARD ON RULE 2 IS THE IMPORTANT PART. If one label carries a polarity or
+    degree word the other lacks — high/low, improved/poorer, familiar/unfamiliar —
+    the merge is REFUSED however much the labels overlap, because "prior
+    knowledge" and "low prior knowledge" are different concepts and collapsing
+    them would destroy the distinction the whole review rests on. This is the same
+    error, in a different stage, as the verification matcher that accepted "high
+    clinical knowledge" as a match for "knowledge deficits" until 2026-11-04.
+    """
+    cfg = _merge_config()
+    guards = _GUARDS_FLOOR | frozenset(
+        str(w).lower() for w in (cfg.get("polarity_and_degree_guards") or ()))
+    by_norm = {_norm_key(label): i for i, (label, _m) in enumerate(clusters)}
+    members = [list(m) for _label, m in clusters]
+    labels = [label for label, _m in clusters]
+    dead: set[int] = set()
+    folded: list[tuple[str, str, str]] = []
+
+    # --- rule 1: declared
+    for entry in cfg.get("merges") or ():
+        if entity_type and entry.get("entity_type") not in (None, entity_type):
+            continue
+        keep_i = by_norm.get(_norm_key(str(entry.get("keep", ""))))
+        if keep_i is None:
+            continue
+        for fold_label in entry.get("fold") or ():
+            fold_i = by_norm.get(_norm_key(str(fold_label)))
+            if fold_i is None or fold_i == keep_i or fold_i in dead:
+                continue
+            members[keep_i].extend(members[fold_i])
+            dead.add(fold_i)
+            folded.append((labels[fold_i], labels[keep_i], "declared"))
+
+    # --- rule 2: subset, guarded. Longest labels first so the fullest name wins.
+    order = sorted(range(len(clusters)), key=lambda i: -len(_tokens(labels[i])))
+    for bi in order:
+        if bi in dead:
+            continue
+        bt = _tokens(labels[bi])
+        for ai in order:
+            if ai == bi or ai in dead:
+                continue
+            at = _tokens(labels[ai])
+            if not at or not at < bt:
+                continue
+            if (at ^ bt) & guards:
+                continue  # a polarity or degree word differs — these are not synonyms
+            members[bi].extend(members[ai])
+            dead.add(ai)
+            folded.append((labels[ai], labels[bi], "subset"))
+
+    if folded and log:
+        for src, dst, how in folded:
+            log(f"    merged ({how}): {src!r} -> {dst!r}")
+    kept = [(labels[i], members[i]) for i in range(len(clusters)) if i not in dead]
+    _warn_on_inverted_names(kept, guards, log)
+    return kept
+
+
+def _warn_on_inverted_names(clusters: list[tuple[str, list[str]]],
+                            guards: frozenset[str], log=None) -> list[tuple[str, str]]:
+    """Flag a canonical name that contradicts the labels it was built from.
+
+    The clustering agent is allowed to NAME each concept, and nothing checked that the
+    name it chose agrees with its members. In the Richmond run it renamed an outcome whose
+    instance label was "lower accuracy THAN explicit combined instruction" to
+    "lower accuracy WITH explicit instruction", which asserts the opposite of the study's
+    finding — S005 instructed one arm and left the other to reason spontaneously, and the
+    instructed arm did better. The extraction was correct and the quote supported it; the
+    name inverted it, and the inversion was only visible by reading the source paper.
+
+    This cannot be repaired automatically without guessing which side is right, so it is
+    reported rather than corrected. A warning that a human reads beats a silent rename.
+    """
+    # NOT `_tokens`. That strips stopwords, and in the case this check exists for the
+    # inversion is carried BY a stopword: "lower accuracy THAN explicit instruction"
+    # against "lower accuracy WITH explicit instruction". Removing "with" and "than"
+    # deletes the only evidence of the contradiction, so the comparison is made on the
+    # raw normalised words plus a set of relational words that change a claim's direction.
+    relational = guards | _RELATIONAL
+    suspects: list[tuple[str, str]] = []
+    for label, members in clusters:
+        lt = frozenset(_norm_key(label).split()) & relational
+        for m in members:
+            mt = frozenset(_norm_key(m).split()) & relational
+            if mt and lt != mt:
+                suspects.append((label, m))
+                break
+    if suspects and log:
+        for label, m in suspects:
+            log(f"    [check] canonical name {label!r} differs in polarity/degree from "
+                f"member {m!r} — read the source before trusting the name")
+    return suspects
+
 
 def _batched_cluster(items: list[str], system_prompt: str, run_id: str,
                      noun: str = "LABELS") -> list[tuple[str, list[str]]]:
@@ -84,7 +240,7 @@ def _batched_cluster(items: list[str], system_prompt: str, run_id: str,
                 merged[key][1].extend(members)
             else:
                 merged[key] = (cluster.canonical_label, list(members))
-    return list(merged.values())
+    return _reconcile_clusters(list(merged.values()), entity_type=None)
 
 
 def build_concept_families(run_id: str) -> dict[str, int]:
