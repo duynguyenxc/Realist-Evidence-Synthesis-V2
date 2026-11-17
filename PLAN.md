@@ -133,12 +133,51 @@ He has not seen this system and does not know what it does. Hold me to these:
 
 ## 5. Open — needs the RA
 
+> ### ▶ RESUME HERE — paused 2026-11-17 midday, RA resting; picking up the same afternoon
+>
+> **Everything through 17 November is committed and pushed** (`1e40591`). Working tree clean,
+> 26 tests passing. Nothing is half-finished in the code or the documents; what remains is
+> three decisions and one optional download.
+>
+> **The three things only you can do, in this order:**
+>
+> 1. **Countersign the 21 HITL decisions** — `res webui`, then `/review`. ~15 minutes. The one
+>    item no further work by Claude can close, and it is exactly what the professor's §5 asks
+>    for. Until it is done, every checkpoint in the record reads `ai-ra:claude`.
+> 2. **Read `handover/0_REQUIREMENTS_MATRIX.md`**, especially the four questions at the end.
+>    Correct anything that is not in your voice — the handover is drafted in Claude's.
+> 3. **Decide how the package goes to the professor** — attached files, GitHub link, or both.
+>    Claude drafts the email; **you press send.** That was never delegated.
+>
+> **Deferred on purpose, not forgotten:** `res acquire --confirm` would download 1,266
+> open-access full texts for nothing, but it is only useful once there is budget to extract
+> from them, so it was judged not urgent. The report is complete without it.
+>
+> **What the afternoon session must read first:** this block, then `CLAUDE.md`'s status
+> pointer, then `WALKTHROUGH.md` **M42** (the search and its four defects) and **M43** (the
+> evidence map and the three literature findings). Those two entries contain everything from
+> the 16–17 November sessions; the conversation added no decision that is not in them.
+>
+> **The one framing worth keeping from the conversation**, because it decides how the report
+> reads: three weeks produced no finding *about emotion regulation* until 17 November, and the
+> defensible case is not "look what we built" but **"four things this project was claiming were
+> false, and they were caught before a journal submission"** — with the literature findings and
+> the $25 ask as the forward half. The requirements matrix is written that way.
+
 - [x] ~~Cost ceiling for Phase C~~ — Proposed default unless overridden: **pilot ≤ $10**, report
-      the measured cost, then decide. Not yet answered.
+      the measured cost, then decide. Superseded 2026-11-17: the cost is now computed, not
+      proposed — **$5.44 screens the whole pool**, a 3-paper pilot is $4–5, screening plus a
+      10-paper pilot about $21 (`outputs-emotion/COST_MODEL.md`). Still unanswered, but it is
+      now a question with a number attached.
 - [ ] **The 21 HITL decisions are uncountersigned** (`0/20` contradictions, programme theory
       signed `ai-ra:claude(...awaiting countersignature)`). Only the RA can do this, and the
       professor's §4 asks us to *preserve* human verification — which cannot be preserved if it
       has never happened. ~15 minutes at `res webui` → `/review`.
+- [ ] **Four research questions put to the professor 2026-11-17** and unanswered, each one
+      capable of changing what the review is: (1) is STEM the focus or the gap, given 51 records;
+      (2) follow his five named interventions or the literature's mindfulness-and-reappraisal
+      centre; (3) one emotion or nine, given anxiety at 578 of 678; (4) may we spend ~$25.
+      `handover/0_REQUIREMENTS_MATRIX.md` states all four. His §5 invites exactly these.
 - [ ] **AERA reviewer comments unread.** aera.net → login → 2027 Annual Meeting → Online Portal
       → Submitter Menu → Read your Reviews. May change what Phase B says.
 
