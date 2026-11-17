@@ -170,10 +170,11 @@ He has not seen this system and does not know what it does. Hold me to these:
       proposed — **$5.44 screens the whole pool**, a 3-paper pilot is $4–5, screening plus a
       10-paper pilot about $21 (`outputs-emotion/COST_MODEL.md`). Still unanswered, but it is
       now a question with a number attached.
-- [ ] **The 21 HITL decisions are uncountersigned** (`0/20` contradictions, programme theory
-      signed `ai-ra:claude(...awaiting countersignature)`). Only the RA can do this, and the
-      professor's §4 asks us to *preserve* human verification — which cannot be preserved if it
-      has never happened. ~15 minutes at `res webui` → `/review`.
+- [x] **The 21 HITL decisions are countersigned** (2026-11-17, M46). 20/20 contradictions and
+      programme theory v12, by `human:duy` at `res webui` → `/review`, none disputed; the
+      signature appends, so `ai-ra:claude(…) + countersigned human:duy` keeps both actors. Two
+      webui defects had to be fixed first — the route crashed on every submission and every human
+      action button rendered blank — so this had been **impossible**, not merely undone.
 - [ ] **Four research questions put to the professor 2026-11-17** and unanswered, each one
       capable of changing what the review is: (1) is STEM the focus or the gap, given 51 records;
       (2) follow his five named interventions or the literature's mindfulness-and-reappraisal

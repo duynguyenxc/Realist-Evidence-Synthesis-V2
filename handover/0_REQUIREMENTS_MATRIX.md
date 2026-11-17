@@ -79,7 +79,7 @@ studies and are not mixed into the corpus.
 
 | Your words | Status | Note |
 |---|---|---|
-| "please interact with it directly and complete the necessary procedures rather than stopping the research process" | **Done on Richmond** | All 20 contradictions resolved and the programme theory signed, recorded honestly as AI-performed under your delegation. Nothing to do yet on the new topic, because screening has not run |
+| "please interact with it directly and complete the necessary procedures rather than stopping the research process" | **Done on Richmond, and countersigned** | All 20 contradictions resolved and the programme theory signed under your delegation, recorded honestly as AI-performed, then each confirmed by Duy at the review console — none disputed. Nothing to do yet on the new topic, because screening has not run |
 | "For routine decisions … please exercise your judgment and document your decisions" | **Done** | `WALKTHROUGH.md`, `docs/DECISION_LOG.md`, and the revision log inside `config-emotion/coding_frame.yaml`, which records every change to the coding dictionary and why |
 | "If you encounter questions involving important research directions … please contact me" | **Doing it now** | Four questions below. Three of them are findings from this week that change what the review should be |
 

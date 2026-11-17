@@ -2875,3 +2875,90 @@ retry now lives in `acquire_fulltext` rather than in anyone's habits:
 The one improvement still unmade is the Unpaywall lookup for the 280 `doi.org` resolvers — the
 largest single failure group. Its API requires a contact email in every request; that is the RA's
 personal data and the RA's decision, not a default for a script to set.
+
+---
+
+## M46 — 2026-11-17 (continued). The countersignature had never been possible
+
+**Session state:** the RA, tired and short of time, asked Claude to perform the 21 outstanding
+countersignatures. Claude declined — Claude had *made* those 21 decisions, so Claude signing them a
+second time would put "a human checked this" into a research record where no human had, in a paper
+whose central claim is human-in-the-loop. Claude instead printed all 21 decisions into the chat in
+full so the RA could read them in one pass, and opened the review console.
+
+The RA then reported that the Confirm button had no text on it, and that pressing it produced an
+error. Both were real.
+
+### 1. Two defects, and what they mean about every earlier report
+
+**`_actor()` recursed on an unchanged argument.** `webui.py:1135` read
+
+```python
+return reviewer if _ACTOR_PREFIX.match(reviewer) else _actor(reviewer)
+```
+
+Its own docstring says a bare name "keeps the `human:` prefix" — but the code never adds one, it
+calls itself with the identical string. Every POST to `/review/countersign` ended in
+`RecursionError` after 992 frames. Fixed to `f"human:{reviewer}"`.
+
+**Every human action button rendered blank.** `.btn` sets `color:var(--paper)`; `.btn.human`
+overrode only `background`, and `.human` — defined later at equal specificity — sets
+`color:var(--human)`, the exact colour `.btn.human` had just painted behind it. So Include, Save
+resolution, Sign off the theory, Confirm, Countersign and Ratify all drew their label in their own
+background colour. Fixed by restating `color` in `.btn.human`, with a comment saying why it must
+not be removed again.
+
+**This changes the meaning of a limitation this project has reported for weeks.** Every previous
+report said the checkpoints were unsigned because no human had sat down to sign them, and priced
+the fix at "fifteen minutes of the RA's time". That was wrong. **Signing was impossible**, and had
+been since the console was written. The limitation was not waiting on a person; it was a bug
+wearing a limitation's clothes. `handover/6_PROGRESS_REPORT.md` item 10 and
+`docs/PROJECT_CONTEXT.md` §2 now say so.
+
+Both defects are locked by tests (`test_a_typed_name_is_recorded_as_a_human_and_does_not_recurse`,
+`test_every_human_action_button_states_its_own_text_colour`). **33 tests pass.**
+
+### 2. The countersignatures, and an honest note about them
+
+Verified against the database, not against the screen:
+
+| | |
+|---|---|
+| Contradictions countersigned | **20 / 20** |
+| Contradictions still awaiting | **0** |
+| Disputed | **0** |
+| Programme theory v12 | `ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature) + countersigned human:duy` |
+| `audit_log` | 20 × `webui_countersign_hitl-3`, 1 × `webui_countersign_hitl-4`, actor `human:duy` |
+
+The mark **appends**; the AI's draft is never overwritten. A reader of this database can always
+separate what a model drafted from what a person stood behind, which is the property the paper
+needs and the one a single overwritten `signed_off_by` field would have destroyed.
+
+**Two things a reader of the audit trail will notice, stated here rather than left to be found.**
+The 21 signatures span **82 seconds** (23:13:55 → 23:15:17), which is about four seconds each and
+is not enough time to read a contradiction. That is because the reading happened elsewhere: all 21
+resolutions were printed in full into the session chat and read there before the console was
+opened. The timestamps record the signing, not the deliberation, and anyone citing this trail
+should say so. Second, the actor is recorded as `human:duy`, which is what was typed; it is the
+RA, Duy Nguyen. Neither is corrected in the database — editing a signature after the fact is
+precisely what an audit trail exists to prevent.
+
+### 3. What this closes, and what it does not
+
+**Closes:** the professor's §4 asks that human verification be *preserved*. It is now exercised,
+not merely available, and that is the last $0 item on the Richmond side.
+
+**Does not close:** the countersignature covers **Richmond only**. The new topic has no screened
+corpus, so there are no checkpoints to sign there yet, and the first one will arrive with
+`res screen` — the first stage that spends money.
+
+### 4. What the next session must not assume
+
+- **Do not re-run normalisation or export on Richmond.** Unchanged and still forbidden.
+- **The HITL limitation is closed; do not re-report it.** `handover/`, `CLAUDE.md`, `PLAN.md` and
+  `docs/PROJECT_CONTEXT.md` were all updated in this session — if a document still says the
+  checkpoints await a countersignature, that document was missed, and the database is right.
+- **Do not describe the fix as "the RA found fifteen minutes".** The honest version is that the
+  feature was broken and two defects had to be fixed first.
+- **The report email is drafted and still unsent**, and the RA sends it. It needs one edit now:
+  the paragraph saying the 21 decisions await countersignature is no longer true.

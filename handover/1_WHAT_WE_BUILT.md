@@ -17,7 +17,7 @@ the project does not have.
 | | |
 |---|---|
 | Richmond benchmark | **Complete.** Ran end to end twice; 28 papers, 94 configurations, 547 quoted elements, verified against your benchmark |
-| The five review checkpoints | **Performed, awaiting a human countersignature.** All 20 contradictions resolved and the programme theory signed, recorded as AI-performed under your section 5 delegation |
+| The five review checkpoints | **Performed and countersigned by a human.** All 20 contradictions resolved and the programme theory signed under your section 5 delegation, each then confirmed by Duy at the review console. Both actors stay in the record: `ai-ra:claude(…) + countersigned human:duy` |
 | New topic configuration | **Drafted, not reviewed.** `config-emotion/` holds the review protocol, the initial programme theory built from your four references, and rewritten agent personas |
 | New topic corpus | **Candidate pool collected and described.** 1,863 records, 89% with an abstract, 68% with an open-access PDF link and **572 full texts obtained**, plus a separate 445-record theory pool. Nothing screened — no eligibility criterion has been applied to any record |
 | What the pool is about | **Coded against Pekrun's and Gross's categories, without a model.** `outputs-emotion/EVIDENCE_MAP.md`. Three findings in it change what the review should be, and are Questions 1–3 in the requirements matrix |
@@ -212,10 +212,11 @@ package:
 only one model vendor has been used; the verification run dates from September; everything rests
 on one benchmark; and there is no cost history to estimate from.
 
-**Still open and not ours to close:** no human has countersigned the review checkpoints. They are
-performed and the reasoning is recorded, but signed `ai-ra:claude` rather than with a name,
-because entering a person's name against a decision they have not read would put a false record
-in the research log. Fifteen minutes of Duy's time closes it.
+**Now closed:** the review checkpoints have been countersigned. Each of the 20 contradiction
+resolutions and the programme theory were performed by the AI acting as RA, recorded honestly as
+`ai-ra:claude`, and then confirmed one at a time by Duy at the review console. The countersignature
+appends rather than overwrites, so the record names both actors and a reader can always tell which
+decisions a model drafted and which a person stood behind. None was disputed.
 
 ---
 

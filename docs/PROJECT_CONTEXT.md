@@ -202,12 +202,16 @@ depends on it); a **budget ceiling was never set**.
    cause was a hole in the prompt, which forbade "adjacent or broader" concepts and said nothing
    about antonyms. All three judging passes now refuse such a vote. The recount cost two concepts
    and uncovered a second, independent error; see `MACHINE_VS_HUMAN.md` §5.1.
-2. **Still open in the part that matters.** The checkpoints have now been *performed* — all 20
-   contradictions resolved, the programme theory signed, `hitl_feedback` 0 → 21 rows — but they are
-   signed `ai-ra:claude(RA-delegated-2026-11-04, awaiting countersignature)`, which is honest and
-   is **not** a human having exercised them. The professor's 2026-10-30 §4 asks us to *preserve*
-   human verification, and a feature never used cannot be preserved. A countersignature flow is
-   built at `/review`; roughly fifteen minutes of the RA's time closes this.
+2. **Closed on 2026-11-17.** The checkpoints were *performed* by the AI acting as RA — all 20
+   contradictions resolved, the programme theory signed, `hitl_feedback` 0 → 21 rows — and have
+   now each been **countersigned by the RA** at `/review`, none disputed. The mark appends rather
+   than overwrites, so the record reads `ai-ra:claude(RA-delegated-2026-11-04, awaiting
+   countersignature) + countersigned human:duy` and a reader can always separate what a model
+   drafted from what a person stood behind. The professor's 2026-10-30 §4 asks us to *preserve*
+   human verification; it is now exercised rather than merely available. Note what had to be fixed
+   to get there (M46): the countersign route recursed until the stack ended, and every human
+   action button drew its label in its own background colour — so this had never been **possible**,
+   which is a different and worse fact than nobody having got round to it.
 3. **The negative-affect gap is diagnosed, and it is not a defect.** Five gold concepts are
    recovered at no tier, four about fear, pressure or low self-efficacy. Measured 2026-11-04:
    `emotion` and `self-efficacy` occur **zero times** in all 28 papers, and the extractor *did*

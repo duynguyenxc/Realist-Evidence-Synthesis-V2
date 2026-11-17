@@ -96,7 +96,8 @@ starting work; retire it when deliverable #6 is sent.
 547 entity instances, 459 typed relations, 94 CMOCs, 8 conceptual entities. Verification is done
 and the matcher defect is fixed. **P0, P1 and P2 of the 2026-11-04 plan are complete**
 (`docs/IMPROVEMENT_PLAN.md` §6, WALKTHROUGH M40 §§7–8): the HITL checkpoints have been performed
-and signed `ai-ra:claude(...awaiting countersignature)`, prompts are extracted to
+and are now **countersigned by a human** (M46; `ai-ra:claude(…) + countersigned human:duy`,
+21/21, none disputed), prompts are extracted to
 `config/prompts/`, and the pipeline now has a literature search (`res search` — OpenAlex and
 Crossref), full-text acquisition (`res acquire`), BM25 retrieval, and retroduction without a quote
 (`res theorise`). `config-emotion/` is a complete draft configuration for the professor's new topic.
@@ -155,9 +156,12 @@ answer to the email and ends with four questions only the professor can settle.
 that spends credit. `handover/` holds deliverables 1, 2 and 6 as drafts in Claude's voice: **unread,
 uncorrected and unsent**, and the RA sends them, not Claude.
 
-**Three things are waiting on a person, not on code:** the 21 HITL decisions are uncountersigned,
-`config-emotion/protocol.yaml` is an unreviewed draft, and **nothing in P2 has been run against a
-real corpus** (no `data-emotion/`, no emotion database). **The AERA 2027 paper was accepted on
+**The 21 HITL decisions were countersigned on 2026-11-17** (M46) — the project's central claim
+now has a person behind it. Getting there required fixing two webui defects that had made
+countersigning **impossible**, not merely undone: `_actor()` recursed on an unchanged argument so
+every submission 500'd, and `.btn.human` drew each button's label in the button's own background
+colour. **Two things still wait on a person:** `config-emotion/protocol.yaml` is an unreviewed
+draft, and **nothing in P2 has been run against a real corpus**. **The AERA 2027 paper was accepted on
 2026-11-06** (Division D roundtable, Toronto, April 2027); reviewer comments sit unread on the All
 Academic portal, and the accepted paper carries the superseded 34/46 and 28/46 figures.
 

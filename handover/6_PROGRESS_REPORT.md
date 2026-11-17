@@ -108,8 +108,10 @@ from the batch being processed. The extraction was verified byte-identical by ha
 before and after.
 
 ### The review checkpoints were performed
-All 20 contradictions are resolved and the programme theory is signed. They are recorded as
-AI-performed under your section 5 delegation and **await Duy's countersignature** — see Open below.
+All 20 contradictions are resolved and the programme theory is signed. They were performed by the
+AI under your section 5 delegation and have now each been **countersigned by Duy** at the review
+console; none was disputed. The record keeps both actors — `ai-ra:claude(…) + countersigned
+human:duy` — so it stays visible which decisions a model drafted and which a person stood behind.
 
 ### Two errors were found in our own reports and corrected
 - **The verification figures were too high.** The scoring code accepted matches whose own written
@@ -223,13 +225,13 @@ to adjudicate one.
 
 ### Open, and not something we can solve for you
 
-10. **No human has countersigned the review checkpoints.** All 20 contradictions are resolved and
-    the programme theory signed, with the reasoning recorded — but signed `ai-ra:claude`, honestly,
-    because writing a person's name against a decision they have not read would put a false entry
-    in the research record. Your section 4 asks us to *preserve* human verification; a feature
-    never exercised cannot be preserved. The console now presents each decision with the evidence
-    for confirming or disputing it, which makes this about fifteen minutes of Duy's time. **It is
-    the one limitation on this list that no amount of further work by us can close.**
+10. **~~No human has countersigned the review checkpoints.~~ Closed.** All 20 contradictions and
+    the programme theory have now been countersigned by Duy, none disputed. Two defects had to be
+    fixed first, and they are worth stating because they change what the earlier reports meant:
+    the countersignature route crashed on every submission, and every button a person was meant to
+    press rendered with its label in its own background colour. **The checkpoints had not been
+    left unsigned for want of a human — signing had never been possible.** Your section 4 asks us
+    to *preserve* human verification; it is now exercised rather than merely available.
 
 ---
 
