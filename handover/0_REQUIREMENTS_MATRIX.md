@@ -1,6 +1,6 @@
 # Your assignment, clause by clause
 
-**Duy Nguyen — 17 November 2026.** A traceability matrix for the email of 30 October 2026.
+**Duy Nguyen.** A traceability matrix for your email of 30 October 2026.
 
 Read this first if you want to know what is done. Every row is a clause of your email, in
 your order, with a status and the file that substantiates it. Nothing is marked done

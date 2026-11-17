@@ -1,8 +1,8 @@
 # Progress report
 
-**Duy Nguyen — 17 November 2026.** Deliverable 6 of the 2026-10-30 assignment.
+**Duy Nguyen.** Deliverable 6 of the 2026-10-30 assignment.
 
-Covering 30 October to 16 November. Short version: deliverables 1, 2 and 6 are complete and
+Covering the period since your email. Short version: deliverables 1, 2 and 6 are complete and
 attached, and **the literature search for the new topic has now been run** — 1,863 candidate
 records, at no cost, which is the first half of deliverable 3. Deliverables 4 and 5, and the
 second half of 3, need screening and extraction, which is where the pipeline begins to spend

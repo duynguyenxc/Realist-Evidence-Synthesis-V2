@@ -1,4 +1,4 @@
-# Handover — 17 November 2026
+# Handover
 
 Deliverables 1, 2 and 6 of the assignment of 2026-10-30, the first half of deliverable 3,
 and a clause-by-clause matrix of the assignment itself.

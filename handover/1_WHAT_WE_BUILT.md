@@ -1,6 +1,6 @@
 # What we built, and where everything is
 
-**Duy Nguyen — 17 November 2026.** Deliverable 1 of the 2026-10-30 assignment.
+**Duy Nguyen.** Deliverable 1 of the 2026-10-30 assignment.
 
 This answers your first request: organise and provide everything developed for the Richmond
 benchmark. It assumes no familiarity with the system.

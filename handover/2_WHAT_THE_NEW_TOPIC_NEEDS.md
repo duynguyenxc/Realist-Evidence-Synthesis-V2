@@ -1,6 +1,6 @@
 # Applying the pipeline to emotional awareness and regulation
 
-**Duy Nguyen — 16 November 2026.** Deliverable 2 of the 2026-10-30 assignment.
+**Duy Nguyen.** Deliverable 2 of the 2026-10-30 assignment.
 
 Your section 2 asked seven questions and a step-by-step plan. Each answer below is tied to code
 that exists, not to what the system might do. Where the honest answer is "we cannot yet", it says so.
