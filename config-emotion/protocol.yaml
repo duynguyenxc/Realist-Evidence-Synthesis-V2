@@ -229,6 +229,42 @@ search_strategy:
     - id: Q10
       purpose: The major school-age syntheses the eligibility criteria admit, Durlak et al. 2011 being the paradigm case the professor names.
       q: '("social and emotional learning" OR "social-emotional learning" OR "emotional intelligence") AND (intervention OR program OR curriculum) AND ("meta-analysis" OR "systematic review" OR randomized OR randomised)'
+  # --- A second, separately-pooled search: the THEORY literature ---
+  # Added 2026-11-17, after a finding that is worth stating plainly. Harley, Pekrun,
+  # Taxer & Gross (2019), "Emotion Regulation in Achievement Situations: An Integrated
+  # Model" (Educational Psychologist 54(2):106-126, doi:10.1080/00461520.2019.1587297,
+  # 387 citations) is the paper that joins the two frameworks the assignment names: it
+  # integrates Pekrun's control-value theory (where achievement emotions come from) with
+  # Gross's process model (how they are regulated). It is the natural initial programme
+  # theory for this review, and it was absent from both pools.
+  #
+  # That absence is not a search failure. Its title and abstract contain NO term from any
+  # intervention block and NO term from any population block (checked word by word), so no
+  # query above could have retrieved it, by construction. What the finding exposes is
+  # structural: ten queries that all require an intervention term can only ever return
+  # intervention studies, and a realist review needs the theory literature too -- the
+  # programme theory is what the intervention evidence is tested against. Richmond's
+  # reviewers had their theory handed to them; this review has to find it.
+  #
+  # These queries therefore drop the intervention block and are pooled SEPARATELY, into
+  # `theory_pool.jsonl`. Theory papers are not included studies and must never be mixed
+  # into the corpus of record: they inform the initial programme theory, which is a
+  # different role with different eligibility.
+  theory_queries:
+    - id: T01
+      purpose: The control-value frame itself, including the taxonomy work that defines which emotions the review is about.
+      q: '("achievement emotions" OR "academic emotions" OR "control-value theory" OR "learning-related emotions") AND (theory OR model OR framework OR taxonomy OR appraisal OR "appraisal patterns")'
+    - id: T02
+      purpose: Emotion regulation theory as it reaches education — the ERAS bridge and anything else joining Gross to achievement settings.
+      q: '("emotion regulation" OR "emotional regulation") AND ("achievement situations" OR academic OR learning OR classroom OR educational) AND (theory OR model OR framework OR "process model" OR conceptual)'
+    - id: T03
+      purpose: Awareness, literacy and competence as constructs rather than as outcomes — the half of the review question the regulation literature does not define.
+      q: '("emotional awareness" OR "emotional literacy" OR "emotional competence" OR "emotional intelligence") AND (construct OR model OR framework OR theory OR conceptualization OR conceptualisation) AND (education OR learning OR student OR academic)'
+  theory_pool_rules: >
+    Pooled into `theory_pool.jsonl`, never into the corpus of record. Used to build and
+    revise the initial programme theory. A paper may later be promoted into the corpus if
+    it turns out to report an intervention, and that promotion is a recorded decision, not
+    a merge.
   crossref_crosscheck_queries:
     - 'emotion regulation intervention university students'
     - 'emotional awareness intervention higher education'

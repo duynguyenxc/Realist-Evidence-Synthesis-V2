@@ -91,7 +91,7 @@ spent entirely on OpenMAIC, which is why this log jumps from 30 September to M38
 not a record, so where it disagrees with the repository the repository wins. Read it before
 starting work; retire it when deliverable #6 is sent.
 
-## Status pointer (updated 2026-11-16 — the new topic now has a literature pool)
+## Status pointer (updated 2026-11-17 — the pool is described, and the questions are the professor's)
 **Phases 0–7 are built and the pipeline has run end to end twice** (M34, M35). The database holds
 547 entity instances, 459 typed relations, 94 CMOCs, 8 conceptual entities. Verification is done
 and the matcher defect is fixed. **P0, P1 and P2 of the 2026-11-04 plan are complete**
@@ -131,6 +131,24 @@ review**; **any Crossref result from before 2026-11-16 is void** (cursor paging 
 relevance ranking); and **"OpenAlex is free and keyless" expired 2026-02-13** — it bills $0.001 a
 search against a $0.10/day budget shared per network IP, so the manuscript's credential-free
 reproducibility claim needs qualifying.
+
+**The pool is now described, 2026-11-17** (M43), still at $0. `config-emotion/coding_frame.yaml`
+(a theory-grounded dictionary: Gross's five regulation families via **ERAS** — Harley, Pekrun,
+Taxer & Gross 2019, the paper that joins the professor's two theoretical references — plus
+Pekrun's nine achievement emotions and his own intervention and context lists verbatim) is applied
+by `scripts/evidence_map.py` to all 1,863 records. **It counts term presence in titles and
+abstracts: nothing in it is a CMOC and no number in it is evidence of effectiveness.** Three
+findings, dictionary-based and provisional, strong enough to ask the professor about and not to
+publish: **anxiety is 578 of 678** emotion-tagged records; **three of his five named interventions
+are nearly absent** (self-regulation activities 7, awareness prompts 6, learning plans 17) while
+mindfulness, unnamed by him, has 291; and **STEM is 51 records** (engineering 20 + computing 18 +
+natural sciences 13) of 1,088 higher-education ones. The frame carries a `revisions:` block —
+**add to it, never edit a term silently**. A second search arm was added because every corpus query
+requires an intervention term and therefore could never reach the theory literature:
+`theory_pool.jsonl`, 445 records, **not the corpus**. And `outputs-emotion/COST_MODEL.md` closed
+the standing "no cost history" limitation: **screening the whole pool is $5.44** — the $45 ceiling
+was always extraction of 28 full papers. `handover/0_REQUIREMENTS_MATRIX.md` is the clause-by-clause
+answer to the email and ends with four questions only the professor can settle.
 
 **The RA suspended all paid work on 2026-11-13 — there is no budget.** Ask before planning anything
 that spends credit. `handover/` holds deliverables 1, 2 and 6 as drafts in Claude's voice: **unread,

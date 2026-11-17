@@ -1,0 +1,64 @@
+# What the paid stages would cost
+
+Generated 2026-11-17 04:07 UTC by `scripts/cost_model.py` from the system prompt the pipeline actually renders, the corpus on disk, and the prices in `config/models.yaml`. Nothing was run and nothing was spent to produce this.
+
+## Why this file exists
+
+The progress report has carried the limitation *"no cost history, so a new run's cost can be measured but not estimated"*. The first half is true — the `token_usage` table was emptied by a database restore. The second half was never checked: a projection needs the prompt, the text and the prices, and all three are in the repository. **The limitation was partly arithmetic nobody had done.**
+
+## The three numbers everything rests on
+
+| | |
+|---|---|
+| Records in the pool | **1863** |
+| System prompt, rendered from `config-emotion/protocol.yaml` | **3,928 characters ≈ 982 tokens**, re-sent per record |
+| Titles + abstracts in the pool | **3,215,106 characters ≈ 0.80M tokens** |
+
+Tokens are estimated at 4 characters each; no tokeniser is installed. Output is assumed at 150 tokens per screening decision. No prompt caching is assumed, although the code re-sends an identical system prompt 1863 times and `models.yaml` prices cached input at a tenth — so the screening figures below are an upper bound that a caching change would cut substantially.
+
+## Screening
+
+Dual-model vote, recall-first: every record is read by both tiers and any *include* wins. Both are cheap tiers, deliberately.
+
+| Scenario | Records | Raw | ×2.0 calibration | Verdict |
+|---|---|---|---|---|
+| Whole pool | 1863 | $2.72 | **$5.44** | the full search, screened |
+| Higher-education records only | 1088 | $1.59 | **$3.17** | if the scope narrows to HE |
+| Top 200 by dictionary relevance | 200 | $0.29 | **$0.58** | a focused first round |
+| The 32 records touching all four roles | 32 | $0.05 | **$0.09** | mechanism-first pilot |
+
+Per tier, whole pool, before calibration: screening_primary (gpt-5.4-mini) **$1.22**; screening_second_vote (gpt-4.1-mini) **$1.50**.
+
+**Screening the entire pool costs about $5.44.** That is the single most consequential number in this file, because the project has been treating screening as budget-blocked alongside extraction. The $45 ceiling in `models.yaml` is for EXTRACTING 28 full papers — a different stage with a different model tier and roughly a hundred times the text per study.
+
+## Extraction
+
+Extraction cannot be projected the same way: it reads full texts, which have not been downloaded, and it makes several calls per study — chunked extraction, a verifier pass, normalisation and synthesis. Modelling that from abstracts would be a guess dressed as arithmetic. So the figure below is **observed, from the Richmond run**, which used the same tiers on comparable papers.
+
+| | |
+|---|---|
+| Richmond: 28 papers, end to end | **$35–$45** (`models.yaml`: "~$35-45 observed") |
+| Implied per paper | **$1.25–$1.61** |
+
+| Pilot size | Projected extraction | Why that size |
+|---|---|---|
+| 3 papers | **$4–$5** | `pilot_paper_count` in `models.yaml` |
+| 10 papers | **$12–$16** | enough to see whether CMOCs are coherent |
+| 32 papers | **$40–$51** | every record touching all four roles |
+| 28 papers | **$35–$45** | a Richmond-sized run, for comparability |
+
+These are **not** calibrated upward: they are already an observation of real spend, and multiplying an observation by a factor meant for list-price estimates would double-count the correction.
+
+## What a decision actually costs
+
+| Package | Cost | What you get |
+|---|---|---|
+| Screen the whole pool | **$5.44** | Every record judged against the protocol by two models, uncertain cases queued for a human. Turns 1,863 candidates into an included corpus — the professor's deliverable 3, second half |
+| Screen + 3-paper pilot extraction | **$10** | The above, plus the first CMOCs on this topic and a measured per-paper cost to replace every estimate in this file |
+| Screen + 10-paper pilot | **$22** | Enough configurations to see whether a programme theory is forming — deliverables 4 and 5 in preliminary form |
+| Screen + all 32 four-role records | **$57** | A defensible small realist review on its own terms |
+
+## What would make these numbers real
+
+One stage, run once, with the provider dashboard read afterwards. `models.yaml` says so itself: *"TO CALIBRATE: run one stage, read the true cost from the dashboard, set factor = true/estimate."* A 3-paper pilot costs a few dollars and replaces every projection here with a measurement — which is why it is the first paid step in the plan and not the last.
+

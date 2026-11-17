@@ -1,0 +1,390 @@
+# Descriptive evidence map — emotional awareness and regulation in learning
+
+Generated 2026-11-17 04:06 UTC by `scripts/evidence_map.py` from `studies_metadata.jsonl` and `config-emotion/coding_frame.yaml` (frame version 1.1). No model was called; this cost nothing.
+
+## Read this first
+
+**This map says what 1863 records TALK ABOUT. It does not say what works.** Every figure below is a count of records whose title or abstract contains a term from a theory-grounded dictionary. A record counted under *reappraisal prompts* mentions reappraisal; it may have found the intervention useless, may be a protocol, may be a critique. **Nothing here is a Context–Mechanism–Outcome Configuration**, and no number here is evidence of effectiveness. Those require screening and extraction, which call a model and are the stages this project currently has no budget for.
+
+What a map like this is for: seeing what a literature is made of, and where its holes are, before paying to read it. The holes are the more useful half — they are where a realist review has something to contribute rather than something to summarise.
+
+Coverage caveat: **1654 of 1863 records (89%) have an abstract.** The rest are matched on title alone and are therefore under-tagged throughout. Every percentage below is of all 1863 records, not of the 1654 with abstracts, so each is a floor.
+
+## Interventions
+
+*What the literature intervenes with.*
+
+**848 of 1863 records (46%) carry at least one intervention tag**; 1015 carry none.
+
+| Category | Records | Share | Carried mostly by |
+|---|---|---|---|
+| Mindfulness and attention training | 291 | 16% | `mindful` 289, `mindfulness` 273, `meditation` 43 |
+| Social and emotional learning programmes | 151 | 8% | `social and emotional learning` 87, `social-emotional learning` 65, `sel program` 47 |
+| Feedback ★ | 149 | 8% | `feedback` 149, `peer feedback` 9, `feedback literacy` 7 |
+| Appraisal and reappraisal prompts | 103 | 6% | `reappraisal` 89, `cognitive reappraisal` 64, `reframing` 8 |
+| Reflective writing ★ | 101 | 5% | `reflective journal` 43, `journaling` 37, `reflective practice` 33 |
+| Expressive writing | 63 | 3% | `expressive writing` 63, `emotional disclosure` 4, `written emotional disclosure` 2 |
+| Emotion-regulation training or programme | 58 | 3% | `emotion regulation training` 24, `emotion regulation skills` 18, `regulation intervention` 12 |
+| Peer, instructor and climate interventions | 27 | 1% | `peer support` 12, `classroom climate` 5, `teacher-student relationship` 5 |
+| Learning plans and goal setting ★ | 17 | 1% | `goal setting` 14, `goal-setting` 6, `study plan` 2 |
+| Course redesign undertaken for affective reasons | 8 | 0% | `flipped classroom` 6, `low-stakes assessment` 2 |
+| Self-regulation activities ★ | 7 | 0% | `self-regulation skill` 4, `regulation skills training` 1, `study skills course` 1 |
+| Emotional awareness prompts ★ | 6 | 0% | `emotional awareness training` 3, `mood meter` 1, `emotion labeling` 1 |
+| Emotion-vocabulary and feeling-words curricula | 5 | 0% | `feeling words` 2, `ruler approach` 2, `emotional literacy curriculum` 1 |
+
+★ = named by example in the assignment of 2026-10-30.
+
+## Mechanism families
+
+*The candidate answers to *why*.*
+
+**489 of 1863 records (26%) carry at least one mechanism familie tag**; 1374 carry none.
+
+| Category | Records | Share | Carried mostly by |
+|---|---|---|---|
+| Response modulation | 137 | 7% | `suppression` 58, `relaxation` 33, `expressive suppression` 31 |
+| Metacognitive and emotional monitoring | 137 | 7% | `metacognit` 112, `self-assessment` 21, `self-monitoring` 5 |
+| Control appraisal (control-value theory) | 128 | 7% | `self-efficacy` 111, `perceived control` 7, `control appraisal` 6 |
+| Cognitive change | 126 | 7% | `reappraisal` 89, `attribution` 11, `reframing` 8 |
+| Situation selection | 65 | 3% | `avoidance` 30, `procrastinat` 26, `withdrawal` 12 |
+| Attentional deployment | 41 | 2% | `rumination` 24, `distraction` 11, `refocus` 6 |
+| Value appraisal (control-value theory) | 25 | 1% | `value appraisal` 13, `task value` 5, `intrinsic value` 5 |
+| Situation modification | 14 | 1% | `help seeking` 12, `help-seeking` 11, `situation modification` 2 |
+
+## Achievement emotions
+
+*Pekrun's taxonomy, as outcomes and as targets.*
+
+**678 of 1863 records (36%) carry at least one achievement emotion tag**; 1185 carry none.
+
+| Category | Records | Share | Carried mostly by |
+|---|---|---|---|
+| Anxiety | 578 | 31% | `anxiety` 566, `test anxiety` 87, `math anxiety` 86 |
+| Enjoyment | 79 | 4% | `enjoy` 79, `enjoyment` 69 |
+| Boredom | 68 | 4% | `bored` 57, `boredom` 55, `disengagement` 11 |
+| Anger | 66 | 4% | `anger` 41, `frustration` 26, `angry` 5 |
+| Hope | 59 | 3% | `hope` 50, `optimism` 11, `hopeful` 1 |
+| Pride | 28 | 2% | `pride` 26, `proud` 2 |
+| Shame | 27 | 1% | `shame` 22, `guilt` 5, `embarrass` 2 |
+| Hopelessness | 24 | 1% | `hopeless` 16, `helpless` 5, `despair` 2 |
+| Relief | 11 | 1% | `relief` 11, `relieved` 1 |
+
+## Other outcomes
+
+*The non-emotional outcomes the assignment lists.*
+
+**1243 of 1863 records (67%) carry at least one other outcome tag**; 620 carry none.
+
+| Category | Records | Share | Carried mostly by |
+|---|---|---|---|
+| Wellbeing and satisfaction (secondary only) | 685 | 37% | `stress` 354, `well-being` 270, `mental health` 270 |
+| Academic achievement | 331 | 18% | `academic performance` 184, `academic achievement` 103, `learning outcome` 62 |
+| Engagement and persistence | 302 | 16% | `engagement` 205, `persist` 49, `engaged` 41 |
+| Motivation | 205 | 11% | `motivation` 191, `intrinsic motivation` 21, `motivated` 18 |
+| Emotion-regulation strategy use | 181 | 10% | `regulation strateg` 150, `emotion regulation strateg` 127, `coping strateg` 32 |
+| Self-regulated learning behaviour | 161 | 9% | `self-regulated learning` 117, `learning strateg` 52, `time management` 26 |
+| Emotional awareness | 150 | 8% | `emotional awareness` 124, `emotion recognition` 17, `emotional clarity` 9 |
+
+## Context dimensions
+
+*The four the assignment names, verbatim.*
+
+**340 of 1863 records (18%) carry at least one context dimension tag**; 1523 carry none.
+
+| Category | Records | Share | Carried mostly by |
+|---|---|---|---|
+| Learning situations ★ | 147 | 8% | `online learning` 42, `lecture` 39, `blended` 20 |
+| Emotional challenges ★ | 130 | 7% | `academic stress` 50, `emotional distress` 17, `emotion dysregulation` 11 |
+| Student characteristics ★ | 72 | 4% | `gender difference` 39, `international student` 8, `at-risk student` 4 |
+| Prior experiences ★ | 11 | 1% | `previous experience` 3, `prior knowledge` 3, `prior experience` 2 |
+
+★ = named by example in the assignment of 2026-10-30.
+
+## Disciplines
+
+*Whether the STEM focus is actually served.*
+
+**615 of 1863 records (33%) carry at least one discipline tag**; 1248 carry none.
+
+| Category | Records | Share | Carried mostly by |
+|---|---|---|---|
+| Mathematics and statistics | 243 | 13% | `math` 164, `mathematics` 132, `statistics` 98 |
+| Health sciences | 177 | 10% | `nursing` 102, `medical student` 56, `nurse` 28 |
+| Explicitly non-STEM | 152 | 8% | `foreign language` 59, `efl` 58, `language learning` 41 |
+| STEM (general) | 53 | 3% | `stem` 53 |
+| Computing | 47 | 3% | `programming` 28, `computing` 13, `computer science` 10 |
+| Engineering | 31 | 2% | `engineering` 31 |
+| Natural sciences | 28 | 2% | `physics` 13, `chemistry` 10, `biology` 4 |
+
+## Settings
+
+*Higher education against school-age.*
+
+**1313 of 1863 records (70%) carry at least one setting tag**; 550 carry none.
+
+| Category | Records | Share | Carried mostly by |
+|---|---|---|---|
+| Higher education | 1088 | 58% | `university student` 456, `higher education` 318, `college student` 310 |
+| School-age | 277 | 15% | `adolescent` 71, `high school` 68, `elementary school` 47 |
+
+## Study designs
+
+*How much of the pool could carry mechanism evidence.*
+
+**1103 of 1863 records (59%) carry at least one study design tag**; 760 carry none.
+
+| Category | Records | Share | Carried mostly by |
+|---|---|---|---|
+| Review or synthesis | 349 | 19% | `systematic review` 236, `meta analysis` 123, `meta-analysis` 120 |
+| Qualitative | 317 | 17% | `qualitative` 218, `interview` 155, `thematic analysis` 56 |
+| Quasi-experiment | 300 | 16% | `control group` 227, `quasi-experiment` 104, `quasi experimental` 104 |
+| Correlational or cross-sectional | 197 | 11% | `cross-sectional` 86, `structural equation` 78, `correlational` 53 |
+| Randomised controlled trial | 184 | 10% | `randomly assigned` 82, `randomized controlled` 81, `rct` 20 |
+| Longitudinal | 101 | 5% | `longitudinal` 91, `ecological momentary` 5, `experience sampling` 4 |
+
+## Which interventions are studied against which emotions
+
+The review question joins an educational practice to a specific emotion. This is the table that shows whether the literature has done that, or whether it has studied practices and emotions separately.
+
+| | Anxiety | Enjoyment | Boredom | Anger | Hope | Pride | Shame | Hopelessness | Relief |
+|---|---|---|---|---|---|---|---|---|---|
+| **Mindfulness and attention training** | 91 | 5 | 1 | 5 | 6 | 2 | 1 | 3 | **·** |
+| **Social and emotional learning programmes** | 4 | 1 | 1 | 2 | 1 | **·** | **·** | **·** | **·** |
+| **Feedback** | 70 | 10 | 8 | 10 | 7 | 4 | 3 | 3 | 1 |
+| **Appraisal and reappraisal prompts** | 35 | 4 | 2 | 4 | 2 | 1 | **·** | **·** | 1 |
+| **Reflective writing** | 24 | 2 | **·** | 1 | 5 | **·** | **·** | **·** | **·** |
+| **Expressive writing** | 21 | 1 | **·** | 1 | 3 | **·** | 3 | **·** | 1 |
+| **Emotion-regulation training or programme** | 14 | 3 | **·** | 3 | **·** | **·** | **·** | **·** | **·** |
+| **Peer, instructor and climate interventions** | 5 | 1 | **·** | 2 | 1 | **·** | **·** | **·** | **·** |
+| **Learning plans and goal setting** | 4 | 2 | **·** | **·** | 1 | **·** | 1 | **·** | **·** |
+| **Course redesign undertaken for affective reasons** | 3 | **·** | **·** | **·** | **·** | **·** | **·** | **·** | **·** |
+| **Self-regulation activities** | **·** | **·** | **·** | **·** | **·** | **·** | **·** | **·** | **·** |
+| **Emotional awareness prompts** | **·** | **·** | **·** | 1 | 1 | **·** | **·** | **·** | **·** |
+| **Emotion-vocabulary and feeling-words curricula** | **·** | **·** | **·** | **·** | **·** | **·** | **·** | **·** | **·** |
+
+**·** marks a pair no record in the pool mentions together: **64 of 117 cells are empty.** An empty cell is a gap in what this literature *discusses*, which is where a review can say something new — but it may equally be a gap in the dictionary, and only reading the papers separates the two.
+
+<details><summary>The empty pairs</summary>
+
+- Mindfulness and attention training × Relief
+- Social and emotional learning programmes × Pride
+- Social and emotional learning programmes × Shame
+- Social and emotional learning programmes × Hopelessness
+- Social and emotional learning programmes × Relief
+- Appraisal and reappraisal prompts × Shame
+- Appraisal and reappraisal prompts × Hopelessness
+- Reflective writing × Boredom
+- Reflective writing × Pride
+- Reflective writing × Shame
+- Reflective writing × Hopelessness
+- Reflective writing × Relief
+- Expressive writing × Boredom
+- Expressive writing × Pride
+- Expressive writing × Hopelessness
+- Emotion-regulation training or programme × Boredom
+- Emotion-regulation training or programme × Hope
+- Emotion-regulation training or programme × Pride
+- Emotion-regulation training or programme × Shame
+- Emotion-regulation training or programme × Hopelessness
+- Emotion-regulation training or programme × Relief
+- Peer, instructor and climate interventions × Boredom
+- Peer, instructor and climate interventions × Pride
+- Peer, instructor and climate interventions × Shame
+- Peer, instructor and climate interventions × Hopelessness
+- Peer, instructor and climate interventions × Relief
+- Learning plans and goal setting × Boredom
+- Learning plans and goal setting × Anger
+- Learning plans and goal setting × Pride
+- Learning plans and goal setting × Hopelessness
+- Learning plans and goal setting × Relief
+- Course redesign undertaken for affective reasons × Enjoyment
+- Course redesign undertaken for affective reasons × Boredom
+- Course redesign undertaken for affective reasons × Anger
+- Course redesign undertaken for affective reasons × Hope
+- Course redesign undertaken for affective reasons × Pride
+- Course redesign undertaken for affective reasons × Shame
+- Course redesign undertaken for affective reasons × Hopelessness
+- Course redesign undertaken for affective reasons × Relief
+- Self-regulation activities × Anxiety
+- Self-regulation activities × Enjoyment
+- Self-regulation activities × Boredom
+- Self-regulation activities × Anger
+- Self-regulation activities × Hope
+- Self-regulation activities × Pride
+- Self-regulation activities × Shame
+- Self-regulation activities × Hopelessness
+- Self-regulation activities × Relief
+- Emotional awareness prompts × Anxiety
+- Emotional awareness prompts × Enjoyment
+- Emotional awareness prompts × Boredom
+- Emotional awareness prompts × Pride
+- Emotional awareness prompts × Shame
+- Emotional awareness prompts × Hopelessness
+- Emotional awareness prompts × Relief
+- Emotion-vocabulary and feeling-words curricula × Anxiety
+- Emotion-vocabulary and feeling-words curricula × Enjoyment
+- Emotion-vocabulary and feeling-words curricula × Boredom
+- Emotion-vocabulary and feeling-words curricula × Anger
+- Emotion-vocabulary and feeling-words curricula × Hope
+- …and 4 more
+
+</details>
+
+## Which interventions are discussed alongside which mechanism family
+
+A realist review's unit is the mechanism, not the intervention. Gross's five families plus control-value theory's two appraisal pathways are the candidate mechanisms; this is where each intervention's proposed *why* would live.
+
+| | Response modulation | Metacognitive and emotional monitoring | Control appraisal | Cognitive change | Situation selection | Attentional deployment | Value appraisal | Situation modification |
+|---|---|---|---|---|---|---|---|---|
+| **Mindfulness and attention training** | 31 | 8 | 19 | 21 | 12 | 15 | **·** | 2 |
+| **Social and emotional learning programmes** | 7 | 3 | 2 | 5 | **·** | **·** | **·** | **·** |
+| **Feedback** | 8 | 20 | 10 | 13 | 6 | 2 | **·** | 2 |
+| **Appraisal and reappraisal prompts** | 50 | 4 | 6 | 103 | 9 | 17 | 1 | 3 |
+| **Reflective writing** | 9 | 10 | 4 | 8 | 1 | 2 | **·** | 1 |
+| **Expressive writing** | 12 | **·** | 1 | 5 | 6 | 4 | **·** | **·** |
+| **Emotion-regulation training or programme** | 9 | 3 | 3 | 12 | 2 | 3 | 1 | 1 |
+| **Peer, instructor and climate interventions** | 5 | **·** | 4 | 4 | **·** | 2 | 1 | 2 |
+| **Learning plans and goal setting** | 1 | 5 | 4 | 2 | 2 | **·** | 1 | **·** |
+| **Course redesign undertaken for affective reasons** | **·** | 3 | 4 | **·** | **·** | **·** | **·** | **·** |
+| **Self-regulation activities** | **·** | 1 | 1 | **·** | 1 | 1 | **·** | **·** |
+| **Emotional awareness prompts** | 1 | **·** | 1 | **·** | **·** | **·** | **·** | **·** |
+| **Emotion-vocabulary and feeling-words curricula** | **·** | **·** | **·** | **·** | **·** | **·** | **·** | **·** |
+
+**·** marks a pair no record in the pool mentions together: **38 of 104 cells are empty.** An empty cell is a gap in what this literature *discusses*, which is where a review can say something new — but it may equally be a gap in the dictionary, and only reading the papers separates the two.
+
+<details><summary>The empty pairs</summary>
+
+- Mindfulness and attention training × Value appraisal (control-value theory)
+- Social and emotional learning programmes × Situation selection
+- Social and emotional learning programmes × Attentional deployment
+- Social and emotional learning programmes × Value appraisal (control-value theory)
+- Social and emotional learning programmes × Situation modification
+- Feedback × Value appraisal (control-value theory)
+- Reflective writing × Value appraisal (control-value theory)
+- Expressive writing × Metacognitive and emotional monitoring
+- Expressive writing × Value appraisal (control-value theory)
+- Expressive writing × Situation modification
+- Peer, instructor and climate interventions × Metacognitive and emotional monitoring
+- Peer, instructor and climate interventions × Situation selection
+- Learning plans and goal setting × Attentional deployment
+- Learning plans and goal setting × Situation modification
+- Course redesign undertaken for affective reasons × Response modulation
+- Course redesign undertaken for affective reasons × Cognitive change
+- Course redesign undertaken for affective reasons × Situation selection
+- Course redesign undertaken for affective reasons × Attentional deployment
+- Course redesign undertaken for affective reasons × Value appraisal (control-value theory)
+- Course redesign undertaken for affective reasons × Situation modification
+- Self-regulation activities × Response modulation
+- Self-regulation activities × Cognitive change
+- Self-regulation activities × Value appraisal (control-value theory)
+- Self-regulation activities × Situation modification
+- Emotional awareness prompts × Metacognitive and emotional monitoring
+- Emotional awareness prompts × Cognitive change
+- Emotional awareness prompts × Situation selection
+- Emotional awareness prompts × Attentional deployment
+- Emotional awareness prompts × Value appraisal (control-value theory)
+- Emotional awareness prompts × Situation modification
+- Emotion-vocabulary and feeling-words curricula × Response modulation
+- Emotion-vocabulary and feeling-words curricula × Metacognitive and emotional monitoring
+- Emotion-vocabulary and feeling-words curricula × Control appraisal (control-value theory)
+- Emotion-vocabulary and feeling-words curricula × Cognitive change
+- Emotion-vocabulary and feeling-words curricula × Situation selection
+- Emotion-vocabulary and feeling-words curricula × Attentional deployment
+- Emotion-vocabulary and feeling-words curricula × Value appraisal (control-value theory)
+- Emotion-vocabulary and feeling-words curricula × Situation modification
+
+</details>
+
+## Is the STEM focus actually served?
+
+The assignment asks for higher education, *particularly STEM*. That is a claim this pool can be checked against rather than assumed.
+
+- Higher education: **1088** records (58%)
+- School-age: **277** records (15%)
+- Both mentioned: **52**; neither: **550**
+
+| Discipline | In higher-education records | Share of higher-education records |
+|---|---|---|
+| Mathematics and statistics | 108 | 10% |
+| Explicitly non-STEM | 93 | 9% |
+| Health sciences | 75 | 7% |
+| STEM (general) | 24 | 2% |
+| Engineering | 20 | 2% |
+| Computing | 18 | 2% |
+| Natural sciences | 13 | 1% |
+
+## How much of the pool could carry mechanism evidence
+
+A realist review needs studies that explain, not studies that correlate. This is the pool's ceiling, before a single eligibility decision.
+
+- Experimental or quasi-experimental: **388** (21%)
+- Qualitative — often the richest mechanism evidence in a realist review: **317** (17%)
+- Experimental **and** qualitative (mixed methods): **55**
+- Correlational or cross-sectional only — the protocol excludes these unless they carry mechanism evidence: **177** (10%)
+- Reviews and syntheses: **349** (19%)
+
+## The records closest to the review question
+
+Ranked by how many of the four roles a record touches — an intervention, a mechanism family, an achievement emotion and a named context — then by citations. **This is a dictionary score, not a quality judgement**, and it is the order a screening pilot should work down if budget arrives for only part of the pool.
+
+| Roles | Cites | Year | Title | Interventions × mechanisms |
+|---|---|---|---|---|
+| 4/4 | 175 | 2017 | Reappraising test anxiety increases academic performance of first-year c | Appraisal and reappraisal prompts × Cognitive change |
+| 4/4 | 55 | 2022 | Gender differences in test anxiety and self-efficacy: why instructors sh | Course redesign undertaken for affective reaso × Control appraisal (control-value theory) |
+| 4/4 | 54 | 2019 | Improving emotion regulation and mood in teacher trainees: Effectiveness | Appraisal and reappraisal prompts, Mindfulness × Attentional deployment, Cognitive change, Resp |
+| 4/4 | 35 | 2020 | Effects of a brief interpersonal conflict cognitive reappraisal interven | Appraisal and reappraisal prompts × Cognitive change |
+| 4/4 | 23 | 2021 | An Empirical Study on Chinese University Students’ English Language Clas | Feedback × Control appraisal (control-value theory) |
+| 4/4 | 22 | 2024 | Bioscience Students in Physics Courses with Higher Test Anxiety Have Low | Course redesign undertaken for affective reaso × Control appraisal (control-value theory) |
+| 4/4 | 18 | 2025 | EmoWELL: effectiveness of a serious game for emotion regulation in emerg | Emotion-regulation training or programme, Feed × Response modulation |
+| 4/4 | 13 | 2025 | Emotional literacy as curriculum: a new paradigm for resilient classroom | Appraisal and reappraisal prompts, Feedback, M × Cognitive change |
+| 4/4 | 8 | 2025 | Integrating mindfulness and physical activity: a meta-analysis of mindfu | Mindfulness and attention training × Response modulation |
+| 4/4 | 6 | 2021 | Immediate and delayed effects of suppression and mindfulness as emotion  | Mindfulness and attention training × Response modulation |
+| 4/4 | 5 | 2025 | Emotions matter—Targeting adult learners' achievement emotions in online | Appraisal and reappraisal prompts, Feedback, M × Cognitive change |
+| 4/4 | 4 | 2016 | Effectiveness of Emotion Regulation Training on Depression, Anxiety, and | Appraisal and reappraisal prompts, Emotion-reg × Cognitive change |
+| 4/4 | 3 | 2022 | Socio-Emotional Skills: Toward a Metacognition and Emotional Regulation  | Feedback × Metacognitive and emotional monitoring |
+| 4/4 | 3 | 2025 | Effects of Reappraisal and Self-Compassion Expressive Writing on Emotion | Appraisal and reappraisal prompts, Expressive  × Cognitive change |
+| 4/4 | 3 | 2024 | Self-Immersed Expressive Writing Increases LF/HF Ratio and Decreases Exp | Expressive writing × Response modulation |
+| 4/4 | 2 | 2025 | Emotion Regulation Strategies and Emotional Experiences in Blended EFL C | Appraisal and reappraisal prompts, Feedback, R × Cognitive change, Response modulation, Situati |
+| 4/4 | 2 | 2025 | Effectiveness of a guided mobile app intervention for depression and anx | Appraisal and reappraisal prompts, Feedback × Cognitive change, Metacognitive and emotional  |
+| 4/4 | 1 | 2026 | Gender-based interactional dynamics in EFL speaking anxiety: A mixed-met | Feedback × Metacognitive and emotional monitoring |
+| 4/4 | 1 | 2026 | Students' Emotional Responses to Mistakes: An Ecological Momentary Asses | Peer, instructor and climate interventions × Value appraisal (control-value theory) |
+| 4/4 | 1 | 2017 | Exploring Mindfulness: College Students' Journey Through an Abbreviated  | Mindfulness and attention training × Situation selection |
+| 4/4 | 0 | 2026 | The Relationship Between Empathy and Emotional Regulation in University  | Appraisal and reappraisal prompts × Cognitive change, Response modulation |
+| 4/4 | 0 | 2026 | Emotional regulation strategies and academic burnout among university st | Appraisal and reappraisal prompts × Attentional deployment, Cognitive change, Resp |
+| 4/4 | 0 | 2026 | Educational escape games in emotion education: effects on learning achie | Appraisal and reappraisal prompts × Cognitive change, Response modulation, Situati |
+| 4/4 | 0 | 2020 | EMOTIONAL INTELLIGENCE AND EMOTIONAL EXPRESSION AS PREDICTORS OF DEPRESS | Mindfulness and attention training × Response modulation |
+| 4/4 | 0 | 2025 | THE ROLE OF VISUAL ELEMENTS IN DAILY JOURNALING AS AN EFFORT TO REDUCE A | Reflective writing × Response modulation |
+
+**32 records (2%) touch all four roles.** That is the realistic size of a first screening round aimed at mechanism evidence rather than at coverage.
+
+## The theory pool, separately
+
+445 records, searched without an intervention term, because the ten corpus queries all require one and therefore cannot reach the literature this review's programme theory is built from. They are **not** candidate studies.
+
+| Cites | Year | Title |
+|---|---|---|
+| 7582 | 2006 | The Control-Value Theory of Achievement Emotions: Assumptions, Corollaries, and Implic |
+| 5750 | 2008 | The Prosocial Classroom: Teacher Social and Emotional Competence in Relation to Studen |
+| 5253 | 2002 | Academic Emotions in Students' Self-Regulated Learning and Achievement: A Program of Q |
+| 4018 | 2007 | The Role of the Family Context in the Development of Emotion Regulation |
+| 2871 | 2010 | Measuring emotions in students’ learning and performance: The Achievement Emotions Que |
+| 1835 | 2004 | The Construct and Criterion Validity of Emotional Intelligence and Its Potential Utili |
+| 1644 | 2011 | Emotional Intelligence: Implications for Personal, Social, Academic, and Workplace Suc |
+| 1570 | 2009 | Achievement goals and achievement emotions: Testing a model of their joint relations w |
+| 1496 | 2000 | A critical evaluation of the emotional intelligence construct |
+| 1472 | 2015 | The neural bases of emotion regulation |
+| 1464 | 2003 | The role of trait emotional intelligence in academic performance and deviant behavior  |
+| 1440 | 2017 | Achievement Emotions and Academic Performance: Longitudinal Models of Reciprocal Effec |
+| 1117 | 2006 | Achievement goals and discrete achievement emotions: A theoretical model and prospecti |
+| 908 | 2020 | Relationships between academic self-efficacy, learning-related emotions, and metacogni |
+| 665 | 2018 | Interoceptive Awareness Skills for Emotion Regulation: Theory and Approach of Mindful  |
+
+## What this map cannot tell you
+
+- **Whether anything works.** No effect, no direction, no magnitude. Term presence only.
+- **Whether a record is eligible.** The protocol's criteria have been applied to nothing.
+- **Whether a mechanism is real.** A record mentioning reappraisal may be measuring it, teaching it, or arguing against it.
+- **What the gaps mean.** An empty cell is either a gap in the literature or a gap in the dictionary, and this file cannot distinguish them.
+
+All four need screening and extraction. The evidence map's job is to make that spend small and well-aimed, and the table of records closest to the review question is where it should be aimed.
+

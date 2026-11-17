@@ -2404,3 +2404,194 @@ the log; its run_id is now prefixed `dryrun-`.
   that the catalogue has already paused once.
 - **The four handover deliverables are updated for 16 November but still unread and unsent**, and
   the RA sends them.
+
+## M43 — The pool described without a model, and three findings that belong to the literature rather than to us (2026-11-17)
+
+The RA asked for every remaining $0 task, for real research rather than mechanical
+compliance, and for everything to be written down well enough to report: *"mọi thứ mình làm
+được mà mình ko biết trình bày báo cáo rõ ràng dễ hiểu là họ ko biết mình đã làm gì đâu."*
+Nothing in this entry called a model or spent anything beyond about **half a cent** of
+OpenAlex's anonymous allowance.
+
+### 1. The search had only one arm, and the paper it most needed was unreachable
+
+Reading the assignment properly — not for tasks but for what the method requires — exposed
+a structural hole. **Every one of the ten corpus queries requires an intervention term.**
+That is right for finding intervention studies and it means the search *cannot* reach the
+theory literature, and a realist review tests intervention evidence against a programme
+theory. Richmond's reviewers were handed their theory; this review has to find it.
+
+What made it concrete: **Harley, Pekrun, Taxer & Gross (2019), "Emotion Regulation in
+Achievement Situations: An Integrated Model"** (*Educational Psychologist* 54(2):106–126,
+doi:10.1080/00461520.2019.1587297, **387 citations**) is the paper that joins the two
+frameworks the professor's four references point at — it integrates Pekrun's control-value
+theory with Gross's process model, for achievement settings specifically. It was in
+**neither** pool.
+
+Rather than assume a search defect, the cause was checked term by term: ERAS's title and
+abstract contain **no** term from any intervention block and **no** term from any
+population block. No query could have returned it. Same test on Gross 1998 (13,743
+citations): **zero** education terms — `academic`, `learning`, `classroom`, `educational`,
+`student`, `education` all absent — so the theory queries cannot reach it either, and it
+correctly enters as a named seed rather than as a retrieved record.
+
+Three theory-only queries were added to `config-emotion/protocol.yaml` and run into
+`data-emotion/theory_pool.jsonl`: **445 records, 80% with an abstract**, now containing
+Pekrun 2006 (**7,582 citations**) and ERAS. Pooled **separately and deliberately** — a
+theory paper is not a candidate study, and `theory_pool_rules` in the protocol says a
+promotion into the corpus would be a recorded decision rather than a merge.
+
+### 2. A coding frame in the protocol, not in a script
+
+`config-emotion/coding_frame.yaml`. The categories decide what the map can see, so they are
+a research decision and belong where the search queries live, reviewable and versioned.
+Grounding, stated in the file:
+
+- **Mechanism families** — Gross's five (situation selection, situation modification,
+  attentional deployment, cognitive change, response modulation) as integrated by ERAS,
+  plus control-value theory's two appraisal pathways and a monitoring category.
+- **Outcome emotions** — Pekrun's nine achievement emotions, each tagged with its object
+  focus (activity vs outcome), valence and activation, per the control-value taxonomy.
+- **Interventions** — the professor's five named examples first and verbatim, each flagged
+  `named_by_professor: true`, then the families they belong to.
+- **Contexts** — his four dimensions, verbatim.
+
+### 3. Two diagnostics the map prints about itself, and what they caught
+
+A dictionary map is trivially easy to fake: widen the terms and everything is "covered".
+So `scripts/evidence_map.py` reports two things about its own instrument before it reports
+any finding.
+
+**Frame coverage** — the share of records matching nothing in each category. **Term
+promiscuity** — the three highest-hitting individual terms per category with their counts,
+so a category carried by one loose word is visible rather than inferred.
+
+The promiscuity diagnostic earned itself on the first run by catching four bad terms:
+
+| Term | Was doing | Verdict |
+|---|---|---|
+| `importance of` | 157 of 178 hits for *value appraisal* | A figure of speech, not an appraisal. **Removed** |
+| `relaxation` | 33 of 44 hits for the emotion *relief* | Relaxation is a Gross-family-5 **strategy**, already counted there. Scoring it as an outcome emotion confused mechanism with outcome — the exact confusion a realist review exists to prevent. **Removed** |
+| `acceptance` | 49 hits for *cognitive change* | In abstracts this is usually acceptance of a technology or a manuscript. **Removed** |
+| `trait`, `individual difference` | *student characteristics* | Methods boilerplate; says nothing about *which* students. **Removed** |
+
+Frame revised **1.0 → 1.1**, with a `revisions:` block in the YAML giving each change and
+its reason. Iterative dictionary coding is normal; invisible iteration is not, because a
+frame that can be adjusted after seeing the result and without a record is unfalsifiable.
+
+Two categories were also **widened on purpose, as a test**: `self_regulation_activities`
+had returned **0** and `emotional_awareness_prompts` **3**, and a zero produced by the
+instrument rather than by the field is the most dangerous reading available. After
+widening they are **7** and **6**. The scarcity is real. That inversion — widen to try to
+destroy your own finding, then report it when it survives — is the only reason §4 below is
+worth sending.
+
+### 4. What the pool is about: three findings, none of them about our system
+
+**(a) The field has studied anxiety and left Pekrun's taxonomy alone.** Of 678 records
+carrying an achievement-emotion tag, **578 mention anxiety (85%)**. The other eight sit
+between 11 and 79. Boredom — the *activity* emotion, the one arising during learning
+rather than about its outcome, and the one Pekrun's own work treats as central — appears
+68 times.
+
+**(b) Three of the five interventions the professor named by example are nearly absent.**
+
+| Named in the assignment | Records | | Not named | Records |
+|---|---|---|---|---|
+| Feedback | 149 (upper bound; all from the bare word) | | **Mindfulness** | **291** |
+| Reflective writing | 101 | | Social and emotional learning | 151 |
+| Learning plans / goal setting | 17 | | Appraisal / reappraisal prompts | 103 |
+| **Self-regulation activities** | **7** | | Expressive writing | 63 |
+| **Emotional awareness prompts** | **6** | | Emotion-regulation training | 58 |
+
+**(c) STEM is barely served.** Of 1,088 higher-education records, engineering (20),
+computing (18) and the natural sciences (13) account for **51 between them** — fewer than
+the 93 that are explicitly non-STEM. Mathematics has 108 and is almost entirely maths and
+statistics *anxiety*. Health sciences, which is where Richmond sat, has 75.
+
+Each of the three changes what the review should be, and none of them is ours to decide, so
+each became a question for the professor rather than an assumption in the protocol. His §5
+asks for exactly that: *"If you encounter questions involving important research
+directions… please contact me."*
+
+Also measured, because a realist review needs explanatory studies rather than correlations:
+**388** experimental or quasi-experimental, **317** qualitative, **55** both, **349**
+mentioning a review design, and **177** correlational-only, which the protocol excludes
+unless they carry mechanism evidence. And **32 records touch all four roles** — an
+intervention, a mechanism family, an achievement emotion and a named context — which is the
+realistic size of a first screening round aimed at mechanism rather than coverage.
+
+### 5. "No cost history, so cost can be measured but not estimated" was half wrong
+
+That limitation has been in the progress report since it was written. The first half is
+true: `token_usage` was emptied by the M39 restore. The second half had never been checked.
+A projection needs the prompt, the text and the prices, and all three are in the
+repository — `core/screening.py` renders the system prompt from the active protocol
+(**3,928 characters ≈ 982 tokens, re-sent per record**), the corpus is on disk, and
+`config/models.yaml` carries per-million-token prices, the tier assignments and a
+deliberately pessimistic ×2.0 calibration factor.
+
+`scripts/cost_model.py` → `outputs-emotion/COST_MODEL.md`:
+
+| | Raw | ×2.0 |
+|---|---|---|
+| Screen all 1,863 records, dual-model vote | $2.72 | **$5.44** |
+| Higher-education records only (1,088) | $1.59 | $3.17 |
+| The 32 four-role records | $0.05 | $0.09 |
+
+**Screening the whole pool is about $5.44.** The project had been treating screening as
+blocked alongside extraction; `max_usd_per_full_run: 45` was always about **extracting 28
+full papers**, a different stage with a different tier and two orders of magnitude more
+text per study. Extraction is reported from the **observed** Richmond rate ($35–45 for 28
+papers) rather than modelled, and deliberately not multiplied by the calibration factor,
+because multiplying an observation by a correction meant for list-price estimates would
+double-count it.
+
+A first version of this script compiled its own regexes and reported **307**
+higher-education records where the evidence map reported **1,088**. Two files disagreeing
+about one number is a failure this project has already had, so the matcher is now imported
+from `evidence_map` rather than reimplemented, and the figures were cross-checked
+programmatically across all four generated documents afterwards. That check caught one more
+drift: the hand-written requirements matrix still carried the pre-revision `Relief 44` and
+"84%", because the frame revision had changed the denominator from 691 to 678.
+
+### 6. The report the professor will actually open first
+
+`handover/0_REQUIREMENTS_MATRIX.md`. Every clause of the 30 October email, in his order,
+with a status from a fixed vocabulary (*Done / Partly done / Blocked / Yours*) and the file
+that substantiates it. Nothing is marked done without something to open. It ends with the
+four questions, three of which are the findings above and the fourth of which is the $25.
+
+Also stated plainly, in his own section 6's terms: **item 5, "a preliminary research
+synthesis identifying promising interventions"**, is **not started and was not faked**. The
+evidence map shows what the literature studies; calling term frequencies "promising
+interventions" would be precisely the error this project spent the previous fortnight
+removing from its own record.
+
+### What the next session must not assume
+
+- **The evidence map is not evidence of effectiveness.** It counts term presence in titles
+  and abstracts. Nothing in it is a CMOC, no number in it supports a claim about what
+  works, and the file says so in its first paragraph. Do not let it drift into the paper as
+  a findings section.
+- **The three literature findings are dictionary-based and provisional.** Anxiety 578/678,
+  the near-absent interventions, and the 51 STEM records all rest on a word list. They are
+  strong enough to put to the professor as questions and **not** strong enough to publish.
+  Screening is what would confirm them.
+- **`coding_frame.yaml` has a `revisions:` block. Add to it; never edit a term silently.**
+  The frame was already revised once after its own diagnostic condemned four terms, and
+  that history is what makes the map falsifiable.
+- **`feedback` is a known over-match.** All 149 hits come from the bare word, which appears
+  in abstracts for reasons unrelated to emotion. It is left wide because feedback is one of
+  the professor's five named interventions and narrowing it would hide his own example; the
+  figure is reported as an upper bound.
+- **The theory pool is not the corpus.** 445 records in `theory_pool.jsonl` inform the
+  programme theory. Promoting one into the corpus is a recorded decision, not a merge, and
+  the protocol says so.
+- **Still true from M42, and still not done:** nothing screened, no CMOCs on this topic,
+  `res acquire` not run (report mode only: **1,266 of 1,863** have a free PDF — that number
+  is correct now and would have read 1,863 before the 16 November fix), the 21 Richmond HITL
+  decisions uncountersigned, the handover unread and unsent.
+- **The cost figures are projections, except extraction.** One 3-paper pilot replaces them
+  all with a measurement, and `config/models.yaml` says how: run a stage, read the
+  dashboard, set `cost_calibration_factor = true/estimate`.

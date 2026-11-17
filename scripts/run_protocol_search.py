@@ -59,6 +59,10 @@ def main() -> int:
     ap.add_argument("--crossref", action="store_true",
                     help="Run the Crossref cross-check queries into their own file "
                          "instead of the OpenAlex corpus of record.")
+    ap.add_argument("--theory", action="store_true",
+                    help="Run the theory-literature queries into their own file. These "
+                         "drop the intervention block, so they return the programme-theory "
+                         "literature that the corpus queries cannot reach by construction.")
     ap.add_argument("--limit", type=int, default=None,
                     help="Override the protocol's limit_per_query_per_source.")
     args = ap.parse_args()
@@ -80,7 +84,13 @@ def main() -> int:
     from_year = ((protocol.get("eligibility") or {}).get("timeframe") or {}).get(
         "published_from", 1998)
 
-    if args.crossref:
+    if args.theory:
+        queries = [q["q"] for q in strategy.get("theory_queries") or []]
+        sources = "openalex"
+        types = "article,review"
+        out = DATA_DIR / "theory_pool.jsonl"
+        label = "OpenAlex theory pool (NOT the corpus of record)"
+    elif args.crossref:
         queries = list(strategy.get("crossref_crosscheck_queries") or [])
         sources, types = "crossref", ""
         out = DATA_DIR / "crossref_crosscheck.jsonl"

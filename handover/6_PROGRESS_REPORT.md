@@ -1,6 +1,6 @@
 # Progress report
 
-**Duy Nguyen — 16 November 2026.** Deliverable 6 of the 2026-10-30 assignment.
+**Duy Nguyen — 17 November 2026.** Deliverable 6 of the 2026-10-30 assignment.
 
 Covering 30 October to 16 November. Short version: deliverables 1, 2 and 6 are complete and
 attached, and **the literature search for the new topic has now been run** — 1,863 candidate
@@ -59,6 +59,48 @@ which it **should not**: Brackett 2012 and Durlak 2011 are intervention studies 
 Pekrun 2006 and Gross 1998 are theory papers with no intervention and no sample, so their absence
 would be correct rather than a failure. All four came out as predicted. We note this because a
 mechanical check would have called the search broken on the two theory papers.
+
+### Three findings about the literature, from reading the pool without a model
+On 17 November we coded every record's title and abstract against a dictionary built from the
+frameworks your references point to — Gross's five emotion-regulation families as integrated for
+achievement settings by Harley, Pekrun, Taxer & Gross (2019), and Pekrun's control-value taxonomy
+of achievement emotions — plus your own lists of interventions and context dimensions, verbatim.
+No model was called. [`outputs-emotion/EVIDENCE_MAP.md`](../outputs-emotion/EVIDENCE_MAP.md) is
+generated from it.
+
+**This map says what the literature talks about. It does not say what works**, and we have been
+careful nowhere to imply otherwise. With that stated, three things came out of it that bear
+directly on what the review should be:
+
+1. **The field has studied anxiety and little else.** Of 678 records carrying an achievement-emotion
+   tag, **578 mention anxiety**. Pekrun's other eight emotions sit between 11 and 79. Boredom —
+   the activity emotion, the one that arises *during* learning — appears 68 times.
+2. **Three of the five interventions you named are nearly absent**: self-regulation activities 7
+   records, emotional awareness prompts 6, learning plans 17. Mindfulness, which you did not name,
+   has 291. We widened the dictionary deliberately to test whether the near-zeros were our fault —
+   self-regulation activities moved from 0 to 7, awareness prompts from 3 to 6 — so the scarcity is
+   in the literature, not in our coding.
+3. **STEM is barely served.** Of 1,088 higher-education records, engineering, computing and the
+   natural sciences account for **51 between them**; mathematics accounts for 108 and is almost
+   entirely maths and statistics anxiety.
+
+Each of these changes what the review should be, so each is a question for you rather than a
+decision we took. They are Questions 1–3 in
+[`0_REQUIREMENTS_MATRIX.md`](0_REQUIREMENTS_MATRIX.md).
+
+### The search was missing an entire arm, and the theory it needs most
+Every one of the ten search queries requires an intervention term. That is correct for finding
+intervention studies and it means the search **cannot** reach the theory literature — and a
+realist review tests intervention evidence *against* a programme theory, so it needs both.
+
+The finding that exposed it: Harley, Pekrun, Taxer & Gross (2019), *"Emotion Regulation in
+Achievement Situations: An Integrated Model"* (*Educational Psychologist*, 387 citations) is the
+paper that joins your two theoretical references — Pekrun's control-value theory with Gross's
+process model, for achievement settings. It was in neither pool. We checked why rather than
+assuming: its title and abstract contain no intervention term and no population term, so no query
+could have retrieved it. Three theory-only queries were added, pooled separately (445 records,
+now including Pekrun 2006 at 7,582 citations and ERAS), and theory papers are kept out of the
+corpus of record because they inform the programme theory rather than being evidence in it.
 
 ### The prompts were lifted out of the code
 You asked for the prompts by name. All 24 were buried across ten source files. Ten are now plain text in
@@ -165,8 +207,14 @@ to adjudicate one.
    report would need a re-run (~$3).
 8. **One benchmark.** Richmond alone cannot separate "performs realist synthesis" from "fits
    Richmond". This needs a second published review and a full run.
-9. **No cost history.** The usage records were lost in a database restore, so a new run's cost can
-   be measured but not estimated. This is why the plan has a pilot step.
+9. ~~**No cost history.**~~ **Closed 17 November.** The claim was that a run's cost "can be
+   measured but not estimated". The first half is true — `token_usage` was emptied by a database
+   restore — but a projection needs the prompt, the text and the prices, and all three are in the
+   repository. [`outputs-emotion/COST_MODEL.md`](../outputs-emotion/COST_MODEL.md) now prices
+   every remaining stage from the system prompt the pipeline actually renders. **Screening the
+   whole pool is $5.44.** We had been treating screening as blocked alongside extraction; the $45
+   figure is for extracting 28 full papers, a different stage. A 3-paper pilot (~$5) would replace
+   the projection with a measurement, which is why it is the first paid step and not the last.
 10. **OpenAlex stopped being free to query without an account on 13 February 2026.** Anonymous
     requests now share a $0.10 daily budget per network address, and the catalogue paused ours
     once in the middle of a ten-query run. The search above completed anonymously and cost about

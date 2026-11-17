@@ -1,0 +1,306 @@
+# =============================================================================
+# Coding frame for the descriptive evidence map — students' emotional awareness
+# and regulation during learning.
+#
+# WHAT THIS IS
+# A dictionary of surface terms, grouped by the role each plays in the review's
+# initial programme theory, applied to the TITLE AND ABSTRACT of every record in
+# the candidate pool by `scripts/evidence_map.py`.
+#
+# WHAT THIS IS NOT
+# It is NOT CMOC extraction, and nothing produced from it is a CMOC. A term match
+# says a record TALKS ABOUT something; it says nothing about whether the study
+# found it to work, for whom, or why. Those are questions for screening and
+# extraction, which call a model and cost money. Anyone quoting a number from the
+# evidence map as evidence of effectiveness is misreading it, so the generated
+# report states this at the top rather than in a footnote.
+#
+# WHY IT LIVES HERE AND NOT IN CODE
+# The categories are a research decision — they decide what the map can show and
+# what it is blind to — so they belong in the protocol directory where they can be
+# reviewed and versioned, not inside a script. Same reason the search queries do.
+#
+# GROUNDING
+# The mechanism families are Gross's process model of emotion regulation as
+# integrated into achievement settings by Harley, Pekrun, Taxer & Gross (2019),
+# "Emotion Regulation in Achievement Situations: An Integrated Model"
+# (Educational Psychologist 54(2):106-126, doi:10.1080/00461520.2019.1587297).
+# The outcome emotions are Pekrun's control-value taxonomy (Pekrun 2006,
+# doi:10.1007/s10648-006-9029-9), which classifies achievement emotions by object
+# focus (activity vs outcome), valence and activation. The intervention list
+# begins with the five the professor's assignment of 2026-10-30 names by example,
+# kept first and verbatim, and extends with the families those five belong to.
+# The four context dimensions are his, verbatim.
+#
+# A term is matched on word boundaries, case-insensitively. Multi-word terms match
+# as phrases. A record can carry any number of tags, including none — and the
+# share carrying none is reported, because a frame that matches everything or
+# nothing is a broken frame and the report should say so.
+# =============================================================================
+
+version: "1.1"
+written: 2026-11-17
+# --- REVISION LOG. The first run of the map is what justified each change; the
+# "carried mostly by" diagnostic in the generated report is what exposed them.
+# Dictionary coding is iterative by nature and the revisions must be visible, or
+# the frame becomes unfalsifiable.
+revisions:
+  - version: "1.1"
+    date: 2026-11-17
+    changes:
+      - 'REMOVED "importance of" from value_appraisal. It matched 157 records and was
+         carrying the whole category: in academic prose "the importance of X" is a
+         figure of speech, not a value appraisal. Task value is now measured by its
+         terms of art only, and the category count drops accordingly, which is correct.'
+      - 'REMOVED "relaxation" from the RELIEF emotion. Relaxation is a regulation
+         STRATEGY (Gross family 5) and is already counted there. Scoring it as the
+         emotion relief confused a mechanism with an outcome -- the exact confusion a
+         realist review exists to avoid -- and it was supplying 33 of relief''s 44.'
+      - 'REMOVED "acceptance" from cognitive_change. It matched 49 records, but in
+         abstracts "acceptance" usually means acceptance of a technology, a programme
+         or a manuscript. Emotional acceptance is kept via "self-talk" and the
+         reappraisal terms; a dedicated term would need "emotional acceptance".'
+      - 'REMOVED "trait" and "individual difference" from student_characteristics.
+         Both match methods boilerplate in any individual-differences study and say
+         nothing about WHICH students, which is what a realist context must specify.'
+      - 'ADDED er_training as an intervention category. The first run exposed the
+         omission: the most obvious intervention family for this review -- a programme
+         that explicitly teaches emotion regulation -- had no category at all, so
+         studies of it were landing under whichever strategy they happened to name.'
+      - 'WIDENED self_regulation_activities, which returned ZERO. The terms were
+         over-specific phrases. The concept is real in this literature; the dictionary
+         could not see it. A zero produced by the frame rather than by the field is the
+         most dangerous kind of finding, and it is why the coverage diagnostic exists.'
+      - 'WIDENED emotional_awareness_prompts (3 records). Partly a real finding -- the
+         professor''s phrase is not a term of art -- so terms of art were added rather
+         than the phrase loosened, and the finding is reported in the evidence map.' 
+applies_to: title_and_abstract
+
+# -----------------------------------------------------------------------------
+# INTERVENTIONS — "Educational practices such as reflective writing, emotional
+# awareness prompts, feedback, learning plans, and self-regulation activities"
+# (assignment §4). The first five entries are those, in his order.
+# -----------------------------------------------------------------------------
+interventions:
+  reflective_writing:
+    label: Reflective writing
+    named_by_professor: true
+    terms: ["reflective writing", "reflective journal", "reflective journaling",
+            "learning journal", "reflective diary", "reflective practice", "journaling"]
+  emotional_awareness_prompts:
+    label: Emotional awareness prompts
+    named_by_professor: true
+    terms: ["emotional awareness prompt", "emotion awareness prompt", "emotion prompt",
+            "awareness prompt", "emotion diary", "emotion log", "mood meter",
+            "emotion check-in", "affect labeling", "affect labelling",
+            "emotion labeling", "emotion labelling", "emotional awareness training",
+            "emotional awareness intervention", "emotion identification training",
+            "emotion recognition training", "emotional awareness program"]
+  feedback:
+    label: Feedback
+    named_by_professor: true
+    terms: ["feedback", "feedback literacy", "formative feedback", "corrective feedback",
+            "teacher feedback", "peer feedback", "written feedback"]
+  learning_plans:
+    label: Learning plans and goal setting
+    named_by_professor: true
+    terms: ["learning plan", "study plan", "goal setting", "goal-setting",
+            "action plan", "learning contract", "implementation intention"]
+  self_regulation_activities:
+    label: Self-regulation activities
+    named_by_professor: true
+    terms: ["self-regulation activit", "self-regulation training", "self-regulation intervention",
+            "self-regulated learning intervention", "srl intervention", "srl training",
+            "self-regulation strategy instruction", "self-regulation skill",
+            "self-regulation program", "self-regulation support", "regulation skills training",
+            "strategy instruction", "study skills course", "learning-to-learn"]
+  er_training:
+    label: Emotion-regulation training or programme
+    terms: ["emotion regulation intervention", "emotion regulation training",
+            "emotional regulation intervention", "emotional regulation training",
+            "emotion regulation program", "emotion regulation skills",
+            "emotion-regulation intervention", "emotion regulation course",
+            "regulation intervention", "affect regulation training"]
+  expressive_writing:
+    label: Expressive writing
+    terms: ["expressive writing", "written emotional disclosure", "emotional disclosure"]
+  emotion_vocabulary_curriculum:
+    label: Emotion-vocabulary and feeling-words curricula
+    terms: ["feeling words", "ruler approach", "ruler curriculum", "emotional literacy curriculum",
+            "emotion vocabulary", "feelings vocabulary"]
+  mindfulness_attention_training:
+    label: Mindfulness and attention training
+    terms: ["mindfulness", "mindful", "meditation", "breathing exercise",
+            "attention training", "body scan", "mbsr", "mbct"]
+  reappraisal_prompts:
+    label: Appraisal and reappraisal prompts
+    terms: ["cognitive reappraisal", "reappraisal", "reframing", "attributional retraining",
+            "attribution retraining", "cognitive restructuring", "appraisal training"]
+  sel_programme:
+    label: Social and emotional learning programmes
+    terms: ["social and emotional learning", "social-emotional learning", "sel program",
+            "sel programme", "sel curriculum", "socioemotional learning",
+            "socio-emotional learning"]
+  climate_and_relational:
+    label: Peer, instructor and climate interventions
+    terms: ["classroom climate", "learning climate", "emotional climate",
+            "teacher-student relationship", "peer support", "supportive climate",
+            "psychological safety", "sense of belonging intervention"]
+  course_redesign:
+    label: Course redesign undertaken for affective reasons
+    terms: ["course redesign", "curriculum redesign", "flipped classroom",
+            "active learning intervention", "assessment redesign", "low-stakes assessment",
+            "ungrading", "mastery grading", "specifications grading"]
+
+# -----------------------------------------------------------------------------
+# MECHANISM FAMILIES — Gross's process model as integrated by ERAS (2019), plus
+# the two appraisal pathways control-value theory makes central. These are the
+# candidate answers to the professor's "why do they work".
+# -----------------------------------------------------------------------------
+mechanism_families:
+  situation_selection:
+    label: Situation selection
+    gross_family: 1
+    terms: ["situation selection", "avoidance", "approach-avoidance", "course selection",
+            "opt out", "withdrawal", "procrastinat"]
+  situation_modification:
+    label: Situation modification
+    gross_family: 2
+    terms: ["situation modification", "help seeking", "help-seeking", "task modification",
+            "environment structuring", "support seeking", "renegotiat"]
+  attentional_deployment:
+    label: Attentional deployment
+    gross_family: 3
+    terms: ["attentional deployment", "attention deployment", "distraction",
+            "attentional focus", "rumination", "mind wandering", "refocus"]
+  cognitive_change:
+    label: Cognitive change
+    gross_family: 4
+    terms: ["cognitive change", "reappraisal", "reframing", "attribution",
+            "perspective taking", "self-talk", "emotional acceptance",
+            "cognitive restructuring", "positive thinking"]
+  response_modulation:
+    label: Response modulation
+    gross_family: 5
+    terms: ["response modulation", "suppression", "expressive suppression",
+            "emotional expression", "venting", "relaxation", "deep breathing",
+            "physical activity", "self-soothing"]
+  control_appraisal:
+    label: Control appraisal (control-value theory)
+    cvt: true
+    terms: ["perceived control", "control appraisal", "self-efficacy", "competence belief",
+            "sense of control", "controllability", "locus of control", "academic self-concept"]
+  value_appraisal:
+    label: Value appraisal (control-value theory)
+    cvt: true
+    terms: ["task value", "value appraisal", "subjective value", "utility value",
+            "intrinsic value", "perceived relevance", "cost appraisal", "attainment value",
+            "value of the task", "perceived usefulness"]
+  metacognitive_monitoring:
+    label: Metacognitive and emotional monitoring
+    terms: ["metacognit", "emotion monitoring", "self-monitoring", "self-assessment",
+            "emotional self-awareness", "interoception", "emotion differentiation",
+            "emotional granularity"]
+
+# -----------------------------------------------------------------------------
+# OUTCOMES — Pekrun's nine achievement emotions by object focus, plus the
+# non-emotional outcomes the assignment lists in §4.
+# -----------------------------------------------------------------------------
+achievement_emotions:
+  enjoyment:    {label: Enjoyment,    object: activity, valence: positive, activation: activating,   terms: ["enjoyment", "enjoy", "pleasure in learning", "interest-enjoyment"]}
+  boredom:      {label: Boredom,      object: activity, valence: negative, activation: deactivating, terms: ["boredom", "bored", "disengagement"]}
+  hope:         {label: Hope,         object: outcome,  valence: positive, activation: activating,   terms: ["hope", "hopeful", "optimism"]}
+  pride:        {label: Pride,        object: outcome,  valence: positive, activation: activating,   terms: ["pride", "proud"]}
+  relief:       {label: Relief,       object: outcome,  valence: positive, activation: deactivating, terms: ["relief", "relieved"]}
+  anger:        {label: Anger,        object: outcome,  valence: negative, activation: activating,   terms: ["anger", "angry", "frustration", "frustrated"]}
+  anxiety:      {label: Anxiety,      object: outcome,  valence: negative, activation: activating,   terms: ["anxiety", "anxious", "test anxiety", "math anxiety",
+                                                                                                             "statistics anxiety", "worry", "apprehension", "nervous"]}
+  shame:        {label: Shame,        object: outcome,  valence: negative, activation: activating,   terms: ["shame", "ashamed", "embarrass", "guilt", "humiliat"]}
+  hopelessness: {label: Hopelessness, object: outcome,  valence: negative, activation: deactivating, terms: ["hopeless", "helpless", "learned helplessness", "despair",
+                                                                                                             "giving up", "resignation"]}
+
+other_outcomes:
+  er_strategy_use:   {label: Emotion-regulation strategy use, terms: ["emotion regulation strateg", "regulation strateg", "coping strateg", "coping skill"]}
+  emotional_awareness: {label: Emotional awareness, terms: ["emotional awareness", "emotion awareness", "emotional self-awareness",
+                                                            "emotion recognition", "emotion identification", "emotional clarity"]}
+  srl_behaviour:     {label: Self-regulated learning behaviour, terms: ["self-regulated learning", "self-regulation of learning",
+                                                                       "learning strateg", "study strateg", "time management", "effort regulation"]}
+  engagement:        {label: Engagement and persistence, terms: ["engagement", "engaged", "persistence", "persist", "retention",
+                                                                 "dropout", "drop-out", "attrition", "withdrawal from"]}
+  motivation:        {label: Motivation, terms: ["motivation", "motivated", "intrinsic motivation", "amotivation", "autonomous motivation"]}
+  achievement:       {label: Academic achievement, terms: ["academic achievement", "academic performance", "grade point average", "gpa",
+                                                           "exam score", "test score", "course grade", "learning outcome", "learning gain"]}
+  wellbeing:         {label: Wellbeing and satisfaction (secondary only), secondary: true,
+                      terms: ["well-being", "wellbeing", "burnout", "stress", "depression", "mental health",
+                              "life satisfaction", "course satisfaction"]}
+
+# -----------------------------------------------------------------------------
+# CONTEXTS — "Student characteristics, learning situations, prior experiences,
+# and emotional challenges" (assignment §4), verbatim, plus the discipline tags
+# the review needs to honour "focus on higher education, particularly STEM".
+# -----------------------------------------------------------------------------
+context_dimensions:
+  student_characteristics:
+    label: Student characteristics
+    named_by_professor: true
+    terms: ["first-generation", "first generation", "underrepresented", "gender difference",
+            "sex difference", "international student", "mature student", "nontraditional",
+            "non-traditional", "low-income", "prior achievement", "high-achieving",
+            "low-achieving", "at-risk student", "gifted"]
+  learning_situations:
+    label: Learning situations
+    named_by_professor: true
+    terms: ["online learning", "remote learning", "blended", "hybrid", "laboratory",
+            "lecture", "seminar", "clinical placement", "group work", "collaborative learning",
+            "high-stakes exam", "examination period", "problem-based learning", "internship"]
+  prior_experiences:
+    label: Prior experiences
+    named_by_professor: true
+    terms: ["prior experience", "previous experience", "past failure", "prior failure",
+            "previous achievement", "educational history", "prior knowledge",
+            "earlier schooling", "adverse experience"]
+  emotional_challenges:
+    label: Emotional challenges
+    named_by_professor: true
+    terms: ["emotional challenge", "emotional difficult", "emotional distress",
+            "emotion dysregulation", "emotional dysregulation", "alexithymia",
+            "high anxiety", "fear of failure", "imposter", "impostor", "stereotype threat",
+            "academic stress", "emotional exhaustion"]
+
+disciplines:
+  stem_general:  {label: STEM (general), terms: ["stem", "science technology engineering"]}
+  engineering:   {label: Engineering, terms: ["engineering"]}
+  computing:     {label: Computing, terms: ["computer science", "computing", "programming", "informatics", "software engineering"]}
+  mathematics:   {label: Mathematics and statistics, terms: ["mathematics", "math", "maths", "statistics", "calculus", "algebra"]}
+  natural_sci:   {label: Natural sciences, terms: ["physics", "chemistry", "biology", "geoscience", "earth science"]}
+  health_sci:    {label: Health sciences, terms: ["medical student", "medical education", "nursing", "nurse",
+                                                  "dental", "pharmacy", "midwifery", "health professions", "clinical reasoning"]}
+  non_stem:      {label: Explicitly non-STEM, terms: ["teacher education", "pre-service teacher", "language learning",
+                                                      "foreign language", "efl", "esl", "business student", "law student",
+                                                      "psychology student", "social work"]}
+
+settings:
+  higher_education: {label: Higher education, terms: ["higher education", "university student", "college student",
+                                                      "undergraduate", "postgraduate", "graduate student",
+                                                      "postsecondary", "post-secondary", "tertiary education"]}
+  school_age:       {label: School-age, terms: ["primary school", "elementary school", "secondary school",
+                                                "high school", "middle school", "adolescent", "pupil", "k-12"]}
+
+# -----------------------------------------------------------------------------
+# DESIGN TAGS — not part of the programme theory, but the review has to know how
+# much of the pool could carry mechanism evidence at all.
+# -----------------------------------------------------------------------------
+study_designs:
+  rct:              {label: Randomised controlled trial, terms: ["randomized controlled", "randomised controlled", "randomized trial",
+                                                                 "randomised trial", "rct", "random assignment", "randomly assigned"]}
+  quasi_experiment: {label: Quasi-experiment, terms: ["quasi-experiment", "quasi experimental", "pre-post", "pretest-posttest",
+                                                      "control group", "comparison group", "intervention group"]}
+  qualitative:      {label: Qualitative, terms: ["qualitative", "interview", "focus group", "thematic analysis",
+                                                 "grounded theory", "case study", "phenomenolog"]}
+  correlational:    {label: Correlational or cross-sectional, terms: ["cross-sectional", "correlational", "survey study",
+                                                                     "questionnaire study", "structural equation", "path analysis"]}
+  review:           {label: Review or synthesis, terms: ["systematic review", "meta-analysis", "meta analysis", "scoping review",
+                                                         "realist review", "realist synthesis", "narrative review",
+                                                         "umbrella review", "rapid review"]}
+  longitudinal:     {label: Longitudinal, terms: ["longitudinal", "diary study", "experience sampling",
+                                                  "ecological momentary", "repeated measures over"]}

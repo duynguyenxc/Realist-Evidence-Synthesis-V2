@@ -1,6 +1,6 @@
 # What we built, and where everything is
 
-**Duy Nguyen — 16 November 2026.** Deliverable 1 of the 2026-10-30 assignment.
+**Duy Nguyen — 17 November 2026.** Deliverable 1 of the 2026-10-30 assignment.
 
 This answers your first request: organise and provide everything developed for the Richmond
 benchmark. It assumes no familiarity with the system.
@@ -20,7 +20,8 @@ the project does not have.
 | Richmond benchmark | **Complete.** Ran end to end twice; 28 papers, 94 configurations, 547 quoted elements, verified against your benchmark |
 | The five review checkpoints | **Performed, awaiting a human countersignature.** All 20 contradictions resolved and the programme theory signed, recorded as AI-performed under your section 5 delegation |
 | New topic configuration | **Drafted, not reviewed.** `config-emotion/` holds the review protocol, the initial programme theory built from your four references, and rewritten agent personas |
-| New topic corpus | **Candidate pool collected, 16 November.** 1,863 records, 89% with an abstract, 68% with a free full text. Nothing screened — no eligibility criterion has been applied to any record |
+| New topic corpus | **Candidate pool collected, 16 November; described, 17 November.** 1,863 records, 89% with an abstract, 68% with a free full text, plus a separate 445-record theory pool. Nothing screened — no eligibility criterion has been applied to any record |
+| What the pool is about | **Coded 17 November against Pekrun's and Gross's categories, without a model.** `outputs-emotion/EVIDENCE_MAP.md`. Three findings in it change what the review should be, and are Questions 1–3 in the requirements matrix |
 | Conference paper | **Accepted to AERA 2027** on 6 November. Reviewer comments not yet read |
 
 **What changed in the three weeks since your email:** the pipeline gained a literature search it

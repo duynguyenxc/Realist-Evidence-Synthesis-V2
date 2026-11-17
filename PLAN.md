@@ -93,9 +93,23 @@ numbers and why they cannot be regenerated. That is a fact to disclose, not a de
       passed on all four of the professor's named references. **The second half of #3 — a
       "structured evidence database" — needs screening, which costs money.** Four defects were
       found and fixed in the search code on the way; see WALKTHROUGH M42.
-- [ ] **C4** **Pilot of 10–15 papers first, and report the measured cost**, because
-      `token_usage` is empty (lost in the M39 restore) so there is no cost history to estimate
-      from. `max_usd_per_full_run` is configured at $45 for 28 papers.
+- [x] **C3b** (#3, descriptive half) ✅ **2026-11-17.** `config-emotion/coding_frame.yaml` —
+      a theory-grounded dictionary (Gross's five families via ERAS 2019; Pekrun's nine achievement
+      emotions; the professor's intervention and context lists verbatim) applied to all 1,863
+      records with **no model call**. `outputs-emotion/EVIDENCE_MAP.md` is generated from it.
+      Three findings for the professor: anxiety is 578 of 678 emotion-tagged records; three of his
+      five named interventions are nearly absent; STEM is 51 records. Frame revised 1.0 → 1.1 after
+      its own promiscuity diagnostic exposed four over-matching terms.
+- [x] **C3c** (search, second arm) ✅ **2026-11-17.** Three theory-only queries added and run into
+      `theory_pool.jsonl` (445 records), after finding that ERAS — the paper joining the professor's
+      two theoretical references — was unreachable by every corpus query by construction.
+- [x] **C4a** ~~No cost history, so cost can be measured but not estimated~~ ✅ **2026-11-17.**
+      `outputs-emotion/COST_MODEL.md`, computed from the rendered system prompt and
+      `config/models.yaml`. **Screening the whole pool is $5.44**; the $45 figure was always
+      extraction of 28 full papers.
+- [ ] **C4** **Pilot of 3–10 papers, and report the measured cost.** Now costed rather than
+      guessed: 3 papers ≈ $4–5, 10 ≈ $13–16, screening + 10-paper pilot ≈ $21. The pilot still
+      exists to replace the projection with a measurement.
 - [ ] **C5** (#4) Screen → extract → CMOCs + knowledge graph.
 - [ ] **C6** (#5) Synthesis: promising interventions, mechanisms, conditions.
 
@@ -144,6 +158,10 @@ He has not seen this system and does not know what it does. Hold me to these:
 | 2026-11-16 | **Every remaining $0 stage identified** | `res search`, `res acquire` and `res ingest` call no model. Money starts at `res screen`. Deliverable #3 was wrongly filed as fully budget-blocked |
 | 2026-11-16 | **Search run — 1,863 records** | OpenAlex 10 boolean queries + Crossref cross-check, isolated database, report generated from the log. Pre-registered validity check passed 4/4 |
 | 2026-11-16 | **Four search defects found and fixed** | Full-text matching inflating the pool 44×; Crossref losing relevance ranking under cursor paging; `oa_pdf_url` dropped from the corpus format; one failed query discarding the whole run. Three now have regression tests |
+| 2026-11-17 | **Theory arm added to the search** | ERAS (Harley/Pekrun/Taxer/Gross 2019) was unreachable by every corpus query by construction — no intervention or population term in its title/abstract. 3 theory queries, 445 records, pooled separately |
+| 2026-11-17 | **Evidence map built, $0** | Theory-grounded dictionary over 1,863 records. Anxiety 578/678; 3 of the professor's 5 named interventions nearly absent; STEM 51 records. Frame self-diagnosed 4 bad terms and was revised |
+| 2026-11-17 | **Cost model closes a standing limitation** | $5.44 screens the whole pool. "No cost history" was partly arithmetic nobody had done |
+| 2026-11-17 | **Requirements matrix written** | `handover/0_REQUIREMENTS_MATRIX.md` — every clause of the email with a status and a file, plus 4 questions the professor must answer |
 | 2026-11-16 | **"Free, keyless" retracted** | OpenAlex has required a key since 2026-02-13 and bills per request. The reproducibility claim in the manuscript needs the qualification |
 
 **What Phase A actually found, beyond stale numbers.** Two substantive errors were in the
