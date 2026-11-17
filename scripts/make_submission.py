@@ -135,6 +135,20 @@ def main() -> int:
             shutil.copy2(src, out / "reports" / name)
             copied.append((f"reports/{name}", blurb))
 
+    # ---- the Richmond results page ---------------------------------------------
+    # The benchmark review as one self-contained page: our conclusions beside
+    # Richmond's, context by context, the verification matrix with confidence
+    # intervals, and every CMOC, entity and relation, searchable, with no server and
+    # no database. It is the strongest single piece of evidence for output 1 and it
+    # opens in a browser, which the markdown does not.
+    results = PROJECT_ROOT / "outputs" / "RESULTS.html"
+    if results.exists():
+        shutil.copy2(results, out / "RICHMOND_RESULTS.html")
+        copied.append(("RICHMOND_RESULTS.html",
+                       "**Open this in a browser.** The whole benchmark review on one "
+                       "self-contained page: our conclusions beside Richmond's, the "
+                       "verification matrix, and every configuration, searchable"))
+
     # ---- the email -------------------------------------------------------------
     email = f"""Subject: Progress report — emotional awareness and regulation review
 
@@ -232,6 +246,10 @@ FOUR QUESTIONS
 Start with 0_REQUIREMENTS_MATRIX.md in the handover folder — it goes through your email
 point by point. INDEX.md lists everything else.
 
+If you would rather see the system than read about it, open RICHMOND_RESULTS.html in a
+browser: it is the whole benchmark review on one page, our conclusions beside Richmond's,
+with the verification figures and every configuration behind them. No server, no setup.
+
 Best regards,
 Duy
 """
@@ -249,6 +267,10 @@ Duy
           "pipeline holds: regenerate them and the numbers follow the database, not a "
           "memory of it. `EMAIL.md` is generated the same way, by "
           "`scripts/make_submission.py`, which is also what built this folder.", "",
+          "`RICHMOND_RESULTS.html` is an export of the benchmark review's database made "
+          "in October and deliberately never regenerated: it is the only surviving "
+          "record of 28 human review decisions that a later schema change could not "
+          "carry, so it is preserved rather than rebuilt.", "",
           "## The figures in one place", "",
           "| | |", "|---|---|",
           f"| Candidate records | {n_pool:,} |",
