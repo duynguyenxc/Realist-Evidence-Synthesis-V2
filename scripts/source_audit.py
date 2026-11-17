@@ -53,9 +53,11 @@ UWSS_DB = UWSS_ROOT / "data" / "emotion.sqlite"
 # (config_emotion.yaml, the ten protocol queries flattened to phrases). "Silent" means
 # the caller receives something that looks like a successful empty or valid result.
 SOURCES = [
-    ("Semantic Scholar", "works, slowly", "no",
-     "Returns records without a key, but rate-limits hard enough that a full pass over "
-     "27 phrases is an overnight job. Usable; not free of friction."),
+    ("Semantic Scholar", "rate-limited out", "no",
+     "Answers **HTTP 429** to the public endpoint and keeps answering 429 through three "
+     "retries with exponential backoff. 20 records were obtained through the official "
+     "`semanticscholar` library before it too stalled. Effectively unusable at review "
+     "scale without a key."),
     ("PubMed (NCBI E-utilities)", "blocked", "**yes**",
      "Answers HTTP **200** with `Content-Type: text/html` and an \"NCBI - WWW Error "
      "Blocked Diagnostic\" page. `paperscraper` parses it as JSON, fails, and reports "
@@ -66,12 +68,39 @@ SOURCES = [
      "the content is the wrong literature anyway: sentiment analysis, emotion "
      "recognition, multimodal LLMs, HCI. A measured answer to \"should we add arXiv\": "
      "no, and here is the number."),
-    ("DOAJ", "broken", "no",
-     "`discover-doaj` raises `ModuleNotFoundError: No module named 'src.uwss.discovery'`"
-     " — the module the command imports is not in the repository. A loud failure, which "
-     "is the good kind."),
+    ("DOAJ", "**repaired, and the best of the four**", "no",
+     "`discover-doaj` raised `ModuleNotFoundError: No module named "
+     "'src.uwss.discovery'` — the command was wired up against a module that is not in "
+     "the repository. Written, and two further defects found once it ran: the command "
+     "hardcoded `doi=None` and `abstract=None` while storing records DOAJ supplies both "
+     "for, so its rows could never dedupe against a DOI-keyed corpus and arrived "
+     "unscreenable. Fixed; **370 records**, all with abstracts. DOAJ indexes only fully "
+     "open-access peer-reviewed journals, so its hits are in scope *and* obtainable as "
+     "full text."),
     ("OpenAIRE", "not attempted", "—",
      "Left for a later pass; the four above already answered the question."),
+]
+
+# Failures of the harness rather than of a catalogue — found while running the audit.
+HARNESS = [
+    ("A command that raises still exits 0",
+     "`discover-semanticscholar` died on a `TypeError` and the shell saw success; the "
+     "same happened again when the catalogue returned 429. A caller scripting these "
+     "commands in sequence — which is what a pipeline is — cannot tell a completed "
+     "stage from a crashed one."),
+    ("`fetch --limit N` governed only the download",
+     "The Unpaywall and link-resolution stages were hardcoded to 200, so `--limit 1500` "
+     "resolved 200, enriched 200, and then reported the download count. The ceiling was "
+     "invisible because the number printed came from the last stage."),
+    ("Re-running `fetch` did not make progress",
+     "The enrichment query selected every row with a DOI and stopped after N *updates*, "
+     "with no marker for rows already asked about — so every run re-asked Unpaywall "
+     "about the same first 200 DOIs. Running it ten times enriched 200 records and sent "
+     "~1,800 pointless requests to a free service. Now marked, including definitive "
+     "negatives, so repeat runs are cumulative."),
+    ("Landing-page resolution ran before Unpaywall, by default",
+     "It opens the publisher pages that CDNs refuse, three retries at a 20-second "
+     "timeout each, to look for links Unpaywall supplies in one request. Now opt-in."),
 ]
 
 # The silent failures this project caught on its own, before this audit.
@@ -132,8 +161,9 @@ def main() -> int:
     w("That is the result worth reporting, and it is not a complaint about tooling. An "
       "automated review does not fail by crashing — it completes, exits zero, and "
       "produces a report indistinguishable from a correct one. Counting this audit and "
-      "the four defects this project had already caught on its own, **five of the nine "
-      "failures recorded below were silent.**")
+      "the four this project had already caught on its own and the four found in the "
+      "collection tool, **this page records thirteen failures and nine of them were "
+      "silent.**")
     w("")
     w("## The four catalogues, measured")
     w("")
@@ -175,6 +205,17 @@ def main() -> int:
     w("|---|---|---|")
     for title, where, why in PRIOR:
         w(f"| {title} | {where} | {why} |")
+    w("")
+    w("## Four more, in the collection tool itself")
+    w("")
+    w("These are defects in UWSS rather than in any catalogue, found while running the "
+      "audit and fixed in the course of it. They are listed because they have the same "
+      "shape as everything above: **a run that reports success.**")
+    w("")
+    w("| Defect | What it meant |")
+    w("|---|---|")
+    for title, detail in HARNESS:
+        w(f"| {title} | {detail} |")
     w("")
     w("## Why this belongs in the paper")
     w("")
