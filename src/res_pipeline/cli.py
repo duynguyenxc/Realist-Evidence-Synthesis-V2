@@ -216,6 +216,7 @@ def acquire(
     limit: int = typer.Option(0, help="Fetch at most N (0 = all with an OA link)."),
     confirm: bool = typer.Option(False, "--confirm",
                                  help="Actually download. Without it this reports only."),
+    attempts: int = typer.Option(3, help="Attempts per link before giving up on it."),
 ) -> None:
     """Fetch the open-access full texts for a searched corpus.
 
@@ -255,7 +256,7 @@ def acquire(
                 # to report into the record count.
                 oa_pdf_url=d.get("oa_pdf_url")))
 
-    result = acquire_fulltext(records, dest_dir, limit=limit,
+    result = acquire_fulltext(records, dest_dir, limit=limit, attempts=attempts,
                               dry_run=not confirm, log=console.print)
     console.print(f"  records {result['candidates']}, with an OA link "
                   f"{result['with_oa_pdf']}", markup=False)
@@ -264,7 +265,7 @@ def acquire(
                       f"into {dest_dir}.", markup=False)
         return
     console.print(f"[green]fetched {result['fetched']}[/green], failed {result['failed']} "
-                  f"-> {dest_dir}", markup=False)
+                  f"(after {result['retried']} retries) -> {dest_dir}", markup=False)
     for e in result["errors"][:8]:
         console.print(f"    {e['doi']}: {e['error']}", markup=False)
 

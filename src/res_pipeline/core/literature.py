@@ -377,8 +377,23 @@ def as_dicts(records: list[Candidate]) -> list[dict]:
     return [asdict(r) for r in records]
 
 
+class _PermanentFetchError(Exception):
+    """A failure that retrying cannot fix — a landing page served as the PDF location."""
+
+
+# Codes worth a second attempt. 403 is NOT among them: the diagnosis of 2026-11-17
+# established that publisher CDNs refuse scripted requests outright and answer a browser
+# User-Agent identically, so a 403 here is a policy decision by the publisher, not a
+# transient condition. Retrying it would be both useless and impolite.
+_RETRYABLE_HTTP = frozenset({408, 425, 429, 500, 502, 503, 504})
+
+
+def _is_retryable_http(code: int) -> bool:
+    return code in _RETRYABLE_HTTP
+
+
 def acquire_fulltext(records: list[Candidate], dest_dir, *, limit: int = 0,
-                     dry_run: bool = True, log=print) -> dict:
+                     dry_run: bool = True, attempts: int = 3, log=print) -> dict:
     """Download the open-access PDFs the catalogue points at.
 
     Only open-access copies the catalogue itself links, never a paywall bypass: the
@@ -388,13 +403,26 @@ def acquire_fulltext(records: list[Candidate], dest_dir, *, limit: int = 0,
     ``dry_run`` is the DEFAULT, deliberately. This writes many files from the open web,
     so it should be an explicit decision each time rather than something a pipeline step
     does on the way past. A dry run reports what would be fetched and from where.
+
+    **Why there is a retry, and why it is bounded.** The first full pass over the emotion
+    pool obtained 434 files; re-running the identical command — which skips what is
+    already on disk — obtained 135 more, from links that had failed once and succeeded
+    later. A corpus whose size depends on how many times someone happened to re-run a
+    command is not reproducible, which is the property this pipeline exists to claim. So
+    the retry is here rather than in the operator's habits.
+
+    It retries only what can plausibly succeed: timeouts, connection errors, 429 and 5xx.
+    It does **not** retry 403, because the diagnosis of 2026-11-17 established that the
+    403s are publisher CDNs refusing scripted requests and answering a browser's
+    User-Agent identically — a policy decision, not a transient fault. It does not retry a
+    200 carrying a landing page either, since that link will never be a file.
     """
     dest_dir.mkdir(parents=True, exist_ok=True)
     have = [r for r in records if r.oa_pdf_url]
     if limit:
         have = have[:limit]
-    result = {"candidates": len(records), "with_oa_pdf": len(have),
-              "fetched": 0, "failed": 0, "files": [], "errors": []}
+    result = {"candidates": len(records), "with_oa_pdf": len(have), "fetched": 0,
+              "failed": 0, "retried": 0, "files": [], "errors": []}
     if dry_run:
         result["dry_run"] = True
         return result
@@ -404,18 +432,38 @@ def acquire_fulltext(records: list[Candidate], dest_dir, *, limit: int = 0,
         if path.exists():
             result["files"].append(str(path))
             continue
-        try:
-            req = urllib.request.Request(rec.oa_pdf_url, headers={"User-Agent": USER_AGENT})
-            with urllib.request.urlopen(req, timeout=60) as resp:
-                blob = resp.read()
-            if not blob.startswith(b"%PDF"):
-                raise ValueError("response is not a PDF")
-            path.write_bytes(blob)
-            result["fetched"] += 1
-            result["files"].append(str(path))
-            log(f"    {len(blob) // 1024:>6} KB  {name}")
-        except Exception as exc:  # noqa: BLE001 - the open web; recorded, not raised
+        last: Exception | None = None
+        for attempt in range(attempts):
+            if attempt:
+                result["retried"] += 1
+                time.sleep(min(30, 2 ** attempt))
+            try:
+                req = urllib.request.Request(rec.oa_pdf_url,
+                                             headers={"User-Agent": USER_AGENT})
+                with urllib.request.urlopen(req, timeout=60) as resp:
+                    blob = resp.read()
+                if not blob.startswith(b"%PDF"):
+                    # A 200 carrying a landing page. Permanent for this URL: the link
+                    # points at a page, not a file, and no amount of retrying changes it.
+                    raise _PermanentFetchError("response is not a PDF")
+                path.write_bytes(blob)
+                result["fetched"] += 1
+                result["files"].append(str(path))
+                log(f"    {len(blob) // 1024:>6} KB  {name}")
+                last = None
+                break
+            except _PermanentFetchError as exc:
+                last = exc
+                break
+            except urllib.error.HTTPError as exc:
+                last = exc
+                if not _is_retryable_http(exc.code):
+                    break
+            except Exception as exc:  # noqa: BLE001 - the open web; recorded, not raised
+                last = exc
+        if last is not None:
             result["failed"] += 1
-            result["errors"].append({"doi": rec.doi, "url": rec.oa_pdf_url, "error": str(exc)[:160]})
+            result["errors"].append({"doi": rec.doi, "url": rec.oa_pdf_url,
+                                     "error": str(last)[:160]})
         time.sleep(0.5)
     return result

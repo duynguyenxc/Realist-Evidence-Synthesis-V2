@@ -588,3 +588,68 @@ def test_a_canonical_name_that_contradicts_its_members_is_flagged():
     assert not _warn_on_inverted_names(
         [("immediate feedback", ["spaced immediate feedback", "immediate feedback on answers"])],
         _GUARDS_FLOOR)
+
+
+def test_acquire_retries_only_what_can_plausibly_succeed(tmp_path, monkeypatch):
+    """A corpus's size must not depend on how many times someone re-ran the command.
+
+    The first pass over the emotion pool obtained 434 full texts. Re-running the identical
+    command — which skips what is already on disk — obtained 135 more, from links that had
+    failed once and succeeded later. So 24% of what we hold arrived by an accident of
+    operator habit, which is not a reproducible corpus.
+
+    The retry has to discriminate, though. The 403s were diagnosed on 2026-11-17 as
+    publisher CDNs refusing scripted requests, answering a browser's User-Agent
+    identically: a policy decision, not a transient fault. Retrying those is useless and
+    impolite. A 200 carrying a landing page is likewise permanent for that link.
+    """
+    import io
+    import urllib.error
+
+    from res_pipeline.core import literature as lit
+
+    assert lit._is_retryable_http(503) and lit._is_retryable_http(429)
+    assert not lit._is_retryable_http(403), "403 is a policy, not a transient fault"
+    assert not lit._is_retryable_http(404)
+
+    calls: dict[str, int] = {}
+
+    class _Resp(io.BytesIO):
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+    def fake_urlopen(req, timeout=0):
+        url = req.full_url
+        calls[url] = calls.get(url, 0) + 1
+        if url.endswith("flaky.pdf"):
+            if calls[url] < 3:
+                raise urllib.error.HTTPError(url, 503, "busy", {}, None)
+            return _Resp(b"%PDF-1.7 fine")
+        if url.endswith("blocked.pdf"):
+            raise urllib.error.HTTPError(url, 403, "Forbidden", {}, None)
+        return _Resp(b"<!doctype html><title>landing page</title>")
+
+    monkeypatch.setattr(lit.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(lit.time, "sleep", lambda _s: None)
+
+    recs = [
+        lit.Candidate(source="openalex", source_id="W1", doi="10.1/flaky", title="t",
+                      oa_pdf_url="https://example.org/flaky.pdf"),
+        lit.Candidate(source="openalex", source_id="W2", doi="10.1/blocked", title="t",
+                      oa_pdf_url="https://example.org/blocked.pdf"),
+        lit.Candidate(source="openalex", source_id="W3", doi="10.1/landing", title="t",
+                      oa_pdf_url="https://example.org/landing.pdf"),
+    ]
+    res = lit.acquire_fulltext(recs, tmp_path, dry_run=False, attempts=3, log=lambda *_a: None)
+
+    assert res["fetched"] == 1 and res["failed"] == 2
+    assert calls["https://example.org/flaky.pdf"] == 3, "a 503 must be retried"
+    assert calls["https://example.org/blocked.pdf"] == 1, "a 403 must not be retried"
+    assert calls["https://example.org/landing.pdf"] == 1, "a landing page must not be retried"
+
+    written = sorted(p.name for p in tmp_path.glob("*.pdf"))
+    assert written == ["10.1_flaky.pdf"], "only the real PDF may be written"
+    assert (tmp_path / "10.1_flaky.pdf").read_bytes().startswith(b"%PDF")

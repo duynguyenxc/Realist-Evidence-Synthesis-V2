@@ -33,9 +33,13 @@ publisher host twice -- once with the pipeline's own User-Agent and once with a 
    browser and closed to any script. That is a property of the publishing estate, not of
    this pipeline, and it is the reason automated full-text acquisition at scale needs an
    institutional proxy.
-3. **Some failures were transient.** Frontiers links that failed during the first pass
-   return a PDF on a later request, so re-running the command is a genuine retry pass
-   (it skips files already on disk) and the obtained count rises between runs.
+3. **Some failures were transient, and this was large.** The first pass obtained 434
+   files; re-running the identical command, which skips what is already on disk, obtained
+   135 more. A quarter of what we hold arrived by an accident of how many times the
+   operator happened to re-run a command, which is not a reproducible corpus. A bounded
+   retry now lives in `acquire_fulltext` instead of in the operator's habits: timeouts,
+   connection errors, 429 and 5xx are retried with backoff; 403 is not, because it is a
+   publisher policy rather than a fault, and a 200 carrying a landing page is not either.
 
 WHAT THIS MEANS FOR THE MANUSCRIPT
 ----------------------------------
@@ -178,11 +182,14 @@ def main() -> int:
       "our protocol, our queries and no institutional access does not arrive at our "
       "corpus. Both belong in the limitations, not a footnote.")
     w("")
-    w("**For the pipeline.** Two improvements, neither yet made and neither costing money: "
-      "an Unpaywall lookup to turn a DOI resolver into a direct PDF location, and an "
-      "explicit retry pass, "
-      "since re-running `res acquire --confirm` skips what is already on disk and does "
-      "recover transient failures. Neither is a model call.")
+    w("**For the pipeline.** The retry is now built in. The first pass obtained 434 files "
+      "and a second identical run obtained 135 more, so a quarter of the corpus had been "
+      "arriving by an accident of operator habit; `acquire_fulltext` now retries "
+      "timeouts, connection errors, 429 and 5xx with backoff, and deliberately does not "
+      "retry a 403 or a landing page. **One improvement is still unmade**: an Unpaywall "
+      "lookup would turn a DOI resolver into a direct PDF location, which is the largest "
+      "single failure group. Its API requires a contact email in every request, which is "
+      "the RA's personal data and the RA's decision. Neither is a model call.")
     w("")
 
     out = OUTPUTS_DIR / "ACQUISITION_REPORT.md"
