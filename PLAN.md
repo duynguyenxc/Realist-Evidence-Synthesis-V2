@@ -175,6 +175,15 @@ He has not seen this system and does not know what it does. Hold me to these:
       signature appends, so `ai-ra:claude(…) + countersigned human:duy` keeps both actors. Two
       webui defects had to be fixed first — the route crashed on every submission and every human
       action button rendered blank — so this had been **impossible**, not merely undone.
+- [x] **The corpus is ingested** (2026-11-18, M47): 572/572 into `realist_emotion`, 539
+      with usable full text, 7,241 text units, 0 failures. Deliverable 3's database half
+      is done; only the eligibility decision remains, and it is the first paid stage.
+- [x] **Four further catalogues run through UWSS** (M47). DOAJ 370, arXiv 200, Semantic
+      Scholar 20, PubMed blocked. Measured shortfall of the registered two-catalogue
+      search: **3.6%**. Nothing merged — amending the search is the professor's call.
+- [ ] **The Unpaywall fetch has not completed.** Needs `UWSS_CONTACT_EMAIL` set by the RA,
+      then `bash scripts/run_emotion_fetch.sh 1500` in the UWSS repo. Now fast, since
+      landing-page resolution is opt-in.
 - [ ] **Four research questions put to the professor 2026-11-17** and unanswered, each one
       capable of changing what the review is: (1) is STEM the focus or the gap, given 51 records;
       (2) follow his five named interventions or the literature's mindfulness-and-reappraisal

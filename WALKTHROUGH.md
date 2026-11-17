@@ -2962,3 +2962,143 @@ corpus, so there are no checkpoints to sign there yet, and the first one will ar
   feature was broken and two defects had to be fixed first.
 - **The report email is drafted and still unsent**, and the RA sends it. It needs one edit now:
   the paragraph saying the 21 decisions await countersignature is no longer true.
+
+---
+
+## M47 — 2026-11-17/18 (overnight). UWSS, four more catalogues, and a corpus that is finally readable
+
+**Session state:** the RA said the progress report read as though very little had been
+done, named their own UWSS scraping system (`~/Downloads/Universal-Web-Scraping-System-high-level-update-main`)
+as a way to collect more, and then went to bed with an instruction to carry on alone, spend
+nothing, send no mail, and leave a submission folder and a draft report ready by morning.
+
+They were half right about the report. The volume of work was not the problem; **outputs 4
+and 5 were empty and 572 PDFs were sitting unread**, which is what made it sound thin.
+This entry is mostly about closing the second of those.
+
+### 1. UWSS runs on this machine now
+
+The checked-in `uwss-env/` is a **Windows** virtualenv (`Scripts/`, `Lib/`) and the code
+uses `str | None`, so it needs 3.10+. Built `.venv-mac` on the project's own Python 3.12.
+Everything works except the Scrapy crawler (`w3lib` incompatibility), which this review
+does not need. `config/config_emotion.yaml` holds 27 phrases **flattened from the ten
+boolean queries already registered in `config-emotion/protocol.yaml`** — not a new
+vocabulary, because a different vocabulary would make the two searches incomparable.
+
+**User-Agent rotation and proxy rotation were left off.** UWSS supports both, via
+`UWSS_UA_FILE` / `UWSS_PROXY_FILE`, and M45 established that publisher 403s answer a
+browser's User-Agent identically. Rotating identity would gain nothing and would mean
+circumventing a stated bot policy to raise a number in a methods paper.
+
+### 2. Four catalogues, and the way three of them failed
+
+| Catalogue | Outcome |
+|---|---|
+| **DOAJ** | **370 records** — the one worth having: open-access journals only, so in scope *and* obtainable |
+| arXiv | 200 records, and the content argues against using them: sentiment analysis, emotion recognition, multimodal LLMs |
+| Semantic Scholar | **HTTP 429** through three backoffs. 20 records via the official library, then it stalled too |
+| PubMed | **0 records — because NCBI answers a blocked request with HTTP 200 and an HTML page** |
+
+The PubMed case is the one that matters. The status line says success; only the content
+type says otherwise, and nothing between the HTTP client and a review's flow diagram looks
+at it. `paperscraper` parses the body as JSON, fails, catches the error, reports zero.
+**A review would write "PubMed: 0 records retrieved" and never learn the request was
+refused.** Adding NCBI's documented `tool` parameter changes nothing.
+
+`outputs-emotion/SOURCE_AUDIT.md` sets this beside the defects this project had already
+caught — OpenAlex quietly billing, Crossref quietly dropping relevance ranking,
+`--types article` nearly discarding Durlak, 694 "open access" links yielding no file —
+and the count is **thirteen failures, nine of them silent**. That is the paper's own
+argument arriving as evidence: an automated review does not fail by crashing, it completes
+and produces a report indistinguishable from a correct one.
+
+### 3. Five defects fixed in UWSS
+
+- **`discover-doaj` could not run at all**: it imports `src.uwss.discovery`, which is not
+  in the repository. Written (`iter_doaj_results`, `iter_semanticscholar_results`), and
+  both check the response **content type** rather than the status line, so a refusal can
+  never arrive looking like an empty result.
+- **The DOAJ command discarded the DOI and abstract** of every record it stored
+  (`doi=None`, `abstract=None` hardcoded) although DOAJ supplies both — so its rows could
+  never dedupe against a DOI-keyed corpus and arrived unscreenable.
+- **`fetch --limit N` governed only the download.** Unpaywall enrichment and link
+  resolution were hardcoded at 200, and the number printed came from the last stage, so
+  the ceiling was invisible.
+- **Re-running `fetch` made no progress.** The enrichment query selected every row with a
+  DOI and stopped after N *updates*, with no marker for rows already asked about: every
+  run re-asked Unpaywall about the same first 200 DOIs. Now marked — including definitive
+  negatives — so repeat runs are cumulative.
+- **Landing-page resolution ran first, by default.** It opens the publisher pages CDNs
+  refuse, three retries at 20s each, to find links Unpaywall returns in one request. Now
+  opt-in via `--resolve-limit`.
+
+### 4. A bug of my own, and a claim I withdrew
+
+**The DOAJ iterator asked for `sort=created_date:desc`** — newest matches rather than best
+ones. That is *precisely* the Crossref defect recorded in M42, reintroduced by me two days
+later. Removed, DOAJ re-run on relevance. **The overlap did not move** (1 of 370 either
+way), so the sort was a real bug but not the cause of anything measured here.
+
+**And I put a false finding in SOURCE_AUDIT before checking it**: "a command that raises
+still exits 0". UWSS returns a correct non-zero exit code; the zero came from the `tail`
+at the end of **my own** pipeline, which is what the shell reports without `pipefail`. The
+retraction is printed on the page itself, because a document about failures that look like
+successes should say when its author produced one.
+
+### 5. What the added catalogues are actually worth: 3.6%
+
+`outputs-emotion/CATALOGUE_OVERLAP.md`, generated. Of **590 records** the four returned,
+**3 were already in the corpus** and of the 587 new ones only **67 carry both an
+intervention and an achievement-emotion term** — a genuine shortfall of **3.6%**. Every
+new record is passed through the same `coding_frame.yaml` used for the evidence map,
+because raw novelty would have counted arXiv's affective-computing hits as a miss.
+
+The 1% overlap is not the reassurance it looks like: the registered search takes top-N per
+query by relevance from a catalogue that ranks by citation weight, so it samples the head
+of the distribution, while DOAJ indexes the tail. **That is a limitation of top-N
+retrieval and belongs in the manuscript whether or not a catalogue is added.** Nothing has
+been merged — the protocol names the search, and amending it is the professor's decision.
+
+### 6. The corpus is readable at last: 572/572 ingested
+
+`res ingest` on `data-emotion/fulltext` failed **twice**, each time on a single document,
+each time discarding everything after it and leaving a database that looked complete from
+a row count — 572 study rows, 162 with any text.
+
+- **A NUL byte in a PDF text layer.** PostgreSQL refuses `0x00` in a text column. Fixed by
+  stripping C0 controls, which cannot move a quote offset because every character removed
+  is unprintable.
+- **An AES-encrypted PDF.** `pypdf` raises `DependencyError` without `cryptography`, which
+  was not a declared dependency. It is now, with the reason in `pyproject.toml`.
+- **And the design flaw under both:** one unreadable document ended the run. Failures are
+  now collected, logged as `study_failed`, and reported as a count — *how much of the
+  corpus could not be read* is a property of the evidence base a realist review states.
+
+Final: **572 of 572 ingested, 0 failures, 539 with a usable full text (20,000+ chars),
+32 partial, 1 empty, 7,241 text units, mean 56,050 characters.** Deliverable 3 is no
+longer "half done": the structured evidence database exists and is indexed. What is
+missing is the eligibility decision on each record, which is the first stage that spends
+money.
+
+### 7. `submission/` — built by a script, not by hand
+
+`scripts/make_submission.py` assembles the six handover documents, the six generated
+reports, `INDEX.md` and `EMAIL.md` into `submission/`, **gitignored** because it holds
+copies. The covering email's figures are read from the corpus, the databases and the
+reports at build time, so it cannot drift from them — the lesson of M41's hand-written
+comparison and M44's projected 1,266.
+
+### 8. What the next session must not assume
+
+- **The Unpaywall fetch never completed.** The RA started it before bed; it was still in
+  the old landing-page resolution stage hours later. With `--resolve-limit` now 0 it will
+  be far faster, but it needs `UWSS_CONTACT_EMAIL` set by **the RA**, because Unpaywall
+  requires a contact address in every request and that address is theirs to give.
+- **Nothing from UWSS has been merged into the corpus.** `data-emotion/uwss_new_records.jsonl`
+  and `.../data/emotion.sqlite` are separate on purpose.
+- **Screening and extraction are still unrun and still the only paid stages.** No part of
+  outputs 4 or 5 has been fabricated, and the evidence map must never be described as
+  showing what works.
+- **33 → 35 tests.** The two new ones cover control-character stripping and the ingest
+  loop surviving a bad document.
+- The report email is drafted at `submission/EMAIL.md` and **unsent**; the RA sends it.

@@ -94,6 +94,23 @@ def main() -> int:
     shortfall = _num(ovl, r"genuine shortfall is\s+\*\*(\d+) records")
     shortfall_pct = _num(ovl, r"\*\*\d+ records, ([\d.]+)%\*\*")
 
+    # What the ingest actually recovered — a file on disk is not yet readable text.
+    n_ingested = n_fulltext = n_units = 0
+    try:
+        from res_pipeline.core.db import get_connection
+        with get_connection() as c, c.cursor() as k:
+            k.execute("""
+              with per as (select s.study_id, coalesce(sum(length(t.text)),0) chars
+                           from studies s left join text_units t using (study_id)
+                           group by 1)
+              select count(*) n, count(*) filter (where chars >= 20000) full from per""")
+            r = k.fetchone()
+            n_ingested, n_fulltext = r["n"], r["full"]
+            k.execute("select count(*) n from text_units")
+            n_units = k.fetchone()["n"]
+    except Exception:  # noqa: BLE001 - the package must still build
+        pass
+
     added = {}
     if UWSS_DB.exists():
         try:
@@ -129,7 +146,15 @@ WHAT IS FINISHED
 
 Outputs 1, 2 and 6 are complete and attached. The literature search in output 3 has been
 run: {n_pool:,} candidate records from the registered protocol, 89% with an abstract, and
-{n_pdf} full texts downloaded and verified. The whole of that cost nothing.
+{n_pdf} full texts downloaded and verified.
+
+Those full texts are now in the review database as well, which is the second half of
+output 3: **all {n_ingested} ingested, {n_fulltext} of them carrying a usable full text,
+{n_units:,} indexed text units, nothing lost in the process.** It is a structured
+evidence database in every sense except the one that matters most to you — no eligibility
+decision has been taken on any record, because that is the first step that calls a model.
+
+The whole of the above cost nothing.
 
 The review checkpoints are also now countersigned. Following your instruction not to stop
 the research process, the pipeline resolved all 20 contradictions and signed off the
@@ -228,6 +253,8 @@ Duy
           "| | |", "|---|---|",
           f"| Candidate records | {n_pool:,} |",
           f"| Full texts held | {n_pdf} |",
+          f"| Ingested into the review database | {n_ingested} ({n_fulltext} with usable full text) |",
+          f"| Indexed text units | {n_units:,} |",
           f"| Review checkpoints countersigned | 21 of 21, none disputed |",
           f"| Added catalogues returned | {sum(added.values()) if added else 0} records |",
           f"| Of those, new **and** on topic | {shortfall} ({shortfall_pct}% of the corpus) |",

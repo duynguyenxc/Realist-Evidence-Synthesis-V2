@@ -168,6 +168,49 @@ def main() -> int:
       "contact email address in every request, which is a decision for the RA rather "
       "than a default this script should set.")
     w("")
+    w("## Having the file is not the same as being able to read it")
+    w("")
+    w("A PDF on disk is not yet evidence. It has to carry a text layer the pipeline can "
+      "extract, and a corpus pulled off the open web does not uniformly do so. The "
+      "figures below come from the ingest into the review database, not from the files:")
+    w("")
+    try:
+        from res_pipeline.core.db import get_connection
+        with get_connection() as c, c.cursor() as k:
+            k.execute("""
+              with per as (select s.study_id, coalesce(sum(length(t.text)),0) chars
+                           from studies s left join text_units t using (study_id)
+                           group by 1)
+              select count(*) n,
+                     count(*) filter (where chars = 0) empty,
+                     count(*) filter (where chars between 1 and 19999) partial,
+                     count(*) filter (where chars >= 20000) full,
+                     coalesce(round(avg(chars) filter (where chars > 0)), 0) avg_chars
+              from per""")
+            r = k.fetchone()
+            k.execute("select count(*) n from audit_log where action = 'study_failed'")
+            failed = k.fetchone()["n"]
+        if r and r["n"]:
+            w("| | Studies |")
+            w("|---|---|")
+            w(f"| Ingested into the review database | {r['n']} |")
+            w(f"| **With a usable full text** (20,000+ characters) | **{r['full']}** |")
+            w(f"| Partial text (1-19,999 characters) | {r['partial']} |")
+            w(f"| No extractable text at all | {r['empty']} |")
+            if failed:
+                w(f"| Could not be opened (logged `study_failed`) | {failed} |")
+            w("")
+            w(f"Mean length where any text was recovered: {int(r['avg_chars']):,} "
+              "characters.")
+            w("")
+            w("**The number that governs extraction is the full-text one, not the file "
+              "count.** Extraction reads the document; a study with no text layer "
+              "contributes nothing to it however many megabytes it occupies.")
+            w("")
+    except Exception as exc:  # noqa: BLE001 - the report must still generate
+        w(f"*(The review database could not be read for this section: "
+          f"{type(exc).__name__}. The file counts above are unaffected.)*")
+        w("")
     w("## What this constrains")
     w("")
     w("**For this review.** Screening works from titles and abstracts, which the pool has "

@@ -52,6 +52,21 @@ Diagnosed rather than assumed: one failed URL per publisher host, requested twic
 
 The largest single group is `doi.org`: the catalogue gave a DOI resolver where a direct PDF location was expected. Resolving it lands on a publisher page, not a file, so these are not retrievable by this route at all. Unpaywall publishes the direct location for exactly this case and would be the fix; its API requires a contact email address in every request, which is a decision for the RA rather than a default this script should set.
 
+## Having the file is not the same as being able to read it
+
+A PDF on disk is not yet evidence. It has to carry a text layer the pipeline can extract, and a corpus pulled off the open web does not uniformly do so. The figures below come from the ingest into the review database, not from the files:
+
+| | Studies |
+|---|---|
+| Ingested into the review database | 572 |
+| **With a usable full text** (20,000+ characters) | **539** |
+| Partial text (1-19,999 characters) | 32 |
+| No extractable text at all | 1 |
+
+Mean length where any text was recovered: 56,050 characters.
+
+**The number that governs extraction is the full-text one, not the file count.** Extraction reads the document; a study with no text layer contributes nothing to it however many megabytes it occupies.
+
 ## What this constrains
 
 **For this review.** Screening works from titles and abstracts, which the pool has for 89% of records, so the 572 full texts do not limit screening. They limit **extraction**, which needs the full text of every included study. Whatever the screening decides, the included set has to be checked against what we can actually read, and anything we cannot will need requesting through the library.

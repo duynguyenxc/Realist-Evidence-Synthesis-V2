@@ -54,3 +54,7 @@ PROJECT_BACKUP_*/
 
 # Claude Code machine-local settings (permissions differ per machine)
 .claude/settings.local.json
+
+# Built by scripts/make_submission.py from handover/ and outputs-emotion/.
+# Copies, not sources: regenerate it rather than tracking a second copy of each file.
+submission/

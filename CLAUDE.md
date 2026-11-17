@@ -134,7 +134,27 @@ relevance ranking); and **"OpenAlex is free and keyless" expired 2026-02-13** �
 search against a $0.10/day budget shared per network IP, so the manuscript's credential-free
 reproducibility claim needs qualifying.
 
-**The pool is now described, 2026-11-17** (M43), still at $0. `config-emotion/coding_frame.yaml`
+**The corpus is collected, ingested and audited, 2026-11-18** (M47), still at $0. All
+**572 full texts are in `realist_emotion`** — 539 with a usable full text, 7,241 text
+units, 0 failures — so deliverable 3 is no longer half done; only the eligibility decision
+is missing, and that is the first paid stage. Getting there fixed two defects that had
+each killed a whole ingest on one document (a NUL byte Postgres refuses, an AES-encrypted
+PDF needing `cryptography`), and one design flaw: a single unreadable file ended the run.
+**The RA's UWSS scraper** (`~/Downloads/Universal-Web-Scraping-System-high-level-update-main`,
+`.venv-mac`, `config/config_emotion.yaml`) added four catalogues. Three could not
+contribute and **only one said so**: NCBI answers a blocked request with **HTTP 200 and an
+HTML page**, so a client reports "0 results". `outputs-emotion/SOURCE_AUDIT.md` counts
+**thirteen infrastructure failures, nine silent**; `CATALOGUE_OVERLAP.md` puts the real
+shortfall of the two-catalogue search at **3.6%** (67 of 590 added records were new *and*
+on topic). **Nothing from UWSS is merged** — amending the registered search is the
+professor's decision. Five UWSS defects were fixed, and two mistakes of mine are on the
+record: a `sort=created_date:desc` that reintroduced M42's Crossref bug, and a false
+finding ("commands exit 0 when they raise") withdrawn on the page where it appeared — the
+zero was `tail`'s, from my own pipeline. **`submission/` is built by
+`scripts/make_submission.py`** (gitignored; 12 attachments + `EMAIL.md` + `INDEX.md`) and
+the email's figures are read from the data, so they cannot drift. **It is unsent.**
+
+**The pool is described, 2026-11-17** (M43), still at $0. `config-emotion/coding_frame.yaml`
 (a theory-grounded dictionary: Gross's five regulation families via **ERAS** — Harley, Pekrun,
 Taxer & Gross 2019, the paper that joins the professor's two theoretical references — plus
 Pekrun's nine achievement emotions and his own intervention and context lists verbatim) is applied
