@@ -135,6 +135,77 @@ def main() -> int:
             shutil.copy2(src, out / "reports" / name)
             copied.append((f"reports/{name}", blurb))
 
+    # ---- what was given to the AI, and what it decided -------------------------
+    # Section 1 of the assignment asks, in as many words, for "the agents, prompts,
+    # instructions, schemas, and configurations used in the pipeline" and for "the
+    # materials and instructions you previously provided to AI, together with
+    # important AI responses, recommendations, and decisions made during
+    # development". Describing those in prose is not supplying them.
+    ai = out / "pipeline-and-ai-record"
+    ai.mkdir(exist_ok=True)
+    for src, dest, blurb in [
+        (PROJECT_ROOT / "CLAUDE.md", "INSTRUCTIONS_TO_AI.md",
+         "The standing instructions the AI is given at the start of every session — "
+         "the project's rules, constraints and current state"),
+        (PROJECT_ROOT / "docs" / "DECISION_LOG.md", "DECISION_LOG.md",
+         "Every methodological decision, with its reasoning and what would reverse it"),
+        (PROJECT_ROOT / "WALKTHROUGH.md", "SESSION_LOG.md",
+         "The full development record, session by session: what was tried, what was "
+         "found, what was wrong and had to be corrected"),
+        (PROJECT_ROOT / "docs" / "ARCHITECTURE.md", "ARCHITECTURE.md",
+         "How the pipeline is put together"),
+        (PROJECT_ROOT / "config-emotion" / "protocol.yaml", "protocol_emotion.yaml",
+         "The review protocol for the new topic: questions, eligibility criteria, "
+         "search strategy. **A draft — it has not been reviewed by anyone**"),
+        (PROJECT_ROOT / "config-emotion" / "coding_frame.yaml", "coding_frame.yaml",
+         "The theory-grounded dictionary behind the evidence map, with every revision "
+         "to it recorded and justified"),
+    ]:
+        if src.exists():
+            shutil.copy2(src, ai / dest)
+            copied.append((f"pipeline-and-ai-record/{dest}", blurb))
+    prompts = PROJECT_ROOT / "config" / "prompts"
+    if prompts.is_dir():
+        shutil.copytree(prompts, ai / "prompts", dirs_exist_ok=True)
+        copied.append(("pipeline-and-ai-record/prompts/",
+                       f"The {len(list(prompts.glob('*.yaml')))} agent prompts, "
+                       "verbatim — one file per stage"))
+
+    # ---- the Richmond outputs themselves ---------------------------------------
+    # "the input data, intermediate results, outputs, knowledge graphs, and
+    # verification reports" — assignment §1, verbatim. The raw export is the database
+    # with nothing summarised away, which is what makes every figure in this package
+    # checkable rather than merely stated.
+    for src, dest, blurb in [
+        (PROJECT_ROOT / "outputs" / "Knowledge_Graph_Report.html",
+         "benchmark-outputs/Knowledge_Graph_Report.html",
+         "The Richmond knowledge graph — entities, relations and communities"),
+        (PROJECT_ROOT / "outputs" / "MASTER_VERIFICATION_REPORT.md",
+         "benchmark-outputs/MASTER_VERIFICATION_REPORT.md",
+         "The verification report: every metric, how it was computed, and its "
+         "confidence interval"),
+    ]:
+        if src.exists():
+            (out / dest).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, out / dest)
+            copied.append((dest, blurb))
+    raw = PROJECT_ROOT / "outputs" / "raw_export"
+    if raw.is_dir():
+        shutil.copytree(raw, out / "benchmark-outputs" / "raw_export",
+                        dirs_exist_ok=True)
+        copied.append(("benchmark-outputs/raw_export/",
+                       f"The benchmark database exported whole — {len(list(raw.iterdir()))} "
+                       "files, CSV and JSON, nothing summarised. Every figure in this "
+                       "package resolves to a row in here"))
+
+    # ---- the conference paper --------------------------------------------------
+    paper = PROJECT_ROOT / "outputs" / "submission_v2" / "AERA_2027_Preliminary_Paper_FINAL.docx"
+    if paper.exists():
+        shutil.copy2(paper, out / "AERA_2027_paper_as_accepted.docx")
+        copied.append(("AERA_2027_paper_as_accepted.docx",
+                       "The conference paper **exactly as accepted**. Its figures have "
+                       "since been superseded — see the note in the covering email"))
+
     # ---- the Richmond results page ---------------------------------------------
     # The benchmark review as one self-contained page: our conclusions beside
     # Richmond's, context by context, the verification matrix with confidence
@@ -207,6 +278,33 @@ at no cost, gave three results worth your attention:
 I widened the coding dictionary deliberately to try to destroy the second finding. It
 survived.
 
+ONE THING I HAD MISSED, FOUND BY RE-READING YOUR EMAIL AGAINST THE FRAME
+
+Your section 3 lists eight things the review should investigate. Seven were in our
+coding frame. **Emotional intelligence was not** — although it is the first construct
+named in your statement of purpose, and Brackett, one of your four references, works in
+it. The frame counted its two sub-constructs, awareness and regulation, and not the
+umbrella, so a study measuring trait EI with an established instrument and naming
+neither sub-construct matched nothing.
+
+Added, and it is substantial: **349 records, 19% of the pool** — the second-largest
+category after anxiety. Every figure in the attached evidence map has been recomputed.
+
+It is also worth saying how nearly that correction went wrong. My first version of the
+term list included "EQ", which returned 161 records. Checking them, 84 were "structural
+equation model" and two were the construct: the matcher deliberately leaves word endings
+open so that a stem like "metacognit" catches "metacognitive", which means "EQ" catches
+"equation". The honest figure is 349, not 485.
+
+A NOTE ON THE ATTACHED PAPER
+
+The conference paper is attached exactly as accepted. **Its verification figures have
+since been superseded** and should not be quoted from it: a defect in the scoring code
+was accepting matches whose own written rationale stated a non-match, and recounting
+found a second arithmetic error on top. The corrected figures are in the handover. I
+have deliberately not edited the accepted manuscript — the record of what was submitted
+should stay what was submitted — but the revision will need them.
+
 WHAT WE FOUND OUT ABOUT THE TOOLING, WHICH MAY MATTER MORE
 
 To answer your instruction to search more broadly, I ran the same registered vocabulary
@@ -275,6 +373,12 @@ argument.
 
 Start with 0_REQUIREMENTS_MATRIX.md in the handover folder — it goes through your email
 point by point. INDEX.md lists everything else.
+
+Your section 1 asked for the prompts, schemas and configurations, and for the materials
+given to the AI along with its recommendations and the decisions made during
+development. Those are in `pipeline-and-ai-record/`: the standing instructions the AI
+receives, all ten agent prompts verbatim, the decision log, and the full session-by-
+session development record including the things that turned out to be wrong.
 
 If you would rather see the system than read about it, open RICHMOND_RESULTS.html in a
 browser: it is the whole benchmark review on one page, our conclusions beside Richmond's,

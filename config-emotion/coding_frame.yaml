@@ -38,13 +38,32 @@
 # nothing is a broken frame and the report should say so.
 # =============================================================================
 
-version: "1.1"
+version: "1.2"
 written: 2026-11-17
 # --- REVISION LOG. The first run of the map is what justified each change; the
 # "carried mostly by" diagnostic in the generated report is what exposed them.
 # Dictionary coding is iterative by nature and the revisions must be visible, or
 # the frame becomes unfalsifiable.
 revisions:
+  - version: "1.2"
+    date: 2026-11-18
+    changes:
+      - 'ADDED emotional_intelligence to other_outcomes. Found by re-reading the
+         assignment line by line against the frame: section 3 lists eight things the
+         review should investigate -- "emotional awareness, emotional regulation,
+         achievement emotions, emotional intelligence, self-regulated learning,
+         motivation, engagement, and academic outcomes" -- and seven were in the frame.
+         Emotional intelligence was not, although it is the first construct named in
+         the assignment''s own statement of purpose. The frame counted its two
+         sub-constructs (awareness, regulation) and not the umbrella, so a study
+         measuring trait EI with an established instrument, and reporting neither
+         sub-construct by name, matched nothing. Terms include the four instruments the
+         field actually uses, plus RULER, because Brackett is one of the assignment''s
+         four references and the RULER curriculum is his. "EQ" and "Bar-On" were
+         tried and REMOVED in the same revision: the matcher leaves the right-hand
+         boundary open by design, so "EQ" matched 161 records of which 84 were
+         "structural equation model" and only two were the construct. Caught by the
+         evidence map''s own term-promiscuity diagnostic, which exists for this.'
   - version: "1.1"
     date: 2026-11-17
     changes:
@@ -233,6 +252,27 @@ other_outcomes:
   wellbeing:         {label: Wellbeing and satisfaction (secondary only), secondary: true,
                       terms: ["well-being", "wellbeing", "burnout", "stress", "depression", "mental health",
                               "life satisfaction", "course satisfaction"]}
+  # Named first in the assignment's own objective -- "improve students' emotional
+  # intelligence, particularly their emotional awareness and emotional regulation" --
+  # and absent from v1.1, which counted the two sub-constructs and not the umbrella.
+  # That matters here rather than being pedantic: EI is a distinct research tradition
+  # with its own instruments (MSCEIT, TEIQue, WLEIS, the Schutte scale), and Brackett
+  # -- one of the four references the assignment supplies -- works in it. A study
+  # measuring trait EI and nothing else would have been invisible to this frame.
+  emotional_intelligence:
+    label: Emotional intelligence (as a named construct)
+    named_by_professor: true
+    # NOT "EQ" and NOT "Bar-On". The matcher deliberately leaves the right-hand
+    # boundary open so that a stem like `metacognit` catches `metacognitive`, which
+    # means `\bEQ` also catches *equation*: of 161 records it matched, 84 were
+    # "structural equation model" and the rest "equivalent", "equipping",
+    # "equitable". Two were the construct. `Bar-On` fails the same way against "bar
+    # on". A category carried by a loose token measures the dictionary, not the field.
+    terms: ["emotional intelligence", "trait emotional intelligence",
+            "ability emotional intelligence", "emotional quotient",
+            "emotional competence", "emotional competencies", "emotional literacy",
+            "MSCEIT", "TEIQue", "WLEIS", "Schutte Self-Report Emotional Intelligence",
+            "social and emotional competence", "RULER"]
 
 # -----------------------------------------------------------------------------
 # CONTEXTS — "Student characteristics, learning situations, prior experiences,
