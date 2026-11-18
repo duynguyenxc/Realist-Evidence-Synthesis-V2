@@ -3154,3 +3154,63 @@ later.
 - **The professor can overturn any of them**, and the handover says so explicitly. If he
   does, record it in `docs/DECISION_LOG.md` rather than silently re-scoping.
 - **Do not re-add "four questions" anywhere.** There is one question, and it is the budget.
+
+---
+
+## M49 — 2026-11-18. The covering email, cut from 1,200 words to 330
+
+### What happened
+
+The RA read the generated `submission/EMAIL.md` and rejected it in two steps: first
+*"viết đúng cái kiểu như 1 con AI viết chứ ko phải là 1 RA bình thường viết báo cáo"*,
+then, on a 480-word rewrite, *"viết ngắn gọn dễ hiểu thôi, viết dài thầy ko đọc đâu"*.
+
+The faults were specific, not stylistic taste:
+
+- **~1,200 words in four numbered ALL-CAPS sections** with nested bullets — the shape of a
+  technical report, not of an email to a supervisor.
+- **Markdown emphasis throughout.** Gmail's plain-text composer renders `**1,863**` as
+  literal asterisks. The file is pasted into mail; it was never going to render.
+- **A figure in almost every clause**, which reads as a dashboard rather than a report.
+- **Nine code defects enumerated.** The professor has no use for them and listing them
+  reads as taking credit for repairing one's own mistakes.
+- **Every paragraph closing on a flourish** — "the one mistake this project cannot
+  afford", "a run that completes, exits zero, and produces a report indistinguishable
+  from a correct one". True sentences, but they are the writing an LLM reaches for.
+
+### What it says now
+
+331 words, continuous prose, no headings, no bullets, no emphasis. Outputs 1/2/6 done;
+the search and the ingest; the four-catalogue check at 3.6%; two flags (the missing
+emotional-intelligence category, and the superseded AERA figures); the countersigned
+checkpoints; the attachments in one sentence; JSU's unreleased allowance with $5.44 and
+$16; this week; and the three scope decisions. Dropped: the defect list, and the offer to
+pay the $5.44 personally — the latter puts the supervisor in an awkward position and the
+RA had not asked for it.
+
+### The part that matters for the next session
+
+`scripts/make_submission.py` **generates** this email, so rewriting only the file would
+have been undone by the next rebuild. The generator was changed, the old 133-line
+f-string replaced, and the package rebuilt — which is the whole point of the email being
+generated: every figure in it resolves against the data at build time.
+
+One figure had been hard-coded in the old text and is now read from the evidence map:
+
+```python
+n_ei = _num(emap, r"Emotional intelligence \(as a named construct\)[^|]*\|\s*(\d+)")
+```
+
+349 came back, not `_num`'s `"?"` default, so the pattern matches the real table. That was
+the number most at risk of drift — it comes from a coding-frame category added after the
+map was first built (M48). `n_raw` and `acq` became dead when the email stopped citing
+them and were removed.
+
+### What the next session must not assume
+
+- **The email is unsent.** The RA sends it, not Claude, and has not yet approved this
+  version.
+- **Do not re-expand it.** Four numbered sections and a defect list were explicitly
+  rejected twice. If something must be added, say it in a clause, not a section.
+- **Never write markdown emphasis into `EMAIL.md`.** It is pasted into a mail client as
+  plain text.
