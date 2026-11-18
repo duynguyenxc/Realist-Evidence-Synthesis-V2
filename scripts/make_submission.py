@@ -271,167 +271,139 @@ def main() -> int:
 
     rewritten = sum(_fix_links(md) for md in sorted(out.rglob("*.md")))
 
+    raw_dir = PROJECT_ROOT / "outputs" / "raw_export"
+    n_raw = len(list(raw_dir.iterdir())) if raw_dir.is_dir() else 0
+
     # ---- the email -------------------------------------------------------------
     email = f"""Subject: Progress report — emotional awareness and regulation review
 
 Dear Professor Zheng,
 
-A report on where the assignment stands, three scope decisions I took, and one thing I\nneed from you.\n\nIn three lines: outputs 1, 2, 3 and 6 are done and attached, all at no cost — {n_pool:,}\nrecords searched, {n_pdf} full texts collected and ingested, and the review checkpoints\ncountersigned. Outputs 4 and 5 need screening and extraction, the first stages that call\na model, and I am asking for about $25. Along the way we found that three of four further\ncatalogues could not be reached and only one of them said so, which is the best evidence\nyet for why this framework keeps a human at its checkpoints.
+Here is where the assignment stands. Everything below was done at no cost, because the
+tool budget has not come through; I come back to that in section 3.
 
-WHAT IS FINISHED
+1. WHAT WE HAVE DONE
 
-Outputs 1, 2 and 6 are complete and attached. The literature search in output 3 has been
-run: {n_pool:,} candidate records from the registered protocol, 89% with an abstract, and
-{n_pdf} full texts downloaded and verified.
+Pipeline documentation and plan (your outputs 1, 2 and 6)
+  - The complete Richmond pipeline documented: architecture, all ten agent prompts, the
+    schemas, the configurations, the evaluation procedure and its results.
+  - An assessment of what the new topic needs, answering each of your seven questions in
+    section 2, with a step-by-step implementation plan.
+  - A review protocol for the new topic: research questions, eligibility criteria,
+    definitions, and a theory-grounded coding frame built on Pekrun's control-value
+    theory and Gross's process model, joined through Harley, Pekrun, Taxer and Gross
+    (2019).
 
-Those full texts are now in the review database as well, which is the second half of
-output 3: **all {n_ingested} ingested, {n_fulltext} of them carrying a usable full text,
-{n_units:,} indexed text units, nothing lost in the process.** It is a structured
-evidence database in every sense except the one that matters most to you — no eligibility
-decision has been taken on any record, because that is the first step that calls a model.
+Literature collection (your output 3)
+  - **{n_pool:,} candidate records** from ten registered boolean queries across OpenAlex
+    and Crossref, 89% with an abstract. A separate 445-record theory pool, because every
+    corpus query requires an intervention term and so could never reach the theoretical
+    literature your references come from.
+  - **{n_pdf} full texts** downloaded and verified, and **all {n_ingested} ingested into
+    the review database** — {n_fulltext} with a usable full text, {n_units:,} indexed
+    text units, nothing lost.
+  - A descriptive evidence map of all {n_pool:,} records against Pekrun's and Gross's
+    categories, built without calling a model.
+  - Four further catalogues searched through our own UWSS scraping system — DOAJ,
+    arXiv, Semantic Scholar, PubMed — to measure whether a two-catalogue search is
+    broad enough. It is: the measured shortfall is {shortfall} records, {shortfall_pct}%.
 
-The whole of the above cost nothing.
+Verification and quality control
+  - Every PDF checked against its own metadata: 97% contain the title they claim. The
+    non-matches were opened by hand and are foreign-language papers, not mis-filed ones.
+  - The corpus checked for duplicates, impossible years, files that are not PDFs and
+    extractions too short to use. Zero duplicates, zero bad years, zero false PDFs.
+  - **The review checkpoints are now countersigned.** Under your section 5 instruction
+    not to stop the process, the pipeline resolved all 20 contradictions and signed off
+    the programme theory itself, recorded honestly as AI-performed; I have since read
+    each and countersigned it, disputing none.
 
-The review checkpoints are also now countersigned. Following your instruction not to stop
-the research process, the pipeline resolved all 20 contradictions and signed off the
-programme theory itself, recorded honestly as AI-performed under your delegation; I have
-since read each one and countersigned it, and disputed none. The record keeps both
-actors, so it stays visible which decisions a model drafted and which a person stood
-behind.
+Corrections to our own earlier claims
+  - The 32 recurring patterns we had reported do not survive a permutation test against
+    chance, and none survives correction for multiple testing.
+  - The comparison against your five programme-theory statements was hand-written prose;
+    it is now computed, and three of the five recover the causal chain but fail to name
+    the population.
+  - "1,266 full texts" was the count of *links*; {n_pdf} is the count of files.
+  - Emotional intelligence — the first construct named in your objective — was missing
+    from our coding frame. Added: 349 records, 19% of the pool.
 
-WHAT IS NOT FINISHED
+Defects found and fixed along the way
+  - Nine in the code: three in the pipeline, six in UWSS. Two of them had each killed a
+    whole ingest run on a single bad document; one meant DOAJ had never worked at all;
+    one meant every ingested study carried a DOI string instead of its title.
 
-Outputs 4 and 5 — the extracted CMOCs, the knowledge graph and the preliminary synthesis
-— are not started. They need screening and extraction, which are the first stages that
-call a model, and the project has no API budget at present. I have not faked them: the
-evidence map attached shows what this literature *studies*, and that is a different claim
-from what works. Calling term frequencies "promising interventions" is the one mistake
-this project cannot afford.
+2. WHAT IS ATTACHED
 
-I should also correct something I reported earlier. I had said outputs 3, 4 and 5 all
-needed budget. Three of the pipeline's stages call no model at all, so half of output 3
-was always within reach, and I should have checked that sooner.
+  - `handover/` — the four documents for your outputs 1, 2 and 6, and a requirements
+    matrix that goes through your email clause by clause. **Start there.**
+  - `reports/` — six reports generated from the data by scripts rather than written by
+    hand, so they cannot drift from what the pipeline holds: the search, the evidence
+    map, the full-text acquisition, the catalogue comparison, an audit of the search
+    infrastructure, and the cost model.
+  - `pipeline-and-ai-record/` — what section 1 asks for by name: the standing
+    instructions given to the AI, all ten agent prompts verbatim, the decision log, the
+    full session-by-session development record, and the new topic's protocol.
+  - `benchmark-outputs/` — the Richmond knowledge graph, the verification report, and
+    the database exported whole, {n_raw} files, nothing summarised.
+  - `data/` — the corpus as spreadsheets, a link to the PDFs, and the quality checks, so
+    you can inspect the evidence rather than take the counts on trust.
+  - `RICHMOND_RESULTS.html` — the whole benchmark review on one page. Open in a browser
+    if you would rather see the system than read about it.
+  - `AERA_2027_paper_as_accepted.docx` — as accepted. **Its verification figures have
+    since been superseded and should not be quoted from it**; the corrected ones are in
+    the handover. I have left the accepted manuscript unedited deliberately.
 
-WHAT WE FOUND OUT ABOUT THE LITERATURE
+3. BUDGET
 
-Coding all {n_pool:,} records against Pekrun's and Gross's categories, with no model and
-at no cost, gave three results worth your attention:
+JSU has not yet released the tool allowance — the earlier request was disapproved and
+nothing has replaced it — so I have had no API credit to work with. Everything above was
+built around that: the search, the acquisition, the ingest, the evidence map and all six
+reports call no model at all, which is why they exist.
 
-  1. The field studies anxiety and little else — 578 of 678 records carrying an
-     achievement-emotion tag mention anxiety, while Pekrun's other eight sit between
-     11 and 79.
-  2. Three of the five interventions you named by example are nearly absent:
-     self-regulation activities 7 records, emotional awareness prompts 6, learning
-     plans 17. Mindfulness, which you did not name, has 291.
-  3. STEM is barely served: engineering, computing and the natural sciences account for
-     51 records between them.
+What the allowance would buy, costed from the actual prompts the pipeline sends rather
+than estimated:
 
-I widened the coding dictionary deliberately to try to destroy the second finding. It
-survived.
+  - Screening all {n_pool:,} records against the protocol: **$5.44**
+  - A 10-paper pilot extraction, with its cost measured rather than projected: **$16**
+  - Together: **about $21**
 
-ONE THING I HAD MISSED, FOUND BY RE-READING YOUR EMAIL AGAINST THE FRAME
+These are the two stages that produce your outputs 4 and 5 — the extracted CMOCs, the
+knowledge graph, and the preliminary synthesis. They are the only parts of the
+assignment I have not been able to deliver, and I have not substituted anything for
+them: the evidence map shows what this literature *studies*, which is a different claim
+from what works, and presenting term counts as "promising interventions" is the one
+mistake this project cannot afford.
 
-Your section 3 lists eight things the review should investigate. Seven were in our
-coding frame. **Emotional intelligence was not** — although it is the first construct
-named in your statement of purpose, and Brackett, one of your four references, works in
-it. The frame counted its two sub-constructs, awareness and regulation, and not the
-umbrella, so a study measuring trait EI with an established instrument and naming
-neither sub-construct matched nothing.
+If the allowance is still blocked, $5.44 is small enough that I would rather cover it
+myself than leave output 3 half-finished — but I did not want to spend against the
+project without asking you first.
 
-Added, and it is substantial: **349 records, 19% of the pool** — the second-largest
-category after anxiety. Every figure in the attached evidence map has been recomputed.
+4. THIS WEEK
 
-It is also worth saying how nearly that correction went wrong. My first version of the
-term list included "EQ", which returned 161 records. Checking them, 84 were "structural
-equation model" and two were the construct: the matcher deliberately leaves word endings
-open so that a stem like "metacognit" catches "metacognitive", which means "EQ" catches
-"equation". The honest figure is 349, not 485.
+Without budget:
+  - Finish the full-text acquisition. Unpaywall has resolved 1,325 direct open-access
+    locations, well past the 572 we hold, and the download is running now.
+  - Re-ingest and re-run the evidence map and the data-quality checks over the larger
+    corpus.
+  - Draft the methods section on what we found about the search infrastructure. Of the
+    thirteen failures we recorded, nine were silent — a run that completes, exits zero,
+    and produces a report indistinguishable from a correct one. That is the strongest
+    evidence I have seen for why this framework keeps a human at its checkpoints, and I
+    think it belongs in the paper.
+  - Prepare the screening run completely — prompts, validation set, cost ceiling — so
+    that it executes the day budget arrives rather than starting then.
 
-WHAT WE FOUND OUT ABOUT THE TOOLING, WHICH MAY MATTER MORE
+With budget, in this order:
+  - Screen all {n_pool:,} records ($5.44), which also settles three scope questions that
+    currently rest on term counts.
+  - Run the 10-paper pilot and report what a programme theory looks like on this topic.
 
-To answer your instruction to search more broadly, I ran the same registered vocabulary
-through four further catalogues using the UWSS scraping system. Three of the four could
-not contribute, and only one of them said so.
-
-PubMed is the instructive case. NCBI answers a blocked request with HTTP 200 and an HTML
-page, so the client parses it as JSON, fails, and reports zero results. A review would
-write "PubMed: 0 records" into its flow diagram and never learn the request was refused.
-
-Counting the defects this project had already caught on its own, the attached SOURCE_AUDIT
-records thirteen failures in the search and acquisition infrastructure, nine of which were
-silent — a run that completes, exits zero, and produces a report indistinguishable from a
-correct one. None of them would be caught by reading the output, because every output was
-well-formed. All were caught by checking an assumption against the live service before
-trusting the run.
-
-That is the argument of our methods paper arriving as evidence rather than assertion: it
-is the clearest case I have seen for why the human checkpoints are not decoration.
-
-On the substance of the broader search: of {sum(added.values()) if added else 0} records
-the added catalogues returned, only {shortfall} were both new to our corpus and on topic
-— a shortfall of {shortfall_pct}%. DOAJ is worth adding and arXiv is not, and I have not
-merged either, because changing the search changes what the review claims to have searched
-and that is your decision rather than a file copy.
-
-THREE DECISIONS I TOOK, AND ONE I CANNOT
-
-Your section 5 asks me to use my judgment on routine decisions and document them. I had
-drafted four questions for you. Three of them turned out to be answerable from the pool,
-so I have decided them and written down the reasoning and what would reverse each one,
-rather than handing back work you would have to do at a greater distance from the data
-than I am. Overturn any of them in a sentence.
-
-  1. STEM is a context dimension, not an inclusion filter. Fifty-one of 1,088
-     higher-education records are engineering, computing or natural science — perhaps
-     ten to twenty after screening, which is the scale at which all 32 of Richmond's
-     apparent patterns failed a permutation test. But realist synthesis treats context
-     as a variable, so the answerable question is which mechanisms fire differently
-     inside STEM rather than what works in STEM. Reverses if screening leaves 40+.
-
-  2. The synthesis is organised by Gross's five regulation families, not by intervention
-     name. Regrouped that way, your "emotional awareness prompts" (6 records) and
-     mindfulness (291) are the same mechanism — attentional deployment. The scarcity is
-     largely a vocabulary gap rather than an evidence gap, and that mismatch between how
-     teachers name what they do and how researchers file it is worth reporting on its
-     own.
-
-  3. Anxiety is the spine, with boredom as a deliberate contrast case. Eight emotions at
-     11-79 records cannot each carry a programme theory, but boredom is an activity
-     emotion in Pekrun's terms where anxiety is an outcome emotion. That makes "do
-     anxiety's mechanisms work on boredom?" answerable, and turns the imbalance from a
-     limitation into a design. Reverses if screening leaves fewer than about 20 boredom
-     studies.
-
-THE ONE I CANNOT DECIDE
-
-May I spend about $25? Screening all {n_pool:,} records costs $5.44; a ten-paper pilot
-with its cost measured rather than estimated is $16 more.
-
-My recommendation is to approve the $5.44 now and hold the rest — not to economise, but
-because every figure in the three decisions above comes from counting dictionary terms in
-titles and abstracts. Screening is what turns each of their reversal thresholds into a
-real number. After it, the case for or against the pilot is evidence rather than
-argument.
-
-Start with 0_REQUIREMENTS_MATRIX.md in the handover folder — it goes through your email
-point by point. INDEX.md lists everything else.
-
-The conference paper is attached exactly as accepted. **Its verification figures have
-since been superseded** and should not be quoted from it: a defect in the scoring code
-was accepting matches whose own written rationale stated a non-match, and recounting
-found a second arithmetic error on top. The corrected figures are in the handover. I
-have deliberately left the accepted manuscript unedited — the record of what was
-submitted should stay what was submitted — but the revision will need them.
-
-Your section 1 asked for the prompts, schemas and configurations, and for the materials
-given to the AI along with its recommendations and the decisions made during
-development. Those are in `pipeline-and-ai-record/`: the standing instructions the AI
-receives, all ten agent prompts verbatim, the decision log, and the full session-by-
-session development record including the things that turned out to be wrong.
-
-If you would rather see the system than read about it, open RICHMOND_RESULTS.html in a
-browser: it is the whole benchmark review on one page, our conclusions beside Richmond's,
-with the verification figures and every configuration behind them. No server, no setup.
+Three decisions I took rather than bringing to you, each with its reasoning and what
+would reverse it, are at the end of the requirements matrix: STEM is carried as a context
+dimension rather than an inclusion filter; the synthesis is organised by Gross's five
+mechanism families rather than by intervention name; and anxiety is the spine with
+boredom as a deliberate contrast case. Overturn any of them in a sentence.
 
 Best regards,
 Duy
