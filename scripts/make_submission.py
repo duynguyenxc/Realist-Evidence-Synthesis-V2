@@ -280,8 +280,24 @@ Duy
           f"| Review checkpoints countersigned | 21 of 21, none disputed |",
           f"| Added catalogues returned | {sum(added.values()) if added else 0} records |",
           f"| Of those, new **and** on topic | {shortfall} ({shortfall_pct}% of the corpus) |",
-          "| Cost of everything so far | $0 |", ""]
+          "| Cost of everything so far | $0 |", "",
+          "## Checking the data yourself", "",
+          "`data/` holds the corpus as spreadsheets, a link to the PDFs, and "
+          "`DATA_QUALITY.md` — the checks a sceptical reader would run: missing fields, "
+          "duplicates, impossible years, PDFs too small to be papers, text extractions "
+          "too short to be useful, and whether each PDF actually contains the paper its "
+          "metadata claims. Sort `ingested_572_with_text_length.csv` by `text_chars` "
+          "ascending to find the weakest records in about ten seconds.", ""]
     (out / "INDEX.md").write_text("\n".join(L) + "\n", encoding="utf-8")
+
+    # The data folder is built by its own script, called from here rather than left to
+    # be remembered: this function starts by deleting submission/, so running them in
+    # the other order silently throws the data away — which it did once.
+    try:
+        import data_package
+        data_package.main()
+    except Exception as exc:  # noqa: BLE001 - the package is still valid without it
+        print(f"(data/ not built: {type(exc).__name__}: {exc})", file=sys.stderr)
 
     print(f"submission/ rebuilt: {len(copied)} attachments + EMAIL.md + INDEX.md")
     for name, _ in copied:
