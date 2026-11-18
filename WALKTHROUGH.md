@@ -3214,3 +3214,89 @@ them and were removed.
   rejected twice. If something must be added, say it in a clause, not a section.
 - **Never write markdown emphasis into `EMAIL.md`.** It is pasted into a mail client as
   plain text.
+
+---
+
+## M50 — 2026-11-18. Stopping the fetch, and the 90 papers it had already earned
+
+### Why it was stopped
+
+The RA asked whether the UWSS fetch could be stopped — *"sợ thế, chạy nhiều thế"*, worried
+it would exhaust memory. It would not have: **27 MB RSS, 0.0% CPU, 676 GB of 926 GB free**.
+The fear was misplaced, but stopping was right for a different reason, visible only by
+counting what it produced per hour:
+
+| Window | PDFs |
+|---|---|
+| 09:00–11:59 | **970** |
+| 12:00–16:15 (4¼ hours) | **48** |
+
+It finished its useful work by noon and spent four hours retrying hosts that no longer
+exist — `ejhc.journals.ekb.eg`, `tsnj.journals.ekb.eg` fail DNS resolution; Sage closes
+the TLS session mid-handshake — at three attempts × 30-second timeouts each. **A process
+can be healthy and still be worthless; resource use does not tell you which.** Stopping
+cost nothing: M47's cumulative-`oa_status` fix means 1,545 of 1,983 rows are now marked as
+asked, so a re-run resumes at the 438 remaining instead of starting over.
+
+### Two counts I reported wrongly, and the check that caught each
+
+I told the RA the run had produced **1,018 PDFs**. It produced **893**; the other 125 are
+`.html` files, which UWSS had named honestly, and my `ls | wc -l` had not excluded. Then of
+the 893, the `%PDF` magic-byte guard refused **10** — HTML paywall pages from Springer and
+Nature saved under a `.pdf` name. The real figure is **883**.
+
+Both errors were in the same direction, and both came from counting filenames instead of
+opening files. That is the project's own recurring defect — M45's "1,266 full texts" was a
+count of links — and it recurred here within a day of being documented.
+
+### What crossed into the corpus, and the line it did not cross
+
+Of 893, **593** belonged to the registered OpenAlex pool, **493** of those were already
+held, and **90** were new and verified. `data-emotion/fulltext/`: **572 → 662**.
+Re-ingested: **662/662, 0 failures, 623 with a usable full text, 8,357 text units**
+(was 539 / 7,241). Titles backfilled, 0 placeholders.
+
+**300 PDFs were left where they were.** They belong to records UWSS discovered on arXiv,
+DOAJ and Semantic Scholar, and the distinction is the one `scripts/uwss_bridge.py` was
+built to hold:
+
+> A record arriving from DOAJ enlarges what the review claims to have searched: that is a
+> protocol amendment, and the professor's decision. A *file* for a study OpenAlex already
+> returned changes nothing about the search — it is the same study, fetched through
+> Unpaywall instead of through an OA link that returned nothing.
+
+So `--collect-pdfs` filters on `source = 'res:openalex'` and nothing else. It also cannot
+read the DOI from the filename: UWSS writes `10.1002/capr.12282` as
+`10_1002_capr_12282_id1458.pdf`, where dots and the slash both became underscores. The
+`_id<rowid>` suffix is the only lossless handle, so the join is filename → rowid → the DOI
+the database holds. Guessing the DOI back from the stem would mis-name most files whose
+suffix contains a dot.
+
+### A one-off discrepancy that turned out to be a finding
+
+`ACQUISITION_REPORT.md` said 661 verified PDFs beside 662 files on disk. The missing one is
+`10.34172/rdme.33409`: in the pool, but with **no open-access link in either catalogue** —
+Unpaywall found a location anyway. So Unpaywall does not only repair broken links, it
+reaches papers the catalogues do not record as open at all. The generator now states the
+difference and its cause rather than leaving a gap that reads like an off-by-one.
+
+### What changed in writing
+
+Generated reports updated themselves. **Eleven hand-written figures across six files did
+not** and were corrected by hand: `handover/{0_REQUIREMENTS_MATRIX,README,1_WHAT_WE_BUILT,
+2_WHAT_THE_NEW_TOPIC_NEEDS}.md`, `CLAUDE.md`, `PLAN.md`. One is deliberately **661, not
+662** — the sentence is about how many of the 1,266 *links* yield a file.
+
+`submission/EMAIL.md` regenerated at 363 words. Its "this week I will finish the downloads"
+is gone, because the download has finished: it now says 662 of 1,863 have a full text and
+most of the remainder are links that no longer resolve.
+
+### What the next session must not assume
+
+- **Not every `.pdf` is a PDF, and not every file in a download folder is a `.pdf`.** Count
+  with a magic-byte check and an extension filter, both.
+- **The 300 UWSS-discovered PDFs are not corpus.** Merging their *records* is a protocol
+  amendment and remains the professor's decision. `--from-uwss` still refuses to do it.
+- **Do not restart the fetch to "finish it".** 438 rows remain unasked, but the measured
+  yield of the last four hours was 48 files, and the hosts involved are gone.
+- **The email is still unsent**, and now carries 662, 623 and 8,357.

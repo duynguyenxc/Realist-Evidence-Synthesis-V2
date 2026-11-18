@@ -25,7 +25,7 @@ rather than written by hand, so they cannot drift from what the pipeline actuall
 ## Where things stand
 
 The literature search for the new topic has been run, and it cost nothing: **1,863
-candidate records**, 89% with an abstract, 68% with an open-access PDF link — of which 572
+candidate records**, 89% with an abstract, 68% with an open-access PDF link — of which 662
 full texts were actually downloadable, for the reasons in `ACQUISITION_REPORT.md`. That is the
 first half of your third output. We had reported all of outputs 3, 4 and 5 as needing
 budget, and that was partly wrong — three of the pipeline's stages call no model at all.

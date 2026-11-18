@@ -121,7 +121,7 @@ counterpart, 152 do not, 72 of those are a single mention in a single study — 
 `data-emotion/` (gitignored) and `outputs-emotion/` exist; the emotion review runs under **exported**
 env vars — `RES_CONFIG_DIR=config-emotion RES_DATA_DIR=data-emotion RES_OUTPUTS_DIR=outputs-emotion
 POSTGRES_DB=realist_emotion` — never written into `.env`, which is shared with Richmond.
-**1,863 candidate records** (89% abstract, 68% an OA PDF *link* — only **572 full texts actually
+**1,863 candidate records** (89% abstract, 68% an OA PDF *link* — only **662 full texts actually
 download**, see `outputs-emotion/ACQUISITION_REPORT.md`; 274 reviews), from ten blocked
 boolean queries recorded in `config-emotion/protocol.yaml` §`search_strategy` and executed only by
 `scripts/run_protocol_search.py`. `outputs-emotion/SEARCH_REPORT.md` is **generated** by
@@ -135,7 +135,7 @@ search against a $0.10/day budget shared per network IP, so the manuscript's cre
 reproducibility claim needs qualifying.
 
 **The corpus is collected, ingested and audited, 2026-11-18** (M47), still at $0. All
-**572 full texts are in `realist_emotion`** — 539 with a usable full text, 7,241 text
+**662 full texts are in `realist_emotion`** — 623 with a usable full text, 8,357 text
 units, 0 failures — so deliverable 3 is no longer half done; only the eligibility decision
 is missing, and that is the first paid stage. Getting there fixed two defects that had
 each killed a whole ingest on one document (a NUL byte Postgres refuses, an AES-encrypted

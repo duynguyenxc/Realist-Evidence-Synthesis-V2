@@ -309,9 +309,11 @@ JSU still has not released the tool allowance, so I have had no API credit; ever
 above was built to run without one. What is left — outputs 4 and 5 — needs screening
 ($5.44) and a ten-paper pilot extraction ($16).
 
-This week I will finish the downloads (Unpaywall has found 1,325 open-access copies, well
-past the {n_pdf} we hold), re-run the evidence map over the larger set, and have the
-screening ready to execute the day budget arrives.
+The open-access download has now run to the end of what it can reach: {n_pdf} of the
+{n_pool:,} records have a full text, and most of what is left are links that no longer
+resolve rather than papers behind a paywall. This week I will have the screening run
+fully prepared — prompts, validation set, cost ceiling — so that it executes the day
+budget arrives rather than starting then.
 
 Three scope decisions are at the end of the matrix. Happy to be overruled on any of them.
 

@@ -44,6 +44,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import sys
 from pathlib import Path
 
@@ -122,6 +123,94 @@ def from_uwss(src: Path, out: Path, data_dir: Path) -> int:
     return 0
 
 
+def collect_pdfs(data_dir: Path, dry: bool = False) -> int:
+    """Bring back full texts for records the registered corpus ALREADY contains.
+
+    This is the one thing that crosses from UWSS into the corpus, and it is worth being
+    exact about why it is allowed when `--from-uwss` is not. A record arriving from DOAJ
+    or arXiv enlarges what the review claims to have searched: that is a protocol
+    amendment. A *file* for a study OpenAlex already returned changes nothing about the
+    search — it is the same study, fetched through Unpaywall instead of through the OA
+    link that returned no file. Of 1,266 "open access" links, 694 yielded nothing (M45);
+    this is how that gap closes without touching the search strategy.
+
+    So the filter is strict: `source = 'res:openalex'` only. A PDF belonging to any
+    UWSS-discovered record is left where it is, counted and reported, not copied.
+
+    THE FILENAME CANNOT BE USED AS THE DOI
+    --------------------------------------
+    UWSS saves `10.1002/capr.12282` as `10_1002_capr_12282_id1458.pdf` — dots and the
+    slash both become underscores, so the DOI is not recoverable from the name. The
+    trailing `_id<rowid>` is, and that is the join: filename -> rowid -> the DOI the
+    database holds. Guessing the DOI back from the stem would mis-name roughly every
+    file whose suffix contains a dot.
+    """
+    import re
+    import sqlite3
+
+    src_dir = UWSS_ROOT / "data" / "emotion_fulltext"
+    db = UWSS_ROOT / "data" / "emotion.sqlite"
+    dest = data_dir / "fulltext"
+    if not src_dir.is_dir() or not db.exists():
+        print(f"No UWSS downloads at {src_dir}", file=sys.stderr)
+        return 1
+
+    files = {int(m.group(1)): p for p in src_dir.glob("*.pdf")
+             if (m := re.search(r"_id(\d+)\.pdf$", p.name))}
+    unnamed = sum(1 for p in src_dir.glob("*.pdf")
+                  if not re.search(r"_id(\d+)\.pdf$", p.name))
+
+    con = sqlite3.connect(db)
+    con.row_factory = sqlite3.Row
+    rows = {r["id"]: r for r in
+            con.execute("select id, doi, source from documents")}
+
+    held = {p.name for p in dest.glob("*.pdf")}
+    added, already, foreign, no_doi, not_pdf = 0, 0, 0, 0, 0
+    for rid, path in sorted(files.items()):
+        row = rows.get(rid)
+        if row is None or row["source"] != "res:openalex":
+            foreign += 1
+            continue
+        doi = (row["doi"] or "").strip()
+        if not doi:
+            no_doi += 1
+            continue
+        # The pipeline's own convention, as `res acquire` writes it: the DOI with "/"
+        # replaced by "_". Matching it is what makes the file findable by study id.
+        name = doi.replace("/", "_") + ".pdf"
+        if name in held:
+            already += 1
+            continue
+        # A file that is not a PDF is the failure mode this project has already been
+        # caught by: a login page saved with a .pdf suffix counts as a full text until
+        # someone tries to read it.
+        with path.open("rb") as fh:
+            if fh.read(5) != b"%PDF-":
+                not_pdf += 1
+                continue
+        if not dry:
+            dest.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, dest / name)
+        added += 1
+
+    print(f"UWSS downloads:            {len(files) + unnamed}")
+    if unnamed:
+        print(f"  no parseable record id:  {unnamed} (left alone)")
+    print(f"  UWSS-discovered records: {foreign} (NOT copied — protocol amendment)")
+    print(f"  already held:            {already}")
+    if no_doi:
+        print(f"  no DOI to name by:       {no_doi}")
+    if not_pdf:
+        print(f"  not actually a PDF:      {not_pdf}")
+    print(f"{'would add' if dry else 'ADDED'}:                 {added}")
+    print(f"corpus full texts now:     {len(held) + (0 if dry else added)}")
+    if added and not dry:
+        print("\nRe-run `res ingest` and `scripts/backfill_study_metadata.py` next: the "
+              "files are on disk but not yet in the database.")
+    return 0
+
+
 def main() -> int:
     from res_pipeline.core.config import DATA_DIR
 
@@ -129,12 +218,17 @@ def main() -> int:
     g = ap.add_mutually_exclusive_group(required=True)
     g.add_argument("--to-uwss", action="store_true")
     g.add_argument("--from-uwss", action="store_true")
+    g.add_argument("--collect-pdfs", action="store_true",
+                   help="copy back full texts for records the corpus already has")
+    ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--src", type=Path,
                     default=UWSS_ROOT / "data" / "emotion_uwss_export.jsonl")
     args = ap.parse_args()
 
     if args.to_uwss:
         return to_uwss(DATA_DIR, UWSS_ROOT / "data" / "emotion_corpus_for_uwss.jsonl")
+    if args.collect_pdfs:
+        return collect_pdfs(DATA_DIR, dry=args.dry_run)
     return from_uwss(args.src, DATA_DIR / "uwss_new_records.jsonl", DATA_DIR)
 
 

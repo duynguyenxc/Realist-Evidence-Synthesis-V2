@@ -88,7 +88,7 @@ numbers and why they cannot be regenerated. That is a fact to disclose, not a de
       shell — so an exported variable isolates this review without leaving a trap set for the
       next session that runs a Richmond command.
 - [x] **C3** (#3, first half) ✅ **2026-11-16.** Search run: **1,863 candidate records**, 89%
-      with an abstract, 68% with an open-access PDF link (572 full texts obtained).
+      with an abstract, 68% with an open-access PDF link (662 full texts obtained).
       `outputs-emotion/SEARCH_REPORT.md` is
       generated from `search_log`, not written. The protocol's pre-registered validity check
       passed on all four of the professor's named references. **The second half of #3 — a
@@ -176,8 +176,8 @@ He has not seen this system and does not know what it does. Hold me to these:
       signature appends, so `ai-ra:claude(…) + countersigned human:duy` keeps both actors. Two
       webui defects had to be fixed first — the route crashed on every submission and every human
       action button rendered blank — so this had been **impossible**, not merely undone.
-- [x] **The corpus is ingested** (2026-11-18, M47): 572/572 into `realist_emotion`, 539
-      with usable full text, 7,241 text units, 0 failures. Deliverable 3's database half
+- [x] **The corpus is ingested** (2026-11-18, M47): 662/662 into `realist_emotion`, 623
+      with usable full text, 8,357 text units, 0 failures. Deliverable 3's database half
       is done; only the eligibility decision remains, and it is the first paid stage.
 - [x] **Four further catalogues run through UWSS** (M47). DOAJ 370, arXiv 200, Semantic
       Scholar 20, PubMed blocked. Measured shortfall of the registered two-catalogue

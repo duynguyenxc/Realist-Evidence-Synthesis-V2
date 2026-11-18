@@ -128,6 +128,19 @@ def main() -> int:
     w(f"{len(files)} files on disk, {total_mb:,.0f} MB. Every one begins with the `%PDF` "
       "magic bytes; nothing HTML was saved as a PDF.")
     w("")
+    # The two counts differ, and the difference is a finding rather than a defect, so the
+    # report says which is which instead of leaving a one-off gap that reads like a bug.
+    # The table counts records the catalogue gave an OA link for; the disk holds a few
+    # papers Unpaywall located although OpenAlex and Crossref published no OA link at all.
+    unlinked = len(files) - len(got)
+    if unlinked > 0:
+        w(f"The two numbers differ by {unlinked}: the table counts records whose catalogue "
+          "entry carried an open-access link, and Unpaywall found a location for "
+          f"{unlinked} further paper{'s' if unlinked != 1 else ''} that OpenAlex and "
+          "Crossref listed no open-access link for at all. So Unpaywall does not only "
+          "repair broken links — it reaches a small number of papers the catalogues do "
+          "not record as open at all.")
+        w("")
     w(f"**The number to quote is {len(got)}, not {len(linked)}.** Earlier reports said "
       f"\"{_pct(len(linked), len(recs))} with a free full text\", which was the share with "
       "an open-access *link*. The share we hold is "
