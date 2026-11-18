@@ -171,6 +171,26 @@ def main() -> int:
                        f"The {len(list(prompts.glob('*.yaml')))} agent prompts, "
                        "verbatim — one file per stage"))
 
+    # ---- the documents the handover links to -----------------------------------
+    # Without these, thirteen links in the package resolve to nothing. They are also
+    # what §1 means by "the evaluation procedures and results from the Richmond
+    # benchmark", so they belong here on their own merits.
+    for name, blurb in [
+        ("VERIFICATION_PROTOCOL.md",
+         "Why these are the right metrics, with citations, and an honest list of what "
+         "is still missing"),
+        ("MACHINE_VS_HUMAN.md",
+         "The system's output against two human coders — the authoritative record of "
+         "the comparison, including the corrections"),
+        ("OUTPUT_AND_VERIFICATION.md", "What the pipeline outputs and how each is checked"),
+        ("SYSTEM_AND_ALGORITHMS.md", "The algorithms, stage by stage"),
+    ]:
+        src = PROJECT_ROOT / "docs" / name
+        if src.exists():
+            (out / "reference-docs").mkdir(exist_ok=True)
+            shutil.copy2(src, out / "reference-docs" / name)
+            copied.append((f"reference-docs/{name}", blurb))
+
     # ---- the Richmond outputs themselves ---------------------------------------
     # "the input data, intermediate results, outputs, knowledge graphs, and
     # verification reports" — assignment §1, verbatim. The raw export is the database
@@ -220,12 +240,43 @@ def main() -> int:
                        "self-contained page: our conclusions beside Richmond's, the "
                        "verification matrix, and every configuration, searchable"))
 
+    # ---- make every link in the package resolve --------------------------------
+    # The handover documents link by their position in the repository
+    # (../outputs-emotion/X.md), and the package puts those files somewhere else
+    # (../reports/X.md). Twenty links pointed at nothing until this was added. A link
+    # that 404s in a document sent to a supervisor is the kind of detail that makes a
+    # reader doubt the parts they cannot check.
+    def _fix_links(md: Path) -> int:
+        text = md.read_text(encoding="utf-8")
+        depth = len(md.relative_to(out).parts) - 1
+        up = "../" * depth
+
+        def repl(m: re.Match) -> str:
+            label, target, frag = m.group(1), m.group(2), m.group(3) or ""
+            name = Path(target).name
+            for folder in ("reports", "reference-docs", "handover",
+                           "pipeline-and-ai-record", "benchmark-outputs"):
+                if (out / folder / name).exists():
+                    return f"[{label}]({up}{folder}/{name}{frag})"
+            if (out / name).exists():
+                return f"[{label}]({up}{name}{frag})"
+            # Not in the package: keep the words, drop the dead link.
+            return label
+
+        fixed, n = re.subn(r"\[([^\]]+)\]\((?!https?:|mailto:)([^)#]+)(#[^)]*)?\)",
+                           repl, text)
+        if fixed != text:
+            md.write_text(fixed, encoding="utf-8")
+        return n
+
+    rewritten = sum(_fix_links(md) for md in sorted(out.rglob("*.md")))
+
     # ---- the email -------------------------------------------------------------
     email = f"""Subject: Progress report — emotional awareness and regulation review
 
 Dear Professor Zheng,
 
-A report on where the assignment stands, three scope decisions I took, and one thing I\nneed from you.
+A report on where the assignment stands, three scope decisions I took, and one thing I\nneed from you.\n\nIn three lines: outputs 1, 2, 3 and 6 are done and attached, all at no cost — {n_pool:,}\nrecords searched, {n_pdf} full texts collected and ingested, and the review checkpoints\ncountersigned. Outputs 4 and 5 need screening and extraction, the first stages that call\na model, and I am asking for about $25. Along the way we found that three of four further\ncatalogues could not be reached and only one of them said so, which is the best evidence\nyet for why this framework keeps a human at its checkpoints.
 
 WHAT IS FINISHED
 
@@ -296,15 +347,6 @@ equation model" and two were the construct: the matcher deliberately leaves word
 open so that a stem like "metacognit" catches "metacognitive", which means "EQ" catches
 "equation". The honest figure is 349, not 485.
 
-A NOTE ON THE ATTACHED PAPER
-
-The conference paper is attached exactly as accepted. **Its verification figures have
-since been superseded** and should not be quoted from it: a defect in the scoring code
-was accepting matches whose own written rationale stated a non-match, and recounting
-found a second arithmetic error on top. The corrected figures are in the handover. I
-have deliberately not edited the accepted manuscript — the record of what was submitted
-should stay what was submitted — but the revision will need them.
-
 WHAT WE FOUND OUT ABOUT THE TOOLING, WHICH MAY MATTER MORE
 
 To answer your instruction to search more broadly, I ran the same registered vocabulary
@@ -374,6 +416,13 @@ argument.
 Start with 0_REQUIREMENTS_MATRIX.md in the handover folder — it goes through your email
 point by point. INDEX.md lists everything else.
 
+The conference paper is attached exactly as accepted. **Its verification figures have
+since been superseded** and should not be quoted from it: a defect in the scoring code
+was accepting matches whose own written rationale stated a non-match, and recounting
+found a second arithmetic error on top. The corrected figures are in the handover. I
+have deliberately left the accepted manuscript unedited — the record of what was
+submitted should stay what was submitted — but the revision will need them.
+
 Your section 1 asked for the prompts, schemas and configurations, and for the materials
 given to the AI along with its recommendations and the decisions made during
 development. Those are in `pipeline-and-ai-record/`: the standing instructions the AI
@@ -433,7 +482,8 @@ Duy
     except Exception as exc:  # noqa: BLE001 - the package is still valid without it
         print(f"(data/ not built: {type(exc).__name__}: {exc})", file=sys.stderr)
 
-    print(f"submission/ rebuilt: {len(copied)} attachments + EMAIL.md + INDEX.md")
+    print(f"submission/ rebuilt: {len(copied)} attachments + EMAIL.md + INDEX.md "
+          f"({rewritten} links rewritten to package paths)")
     for name, _ in copied:
         print(f"  {name}")
     return 0
