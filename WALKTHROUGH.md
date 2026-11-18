@@ -3102,3 +3102,55 @@ comparison and M44's projected 1,266.
 - **33 → 35 tests.** The two new ones cover control-character stripping and the ingest
   loop surviving a bad document.
 - The report email is drafted at `submission/EMAIL.md` and **unsent**; the RA sends it.
+
+---
+
+## M48 — 2026-11-18. Three questions that should never have been questions
+
+**Session state:** the RA, reading the handover, said plainly:
+
+> *"những câu hỏi nào mà bạn có thể tự suy luận tham khảo và tự bạn nếu cố gắng hết sức
+> deep research mà trả lời được thì đừng có đi hỏi thầy vì thầy ko phải người trực tiếp
+> làm như ta mà hiểu sâu được đâu"*
+
+They are right, and the professor's own email already said so: §5 asks for judgment on
+routine decisions **with documentation**, and contact only on important research
+directions. Three of the four questions in `0_REQUIREMENTS_MATRIX.md` were answerable
+from the pool. Referring them was passing work to someone further from the data.
+
+### What changed
+
+`handover/0_REQUIREMENTS_MATRIX.md` no longer ends in "Four questions for you". It ends in
+**three decisions, each with its evidence, its reasoning and the threshold that would
+reverse it**, plus the one question that is genuinely the professor's.
+
+| | Decision | Reverses if |
+|---|---|---|
+| 1 | **STEM is a context dimension, not an inclusion filter.** 51 of 1,088 HE records are engineering/computing/natural science — ~10–20 after screening, the scale at which all 32 of Richmond's apparent patterns failed a permutation test. Realist synthesis treats context as a variable, so the answerable question is which mechanisms fire differently *inside* STEM | screening leaves 40+ eligible STEM studies |
+| 2 | **Organise by Gross's five regulation families, not by intervention name.** "Emotional awareness prompts" returns 6 records and mindfulness 291 — but they are the same family, attentional deployment. The scarcity is largely a **vocabulary** gap, and that mismatch between practitioner and research language is itself reportable | the families do not discriminate at extraction |
+| 3 | **Anxiety is the spine, boredom the contrast case.** 578 of 678. Boredom (68) is an *activity* emotion in Pekrun's terms where anxiety is an *outcome* emotion, so "do anxiety's mechanisms work on boredom?" is answerable and genuinely realist | fewer than ~20 eligible boredom studies |
+
+The budget question stays with the professor, with a recommendation: **approve $5.44 for
+screening first**, because every figure above rests on dictionary term counts and
+screening is exactly what turns all three reversal thresholds into real numbers.
+
+Recorded in `docs/DECISION_LOG.md` with the reasoning for taking them rather than
+referring them. `handover/README.md`, `CLAUDE.md`, `PLAN.md` and `submission/EMAIL.md`
+updated; the email now reads "three decisions I took, and one I cannot".
+
+### Why this is a methodological point and not just a tone change
+
+A decision stated with its reversal threshold is falsifiable; a question passed upward is
+not. Each of the three now says what evidence would overturn it, so screening will either
+confirm them or force a documented change — which is how RAMESES II expects a realist
+review's scope to be set and revised. Handing the professor three open questions would
+have produced three answers with no recorded basis, and nothing to check them against
+later.
+
+### What the next session must not assume
+
+- **These are decisions, not findings.** Every number in them comes from term counts in
+  titles and abstracts. They are provisional by construction and each carries a threshold.
+- **The professor can overturn any of them**, and the handover says so explicitly. If he
+  does, record it in `docs/DECISION_LOG.md` rather than silently re-scoping.
+- **Do not re-add "four questions" anywhere.** There is one question, and it is the budget.

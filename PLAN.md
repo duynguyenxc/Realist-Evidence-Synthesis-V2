@@ -145,7 +145,8 @@ He has not seen this system and does not know what it does. Hold me to these:
 > 1. **Countersign the 21 HITL decisions** — `res webui`, then `/review`. ~15 minutes. The one
 >    item no further work by Claude can close, and it is exactly what the professor's §5 asks
 >    for. Until it is done, every checkpoint in the record reads `ai-ra:claude`.
-> 2. **Read `handover/0_REQUIREMENTS_MATRIX.md`**, especially the four questions at the end.
+> 2. **Read `handover/0_REQUIREMENTS_MATRIX.md`**, especially the three scope decisions at
+>    the end and the one budget question left for the professor.
 >    Correct anything that is not in your voice — the handover is drafted in Claude's.
 > 3. **Decide how the package goes to the professor** — attached files, GitHub link, or both.
 >    Claude drafts the email; **you press send.** That was never delegated.

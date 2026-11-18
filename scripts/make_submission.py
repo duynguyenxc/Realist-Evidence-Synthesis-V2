@@ -154,7 +154,7 @@ def main() -> int:
 
 Dear Professor Zheng,
 
-A report on where the assignment stands, and four questions I cannot settle without you.
+A report on where the assignment stands, three scope decisions I took, and one thing I\nneed from you.
 
 WHAT IS FINISHED
 
@@ -233,15 +233,45 @@ the added catalogues returned, only {shortfall} were both new to our corpus and 
 merged either, because changing the search changes what the review claims to have searched
 and that is your decision rather than a file copy.
 
-FOUR QUESTIONS
+THREE DECISIONS I TOOK, AND ONE I CANNOT
 
-  1. Is STEM the focus, or is the gap itself the finding?
-  2. Does the review follow your five examples, or follow the literature to mindfulness
-     and reappraisal?
-  3. Is this a review of anxiety management, or of the full taxonomy with absence across
-     two thirds of it?
-  4. May I spend about $25? Five dollars screens all {n_pool:,} records; $16 more buys a
-     ten-paper pilot with its cost measured rather than estimated.
+Your section 5 asks me to use my judgment on routine decisions and document them. I had
+drafted four questions for you. Three of them turned out to be answerable from the pool,
+so I have decided them and written down the reasoning and what would reverse each one,
+rather than handing back work you would have to do at a greater distance from the data
+than I am. Overturn any of them in a sentence.
+
+  1. STEM is a context dimension, not an inclusion filter. Fifty-one of 1,088
+     higher-education records are engineering, computing or natural science — perhaps
+     ten to twenty after screening, which is the scale at which all 32 of Richmond's
+     apparent patterns failed a permutation test. But realist synthesis treats context
+     as a variable, so the answerable question is which mechanisms fire differently
+     inside STEM rather than what works in STEM. Reverses if screening leaves 40+.
+
+  2. The synthesis is organised by Gross's five regulation families, not by intervention
+     name. Regrouped that way, your "emotional awareness prompts" (6 records) and
+     mindfulness (291) are the same mechanism — attentional deployment. The scarcity is
+     largely a vocabulary gap rather than an evidence gap, and that mismatch between how
+     teachers name what they do and how researchers file it is worth reporting on its
+     own.
+
+  3. Anxiety is the spine, with boredom as a deliberate contrast case. Eight emotions at
+     11-79 records cannot each carry a programme theory, but boredom is an activity
+     emotion in Pekrun's terms where anxiety is an outcome emotion. That makes "do
+     anxiety's mechanisms work on boredom?" answerable, and turns the imbalance from a
+     limitation into a design. Reverses if screening leaves fewer than about 20 boredom
+     studies.
+
+THE ONE I CANNOT DECIDE
+
+May I spend about $25? Screening all {n_pool:,} records costs $5.44; a ten-paper pilot
+with its cost measured rather than estimated is $16 more.
+
+My recommendation is to approve the $5.44 now and hold the rest — not to economise, but
+because every figure in the three decisions above comes from counting dictionary terms in
+titles and abstracts. Screening is what turns each of their reversal thresholds into a
+real number. After it, the case for or against the pilot is evidence rather than
+argument.
 
 Start with 0_REQUIREMENTS_MATRIX.md in the handover folder — it goes through your email
 point by point. INDEX.md lists everything else.

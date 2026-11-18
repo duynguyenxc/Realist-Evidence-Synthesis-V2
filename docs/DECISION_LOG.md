@@ -92,3 +92,36 @@ Format:
 - Neo4j initial password/setup (do during scaffold).
 - Second human coder for per-paper gold standard (RA to arrange; professor?).
 - Budget ceiling per full pipeline run (set after 3-paper pilot).
+
+## 2026-11-18 — Three scope decisions for the emotion review, taken rather than referred
+- **Decision 1: STEM is a context dimension, not an inclusion filter.** 51 of 1,088
+  higher-education records are engineering, computing or natural sciences. Rationale: a
+  realist review needs enough studies per configuration for a pattern to repeat, and 51
+  before screening is ~10–20 after it — the scale at which this project already measured
+  all 32 of Richmond's apparent recurring patterns failing a permutation test. Realist
+  synthesis treats context as a variable, so the answerable question is which mechanisms
+  fire differently inside STEM, not what works in STEM. **Reverses if** screening leaves
+  40+ eligible STEM studies.
+- **Decision 2: organise the synthesis by Gross's five regulation families, not by
+  intervention name.** Three of the professor's five named interventions return 7, 6 and
+  17 records while mindfulness, unnamed, returns 291. Rationale: regrouped by mechanism,
+  "emotional awareness prompts" (6) and mindfulness (291) are the same family —
+  attentional deployment — so the scarcity is largely a vocabulary gap, not an evidence
+  gap, and that mismatch between practitioner and research vocabulary is itself
+  reportable. **Reverses if** the families do not discriminate at extraction.
+- **Decision 3: anxiety is the spine; boredom is a deliberate contrast case.** Anxiety is
+  578 of 678 emotion-tagged records; the other eight sit at 11–79. Rationale: eight
+  emotions at that scale cannot each support a programme theory, but boredom is an
+  *activity* emotion in Pekrun's terms where anxiety is an *outcome* emotion, which makes
+  "do anxiety's mechanisms work on boredom?" answerable and genuinely realist.
+  **Reverses if** screening leaves fewer than ~20 eligible boredom studies.
+- **Why taken rather than referred.** The professor's 2026-10-30 §5 asks for judgment on
+  routine decisions with documentation, and for contact on important research directions.
+  These were initially filed as four questions for him. The RA's position, accepted here:
+  a supervisor who is not doing the work cannot adjudicate a scope question better than
+  the people holding the data, and referring an answerable question is passing work back.
+  All three are stated in the handover with their evidence and their reversal threshold,
+  so he can overturn any of them in a sentence.
+- **Still referred, because it is not ours:** the ~$25 budget. Recommendation is $5.44 for
+  screening first, since every figure above rests on dictionary term counts and screening
+  is what turns all three reversal thresholds into answerable questions.

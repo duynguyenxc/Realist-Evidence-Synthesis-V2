@@ -170,7 +170,13 @@ requires an intervention term and therefore could never reach the theory literat
 `theory_pool.jsonl`, 445 records, **not the corpus**. And `outputs-emotion/COST_MODEL.md` closed
 the standing "no cost history" limitation: **screening the whole pool is $5.44** — the $45 ceiling
 was always extraction of 28 full papers. `handover/0_REQUIREMENTS_MATRIX.md` is the clause-by-clause
-answer to the email and ends with four questions only the professor can settle.
+answer to the email. It ends with **three scope decisions taken, each with its evidence and
+the threshold that would reverse it** (STEM as a context not a filter; mechanism families
+rather than intervention names; anxiety as the spine with boredom as contrast), and the one
+question left for the professor, which is the ~$25 budget. The RA's instruction on
+2026-11-18: **do not refer a question Claude can answer from the data** — a supervisor who
+is not doing the work cannot adjudicate scope better than whoever holds it. `docs/DECISION_LOG.md`
+records all three.
 
 **The RA suspended all paid work on 2026-11-13 — there is no budget.** Ask before planning anything
 that spends credit. `handover/` holds deliverables 1, 2 and 6 as drafts in Claude's voice: **unread,

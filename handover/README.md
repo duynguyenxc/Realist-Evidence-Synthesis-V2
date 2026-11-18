@@ -6,7 +6,7 @@ glance what is finished and what is not.
 
 | | |
 |---|---|
-| [`0_REQUIREMENTS_MATRIX.md`](0_REQUIREMENTS_MATRIX.md) | **Start here.** Everything you asked for, in your order, each with a status and the file that backs it up — and four questions that need your decision |
+| [`0_REQUIREMENTS_MATRIX.md`](0_REQUIREMENTS_MATRIX.md) | **Start here.** Everything you asked for, in your order, each with a status and the file that backs it up — three scope decisions we took with the reasoning shown, and the one question that needs you |
 | [`1_WHAT_WE_BUILT.md`](1_WHAT_WE_BUILT.md) | Then here. Where the project stands, what the system does, where every item you listed lives, and what it cannot do |
 | [`2_WHAT_THE_NEW_TOPIC_NEEDS.md`](2_WHAT_THE_NEW_TOPIC_NEEDS.md) | Your seven questions answered against code that exists, what the literature says about doing this with AI, and a step-by-step plan |
 | [`6_PROGRESS_REPORT.md`](6_PROGRESS_REPORT.md) | Completed, limitations, next steps |
@@ -68,8 +68,11 @@ near-zeros were our own fault, and they survived it.
 records between them, fewer than the 93 that are explicitly outside STEM. Mathematics has
 108, and it is almost all maths and statistics anxiety.
 
-Those last three are questions rather than conclusions, and they are Questions 1 to 3 in the
-requirements matrix.
+Those last three were questions rather than conclusions. They are now **Decisions 1 to 3**
+in the requirements matrix: each is taken, with the evidence, the reasoning, and the
+threshold that would reverse it. Your email asks us to exercise judgment on routine
+decisions and document them, and on reflection these were answerable from the pool rather
+than things to hand back.
 
 ## One near miss worth knowing about
 
