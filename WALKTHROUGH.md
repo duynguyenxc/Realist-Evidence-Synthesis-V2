@@ -3300,3 +3300,62 @@ most of the remainder are links that no longer resolve.
 - **Do not restart the fetch to "finish it".** 438 rows remain unasked, but the measured
   yield of the last four hours was 48 files, and the hosts involved are gone.
 - **The email is still unsent**, and now carries 662, 623 and 8,357.
+
+---
+
+## M51 — 2026-11-19. UWSS changes applied to the public repository
+
+### What went up
+
+The local UWSS folder is a ZIP download, not a clone, so M47's fixes had been written out
+to `UWSS_CHANGES.md` and left there. They are now on
+`github.com/duynguyenxc/Universal-Web-Scraping-System-high-level-update` as two pull
+requests, opened from a fresh clone in the scratchpad rather than from the ZIP:
+
+- **[#1]** the five defects — `discovery.py` (the module two commands import and which did
+  not exist), DOAJ discarding DOI and abstract, `--limit` governing only the download,
+  Unpaywall enrichment that never marked a row as asked, landing-page resolution running
+  first by default. 6 files, +508 lines. MERGEABLE / CLEAN.
+- **[#2]** deletion of `config/web_crawler_scrapy_jsums_wei_zheng.yaml`.
+
+Both are unmerged; the RA merges them.
+
+### The thing worth recording
+
+**The repository is public, and the material was written for a private reader.**
+`config_emotion.yaml` opened by naming the supervisor and his unpublished 2026-10-30
+assignment; `run_emotion_fetch.sh` and `UWSS_CHANGES.md` quoted corpus figures from an
+unsubmitted review and pointed at `../Realist-Evidence-Synthesis-V2` throughout. None of
+it is secret in the sense a scanner would catch — there is no key, no token, no address —
+which is exactly why a grep for credentials would have passed it.
+
+Scrubbed before the first push: the supervisor's name, the assignment and its date, the
+sibling project's path, and every unpublished figure (572, 1,863 → "roughly 1,900" or
+dropped). What survives is the engineering, which is the part a reader of *that* repository
+needs. Verified afterwards that `config_emotion.yaml` parses to a structure **identical**
+to the original — the scrub touched only comments.
+
+### The file that was already there
+
+`config/web_crawler_scrapy_jsums_wei_zheng.yaml`, committed by the RA in December 2025 and
+public ever since: crawl `jsums.edu`, find pages mentioning one named person, three levels
+deep, `max_emails: 10`. Polite settings — robots.txt respected, 0.7s delay — and that is
+not the point. A public repository should not hold a configuration whose stated purpose is
+to find pages about a real, named person and harvest their contact details, least of all
+when the author is that person's research assistant.
+
+Checked before proposing anything: nothing references it, **no output of that run was ever
+committed**, and the repository has **0 forks**. So deleting it from the tree removes it
+from everything a visitor or a clone will see. History keeps it; purging that would mean a
+force-push that breaks every clone, which is disproportionate at zero forks. The RA chose
+deletion.
+
+### What the next session must not assume
+
+- **The local UWSS folder is still a ZIP.** It has no remote. Work on it is applied by
+  cloning, copying and opening a PR — never by pushing from that folder.
+- **Neither PR is merged.** Do not assume the repository contains these fixes.
+- **Scrub before publishing, every time.** The private details here were ordinary prose in
+  a comment header, not credentials, and no secret-scanner would have flagged one of them.
+- **`data/emotion.sqlite` must not be committed.** `.gitignore` already has `*.sqlite`, and
+  beyond size, its 2,242 abstracts are publishers' copyrighted text.

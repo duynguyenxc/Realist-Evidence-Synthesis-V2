@@ -75,10 +75,12 @@ def main() -> int:
             "type", "open_access", "oa_pdf_url", "cited_by", "url", "abstract"]
     flat = [{**r, "authors": ", ".join(r["authors"]) if isinstance(r.get("authors"), list)
              else r.get("authors")} for r in pool]
-    _write_csv(out / "corpus_1863_records.csv", flat, cols)
+    pool_csv = f"corpus_{len(pool)}_records.csv"
+    _write_csv(out / pool_csv, flat, cols)
 
     if theory:
-        _write_csv(out / "theory_pool_445_records.csv",
+        theory_csv = f"theory_pool_{len(theory)}_records.csv"
+        _write_csv(out / theory_csv,
                    [{**r, "authors": ", ".join(r["authors"])
                      if isinstance(r.get("authors"), list) else r.get("authors")}
                     for r in theory], cols)
@@ -100,7 +102,8 @@ def main() -> int:
     except Exception as exc:  # noqa: BLE001
         print(f"(review database unreadable: {type(exc).__name__})", file=sys.stderr)
     if ingested:
-        _write_csv(out / "ingested_572_with_text_length.csv", ingested,
+        ingested_csv = f"ingested_{len(ingested)}_with_text_length.csv"
+        _write_csv(out / ingested_csv, ingested,
                    ["study_id", "doi", "title", "year", "journal", "source_kind",
                     "text_chars", "text_units", "pdf_path"])
 
@@ -165,13 +168,13 @@ def main() -> int:
     w("")
     w("| File | What to look at |")
     w("|---|---|")
-    w(f"| `corpus_1863_records.csv` | The whole candidate pool, one row per record. "
+    w(f"| `{pool_csv}` | The whole candidate pool, one row per record. "
       f"Opens in Excel |")
     if theory:
-        w(f"| `theory_pool_445_records.csv` | The separate theory-literature search — "
+        w(f"| `{theory_csv}` | The separate theory-literature search — "
           f"**not** candidate studies |")
     if ingested:
-        w("| `ingested_572_with_text_length.csv` | Every ingested study with how many "
+        w(f"| `{ingested_csv}` | Every ingested study with how many "
           "characters of text were recovered from it. **Sort by `text_chars` ascending "
           "to find the bad ones** |")
     if added:

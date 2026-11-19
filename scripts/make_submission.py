@@ -353,7 +353,7 @@ Duy
           "`DATA_QUALITY.md` — the checks a sceptical reader would run: missing fields, "
           "duplicates, impossible years, PDFs too small to be papers, text extractions "
           "too short to be useful, and whether each PDF actually contains the paper its "
-          "metadata claims. Sort `ingested_572_with_text_length.csv` by `text_chars` "
+          "metadata claims. Sort the `ingested_*_with_text_length.csv` file by `text_chars` "
           "ascending to find the weakest records in about ten seconds.", ""]
     (out / "INDEX.md").write_text("\n".join(L) + "\n", encoding="utf-8")
 
