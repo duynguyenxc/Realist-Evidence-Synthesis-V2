@@ -243,8 +243,8 @@ def main() -> int:
     # the assignment asks for. Copied as HTML and converted to PDF later in this run.
     results = PROJECT_ROOT / "outputs" / "RESULTS.html"
     if results.exists():
-        shutil.copy2(results, out / "RICHMOND_RESULTS.html")
-        copied.append(("RICHMOND_RESULTS.pdf",
+        shutil.copy2(results, out / "Our_results_vs_Richmond.html")
+        copied.append(("Our_results_vs_Richmond.pdf",
                        "**The benchmark review in full**: Richmond's conclusions beside "
                        "the system's, context by context, every concept Richmond named "
                        "and whether we found it, and every causal link. It opens with a "
@@ -317,9 +317,9 @@ def main() -> int:
           "rather than by reading a history.",
           "- `agent_feedback.csv` — the mechanism for correcting an agent from a human "
           "note exists and was not used on this corpus.", "",
-          "`RICHMOND_RESULTS.pdf` is an export of the benchmark review's database, "
+          "`Our_results_vs_Richmond.pdf` is an export of the benchmark review's database, "
           "deliberately never regenerated: it is the only surviving "
-          "record of 28 human review decisions that a later schema change could not "
+          "record of 21 human review decisions that a later schema change could not "
           "carry, so it is preserved rather than rebuilt.", "",
           "## The figures in one place", "",
           "| | |", "|---|---|",
@@ -359,10 +359,10 @@ def main() -> int:
     try:
         import patch_richmond_page
         if patch_richmond_page.main() != 0:
-            print("!! RICHMOND_RESULTS NOT corrected — do not send the package",
+            print("!! Our_results_vs_Richmond NOT corrected — do not send the package",
                   file=sys.stderr)
     except Exception as exc:  # noqa: BLE001
-        print(f"!! RICHMOND_RESULTS not corrected: {type(exc).__name__}: {exc}",
+        print(f"!! Our_results_vs_Richmond not corrected: {type(exc).__name__}: {exc}",
               file=sys.stderr)
 
     # Builds the one file that gets emailed, then converts every remaining HTML page in
@@ -380,7 +380,7 @@ def main() -> int:
     # Everything else is a link away.
     mail = root / "1-ATTACH-TO-EMAIL"
     total = 0
-    for name in ("Emotional_regulation_review.pdf", "RICHMOND_RESULTS.pdf"):
+    for name in ("Emotional_regulation_review.pdf", "Our_results_vs_Richmond.pdf"):
         f = out / name
         if f.exists():
             shutil.copy2(f, mail / name)

@@ -52,7 +52,7 @@ import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-PAGE = PROJECT_ROOT / "submission" / "2-UPLOAD-TO-DRIVE" / "RICHMOND_RESULTS.html"
+PAGE = PROJECT_ROOT / "submission" / "2-UPLOAD-TO-DRIVE" / "Our_results_vs_Richmond.html"
 
 MARKER = "<!-- corrected-2026-11-04 -->"
 
@@ -134,7 +134,7 @@ def main() -> int:
         return 1
     s = PAGE.read_text(encoding="utf-8")
     if MARKER in s:
-        print("RICHMOND_RESULTS.html already corrected")
+        print("Our_results_vs_Richmond.html already corrected")
         return 0
 
     for needle, repl in EDITS:
@@ -153,7 +153,7 @@ def main() -> int:
     s = s[:at] + "\n" + BANNER + s[at:]
 
     PAGE.write_text(s, encoding="utf-8")
-    print(f"RICHMOND_RESULTS.html corrected: {len(EDITS)} figures + banner")
+    print(f"Our_results_vs_Richmond.html corrected: {len(EDITS)} figures + banner")
     return 0
 
 
