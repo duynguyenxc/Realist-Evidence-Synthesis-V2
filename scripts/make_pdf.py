@@ -192,37 +192,59 @@ def main() -> int:
     try:
         src = tmp / "reading_copy.html"
         src.write_text(page, encoding="utf-8")
-
-        chrome = next((c for c in (
-            "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-            "/Applications/Chromium.app/Contents/MacOS/Chromium",
-            "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
-        ) if Path(c).exists()), None)
-        if chrome is None:
-            # Falling back to the HTML would put a second file in the package that says
-            # the same thing as the PDF, which is what this script exists to avoid. Say
-            # what is wrong instead and leave the folder as it was.
-            print("No Chrome, Chromium or Edge found — cannot produce the PDF.",
-                  file=sys.stderr)
-            return 1
-
-        r = subprocess.run(
-            [chrome, "--headless=new", "--disable-gpu", "--no-sandbox",
-             # Without this, every page carries Chrome's own URL-and-date furniture.
-             "--no-pdf-header-footer",
-             # Static page, but Chrome still needs a moment to lay out 53 tables.
-             "--virtual-time-budget=10000",
-             f"--print-to-pdf={out}", src.as_uri()],
-            capture_output=True, text=True, timeout=180)
-        if not out.exists() or out.stat().st_size < 10_000:
-            print(f"Chrome did not produce a PDF.\n{r.stderr[-600:]}", file=sys.stderr)
+        if not print_pdf(src, out):
             return 1
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+    print(f"{out.relative_to(PROJECT_ROOT)}  —  {len(DOCS)} documents, "
+          f"{out.stat().st_size/1024:,.0f} KB")
 
-    kb = out.stat().st_size / 1024
-    print(f"{out.relative_to(PROJECT_ROOT)}  —  {len(DOCS)} documents, {kb:,.0f} KB")
+    # Everything the supervisor receives is a PDF. The package also holds two HTML pages
+    # produced elsewhere — the exported benchmark review and the knowledge-graph report —
+    # and an .html attachment is the same trap as a .md one: it may open in an editor, it
+    # looks like something to be wary of in a mail client, and on a phone it is awkward.
+    # They are converted and the HTML removed, so there is one format in the folder.
+    for page_path in sorted(SUBMISSION.rglob("*.html")):
+        pdf = page_path.with_suffix(".pdf")
+        if print_pdf(page_path, pdf, budget_ms=25_000):
+            page_path.unlink()
+            print(f"{pdf.relative_to(PROJECT_ROOT)}  —  converted from HTML, "
+                  f"{pdf.stat().st_size/1024:,.0f} KB")
+        else:
+            # Leave the HTML rather than lose the content; say so loudly.
+            print(f"!! {page_path.name} could not be converted and is still HTML",
+                  file=sys.stderr)
     return 0
+
+
+def _browser() -> str | None:
+    return next((c for c in (
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        "/Applications/Chromium.app/Contents/MacOS/Chromium",
+        "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+    ) if Path(c).exists()), None)
+
+
+def print_pdf(src: Path, dst: Path, budget_ms: int = 10_000) -> bool:
+    """Render one local HTML file to PDF with the browser's own print engine."""
+    chrome = _browser()
+    if chrome is None:
+        # Falling back to HTML would put the format back that this script exists to
+        # remove. Say what is wrong instead and change nothing.
+        print("No Chrome, Chromium or Edge found — cannot produce a PDF.", file=sys.stderr)
+        return False
+    r = subprocess.run(
+        [chrome, "--headless=new", "--disable-gpu", "--no-sandbox",
+         # Without this, every sheet carries Chrome's own URL-and-date furniture.
+         "--no-pdf-header-footer",
+         # Static pages, but Chrome still needs time to lay out large tables.
+         f"--virtual-time-budget={budget_ms}",
+         f"--print-to-pdf={dst}", src.as_uri()],
+        capture_output=True, text=True, timeout=300)
+    if not dst.exists() or dst.stat().st_size < 10_000:
+        print(f"Chrome produced no PDF for {src.name}.\n{r.stderr[-500:]}", file=sys.stderr)
+        return False
+    return True
 
 
 if __name__ == "__main__":

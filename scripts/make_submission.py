@@ -202,6 +202,8 @@ def main() -> int:
     # with nothing summarised away, which is what makes every figure in this package
     # checkable rather than merely stated.
     for src, dest, blurb in [
+        # Copied as HTML and converted to PDF later in this run, so the name INDEX
+        # prints is the converted one while the source read here is the export.
         (PROJECT_ROOT / "outputs" / "Knowledge_Graph_Report.html",
          "benchmark-outputs/Knowledge_Graph_Report.html",
          "The Richmond knowledge graph — entities, relations and communities"),
@@ -213,7 +215,9 @@ def main() -> int:
         if src.exists():
             (out / dest).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(src, out / dest)
-            copied.append((dest, blurb))
+            # INDEX must name the file as it will exist when the package is read, and
+            # make_pdf converts every HTML page later in this run.
+            copied.append((dest[:-5] + ".pdf" if dest.endswith(".html") else dest, blurb))
     raw = PROJECT_ROOT / "outputs" / "raw_export"
     if raw.is_dir():
         shutil.copytree(raw, out / "benchmark-outputs" / "raw_export",
@@ -235,15 +239,16 @@ def main() -> int:
     # The benchmark review as one self-contained page: our conclusions beside
     # Richmond's, context by context, the verification matrix with confidence
     # intervals, and every CMOC, entity and relation, searchable, with no server and
-    # no database. It is the strongest single piece of evidence for output 1 and it
-    # opens in a browser, which the markdown does not.
+    # no database. It is the strongest single piece of evidence for the documentation
+    # the assignment asks for. Copied as HTML and converted to PDF later in this run.
     results = PROJECT_ROOT / "outputs" / "RESULTS.html"
     if results.exists():
         shutil.copy2(results, out / "RICHMOND_RESULTS.html")
-        copied.append(("RICHMOND_RESULTS.html",
-                       "**Open this in a browser.** The whole benchmark review on one "
-                       "self-contained page: our conclusions beside Richmond's, the "
-                       "verification matrix, and every configuration, searchable"))
+        copied.append(("RICHMOND_RESULTS.pdf",
+                       "**The benchmark review in full**: Richmond's conclusions beside "
+                       "the system's, context by context, every concept Richmond named "
+                       "and whether we found it, and every causal link. It opens with a "
+                       "notice correcting five figures that predate the November recount"))
 
     # ---- make every link in the package resolve --------------------------------
     # The handover documents link by their position in the repository
@@ -301,7 +306,7 @@ def main() -> int:
           "pipeline holds: regenerate them and the numbers follow the database, not a "
           "memory of it. This folder is built by "
           "`scripts/make_submission.py`, which is also what built this folder.", "",
-          "`RICHMOND_RESULTS.html` is an export of the benchmark review's database made "
+          "`RICHMOND_RESULTS.pdf` is an export of the benchmark review's database made "
           "in October and deliberately never regenerated: it is the only surviving "
           "record of 28 human review decisions that a later schema change could not "
           "carry, so it is preserved rather than rebuilt.", "",
@@ -333,26 +338,29 @@ def main() -> int:
     except Exception as exc:  # noqa: BLE001 - the package is still valid without it
         print(f"(data/ not built: {type(exc).__name__}: {exc})", file=sys.stderr)
 
-    # The one file that gets emailed. It must be built from the Markdown this run just
-    # copied, so it goes last and is chained rather than remembered: a reading copy a
-    # version behind the documents beside it is worse than none.
+    # ORDER MATTERS, and getting it wrong once already produced a package with the
+    # uncorrected figures in it. The benchmark page is corrected while it is still HTML;
+    # make_pdf then converts it and deletes the HTML. Reversed, the patch finds no file,
+    # reports failure, and the PDF beside it carries five superseded numbers.
+    #
+    # The page itself predates the 2026-11-04 recount and cannot be regenerated, which is
+    # why it is patched rather than rebuilt.
+    try:
+        import patch_richmond_page
+        if patch_richmond_page.main() != 0:
+            print("!! RICHMOND_RESULTS NOT corrected — do not send the package",
+                  file=sys.stderr)
+    except Exception as exc:  # noqa: BLE001
+        print(f"!! RICHMOND_RESULTS not corrected: {type(exc).__name__}: {exc}",
+              file=sys.stderr)
+
+    # Builds the one file that gets emailed, then converts every remaining HTML page in
+    # the package to PDF and removes the HTML, so the folder holds one format.
     try:
         import make_pdf
         make_pdf.main()
     except Exception as exc:  # noqa: BLE001 - the package is still valid without it
         print(f"(the PDF was not built: {type(exc).__name__}: {exc})",
-              file=sys.stderr)
-
-    # The exported benchmark page predates the 2026-11-04 recount and cannot be
-    # regenerated, so the copy in the package is corrected in place. Chained here because
-    # forgetting it means sending out four figures that overstate the system.
-    try:
-        import patch_richmond_page
-        if patch_richmond_page.main() != 0:
-            print("!! RICHMOND_RESULTS.html NOT corrected — do not send the package",
-                  file=sys.stderr)
-    except Exception as exc:  # noqa: BLE001
-        print(f"!! RICHMOND_RESULTS.html not corrected: {type(exc).__name__}: {exc}",
               file=sys.stderr)
 
     reading = out / "Emotional_regulation_review.pdf"
