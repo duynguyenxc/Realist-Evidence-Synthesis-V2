@@ -3359,3 +3359,101 @@ deletion.
   a comment header, not credentials, and no secret-scanner would have flagged one of them.
 - **`data/emotion.sqlite` must not be committed.** `.gitignore` already has `*.sqlite`, and
   beyond size, its 2,242 abstracts are publishers' copyrighted text.
+
+---
+
+## M52 — 2026-11-20. The package audited file by file, and five things it was going to get wrong
+
+### Why this entry exists
+
+The RA asked, several times and with increasing impatience, for the submission package to
+be checked properly. Each pass found something, and the pattern is worth recording: **none
+of these were introduced this session. They were already in the package, and only a
+file-by-file check against the live data surfaced them.**
+
+### What the audit found
+
+**1. The benchmark page showed the machine beating the human coders.** `RESULTS.html` was
+exported before the 2026-11-04 recount and carries five superseded figures — 34/46, 29/40
+anchored, 6/40 strict, and the same 29/40 again in its own one-line verdict. Every one
+overstates the system. Worse, its headline table set the system's *role-tolerant* 34/46
+beside the two coders' *one-to-one* 28/46 and 30/46, so the machine appeared to win by a
+clear margin. The like-for-like figure, **26/46, is below both**, and it was not on the
+page at all.
+
+The page cannot be regenerated, so `scripts/patch_richmond_page.py` corrects the copy in
+the package and `outputs/RESULTS.html` is never touched — asserted on every build.
+Nothing is deleted: each superseded value is struck through beside its replacement,
+because the AERA paper was accepted carrying them. No interval was ever recorded for
+5/40, so none was invented.
+
+**2. `VERIFICATION_PROTOCOL.md` and `MACHINE_VS_HUMAN.md` both said "equal to Coder B".**
+The correction sat at the foot of the same section, so each document contradicted itself
+top to bottom. Both now read "below", with a note of what they used to say.
+
+**3. Deleting the requirements matrix took three things with it**, and nobody would have
+noticed until the professor asked. The **emotional-intelligence gap** — the first
+construct in his objective, 349 records — appeared nowhere in the handover afterwards.
+Nor did the **study-design breakdown**, which answers his request to identify the reviews
+and experimental studies. The **four-catalogue test** had never been in the handover at
+all: a night's work, the measured 3.6%, and the 13 infrastructure failures of which 9
+were silent.
+
+**4. `CLAUDE.md` said RESULTS.html reports 28 human decisions.** Counting
+`hitl_feedback.csv` gives **21** — twenty contradictions at HITL-3, one programme theory
+at HITL-4, exactly the countersigned set. `RESULTS.html` never claimed 28; this file had
+conflated the decisions with the 28 papers. The standing rule is unaffected: the risk is
+a re-export from a restored database finding the table *empty*, not how large it is.
+
+**5. Three exported tables are empty, and one of them matters.**
+`theorised_entities.csv` is empty because **retroduction has never been run on the
+Richmond corpus** — built and tested, not exercised — while the covering email lists it
+as a new capability. `INDEX.md` now says so, and so does the email.
+
+### Mistakes of mine this session, on the record
+
+- **I put the PDF conversion before the figure patch.** `make_pdf` converted and deleted
+  the HTML, so the patch found no file and reported failure — and one build produced a
+  PDF carrying all five superseded numbers. Caught by the script's own loud failure.
+  Order is now fixed and commented.
+- **I committed a message describing a change that had not applied.** Two replacements
+  failed on a line-wrap mismatch and I did not re-check the output.
+- **My first long-sentence measurement was broken** and said the opposite of the truth: it
+  stripped table rows before collapsing whitespace, so the regex ate each document and
+  reported 0–1 long sentences per file. The real figure was 57 over 35 words. The RA was
+  right and the check I used to doubt it was wrong.
+
+### What the package is now
+
+`submission/1-ATTACH-TO-EMAIL/` — two PDFs, 2.7 MB.
+`submission/2-UPLOAD-TO-DRIVE/` — 78 files, 15 MB, the same two PDFs plus everything else.
+
+No HTML (the two exported pages are converted and the HTML removed), no dead links, no
+stale figure outside the places that mark it superseded, `INDEX.md` names no file the
+folder lacks, 35 tests pass, `outputs/RESULTS.html` untouched.
+
+`Our_results_vs_Richmond.pdf` was called `RICHMOND_RESULTS.pdf` until the RA read the name
+and asked whether it held only Richmond's results. It holds both sides. A filename is the
+first sentence of a document.
+
+### The comparison with Richmond, since the RA asked whether it was safe to send
+
+Computed, not judged. **No statement contradicts Richmond.** Across his five:
+outcomes **17/17**, interventions **14/19**, mechanism-responses **12/23**, context labels
+**2/5**. One statement reproduced in full, three recovering the whole causal chain but
+failing to name the population, one partial. PTS5 returns 3/3, 4/4 and 5/5 and still
+counts as a miss for want of a label.
+
+The failure mode is **naming, not direction**, and it is the same defect as M40's 22
+orphan Contexts. Safe to send, and better sent by us than discovered by a Division D
+reviewer in Toronto.
+
+### What the next session must not assume
+
+- **Do not run `res export-results`.** Unchanged, and now with the right reason attached:
+  the count is 21, and the risk is an empty table, not a small one.
+- **`patch_richmond_page.py` must run before `make_pdf`.** The build enforces it; do not
+  reorder.
+- **The figures in the covering email drift.** Lines of code and commit counts were right
+  when written and are already stale. If the email is sent later, recount or drop them.
+- **The email is still unsent**, and the RA sends it.
