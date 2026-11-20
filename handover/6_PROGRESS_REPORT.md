@@ -13,7 +13,7 @@ That decision is the first step that sends text to the AI model, so it costs mon
 is no budget, so it has not been run. The same blocks the extracted CMOCs, the knowledge
 graph and the preliminary synthesis.
 
-Most of these three weeks went into making the existing system fit to hand over. That was
+Most of the effort went into making the existing system fit to hand over. That was
 not tidying. Checking it turned up four errors in figures we had already reported, and one
 of them was a whole category of studies the search was not counting.
 
@@ -186,7 +186,7 @@ decision, not a file copy.
 
 ### What was built, in short
 
-Collecting the studies was the visible part. Most of the three weeks went into the system
+Collecting the studies was the visible part. Most of the work went into the system
 that made the collection possible and into checking what it had already produced:
 
 | | |

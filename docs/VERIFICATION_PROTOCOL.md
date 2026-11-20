@@ -227,7 +227,7 @@ Nothing below is a nice-to-have. Each is a specific reason a reviewer could reje
 ### 3.1 ~~No human has coded anything~~ — **DONE 2026-09-25. No longer blocking.**
 
 > **This section was written on 23 September and was obsolete two days later.** It is corrected
-> rather than deleted, because it was the project's headline caveat for weeks and anyone who read
+> rather than deleted, because it was the project's headline caveat and anyone who read
 > it then should see what replaced it. The authoritative record is `docs/MACHINE_VS_HUMAN.md` §5.
 
 **What was actually run** — more than this section asked for. **Two human coders**, coding **all 28

@@ -26,7 +26,7 @@ it.
 | What the pool is about | **Coded against Pekrun's and Gross's categories, without a model.** `outputs-emotion/EVIDENCE_MAP.md`. Three findings in it change what the review should be; all three are settled at the end of `6_PROGRESS_REPORT.md` |
 | Conference paper | **Accepted to AERA 2027** on 6 November. Reviewer comments not yet read |
 
-**What changed in the three weeks since your email:** the pipeline gained a literature search it
+**What changed since your email:** the pipeline gained a literature search it
 never had and has now run it; the prompts were lifted out of the source code into configuration;
 three tests of the system's own reasoning were built, which changed what we are entitled to claim;
 and checking the search code against the live catalogues before using it found four defects, one of
@@ -177,7 +177,7 @@ their agreement is **0.785** (positive specific agreement). **The system is belo
 the comparable measure.** The claim this supports is *non-inferiority* — overlapping confidence
 intervals — not superiority. We have been careful that the word "exceeds" appears nowhere.
 
-### Two errors in our own earlier reports, found and corrected last week
+### Two errors in our own earlier reports, found and corrected
 
 **The figures were too high.** A defect in the scoring code accepted a match whose own written
 rationale stated a non-match — two concepts, each matched to its *opposite* ("high knowledge"
