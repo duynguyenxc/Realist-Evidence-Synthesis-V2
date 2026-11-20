@@ -21,9 +21,19 @@ of them was a whole category of studies the search was not counting.
 
 ## Completed
 
-### The assignment's first instruction
+### The assignment's first instruction, and what the review of our own system found
 You asked us to *"begin by reviewing the existing pipeline with AI and determining what we need to
-prepare"*. That review is deliverables 1 and 2. It found more than expected, recorded below.
+prepare"*. That review is the pipeline documentation and the assessment of the new topic. It found
+more than expected, and three things are worth stating plainly before the rest.
+
+- **The artefacts you listed were not in the repository.** The prompts, schemas, configurations and
+  evaluation results you asked to be handed over existed only inside the running code or in our
+  heads. They have been written out, and that is most of what the documentation now is.
+- **A live OpenAI API key was in the working directory**, one `git add -A` away from a public
+  repository. It was revoked and the handling of credentials changed so it cannot recur.
+- **The step where a person approves the system's decisions had never worked.** Not "had not been
+  done" — could not be done. Two defects in the web interface made every approval fail. They are
+  fixed, and the approvals have since been performed; see below.
 
 ### The pipeline gained three capabilities it did not have
 - **Literature search.** Until recently the pipeline had no search of any kind — Richmond's 28
@@ -148,6 +158,12 @@ Our search uses OpenAlex and Crossref. The obvious objection is that two catalog
 few, so we measured it rather than argue about it. We ran the same ten queries through four
 more: DOAJ, PubMed, arXiv and Semantic Scholar.
 
+Doing that meant first repairing the web-scraping system built earlier in this project, which
+reaches catalogues this pipeline cannot. Five defects had to be fixed before it would run at
+all — two of its four search commands had never worked, and a third was throwing away the
+identifier and abstract of every record it collected, which made its results impossible to
+deduplicate or to screen. The repairs are now submitted back to that repository.
+
 They returned 590 records. Three overlapped our collection. Of the rest, **67 were both new
 and on topic — 3.6% of the collection.** Two catalogues is enough, and we can now say so with
 a number.
@@ -167,6 +183,22 @@ arithmetic.
 **Nothing from those four catalogues has been merged into the collection.** Adding a catalogue
 changes what the review claims to have searched, which is a protocol amendment and your
 decision, not a file copy.
+
+### What was built, in short
+
+Collecting the studies was the visible part. Most of the three weeks went into the system
+that made the collection possible and into checking what it had already produced:
+
+| | |
+|---|---|
+| Added to the pipeline | literature search, full-text download, text indexing, and the ability to propose a concept reasoned from theory |
+| Added so the system can check itself | a statistical test for the recurring patterns, a consistency check on the knowledge graph, and a computed comparison against your five conclusions |
+| Repaired | the human-approval step, which had never worked; the concept-matching code behind the verification figures; the search, before it was run; and the separate scraping system used to test the search |
+| Made reusable | all the prompts, configurations and schemas lifted out of the code, so the system can be pointed at a new topic without programming |
+| Made checkable | every report in this package generated from the database by script rather than typed, and a test suite that runs on every change |
+
+The three checking tools in the second row are what found the errors reported below. Without
+them we would have handed you figures that were wrong and had no way of knowing.
 
 ### The prompts were lifted out of the code
 You asked for the prompts by name. All 24 were buried across ten source files. Ten are now plain text in
