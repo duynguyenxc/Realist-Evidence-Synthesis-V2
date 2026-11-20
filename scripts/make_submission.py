@@ -343,6 +343,18 @@ def main() -> int:
         print(f"(the PDF was not built: {type(exc).__name__}: {exc})",
               file=sys.stderr)
 
+    # The exported benchmark page predates the 2026-11-04 recount and cannot be
+    # regenerated, so the copy in the package is corrected in place. Chained here because
+    # forgetting it means sending out four figures that overstate the system.
+    try:
+        import patch_richmond_page
+        if patch_richmond_page.main() != 0:
+            print("!! RICHMOND_RESULTS.html NOT corrected — do not send the package",
+                  file=sys.stderr)
+    except Exception as exc:  # noqa: BLE001
+        print(f"!! RICHMOND_RESULTS.html not corrected: {type(exc).__name__}: {exc}",
+              file=sys.stderr)
+
     reading = out / "Emotional_regulation_review.pdf"
     if reading.exists():
         shutil.copy2(reading, root / "1-ATTACH-TO-EMAIL" / reading.name)
