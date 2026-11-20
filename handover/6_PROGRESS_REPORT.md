@@ -104,9 +104,9 @@ directly on what the review should be:
    natural sciences account for **51 between them**; mathematics accounts for 108 and is almost
    entirely maths and statistics anxiety.
 
-Each of these changes what the review should be, so each is a question for you rather than a
-decision we took. They are Questions 1–3 in
-[`0_REQUIREMENTS_MATRIX.md`](0_REQUIREMENTS_MATRIX.md).
+Each of these changes what the review should be. We settled all three ourselves rather than
+hold the work up, and wrote down for each one what would make us change our mind. They are
+at the end of this report, under "Three decisions we took ourselves".
 
 ### The search was missing an entire arm, and the theory it needs most
 Every one of the ten search queries requires an intervention term. That is correct for finding
@@ -292,3 +292,122 @@ to adjudicate one.
 - **The AERA paper.** Accepted 6 November. It carries the superseded figures and the coder error
   described above. Reviewer comments are on the All Academic portal and have not been read.
   The deadline for programme changes is 5 March 2027.
+
+---
+
+## Three decisions we took ourselves
+
+You asked us to use our own judgment on routine decisions and write them down, and to
+bring you only the ones that affect the research direction. Three of the four open
+questions turned out to be answerable from the pool itself, so they are **decided below
+with the reasoning shown** rather than passed to you. Each says what would reverse it.
+The fourth is money, which is not ours to spend.
+
+### Decision 1 — STEM becomes a context, not a filter
+
+**The finding.** Of 1,088 higher-education records, engineering, computing and the natural
+sciences account for **51 between them**. Mathematics accounts for 108, and almost all of
+it is maths or statistics *anxiety*. Health sciences account for 75.
+
+**What we decided.** The review covers higher education, and STEM is carried as a
+**context dimension inside the realist framework** rather than as an inclusion criterion.
+
+**Why.** A realist review needs enough studies per configuration to see a pattern repeat.
+Fifty-one records before screening is perhaps ten to twenty after it, and this project has
+already measured what happens at that scale: on Richmond's 28 papers, all 32 apparent
+recurring patterns failed a degree-preserving permutation test. A STEM-only review would
+produce configurations we could not defend.
+
+But realist synthesis does not filter by context — **it treats context as the variable**.
+The answerable question is therefore not "what works in STEM" but **"which mechanisms fire
+differently in STEM than outside it"**, and 51 against 1,037 is enough for that comparison
+even though it is not enough for a review of its own. This keeps your "particularly STEM"
+without promising something the evidence cannot carry.
+
+**What would reverse it.** If screening leaves 40+ eligible STEM studies, a STEM-focused
+review becomes defensible and we should revisit.
+
+### Decision 2 — the review is organised by mechanism, not by intervention name
+
+**The finding.** Three of the five intervention types you named by example are nearly
+absent, while one you did not name dominates:
+
+| Your examples | Records | | Not named by you | Records |
+|---|---|---|---|---|
+| Feedback | 149 | | **Mindfulness / attention training** | **291** |
+| Reflective writing | 101 | | Social and emotional learning | 151 |
+| Learning plans, goal setting | 17 | | Appraisal and reappraisal prompts | 103 |
+| **Self-regulation activities** | **7** | | Expressive writing | 63 |
+| **Emotional awareness prompts** | **6** | | ER training as a named programme | 58 |
+
+**What we decided.** Neither "follow your examples" nor "follow the literature". The
+synthesis groups studies by **Gross's five emotion-regulation families**, which is what
+the programme theory is built on anyway.
+
+**Why.** Reorganised that way the gap largely disappears, and the reason it looked like a
+gap is itself the interesting part:
+
+| Mechanism family | What falls inside it |
+|---|---|
+| Attentional deployment | mindfulness **291** + your emotional awareness prompts **6** |
+| Cognitive change | reappraisal **103** + reflective writing **101** + expressive writing **63** |
+| Situation modification | learning plans **17** + feedback |
+
+**"Emotional awareness prompts" returns 6 records because it is a name for a practice, not
+a name for a mechanism.** The same mechanism has 291 records filed under "mindfulness". So
+the scarcity is mostly a vocabulary gap rather than an evidence gap — and *that* is worth
+reporting on its own: a teacher searching for evidence about what they actually do will
+not find it, because the literature files it under a word they would not think to use.
+
+**What would reverse it.** If the mechanism families turn out not to discriminate between
+studies at extraction — if nearly everything lands in cognitive change — the grouping is
+not doing work and intervention type should come back.
+
+### Decision 3 — anxiety is the spine, and boredom is the test case
+
+**The finding.** Anxiety is **578 of 678** emotion-tagged records. Pekrun's other eight sit
+between 11 and 79: enjoyment 79, boredom 68, anger 66, hope 59, pride 28, shame 27,
+hopelessness 24, relief 11.
+
+**What we decided.** The review is built on anxiety, with **boredom carried alongside it as
+a deliberate contrast case**, and the absence of the other seven reported as a finding
+rather than apologised for.
+
+**Why.** Eight emotions at 11–79 records cannot each support a programme theory. But
+boredom is not just the second-largest — it is **theoretically different in Pekrun's own
+terms**: an *activity* emotion, arising during learning, where anxiety is an *outcome*
+emotion, about the result. That gives a question this pool can actually answer: **do the
+mechanisms that regulate anxiety still work on boredom?** If they do not, that is a
+genuine realist finding — same mechanism, different context, different outcome.
+
+It turns "we only have anxiety" from a limitation into a design.
+
+**What would reverse it.** If screening leaves fewer than ~20 eligible boredom studies, the
+contrast is too thin and the review becomes anxiety-only with absence reported.
+
+---
+
+## The one decision that is yours: may we spend about $25?
+
+| | |
+|---|---|
+| Screen all 1,863 records against the protocol | **$5.44** |
+| A 3-paper pilot extraction, which replaces every estimate with a measurement | **$4–5** |
+| A 10-paper pilot — enough to see whether a programme theory forms | **$13–16** |
+| Screen + 10-paper pilot | **≈ $21** |
+
+Figures from [`COST_MODEL.md`](../outputs-emotion/COST_MODEL.md), computed from the system
+prompt the pipeline actually sends and the prices in `config/models.yaml`, then doubled by
+the project's own deliberately pessimistic calibration factor.
+
+**Our recommendation is to approve the $5.44 first and hold the rest.** Not to economise —
+because screening is what makes the three decisions above checkable. Every figure in them
+comes from counting dictionary terms in titles and abstracts, which is stated plainly
+wherever it appears. After screening we know how many records are genuinely *eligible*, and
+all three thresholds above ("40+ STEM studies", "~20 boredom studies", "do the families
+discriminate") become answerable with real numbers rather than term counts.
+
+We had reported deliverables 3, 4 and 5 as needing budget. That was partly wrong: three of
+the pipeline's stages call no model at all, which is why the search, the acquisition, the
+ingest and every document in this package cost nothing. Screening is cheap. **Extraction is
+the expensive stage, and it is the only one genuinely blocked.**

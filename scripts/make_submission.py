@@ -48,11 +48,9 @@ UWSS_DB = (PROJECT_ROOT.parent
            / "data" / "emotion.sqlite")
 
 HANDOVER = [
-    ("0_REQUIREMENTS_MATRIX.md", "**Read first.** Your email, clause by clause, each with a status and the file that backs it"),
-    ("1_WHAT_WE_BUILT.md", "Output 1 — the existing pipeline: inputs, outputs, architecture, prompts, evaluation"),
-    ("2_WHAT_THE_NEW_TOPIC_NEEDS.md", "Output 2 — what the new topic needs, with a step-by-step plan"),
-    ("6_PROGRESS_REPORT.md", "Output 6 — completed, limitations, next steps"),
-    ("README.md", "A short tour of the package"),
+    ("1_WHAT_WE_BUILT.md", "The existing pipeline in full: architecture, all ten agent prompts, schemas, configurations, evaluation results"),
+    ("2_WHAT_THE_NEW_TOPIC_NEEDS.md", "Your seven questions answered, with a step-by-step plan"),
+    ("6_PROGRESS_REPORT.md", "**Read first.** What is done, what the limitations are, what comes next, and the three scope decisions we took"),
     ("pipeline.svg", "The six stages, and the five points where the system stops and asks a person"),
 ]
 

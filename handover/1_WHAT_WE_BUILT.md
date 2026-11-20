@@ -23,7 +23,7 @@ it.
 | The five review checkpoints | **Performed and countersigned by a human.** All 20 contradictions resolved and the programme theory signed under your section 5 delegation, each then confirmed by Duy at the review console. Both actors stay in the record: `ai-ra:claude(…) + countersigned human:duy` |
 | New topic configuration | **Drafted, not reviewed.** `config-emotion/` holds the review protocol, the initial programme theory built from your four references, and rewritten agent personas |
 | New topic corpus | **Candidate pool collected and described.** 1,863 records, 89% with an abstract, 68% with an open-access PDF link, **662 full texts obtained and ingested** (623 with a usable full text, 8,357 text units), plus a separate 445-record theory pool. Nothing screened — no eligibility criterion has been applied to any record |
-| What the pool is about | **Coded against Pekrun's and Gross's categories, without a model.** `outputs-emotion/EVIDENCE_MAP.md`. Three findings in it change what the review should be, and are Questions 1–3 in the requirements matrix |
+| What the pool is about | **Coded against Pekrun's and Gross's categories, without a model.** `outputs-emotion/EVIDENCE_MAP.md`. Three findings in it change what the review should be; all three are settled at the end of `6_PROGRESS_REPORT.md` |
 | Conference paper | **Accepted to AERA 2027** on 6 November. Reviewer comments not yet read |
 
 **What changed in the three weeks since your email:** the pipeline gained a literature search it
