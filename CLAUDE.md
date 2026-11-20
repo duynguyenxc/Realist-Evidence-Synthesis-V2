@@ -51,10 +51,15 @@ Richmond's human outputs. **Method > platform; human judgment stays sovereign.**
    matrix with exact confidence intervals and a *judged by* column; all 46 gold concepts one by
    one; and every CMOC, entity, relation and emergent mechanism, searchable. This is the artefact
    to send to the professor or open in an interview. No server, no database.
-   **`res export-results` must never be run again.** The 28 human decisions this page reports live
+   **`res export-results` must never be run again.** The human decisions this page reports live
    in `hitl_feedback`, which the markdown-based snapshot restore could not carry (M39 §4), so any
    re-export silently reports **0** and overwrites the only surviving record of them. Rebuild the
    *database* with `scripts/import_snapshot.py`; leave this file alone.
+   **The count is 21, not 28** (corrected 2026-11-20 by counting
+   `outputs/raw_export/hitl_feedback.csv`): 20 contradictions at HITL-3 plus one programme
+   theory at HITL-4. The 28 was this file conflating the decisions with the 28 papers, and
+   `RESULTS.html` never claimed it. The rule itself is unaffected — the risk is a re-export
+   from a restored database finding the table empty, not the size of the table.
 2. **`docs/VERIFICATION_PROTOCOL.md`** — why those are the right metrics, with citations, and the
    honest list of what is still missing. **Human coding is done and the ceiling exists**: two human
    coders, all 28 papers, blind, 2026-09-25; **positive specific agreement 0.785** (RA-confirmed

@@ -306,6 +306,17 @@ def main() -> int:
           "pipeline holds: regenerate them and the numbers follow the database, not a "
           "memory of it. This folder is built by "
           "`scripts/make_submission.py`, which is also what built this folder.", "",
+          "", "## Three tables in `raw_export/` are empty", "",
+          "They are empty in the database, not lost in the export, and each says "
+          "something:", "",
+          "- `theorised_entities.csv` — the pipeline can now propose a concept reasoned "
+          "from theory rather than read from a paper, but **that capability has never "
+          "been run on the Richmond corpus**. It is built and tested, not exercised.",
+          "- `token_usage.csv` — model cost was not recorded during the Richmond runs. "
+          "That is why `COST_MODEL.md` had to be built by measuring the prompts directly "
+          "rather than by reading a history.",
+          "- `agent_feedback.csv` — the mechanism for correcting an agent from a human "
+          "note exists and was not used on this corpus.", "",
           "`RICHMOND_RESULTS.pdf` is an export of the benchmark review's database, "
           "deliberately never regenerated: it is the only surviving "
           "record of 28 human review decisions that a later schema change could not "
