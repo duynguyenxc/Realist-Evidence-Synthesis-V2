@@ -1,8 +1,10 @@
 # Handover
 
-Everything so far: the three documents you asked for, the first half of the literature
-collection, and a matrix that goes through your email point by point so you can see at a
-glance what is finished and what is not.
+Everything so far. The three documents you asked for, the studies collected for the new
+topic, and a matrix that goes through your email point by point.
+
+**Open the matrix first.** It starts with a one-page summary of all six outputs and their
+status, so you can see what is finished before reading anything else.
 
 | | |
 |---|---|

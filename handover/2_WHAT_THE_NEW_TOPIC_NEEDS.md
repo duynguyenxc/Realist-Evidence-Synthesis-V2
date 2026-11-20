@@ -181,11 +181,17 @@ Two consequences, which should be designed in now rather than discovered at the 
 quality control on top of an external benchmark. Here they *are* the evidence. They must have a
 real person behind them, documented, with disagreements recorded rather than resolved silently.
 
-**Second, what gets reported is process evidence, not an accuracy number.** What this system can
-show that an unstructured approach cannot: every claim anchored to a quotation; every configuration
-attributed to a named study; typed causal relations; patterns and contradictions computed rather
-than asserted; a complete adjudication record. That is the methodological contribution, and it does
-not depend on having a benchmark.
+**Second, what we report is evidence about the process, not a single accuracy score.**
+
+Five things this system can show that an unstructured approach cannot:
+
+- every claim is tied to a specific quotation
+- every configuration names the study it came from
+- causal relations are labelled by type, not left implicit
+- patterns and contradictions are computed, not asserted
+- there is a complete record of who decided what
+
+That is the methodological contribution, and it does not require a benchmark.
 
 **Richmond's role in the paper is therefore to show the method works where it *can* be checked**,
 and this topic's role is to show it produces usable knowledge where no answer key exists. The two
@@ -215,28 +221,33 @@ which describes how CMOCs are extracted by hand. **That makes the Richmond study
 unusually clear: it is not a better version of something already benchmarked; it is the first
 benchmark of its kind that we can find.**
 
-**No dedicated systematic review of emotion-regulation interventions in STEM higher education,
-framed by achievement emotions, appears to exist either.** The adjacent work is real but differently
-scoped: a 2025 *Educational Psychology Review* meta-analysis of regulation *strategies* and
-achievement in secondary and university students; Pekrun-linked work on regulating achievement
-emotions, including the RAEQ instrument; a 2022 study of 174 STEM degree students finding
-cognitive reappraisal associated with better exam performance; and a
-[PNAS field experiment](https://www.pnas.org/doi/10.1073/pnas.1808589116) in which a reappraisal
-intervention improved science exam scores and pass rates for lower-income students. **So the
-review has a genuine gap to fill, and the evidence base to fill it exists.**
+**No review appears to exist on emotion-regulation interventions in STEM higher education,
+framed by achievement emotions.** The nearest work is real, but each piece is scoped differently:
+
+- a 2025 *Educational Psychology Review* meta-analysis — but of regulation *strategies* rather
+  than interventions, and in secondary as well as university students
+- Pekrun-linked work on regulating achievement emotions, including the RAEQ instrument
+- a 2022 study of 174 STEM students, finding cognitive reappraisal linked to better exam results
+- a [PNAS field experiment](https://www.pnas.org/doi/10.1073/pnas.1808589116) where a reappraisal
+  intervention raised science exam scores and pass rates for lower-income students
+
+**So there is a real gap to fill, and enough published evidence to fill it.**
 
 One validation worth noting: our trial search independently surfaced the 2022 STEM study the
 literature search above also found. The tool is looking in the right place.
 
 ### Three things this changes in how we should work
 
-**Report to an AI-assisted standard, not only to RAMESES.** Reporting guidance for AI-assisted
-reviews now exists in draft: [PRISMA-LLM](https://arxiv.org/abs/2609.11559) (September 2026),
-built from an analysis of 888 review-automation papers, plus ARISMA and L-PRISMA, and PRISMA 2026
-is reported to add structured handling of AI-assisted screening. None is settled, so we should not
-claim conformance — but PRISMA-LLM's central distinction is one we should adopt now, because it
-is the distinction a reviewer will apply: **separate disclosing what the AI did from evaluating
-what difference it made.** Its own finding is the warning: among papers reporting only positive
+**Report against an AI-assisted standard, not only RAMESES.**
+
+Reporting guidance for AI-assisted reviews now exists in draft form. The main one is
+[PRISMA-LLM](https://arxiv.org/abs/2609.11559) (September 2026), built from an analysis of 888
+papers on review automation. There are also ARISMA and L-PRISMA, and PRISMA 2026 is reported to
+be adding structured handling of AI-assisted screening.
+
+None of these is settled yet, so we should not claim to conform to any of them. But one
+distinction in PRISMA-LLM is worth adopting now, because it is the one a journal reviewer will
+apply: **saying what the AI did is a separate matter from showing what difference it made.** Its own finding is the warning: among papers reporting only positive
 LLM evaluations, 52% nonetheless disclosed an unmet reliability requirement. A review that
 reports only what worked is the common failure, not the exception.
 

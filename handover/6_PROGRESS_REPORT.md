@@ -1,11 +1,21 @@
 # Progress report
 
-Short version: deliverables 1, 2 and 6 are complete and
-attached, and **the literature search for the new topic has now been run** — 1,863 candidate
-records, at no cost, which is the first half of deliverable 3. Deliverables 4 and 5, and the
-second half of 3, need screening and extraction, which is where the pipeline begins to spend
-API credit, and the project has no budget. The three weeks were spent making the existing system
-and its record fit to hand over, and that turned out to be necessary rather than tidying.
+## The short version
+
+Three of the six outputs are finished and attached: the documentation of the existing
+pipeline, the assessment of what the new topic needs, and this report.
+
+The literature search has also been run, at no cost. We have 1,863 studies that may be
+relevant and the full text of 662 of them. That is the collection half of the literature
+output you asked for; what is missing is deciding which studies are eligible.
+
+That decision is the first step that sends text to the AI model, so it costs money. There
+is no budget, so it has not been run. The same blocks the extracted CMOCs, the knowledge
+graph and the preliminary synthesis.
+
+Most of these three weeks went into making the existing system fit to hand over. That was
+not tidying. Checking it turned up four errors in figures we had already reported, and one
+of them was a whole category of studies the search was not counting.
 
 ---
 
@@ -20,12 +30,13 @@ prepare"*. That review is deliverables 1 and 2. It found more than expected, rec
   papers had been supplied by hand. It now searches OpenAlex and Crossref, deduplicates by DOI and
   title as a reportable stage, and logs every query so the search can be repeated by a reader.
 - **Full-text acquisition**, restricted to open-access copies the catalogue itself links.
-- **Retroduction without a quote.** Richmond's reviewers reached four concepts by inference from
-  theory, not from the text — the words *emotion* and *self-efficacy* occur **zero times** in the
-  28 papers, so no extractor could have found them. The system can now make such a proposal, but
-  only in a separate table that cannot enter the evidence graph, only when it names words it
-  claims are absent and those words are checked against the corpus, and only as a proposal until a
-  human ratifies it.
+- **Reaching a concept that is not written down.** Richmond's reviewers arrived at four
+  concepts by reasoning from theory rather than by reading them in the papers. The words
+  *emotion* and *self-efficacy* appear **zero times** across all 28 papers, so no amount of
+  text extraction could have found them. The system can now propose a concept this way, under
+  three restrictions. It goes in a separate table that cannot feed the evidence graph. It must
+  name the words it claims are absent, and those words are then checked against the corpus. And
+  it stays a proposal until a person approves it.
 
 ### The literature search has been run, and it found four defects first
 We established that three pipeline stages — search, full-text acquisition and
@@ -46,25 +57,36 @@ Three of the four now have regression tests. A fifth was fixed on the way: a sin
 used to discard an entire multi-query run, so the command now records each failure and refuses to
 write a corpus file that is missing protocol queries while looking complete.
 
-**The search strategy was written into the protocol before the search ran**, with the ten boolean
-queries, the coverage dates, the date last searched, and a statement that this is a purposive
-relevance-ranked sample rather than an exhaustive retrieval — which is the realist convention and
-not an excuse. `outputs-emotion/SEARCH_REPORT.md` is **generated** from the query log and the pool,
-not typed, for the same reason the comparison with your conclusions is now computed.
+**We wrote the search strategy into the protocol before running the search.** It records the
+ten search queries, which years each catalogue covers, and the date we last searched.
 
-The protocol also recorded, in advance, which of your four references the search **must** find and
-which it **should not**: Brackett 2012 and Durlak 2011 are intervention studies and had to appear;
-Pekrun 2006 and Gross 1998 are theory papers with no intervention and no sample, so their absence
-would be correct rather than a failure. All four came out as predicted. We note this because a
-mechanical check would have called the search broken on the two theory papers.
+It also states plainly that this is a selected, relevance-ranked sample and not an attempt to
+retrieve everything. That is the normal convention for a realist review, not an excuse for
+missing studies.
+
+The search report is generated from the query log and the collection itself. Nobody types the
+numbers in, so they cannot drift from what the system actually holds.
+
+We also wrote down in advance which of your four references the search **had** to find, and
+which it should **not**.
+
+Brackett 2012 and Durlak 2011 are intervention studies, so they had to appear. Pekrun 2006 and
+Gross 1998 are theory papers with no intervention and no sample, so for them absence is the
+correct result, not a failure.
+
+All four came out as predicted. We mention it because an automatic check would have reported the
+search as broken when it did not return the two theory papers.
 
 ### Three findings about the literature, from reading the pool without a model
-We coded every record's title and abstract against a dictionary built from the
-frameworks your references point to — Gross's five emotion-regulation families as integrated for
-achievement settings by Harley, Pekrun, Taxer & Gross (2019), and Pekrun's control-value taxonomy
-of achievement emotions — plus your own lists of interventions and context dimensions, verbatim.
-No model was called. [`outputs-emotion/EVIDENCE_MAP.md`](../outputs-emotion/EVIDENCE_MAP.md) is
-generated from it.
+We read the title and abstract of every record and tagged it against a fixed list of terms.
+
+That list comes from the frameworks your own references point to. Gross's five families of
+emotion regulation, as adapted for achievement settings by Harley, Pekrun, Taxer and Gross
+(2019). Pekrun's categories of achievement emotions. And your own lists of interventions and
+contexts, word for word.
+
+No AI model was involved — it is term matching, which is why it cost nothing.
+[`outputs-emotion/EVIDENCE_MAP.md`](../outputs-emotion/EVIDENCE_MAP.md) is generated from it.
 
 **This map says what the literature talks about. It does not say what works**, and we have been
 careful nowhere to imply otherwise. With that stated, three things came out of it that bear
@@ -181,11 +203,16 @@ regression test written alongside it. The corrected result is above.
 spanning two configurations: none. A configuration missing C, M or O: none. One cycle, which means
 normalisation left three near-synonyms as separate concepts.
 
-One intended check was reclassified rather than kept. "The same driver asserted both positive and
-negative within one study" was written as a defect detector and is not one: all 29 hits are
-two-arm experimental designs — one of your studies instructs one group in a reasoning strategy and
-tells the other to use whatever comes naturally — and the contrast between arms is the study's
-finding. Counting it as an error would have discarded the best mechanism evidence in the corpus.
+One check we had written turned out to be measuring the wrong thing.
+
+It flagged any case where the same factor was reported as both helping and hindering within a
+single study, on the assumption that this was a contradiction. All 29 cases turned out to be
+two-arm experiments. In one of your studies, for example, one group is taught a reasoning
+strategy and the other is told to work however comes naturally.
+
+The difference between the two arms is the study's finding, not an error in ours. Had we counted
+these as errors we would have thrown away the best evidence about mechanisms in the whole
+collection.
 
 **What is measurable about precision, without budget, has been measured.** Of our 183 concepts,
 **31 have a counterpart in your 46 and 152 do not**; of those 152, **98 appear in a single study**

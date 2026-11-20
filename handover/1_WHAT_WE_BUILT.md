@@ -8,11 +8,14 @@ something you already know, skip it.
 
 ## 0. Where we are right now
 
-**Stage: the Richmond benchmark is complete and verified; the new topic now has a literature pool
-and is waiting on screening, which is where cost begins.** In the terms of your assignment,
-sections 1 and 2 are done — this document and the next are those — the search in section 3 ran on
-at no cost, and sections 4 to 6 need screening and extraction, which need API budget
-the project does not have.
+The benchmark review on Richmond's 28 papers is finished and verified. For the new topic,
+we have collected the studies but not yet decided which ones are eligible.
+
+Against what you asked for: the documentation and the assessment are done, and they are
+this document and the next one. The literature search has run, at no cost. The remaining
+three outputs — deciding eligibility, extracting the CMOCs into a knowledge graph, and the
+preliminary synthesis — all need to send text to the AI model, and there is no budget for
+it.
 
 | | |
 |---|---|

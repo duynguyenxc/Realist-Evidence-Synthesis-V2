@@ -17,7 +17,7 @@ measures instead.
 WHAT GOES IN
 ------------
 The six handover documents the assignment asked for, the five generated reports on the
-new topic, the pipeline diagram, and `EMAIL.md`. `INDEX.md` says what each file is and
+new topic and the pipeline diagram. `INDEX.md` says what each file is and
 in what order to read them, because a folder of eleven markdown files is not a
 deliverable until someone says which one to open first.
 
@@ -279,62 +279,10 @@ def main() -> int:
     # a supervisor who gets a four-section report with nested bullets does not read it,
     # and a report nobody reads is worth less than a short one that is read. Prose, no
     # headings, no markdown emphasis — Gmail's plain text renders ** as literal asterisks.
-    # Short on purpose, and NAMED rather than numbered.
-    #
-    # The RA rejected three drafts. The first was 1,200 words in numbered ALL-CAPS
-    # sections. The second was prose but still said "Outputs 1, 2 and 6 are done" and
-    # "as you asked in section 5" — two different numbering schemes from the supervisor's
-    # own email, with nothing said about what any of them were. A reader has to go and
-    # re-open their own email to decode that, and on a phone they simply do not. So every
-    # deliverable is now called by what it IS: "the documentation of our existing
-    # pipeline", not "output 1". No headings, no bullets, and no markdown emphasis —
-    # Gmail's plain-text composer renders ** as literal asterisks.
-    email = f"""Subject: Progress report — emotional regulation review
-
-Dear Professor Zheng,
-
-A short update on the emotional regulation assignment.
-
-Three of the six things you asked for are finished and attached: the documentation of our
-existing pipeline, the assessment of what this new topic needs with its implementation
-plan, and the progress report.
-
-The literature collection is collected but not yet screened. We have {n_pool:,} candidate
-records from ten search queries and {n_pdf} full texts, all loaded into the review
-database and indexed. Deciding which ones are eligible is the first step that calls the AI
-model, so that is where it stops.
-
-Two things I should flag. Our coding frame had no category for emotional intelligence,
-which is the first construct named in your objective; adding it brought in {n_ei} more
-records, about a fifth of the pool. And three figures we had reported earlier turned out to
-be wrong — the corrected ones are in the progress report, and please don't quote the
-verification numbers from the AERA paper, as they have been superseded.
-
-The extracted CMOCs with the knowledge graph, and the preliminary synthesis, are the two I
-could not start. Both need the model: screening the whole pool costs $5.44 and a ten-paper
-trial extraction about $16. JSU has still not released the tool allowance after the earlier
-request was disapproved, so I have had no credit at all, and everything above was built to
-run without one.
-
-Of the attachments, start with the requirements matrix — it goes through your email point
-by point. The rest is the handover documents, six reports generated straight from the data,
-the prompts and decision log you asked for, the Richmond benchmark outputs, and the corpus
-as spreadsheets so you can check the records yourself.
-
-The open-access downloads have run as far as they can reach; most of what is left are links
-that no longer resolve. This week I will have the screening fully prepared so that it runs
-the day the budget arrives.
-
-Three scope decisions are at the end of the matrix. Happy to be overruled on any of them.
-
-Best regards,
-Duy
-"""
-    (out / "EMAIL.md").write_text(email, encoding="utf-8")
 
     # ---- the index -------------------------------------------------------------
     L = ["# What is in this folder", "",
-         "`EMAIL.md` is the covering note. Everything else is an attachment.", "",
+         "Every file here is an attachment to the covering email.", "",
          "## Read in this order", "", "| File | What it is |", "|---|---|"]
     for name, blurb in copied:
         L.append(f"| `{name}` | {blurb} |")
@@ -342,7 +290,7 @@ Duy
           "The six files in `handover/` are written documents. The six in `reports/` are "
           "**generated from the data by scripts**, so they cannot drift from what the "
           "pipeline holds: regenerate them and the numbers follow the database, not a "
-          "memory of it. `EMAIL.md` is generated the same way, by "
+          "memory of it. This folder is built by "
           "`scripts/make_submission.py`, which is also what built this folder.", "",
           "`RICHMOND_RESULTS.html` is an export of the benchmark review's database made "
           "in October and deliberately never regenerated: it is the only surviving "
@@ -376,7 +324,7 @@ Duy
     except Exception as exc:  # noqa: BLE001 - the package is still valid without it
         print(f"(data/ not built: {type(exc).__name__}: {exc})", file=sys.stderr)
 
-    print(f"submission/ rebuilt: {len(copied)} attachments + EMAIL.md + INDEX.md "
+    print(f"submission/ rebuilt: {len(copied)} attachments + INDEX.md "
           f"({rewritten} links rewritten to package paths)")
     for name, _ in copied:
         print(f"  {name}")
