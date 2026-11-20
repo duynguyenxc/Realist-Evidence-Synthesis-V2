@@ -248,7 +248,7 @@ def main() -> int:
                        "**The benchmark review in full**: Richmond's conclusions beside "
                        "the system's, context by context, every concept Richmond named "
                        "and whether we found it, and every causal link. It opens with a "
-                       "notice correcting five figures that predate the November recount"))
+                       "notice correcting five figures that predate a later recount"))
 
     # ---- make every link in the package resolve --------------------------------
     # The handover documents link by their position in the repository
@@ -306,8 +306,8 @@ def main() -> int:
           "pipeline holds: regenerate them and the numbers follow the database, not a "
           "memory of it. This folder is built by "
           "`scripts/make_submission.py`, which is also what built this folder.", "",
-          "`RICHMOND_RESULTS.pdf` is an export of the benchmark review's database made "
-          "in October and deliberately never regenerated: it is the only surviving "
+          "`RICHMOND_RESULTS.pdf` is an export of the benchmark review's database, "
+          "deliberately never regenerated: it is the only surviving "
           "record of 28 human review decisions that a later schema change could not "
           "carry, so it is preserved rather than rebuilt.", "",
           "## The figures in one place", "",
