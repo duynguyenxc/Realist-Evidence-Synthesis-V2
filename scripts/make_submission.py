@@ -286,10 +286,10 @@ def main() -> int:
 
     # ---- the index -------------------------------------------------------------
     L = ["# What is in this folder", "",
-         "**Open `READ_THIS_FIRST.html` in a browser.** It holds all nine written "
-         "documents on one page, behind a table of contents, with every table rendered. "
-         "It is also the file attached to the covering email, so if you have read that "
-         "attachment you have read the written part of this folder.", "",
+         "**Start with `Emotional_regulation_review.pdf`.** It holds all nine written "
+         "documents in reading order behind a table of contents. It is also the file "
+         "attached to the covering email, so if you have read that attachment you have "
+         "read the written part of this folder.", "",
          "Everything below is the underlying material: the same documents as Markdown, "
          "the benchmark outputs, the agent prompts, the decision log, and the data.", "",
          "## Read in this order", "", "| File | What it is |", "|---|---|"]
@@ -337,13 +337,13 @@ def main() -> int:
     # copied, so it goes last and is chained rather than remembered: a reading copy a
     # version behind the documents beside it is worse than none.
     try:
-        import make_reading_copy
-        make_reading_copy.main()
+        import make_pdf
+        make_pdf.main()
     except Exception as exc:  # noqa: BLE001 - the package is still valid without it
-        print(f"(READ_THIS_FIRST.html not built: {type(exc).__name__}: {exc})",
+        print(f"(the PDF was not built: {type(exc).__name__}: {exc})",
               file=sys.stderr)
 
-    reading = out / "READ_THIS_FIRST.html"
+    reading = out / "Emotional_regulation_review.pdf"
     if reading.exists():
         shutil.copy2(reading, root / "1-ATTACH-TO-EMAIL" / reading.name)
         print(f"  -> also copied to 1-ATTACH-TO-EMAIL/ ({reading.stat().st_size//1024} KB)")

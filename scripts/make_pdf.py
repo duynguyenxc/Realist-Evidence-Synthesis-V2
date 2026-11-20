@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build one self-contained HTML file holding every document in the submission.
+"""Build one PDF holding every written document in the submission.
 
 WHY THIS EXISTS
 ---------------
@@ -9,27 +9,37 @@ are looking at `**bold**` and `|---|---|`. These documents are mostly tables, an
 Markdown table rendered as plain text is unreadable — the one format where the fallback is
 worse than no formatting at all.
 
-`pandoc` is not installed on this machine and installing it is not the supervisor's
-problem. `markdown-it-py` is already a dependency, so the conversion costs nothing.
+One PDF rather than nine files, because nine attachments is a filing job for the reader.
+A PDF opens the same way on every device, can be annotated, and needs no decision from the
+reader about what to open first.
 
-One file rather than nine, because nine attachments is a filing job for the reader. It
-opens in any browser on any device, needs no software, prints cleanly, and the table of
-contents means the reader never scrolls looking for a section.
+HOW, GIVEN WHAT IS INSTALLED
+----------------------------
+No `pandoc`, no `weasyprint`. `markdown-it-py` is already a dependency and Chrome is on
+this machine, so: Markdown -> HTML with markdown-it, then HTML -> PDF with headless
+Chrome's own print engine. That is the same renderer the reader would get by pressing
+Cmd-P, so what the PDF shows is what the page is.
 
-The Markdown files stay in the package for anyone who wants to diff or grep them. This is
-the reading copy, not a replacement.
+**The HTML is a build artefact and is written to a temporary directory, not into
+`submission/`.** Only the PDF belongs in the folder the supervisor receives; shipping both
+would mean two files that say the same thing and a reader wondering which is current.
+
+The Markdown files stay in the package for anyone who wants to grep or diff them.
 
 USAGE
 -----
-    python scripts/make_reading_copy.py
-    # -> submission/READ_THIS_FIRST.html
+    python scripts/make_pdf.py
+    # -> submission/2-UPLOAD-TO-DRIVE/Emotional_regulation_review.pdf
 """
 
 from __future__ import annotations
 
 import html
 import re
+import shutil
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -103,14 +113,23 @@ hr{border:0;border-top:1px solid var(--line);margin:2.5rem 0}
 .back{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.8rem;
   color:var(--soft);text-decoration:none}
 .back:hover{color:var(--accent)}
-/* Printing: one document per sheet, links shown as plain text. */
+/* This block decides what the PDF looks like, so it is the important one. */
+@page{size:A4;margin:18mm 16mm}
 @media print{
   .wrap{max-width:none;padding:0}
-  .doc{page-break-before:always}
+  .doc{break-before:page}
   .back{display:none}
-  body{font-size:11pt}
-  h2{break-after:avoid}
-  table,pre,blockquote{break-inside:avoid}
+  body{font-size:10.5pt;line-height:1.5}
+  h1{font-size:17pt}h2{font-size:13pt}h3{font-size:11.5pt}
+  /* A heading stranded at the foot of a page, or one row of a table carried over,
+     is the usual way an automatically produced PDF looks automatic. */
+  h1,h2,h3,h4{break-after:avoid}
+  table,pre,blockquote,li{break-inside:avoid}
+  tr{break-inside:avoid}
+  thead{display:table-header-group}
+  table{font-size:8.6pt}
+  a{color:var(--ink);text-decoration:none}
+  .toc a{color:var(--accent)}
 }
 """
 
@@ -168,8 +187,39 @@ def main() -> int:
 </div>
 </html>
 """
-    out = SUBMISSION / "READ_THIS_FIRST.html"
-    out.write_text(page, encoding="utf-8")
+    out = SUBMISSION / "Emotional_regulation_review.pdf"
+    tmp = Path(tempfile.mkdtemp(prefix="res-reading-copy-"))
+    try:
+        src = tmp / "reading_copy.html"
+        src.write_text(page, encoding="utf-8")
+
+        chrome = next((c for c in (
+            "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+            "/Applications/Chromium.app/Contents/MacOS/Chromium",
+            "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+        ) if Path(c).exists()), None)
+        if chrome is None:
+            # Falling back to the HTML would put a second file in the package that says
+            # the same thing as the PDF, which is what this script exists to avoid. Say
+            # what is wrong instead and leave the folder as it was.
+            print("No Chrome, Chromium or Edge found — cannot produce the PDF.",
+                  file=sys.stderr)
+            return 1
+
+        r = subprocess.run(
+            [chrome, "--headless=new", "--disable-gpu", "--no-sandbox",
+             # Without this, every page carries Chrome's own URL-and-date furniture.
+             "--no-pdf-header-footer",
+             # Static page, but Chrome still needs a moment to lay out 53 tables.
+             "--virtual-time-budget=10000",
+             f"--print-to-pdf={out}", src.as_uri()],
+            capture_output=True, text=True, timeout=180)
+        if not out.exists() or out.stat().st_size < 10_000:
+            print(f"Chrome did not produce a PDF.\n{r.stderr[-600:]}", file=sys.stderr)
+            return 1
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
     kb = out.stat().st_size / 1024
     print(f"{out.relative_to(PROJECT_ROOT)}  —  {len(DOCS)} documents, {kb:,.0f} KB")
     return 0
