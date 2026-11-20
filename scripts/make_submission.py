@@ -322,6 +322,16 @@ def main() -> int:
     except Exception as exc:  # noqa: BLE001 - the package is still valid without it
         print(f"(data/ not built: {type(exc).__name__}: {exc})", file=sys.stderr)
 
+    # The one file that gets emailed. It must be built from the Markdown this run just
+    # copied, so it goes last and is chained rather than remembered: a reading copy a
+    # version behind the documents beside it is worse than none.
+    try:
+        import make_reading_copy
+        make_reading_copy.main()
+    except Exception as exc:  # noqa: BLE001 - the package is still valid without it
+        print(f"(READ_THIS_FIRST.html not built: {type(exc).__name__}: {exc})",
+              file=sys.stderr)
+
     print(f"submission/ rebuilt: {len(copied)} attachments + INDEX.md "
           f"({rewritten} links rewritten to package paths)")
     for name, _ in copied:
