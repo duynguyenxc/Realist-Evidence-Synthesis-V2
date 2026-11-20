@@ -64,7 +64,7 @@ def _write_csv(path: Path, rows: list[dict], columns: list[str]) -> None:
 def main() -> int:
     from res_pipeline.core.config import DATA_DIR
 
-    out = PROJECT_ROOT / "submission" / "data"
+    out = PROJECT_ROOT / "submission" / "2-UPLOAD-TO-DRIVE" / "data"
     out.mkdir(parents=True, exist_ok=True)
 
     pool = _load(DATA_DIR / "studies_metadata.jsonl")

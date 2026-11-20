@@ -75,9 +75,15 @@ def _num(path: Path, pattern: str, default: str = "?") -> str:
 def main() -> int:
     from res_pipeline.core.config import DATA_DIR, OUTPUTS_DIR
 
-    out = PROJECT_ROOT / "submission"
-    if out.exists():
-        shutil.rmtree(out)
+    # Two folders, named so that no one has to remember which is which. The RA uploads
+    # the whole of `2-UPLOAD-TO-DRIVE` and attaches the one file in `1-ATTACH-TO-EMAIL`.
+    # The emailed file is also inside the Drive folder: the supervisor who clicks the
+    # link should find everything there, not everything-except-the-thing-he-already-has.
+    root = PROJECT_ROOT / "submission"
+    out = root / "2-UPLOAD-TO-DRIVE"
+    if root.exists():
+        shutil.rmtree(root)
+    (root / "1-ATTACH-TO-EMAIL").mkdir(parents=True)
     (out / "reports").mkdir(parents=True)
     (out / "handover").mkdir(parents=True)
 
@@ -280,12 +286,17 @@ def main() -> int:
 
     # ---- the index -------------------------------------------------------------
     L = ["# What is in this folder", "",
-         "Every file here is an attachment to the covering email.", "",
+         "**Open `READ_THIS_FIRST.html` in a browser.** It holds all nine written "
+         "documents on one page, behind a table of contents, with every table rendered. "
+         "It is also the file attached to the covering email, so if you have read that "
+         "attachment you have read the written part of this folder.", "",
+         "Everything below is the underlying material: the same documents as Markdown, "
+         "the benchmark outputs, the agent prompts, the decision log, and the data.", "",
          "## Read in this order", "", "| File | What it is |", "|---|---|"]
     for name, blurb in copied:
         L.append(f"| `{name}` | {blurb} |")
     L += ["", "## How these were produced", "",
-          "The six files in `handover/` are written documents. The six in `reports/` are "
+          "The three files in `handover/` are written documents. The six in `reports/` are "
           "**generated from the data by scripts**, so they cannot drift from what the "
           "pipeline holds: regenerate them and the numbers follow the database, not a "
           "memory of it. This folder is built by "
@@ -331,6 +342,11 @@ def main() -> int:
     except Exception as exc:  # noqa: BLE001 - the package is still valid without it
         print(f"(READ_THIS_FIRST.html not built: {type(exc).__name__}: {exc})",
               file=sys.stderr)
+
+    reading = out / "READ_THIS_FIRST.html"
+    if reading.exists():
+        shutil.copy2(reading, root / "1-ATTACH-TO-EMAIL" / reading.name)
+        print(f"  -> also copied to 1-ATTACH-TO-EMAIL/ ({reading.stat().st_size//1024} KB)")
 
     print(f"submission/ rebuilt: {len(copied)} attachments + INDEX.md "
           f"({rewritten} links rewritten to package paths)")

@@ -33,7 +33,7 @@ import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-SUBMISSION = PROJECT_ROOT / "submission"
+SUBMISSION = PROJECT_ROOT / "submission" / "2-UPLOAD-TO-DRIVE"
 
 # Reading order, not alphabetical order. The progress report answers "what did you do",
 # which is the question the supervisor opens the file with.
