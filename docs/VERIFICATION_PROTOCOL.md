@@ -255,17 +255,25 @@ That confirmation matters because two documents disagreed:
 | Coder A — human (the RA) | 30/46 (65%) | 192 |
 | Coder B — human, same frame, blind | 28/46 (61%) | 139 |
 | Both humans agreed | 28/46 (61%) | 130 agreed |
-| The system | 34/46 (74%) | 547 mentions |
+| The system, same-role | **32/46 (69.6%)** — *as published: 34/46* | 547 mentions |
+| The system, under the humans' one-to-one constraint | **26/46 (56.5%)** — *as published: 28/46* | 547 mentions |
+
+**Read the last row, not the fourth.** The humans worked under a frame giving one code per
+element, so their matching is one-to-one by construction. 26/46 is the like-for-like figure, and
+it is **two below Coder B**.
 
 **Positive specific agreement between the two humans: 0.785** — the statistic this section argued
 for (Hripcsak & Rothschild 2005), and the ceiling it said was missing. Per paper it ranges
 0.36–1.00, median 0.85.
 
-**The claim this licenses is non-inferiority, not superiority.** The system's 34 matches rest on
-only **28 distinct canonical concepts**: four of ours are each counted against two or three of
-Richmond's. A human cannot do that — the frame gives one code per element, so human matching is
-one-to-one by construction. Under the same constraint the system scores **28/46 (60.9%), equal to
-Coder B and to the both-agreed set, not above them.** `MACHINE_VS_HUMAN.md` §5 states the rule
+**The claim this licenses is non-inferiority, not superiority.** The system's same-role matches
+rest on fewer distinct canonical concepts than the raw count suggests: several of ours are each
+counted against two or three of Richmond's. A human cannot do that, because the frame gives one
+code per element, so human matching is one-to-one by construction.
+
+Under that same constraint the system scores **26/46 (56.5%)** — **below Coder B's 28/46 and below
+the both-agreed set**, not equal to them and not above them. Non-inferiority therefore rests on
+the confidence intervals overlapping, not on parity. `MACHINE_VS_HUMAN.md` §5 states the rule
 plainly: *the word "exceeds" should not appear.*
 
 **Fixed 2026-11-04 — and it cost two concepts, not one.** The two matcher defects found

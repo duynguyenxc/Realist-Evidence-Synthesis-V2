@@ -216,12 +216,14 @@ concepts** — four concepts are each counted for two or three of Richmond's:
 | `outc:learning-and-schema-integration` | E28, E40 |
 
 A human coder cannot do this: the frame gives one code per element, so human matching is one-to-one
-by construction. Applying the same constraint, the system scores **28/46 (60.9%)** — **equal to
-Coder B and to the both-agreed set, not above them.**
+by construction. Applying the same constraint, the system scores **26/46 (56.5%)** — **below Coder
+B's 28/46 and below the both-agreed set.** (This passage read "28/46, equal to Coder B" until the
+2026-11-04 recount; see §5.1.)
 
-**The defensible claim is therefore non-inferiority, not superiority:** the system matches two human
-coders working under time pressure, at 547 quoted mentions against their 192 and 139, with every
-mention auditable. Given that human screeners themselves err about 10.8% of the time,
+**The defensible claim is therefore non-inferiority, not superiority**, and it now rests on the
+confidence intervals overlapping rather than on parity: the system is close to two human coders
+working under time pressure, at 547 quoted mentions against their 192 and 139, with every mention
+auditable. Given that human screeners themselves err about 10.8% of the time,
 non-inferiority is the right target — but the word "exceeds" should not appear.
 
 Two further matcher defects found on 2026-09-30, both correctable in `verification/metrics.py`:
