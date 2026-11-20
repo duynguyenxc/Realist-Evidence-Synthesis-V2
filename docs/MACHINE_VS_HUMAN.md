@@ -70,12 +70,15 @@ uncertain and routed to a human, who included them. The design working as intend
 
 ### Level 2 — the same concepts? *(language-model judged)*
 
-| Tier | Result | What it means |
-|---|---|---|
-| Same realist role (**lead with this**) | **34/46 = 73.9%** (95% CI 58.9%–85.7%) | our concept means the same thing *and* sits in the same C/M/O role |
-| Role-crossing allowed | 41/46 = 89.1% | 7 of these sit under a different realist role than Richmond assigned |
-| **One concept may claim only one Richmond concept** | **28/46 = 60.9%** | see §5 — this is the figure comparable to a human coder |
-| Per-sample spread over 3 samples | 67.4% – 78.3% | the judge is not stable to ±5 pp |
+| Tier | Result (**current — quote these**) | As first published, now superseded | What it means |
+|---|---|---|---|
+| Same realist role | **32/46 = 69.6%** | 34/46 = 73.9% (95% CI 58.9%–85.7%) | our concept means the same thing *and* sits in the same C/M/O role |
+| Role-crossing allowed | **39/46 = 84.8%** | 41/46 = 89.1% | these sit under a different realist role than Richmond assigned |
+| **One concept may claim only one Richmond concept** | **26/46 = 56.5%** | 28/46 = 60.9% | the figure comparable to a human coder |
+| Per-sample spread over 3 samples | 67.4% – 78.3% | — | the judge is not stable to ±5 pp |
+
+The right-hand column is kept because the AERA paper was accepted carrying those figures. It is
+the manuscript that needs correcting, not this record. §5.1 has the arithmetic for the recount.
 
 > **All three figures above are superseded by §5.1** (matcher fixed 2026-11-04): 39/46 role-crossing, **32/46** same-role, **26/46** one-to-one. Left in place because the published papers quote them.
 
@@ -170,7 +173,7 @@ studies", that matters as much as the concept count, and it is not yet reported 
 
 ---
 
-## 4. Faithfulness — the one place the machine clearly exceeds the human record
+## 4. Faithfulness — the one place the machine's record can be audited and the published review's cannot
 
 | | Result |
 |---|---|

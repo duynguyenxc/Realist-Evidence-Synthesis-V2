@@ -108,6 +108,26 @@ Each of these changes what the review should be. We settled all three ourselves 
 hold the work up, and wrote down for each one what would make us change our mind. They are
 at the end of this report, under "Three decisions we took ourselves".
 
+### What kinds of study the pool contains
+
+You asked us to identify the systematic reviews, experimental studies and intervention
+studies the search turned up. 1,103 of the 1,863 records carry a recognisable study design;
+760 carry none, usually because the abstract does not state one.
+
+| | Records |
+|---|---|
+| Review or synthesis (236 say "systematic review", 123 "meta-analysis") | 349 |
+| Qualitative | 317 |
+| Quasi-experiment | 300 |
+| Correlational or cross-sectional | 197 |
+| Randomised controlled trial | 184 |
+| Longitudinal | 101 |
+
+A record can fall in more than one row. The full table, with the terms behind each count, is
+in `EVIDENCE_MAP.md`. One caution: these come from words in titles and abstracts, so they
+show what each study *calls itself*, not an appraisal of its design. Screening is what
+decides which of them actually belong in the review.
+
 ### The search was missing an entire arm, and the theory it needs most
 Every one of the ten search queries requires an intervention term. That is correct for finding
 intervention studies and it means the search **cannot** reach the theory literature — and a
@@ -122,6 +142,32 @@ could have retrieved it. Three theory-only queries were added, pooled separately
 now including Pekrun 2006 at 7,582 citations and ERAS), and theory papers are kept out of the
 corpus of record because they inform the programme theory rather than being evidence in it.
 
+### We tested whether searching two catalogues was enough
+
+Our search uses OpenAlex and Crossref. The obvious objection is that two catalogues is too
+few, so we measured it rather than argue about it. We ran the same ten queries through four
+more: DOAJ, PubMed, arXiv and Semantic Scholar.
+
+They returned 590 records. Three overlapped our collection. Of the rest, **67 were both new
+and on topic — 3.6% of the collection.** Two catalogues is enough, and we can now say so with
+a number.
+
+Getting there produced a finding we think belongs in the paper. Three of the four catalogues
+could not actually contribute, and **only one of them said so.** NCBI answers a blocked
+request with HTTP 200 and an HTML error page, so a client that trusts the status code reports
+*zero results* — indistinguishable from "nothing matched your query". Across the whole
+exercise we recorded **13 infrastructure failures, 9 of them silent**: the command completed,
+reported success, and returned nothing.
+
+In a systematic review that zero goes into a PRISMA flow diagram as a fact about the
+literature. It is the clearest argument we have found for why this framework keeps a person at
+its checkpoints. `SOURCE_AUDIT.md` lists all 13; `CATALOGUE_OVERLAP.md` has the overlap
+arithmetic.
+
+**Nothing from those four catalogues has been merged into the collection.** Adding a catalogue
+changes what the review claims to have searched, which is a protocol amendment and your
+decision, not a file copy.
+
 ### The prompts were lifted out of the code
 You asked for the prompts by name. All 24 were buried across ten source files. Ten are now plain text in
 `config/prompts/`; eleven more are built from `protocol.yaml` and `agents.yaml`, so **21 of 24 can
@@ -135,7 +181,23 @@ AI under your section 5 delegation and have now each been **countersigned by Duy
 console; none was disputed. The record keeps both actors — `ai-ra:claude(…) + countersigned
 human:duy` — so it stays visible which decisions a model drafted and which a person stood behind.
 
-### Two errors were found in our own reports and corrected
+### A whole category of studies was missing from our search terms
+
+Your objective names eight things to look at, beginning with emotional intelligence. We were
+counting seven of them.
+
+Our coding frame had categories for emotional *awareness* and emotional *regulation*, which are
+sub-constructs of emotional intelligence, but no category for the umbrella construct itself. The
+effect: any study that used an established emotional intelligence instrument without also using
+the words "awareness" or "regulation" matched nothing and was invisible to us.
+
+Added to the frame, and it is substantial: **349 records, 19% of the pool** — the second-largest
+category after anxiety. Every figure in `EVIDENCE_MAP.md` has been recomputed.
+
+We found this by re-reading your email clause by clause against what the code actually does,
+rather than against what we believed it did.
+
+### Three errors were found in our own reports and corrected
 - **The verification figures were too high.** The scoring code accepted matches whose own written
   rationale stated a non-match; recounting found a second, unrelated arithmetic error. Concept
   recovery moved from 34/46 to **32/46**, and the figure comparable to a human coder from 28/46 to
@@ -143,6 +205,9 @@ human:duy` — so it stays visible which decisions a model drafted and which a p
 - **We had understated our own evidence.** A report stated that only one coder was human and that
   0.785 was therefore not a reliability figure. Both halves were wrong: two people coded all 28
   papers, so **0.785 is a genuine inter-rater reliability figure**.
+- **A count of links was reported as a count of papers.** We had said we held 1,266 full texts.
+  1,266 was the number of open-access *links* the catalogues published. The number of files we
+  actually hold is **662**, and 605 of those links yield nothing at all.
 
 ### A draft configuration for the new topic
 `config-emotion/` — review protocol, initial programme theory built from your four references, and
