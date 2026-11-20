@@ -279,41 +279,51 @@ def main() -> int:
     # a supervisor who gets a four-section report with nested bullets does not read it,
     # and a report nobody reads is worth less than a short one that is read. Prose, no
     # headings, no markdown emphasis — Gmail's plain text renders ** as literal asterisks.
+    # Short on purpose, and NAMED rather than numbered.
+    #
+    # The RA rejected three drafts. The first was 1,200 words in numbered ALL-CAPS
+    # sections. The second was prose but still said "Outputs 1, 2 and 6 are done" and
+    # "as you asked in section 5" — two different numbering schemes from the supervisor's
+    # own email, with nothing said about what any of them were. A reader has to go and
+    # re-open their own email to decode that, and on a phone they simply do not. So every
+    # deliverable is now called by what it IS: "the documentation of our existing
+    # pipeline", not "output 1". No headings, no bullets, and no markdown emphasis —
+    # Gmail's plain-text composer renders ** as literal asterisks.
     email = f"""Subject: Progress report — emotional regulation review
 
 Dear Professor Zheng,
 
-A short update on the emotional awareness and regulation assignment.
+A short update on the emotional regulation assignment.
 
-Outputs 1, 2 and 6 are done and attached. For output 3 the search has run:
-{n_pool:,} candidate records from ten registered queries, {n_pdf} full texts downloaded,
-and all of them ingested and indexed. I also ran the same queries through four more
-catalogues — DOAJ, PubMed, arXiv, Semantic Scholar — to check whether two were enough.
-They were; the shortfall is about {shortfall_pct}%.
+Three of the six things you asked for are finished and attached: the documentation of our
+existing pipeline, the assessment of what this new topic needs with its implementation
+plan, and the progress report.
 
-Two things worth flagging. Our coding frame had no category for emotional intelligence,
-which is the first construct in your objective; adding it brings in {n_ei} records, about
-a fifth of the pool. And three figures we had reported earlier turned out to be wrong and
-are corrected in the handover — so please don't quote the verification numbers from the
-AERA paper, they have been superseded.
+The literature collection is collected but not yet screened. We have {n_pool:,} candidate
+records from ten search queries and {n_pdf} full texts, all loaded into the review
+database and indexed. Deciding which ones are eligible is the first step that calls the AI
+model, so that is where it stops.
 
-The review checkpoints are countersigned. The pipeline resolved all 20 contradictions
-itself, as you asked in section 5; I have since read each one and signed it.
+Two things I should flag. Our coding frame had no category for emotional intelligence,
+which is the first construct named in your objective; adding it brought in {n_ei} more
+records, about a fifth of the pool. And three figures we had reported earlier turned out to
+be wrong — the corrected ones are in the progress report, and please don't quote the
+verification numbers from the AERA paper, as they have been superseded.
 
-Attached: the handover documents — start with the requirements matrix, it goes through
-your email point by point — six reports generated straight from the data, the prompts and
-decision log you asked for in section 1, the Richmond benchmark outputs, and the corpus as
-spreadsheets so you can check the records yourself.
+The extracted CMOCs with the knowledge graph, and the preliminary synthesis, are the two I
+could not start. Both need the model: screening the whole pool costs $5.44 and a ten-paper
+trial extraction about $16. JSU has still not released the tool allowance after the earlier
+request was disapproved, so I have had no credit at all, and everything above was built to
+run without one.
 
-JSU still has not released the tool allowance, so I have had no API credit; everything
-above was built to run without one. What is left — outputs 4 and 5 — needs screening
-($5.44) and a ten-paper pilot extraction ($16).
+Of the attachments, start with the requirements matrix — it goes through your email point
+by point. The rest is the handover documents, six reports generated straight from the data,
+the prompts and decision log you asked for, the Richmond benchmark outputs, and the corpus
+as spreadsheets so you can check the records yourself.
 
-The open-access download has now run to the end of what it can reach: {n_pdf} of the
-{n_pool:,} records have a full text, and most of what is left are links that no longer
-resolve rather than papers behind a paywall. This week I will have the screening run
-fully prepared — prompts, validation set, cost ceiling — so that it executes the day
-budget arrives rather than starting then.
+The open-access downloads have run as far as they can reach; most of what is left are links
+that no longer resolve. This week I will have the screening fully prepared so that it runs
+the day the budget arrives.
 
 Three scope decisions are at the end of the matrix. Happy to be overruled on any of them.
 

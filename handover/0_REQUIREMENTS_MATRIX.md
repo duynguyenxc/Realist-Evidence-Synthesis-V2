@@ -1,13 +1,34 @@
 # Your assignment, clause by clause
 
-Read this first if you want to know what is done. Every row below is something you asked
-for, in the order you asked it, with a status and the file that backs it up. Nothing is
-marked done without something you can open and check.
+## In one glance
 
-A word on the four statuses I use. **Done** means finished, with the file named. **Partly
-done** means the part we could do without spending has been done, and the row says what is
-left and why. **Blocked** means the obstacle is named, with its price where it has one.
-**Yours** means it needs your judgement rather than our work.
+| The six outputs you asked for | |
+|---|---|
+| Documentation of the existing pipeline | **Done** |
+| Assessment of what the new topic needs, with a plan | **Done** |
+| Literature collection and evidence database | **Collected, not yet screened** |
+| Extracted CMOCs and knowledge graph | **Not started — needs the AI model** |
+| Preliminary synthesis | **Not started — needs the AI model** |
+| Progress report | **Done** |
+
+**Why the last three stop there.** Screening decides which of the 1,863 records are
+eligible, and it is the first step that calls the AI model. JSU has not released the tool
+allowance, so there has been no credit. Screening the whole pool costs **$5.44**; a
+ten-paper trial extraction, **$16**.
+
+**What we need from you.** One decision — may we spend about $25? Everything else below is
+a report, not a question. Three scope decisions we took ourselves are at the end, each with
+what would reverse it.
+
+**What all of this cost so far.** Nothing.
+
+---
+
+Below is every clause of your email, in the order you wrote it, with a status and the file
+that backs it up. Nothing is marked done without something you can open and check.
+**Done** = finished. **Partly done** = what could be done without spending is done, and the
+row says what is left. **Blocked** = the obstacle is named, with its price. **Yours** =
+needs your judgement, not our work.
 
 ---
 
