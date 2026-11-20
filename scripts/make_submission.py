@@ -363,10 +363,21 @@ def main() -> int:
         print(f"(the PDF was not built: {type(exc).__name__}: {exc})",
               file=sys.stderr)
 
-    reading = out / "Emotional_regulation_review.pdf"
-    if reading.exists():
-        shutil.copy2(reading, root / "1-ATTACH-TO-EMAIL" / reading.name)
-        print(f"  -> also copied to 1-ATTACH-TO-EMAIL/ ({reading.stat().st_size//1024} KB)")
+    # What the supervisor actually receives by mail. Two PDFs: the written handover, and
+    # the benchmark review, which is the one place his own question — does the system
+    # reach Richmond's conclusions? — is answered side by side rather than asserted.
+    # Everything else is a link away.
+    mail = root / "1-ATTACH-TO-EMAIL"
+    total = 0
+    for name in ("Emotional_regulation_review.pdf", "RICHMOND_RESULTS.pdf"):
+        f = out / name
+        if f.exists():
+            shutil.copy2(f, mail / name)
+            total += f.stat().st_size
+            print(f"  -> 1-ATTACH-TO-EMAIL/{name} ({f.stat().st_size//1024} KB)")
+    if total:
+        # Gmail refuses at 25 MB and most university mail servers at less.
+        print(f"  -> attachments total {total/1_048_576:.1f} MB")
 
     print(f"submission/ rebuilt: {len(copied)} attachments + INDEX.md "
           f"({rewritten} links rewritten to package paths)")
